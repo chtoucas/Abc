@@ -5,9 +5,7 @@ namespace Abc
     using System;
 
     /// <summary>
-    /// Provides extension methods for functions in the Kleisli category:
-    /// <see cref="Func{TSource, TResult}"/> where <c>TResult</c> is of type
-    /// <see cref="Maybe{T}"/>.
+    /// Provides extension methods for functions in the Kleisli category.
     /// </summary>
     public static partial class Kleisli
     {

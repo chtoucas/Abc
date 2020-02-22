@@ -13,17 +13,24 @@ namespace Abc
     {
         public static Unit Default { get; } = default;
 
+        /// <summary>
+        /// Always returns true.
+        /// </summary>
         public static bool operator ==(Unit left, Unit right) => true;
-        public static bool operator !=(Unit left, Unit right) => false;
 
-        public static bool operator ==(Unit left, ValueTuple right) => true;
-        public static bool operator !=(Unit left, ValueTuple right) => false;
+        /// <summary>
+        /// Always returns false.
+        /// </summary>
+        public static bool operator !=(Unit left, Unit right) => false;
 
         /// <summary>
         /// Returns a string representation of the current instance.
         /// </summary>
         public override string ToString() => "()";
 
+        /// <summary>
+        /// Always returns true.
+        /// </summary>
         public bool Equals(Unit other) => true;
 
         /// <inheritdoc />

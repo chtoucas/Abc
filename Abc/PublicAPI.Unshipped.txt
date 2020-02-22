@@ -75,6 +75,4 @@ static Abc.Maybe<T>.operator !=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Unit.Default.get -> Abc.Unit
 static Abc.Unit.operator !=(Abc.Unit left, Abc.Unit right) -> bool
-static Abc.Unit.operator !=(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator ==(Abc.Unit left, Abc.Unit right) -> bool
-static Abc.Unit.operator ==(Abc.Unit left, System.ValueTuple right) -> bool
