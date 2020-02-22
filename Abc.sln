@@ -15,9 +15,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{BBE17D96-73CC-48B2-B07F-E6A2185B1D4F}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "play", "play\play.fsproj", "{CD2DD134-444A-467F-83AD-5CA696691E64}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "play", "play\play.fsproj", "{CD2DD134-444A-467F-83AD-5CA696691E64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
