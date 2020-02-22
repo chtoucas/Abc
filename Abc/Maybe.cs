@@ -4,9 +4,8 @@ namespace Abc
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-
-    // REVIEW: disabled methods.
 
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
@@ -33,7 +32,7 @@ namespace Abc
         /// <see cref="Maybe{T}"/>.</param>
         /// <typeparam name="T">The underlying type of <paramref name="value"/>.
         /// </typeparam>
-        public static Maybe<T> Of<T>(T value)
+        public static Maybe<T> Of<T>([AllowNull]T value)
             => value is null ? Maybe<T>.None : new Maybe<T>(value);
 
         /// <summary>

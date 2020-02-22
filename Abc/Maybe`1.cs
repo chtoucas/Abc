@@ -9,6 +9,9 @@ namespace Abc
 
     using ANException = System.ArgumentNullException;
 
+    // REVIEW: disposable exts, async exts, nullable attrs.
+    // See https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
+
     // TODO: voir les derniers ajouts dans
     // http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
     // https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.13.0.0/Control-Monad.html
@@ -34,7 +37,6 @@ namespace Abc
         /// Initializes a new instance of the <see cref="Maybe{T}" /> struct
         /// from the specified value.
         /// </summary>
-        /// <param name="value">A value to wrap.</param>
         internal Maybe(T value)
         {
             Debug.Assert(value != null);
@@ -143,6 +145,7 @@ namespace Abc
         /// <paramref name="some"/>, otherwise it executes
         /// <paramref name="none"/>.
         /// </summary>
+        [return: MaybeNull]
         public TResult Match<TResult>(Func<T, TResult> some, Func<TResult> none)
             => IsSome ? (some ?? throw new ANException(nameof(some)))(Value)
                 : (none ?? throw new ANException(nameof(none)))();
@@ -194,6 +197,7 @@ namespace Abc
         /// Obtains the enclosed value if any; otherwise this method returns the
         /// default value of <typeparamref name="T"/>.
         /// </summary>
+        [return: MaybeNull]
         public T ValueOrDefault()
             => IsSome ? Value : default;
 
@@ -203,9 +207,11 @@ namespace Abc
         /// </summary>
         /// <param name="other">A default value to be used if if there is no
         /// underlying value.</param>
+        [return: MaybeNull]
         public T ValueOrElse(T other)
             => IsSome ? Value : other;
 
+        [return: MaybeNull]
         public T ValueOrElse(Func<T> valueFactory)
         {
             if (valueFactory is null) { throw new ANException(nameof(valueFactory)); }
@@ -235,7 +241,7 @@ namespace Abc
     // Standard API.
     public partial struct Maybe<T>
     {
-        public Maybe<TResult> ReplaceWith<TResult>(TResult value)
+        public Maybe<TResult> ReplaceWith<TResult>([AllowNull]TResult value)
         {
 #if MONADS_PURE
             return Select(_ => value);
@@ -298,12 +304,6 @@ namespace Abc
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
 #if MONADS_PURE
-            // This is the same as:
-            // > return Bind(
-            // >     x => second.Bind(
-            // >        y => third.Select(
-            // >            z => zipper(x, y, z))));
-            // but faster if ZipWith is locally shadowed.
             return Bind(
                 x => first.ZipWith(
                     second, (y, z) => zipper(x, y, z)));
@@ -323,11 +323,6 @@ namespace Abc
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
 #if MONADS_PURE
-            // > return Bind(
-            // >     x => second.Bind(
-            // >         y => third.Bind(
-            // >             z => fourth.Select(
-            // >                 arg4 => zipper(x, y, z, arg4)))));
             return Bind(
                 x => first.ZipWith(
                     second,
@@ -350,12 +345,6 @@ namespace Abc
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
 #if MONADS_PURE
-            // > return Bind(
-            // >     x => second.Bind(
-            // >         y => third.Bind(
-            // >             z => fourth.Bind(
-            // >                 a => fifth.Select(
-            // >                     b => zipper(x, y, z, a, b))))));
             return Bind(
                 x => first.ZipWith(
                     second,
@@ -388,8 +377,9 @@ namespace Abc
         {
             if (predicate is null) { throw new ANException(nameof(predicate)); }
 
-#if MONADS_PURE
-            return Bind(x => predicate(x) ? Maybe.Of(x) : None);
+#if !MONADS_PURE
+            // NB: x is never null.
+            return Bind(x => predicate(x) ? new Maybe<T>(x) : None);
 #else
             return IsSome && predicate(Value) ? this : None;
 #endif
@@ -539,10 +529,10 @@ namespace Abc
 
         /// <inheritdoc />
         public override bool Equals(object obj)
-            => obj is Maybe<T> opt && Equals(opt);
+            => obj is Maybe<T> maybe && Equals(maybe);
 
         public bool Equals(object other, IEqualityComparer<T> comparer)
-            => other is Maybe<T> opt && Equals(opt, comparer);
+            => other is Maybe<T> maybe && Equals(maybe, comparer);
 
         /// <inheritdoc />
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
