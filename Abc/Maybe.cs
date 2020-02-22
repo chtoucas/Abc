@@ -10,10 +10,11 @@ namespace Abc
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
     /// </summary>
-    public static class Maybe
-    {
-        #region Core monadic methods
+    public static partial class Maybe { }
 
+    // Core monadic methods.
+    public partial class Maybe
+    {
         /// <summary>
         /// Gets the unit for the type <see cref="Maybe{T}"/>.
         /// </summary>
@@ -58,13 +59,13 @@ namespace Abc
             => @this.IsSome ? @this.Value : Maybe<T>.None;
 #endif
 
-        #endregion
-
         public static Maybe<Unit> Guard(bool predicate)
             => predicate ? Unit : None;
+    }
 
-        #region Extension methods when T is a func
-
+    // Extension methods when T is a func.
+    public partial class Maybe
+    {
         public static Maybe<TResult> Invoke<TSource, TResult>(
             this Maybe<Func<TSource, TResult>> @this, Maybe<TSource> value)
         {
@@ -75,22 +76,22 @@ namespace Abc
                 : Maybe<TResult>.None;
 #endif
         }
+    }
 
-        #endregion
-
-        #region Extension methods when T is enumerable
-
+    // Extension methods when T is enumerable.
+    public partial class Maybe
+    {
         public static IEnumerable<T> ValueOrEmpty<T>(this Maybe<IEnumerable<T>> @this)
 #if MONADS_PURE
             => @this.ValueOrElse(Enumerable.Empty<T>());
 #else
             => @this.IsSome ? @this.Value : Enumerable.Empty<T>();
 #endif
+    }
 
-        #endregion
-
-        #region Extension methods when T is a struct
-
+    // Extension methods when T is a struct.
+    public partial class Maybe
+    {
         // Conversion from Maybe<T?> to  Maybe<T>.
         public static Maybe<T> Squash<T>(this Maybe<T?> @this) where T : struct
             // NB: When IsSome is true, Value.HasValue is also true, therefore
@@ -123,11 +124,11 @@ namespace Abc
 #else
             => @this.IsSome ? @this.Value : (T?)null;
 #endif
+    }
 
-        #endregion
-
-        //#region Extension methods when T is disposable
-
+    // Extension methods when T is disposable.
+    public partial class Maybe
+    {
         //// Bind() with automatic resource management.
         //public static Maybe<TResult> BindDispose<TSource, TResult>(
         //    this Maybe<TSource> @this, Func<TSource, Maybe<TResult>> binder)
@@ -147,7 +148,5 @@ namespace Abc
 
         //    return @this.Select(x => { using (x) { return selector(x); } });
         //}
-
-        //#endregion
     }
 }
