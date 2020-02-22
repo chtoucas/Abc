@@ -377,7 +377,7 @@ namespace Abc
         {
             if (predicate is null) { throw new ANException(nameof(predicate)); }
 
-#if !MONADS_PURE
+#if MONADS_PURE
             // NB: x is never null.
             return Bind(x => predicate(x) ? new Maybe<T>(x) : None);
 #else
