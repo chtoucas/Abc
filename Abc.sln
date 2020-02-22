@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc", "Abc\Abc.csproj", "{F0ABA4D7-5247-428D-B334-18B709597617}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{A103A23E-EDA8-485E-BBCB-07B8447D14B6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Common.props = Common.props
+		qtest.cmd = qtest.cmd
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{BBE17D96-73CC-48B2-B07F-E6A2185B1D4F}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "play", "play\play.fsproj", "{CD2DD134-444A-467F-83AD-5CA696691E64}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F0ABA4D7-5247-428D-B334-18B709597617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0ABA4D7-5247-428D-B334-18B709597617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0ABA4D7-5247-428D-B334-18B709597617}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0ABA4D7-5247-428D-B334-18B709597617}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD2DD134-444A-467F-83AD-5CA696691E64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD2DD134-444A-467F-83AD-5CA696691E64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD2DD134-444A-467F-83AD-5CA696691E64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD2DD134-444A-467F-83AD-5CA696691E64}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1739E5AC-504C-40F8-968B-64F1F620D3C3}
+	EndGlobalSection
+EndGlobal
