@@ -31,9 +31,7 @@ namespace Abc
         /// </summary>
         /// <param name="value">A value to be wrapped in an object of type
         /// <see cref="Maybe{T}"/>.</param>
-        /// <typeparam name="T">The underlying type of <paramref name="value"/>.
-        /// </typeparam>
-        public static Maybe<T> Of<T>([AllowNull]T value)
+        public static Maybe<T> Of<T>([AllowNull]T value) where T : notnull
             => value is null ? Maybe<T>.None : new Maybe<T>(value);
 
         /// <summary>
@@ -42,8 +40,6 @@ namespace Abc
         /// </summary>
         /// <param name="value">A value to be wrapped in an object of type
         /// <see cref="Maybe{T}"/>.</param>
-        /// <typeparam name="T">The underlying type of <paramref name="value"/>.
-        /// </typeparam>
         public static Maybe<T> Of<T>(T? value) where T : struct
             // This method makes it impossible to create a Maybe<T?> **directly**.
             => value.HasValue ? new Maybe<T>(value.Value) : Maybe<T>.None;
@@ -53,6 +49,7 @@ namespace Abc
         /// outer level.
         /// </summary>
         public static Maybe<T> Flatten<T>(this Maybe<Maybe<T>> @this)
+            where T : notnull
 #if MONADS_PURE
             => Maybe<T>.μ(@this);
 #else
@@ -68,6 +65,8 @@ namespace Abc
     {
         public static Maybe<TResult> Invoke<TSource, TResult>(
             this Maybe<Func<TSource, TResult>> @this, Maybe<TSource> value)
+            where TSource : notnull
+            where TResult : notnull
         {
 #if MONADS_PURE
             return @this.Bind(x => value.Select(x));
@@ -92,30 +91,30 @@ namespace Abc
     // Extension methods when T is a struct.
     public partial class Maybe
     {
-        // Conversion from Maybe<T?> to  Maybe<T>.
-        public static Maybe<T> Squash<T>(this Maybe<T?> @this) where T : struct
-            // NB: When IsSome is true, Value.HasValue is also true, therefore
-            // we can safely access Value.Value.
-#if MONADS_PURE
-            => @this.Bind(x => new Maybe<T>(x!.Value));
-#else
-            => @this.IsSome ? new Maybe<T>(@this.Value!.Value) : Maybe<T>.None;
-#endif
+//        // Conversion from Maybe<T?> to  Maybe<T>.
+//        public static Maybe<T> Squash<T>(this Maybe<T?> @this) where T : struct
+//            // NB: When IsSome is true, Value.HasValue is also true, therefore
+//            // we can safely access Value.Value.
+//#if MONADS_PURE
+//            => @this.Bind(x => new Maybe<T>(x!.Value));
+//#else
+//            => @this.IsSome ? new Maybe<T>(@this.Value!.Value) : Maybe<T>.None;
+//#endif
 
-        // Conversion from Maybe<T?> to T?.
-        public static T? ToNullable<T>(this Maybe<T?> @this) where T : struct
-#if MONADS_PURE
-            => @this.ValueOrDefault();
-#else
-#if DEBUG
-            // We have to be careful in Debug mode since the access to Value is
-            // protected by a Debug.Assert.
-            => @this.IsSome ? @this.Value : null;
-#else
-            // If the object is "none", Value is default(T?) ie null.
-            => @this.Value;
-#endif
-#endif
+//        // Conversion from Maybe<T?> to T?.
+//        public static T? ToNullable<T>(this Maybe<T?> @this) where T : struct
+//#if MONADS_PURE
+//            => @this.ValueOrDefault();
+//#else
+//#if DEBUG
+//            // We have to be careful in Debug mode since the access to Value is
+//            // protected by a Debug.Assert.
+//            => @this.IsSome ? @this.Value : null;
+//#else
+//            // If the object is "none", Value is default(T?) ie null.
+//            => @this.Value;
+//#endif
+//#endif
 
         // Conversion from Maybe<T> to T?.
         public static T? ToNullable<T>(this Maybe<T> @this) where T : struct

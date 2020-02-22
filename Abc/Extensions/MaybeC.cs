@@ -18,6 +18,7 @@ namespace Abc.Extensions
     {
         public static Maybe<TValue> MayGetValue<TKey, TValue>(
             this IDictionary<TKey, TValue> @this, TKey key)
+            where TValue : notnull
         {
             if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
 
@@ -46,6 +47,7 @@ namespace Abc.Extensions
 
         public static IEnumerable<T> ParseValues<T>(
             this NameValueCollection @this, string name, Func<string, Maybe<T>> parser)
+            where T : notnull
         {
             if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
 

@@ -9,8 +9,9 @@ namespace Abc
 
     using ANException = System.ArgumentNullException;
 
-    // REVIEW: disposable exts, async exts, nullable attrs.
-    // See https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
+    // REVIEW: disposable exts, async exts, nullable attrs, notnull constraints.
+    // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
+    // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
 
     // TODO: voir les derniers ajouts dans
     // http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
@@ -24,7 +25,7 @@ namespace Abc
     /// <typeparam name="T">The underlying type of the value.</typeparam>
     [DebuggerDisplay("IsSome = {IsSome}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
-    public partial struct Maybe<T> : IEquatable<Maybe<T>>
+    public partial struct Maybe<T> : IEquatable<Maybe<T>> where T : notnull
     {
         /// <summary>
         /// Represents the enclosed value.
@@ -37,7 +38,7 @@ namespace Abc
         /// Initializes a new instance of the <see cref="Maybe{T}" /> struct
         /// from the specified value.
         /// </summary>
-        internal Maybe(T value)
+        internal Maybe([DisallowNull]T value)
         {
             Debug.Assert(value != null);
 
@@ -97,6 +98,7 @@ namespace Abc
         public static Maybe<T> None { get; } = default;
 
         public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
+            where TResult : notnull
         {
             if (binder is null) { throw new ANException(nameof(binder)); }
 
@@ -140,6 +142,8 @@ namespace Abc
     // Pattern matching.
     public partial struct Maybe<T>
     {
+        // REVIEW: throw or not? delayed?
+
         /// <summary>
         /// If the current instance encloses a value, it executes
         /// <paramref name="some"/>, otherwise it executes
@@ -147,8 +151,18 @@ namespace Abc
         /// </summary>
         [return: MaybeNull]
         public TResult Match<TResult>(Func<T, TResult> some, Func<TResult> none)
-            => IsSome ? (some ?? throw new ANException(nameof(some)))(Value)
-                : (none ?? throw new ANException(nameof(none)))();
+        {
+            if (IsSome)
+            {
+                if (some is null) { throw new ANException(nameof(some)); }
+                return some(Value);
+            }
+            else
+            {
+                if (none is null) { throw new ANException(nameof(none)); }
+                return none();
+            }
+        }
 
         /// <summary>
         /// If the current instance encloses a value, it executes
@@ -159,11 +173,13 @@ namespace Abc
         {
             if (IsSome)
             {
-                (onSome ?? throw new ANException(nameof(onSome)))(Value);
+                if (onSome is null) { throw new ANException(nameof(onSome)); }
+                onSome(Value);
             }
             else
             {
-                (onNone ?? throw new ANException(nameof(onNone)))();
+                if (onNone is null) { throw new ANException(nameof(onNone)); }
+                onNone();
             }
         }
 
@@ -175,7 +191,8 @@ namespace Abc
         {
             if (IsSome)
             {
-                (action ?? throw new ANException(nameof(action)))(Value);
+                if (action is null) { throw new ANException(nameof(action)); }
+                action(Value);
             }
         }
 
@@ -187,7 +204,8 @@ namespace Abc
         {
             if (!IsSome)
             {
-                (action ?? throw new ANException(nameof(action)))();
+                if (action is null) { throw new ANException(nameof(action)); }
+                action();
             }
         }
 
@@ -207,16 +225,20 @@ namespace Abc
         /// </summary>
         /// <param name="other">A default value to be used if if there is no
         /// underlying value.</param>
-        [return: MaybeNull]
         public T ValueOrElse(T other)
             => IsSome ? Value : other;
 
-        [return: MaybeNull]
         public T ValueOrElse(Func<T> valueFactory)
         {
-            if (valueFactory is null) { throw new ANException(nameof(valueFactory)); }
-
-            return IsSome ? Value : valueFactory();
+            if (IsSome)
+            {
+                return Value;
+            }
+            else
+            {
+                if (valueFactory is null) { throw new ANException(nameof(valueFactory)); }
+                return valueFactory();
+            }
         }
 
         public T ValueOrThrow()
@@ -224,9 +246,15 @@ namespace Abc
 
         public T ValueOrThrow(Func<Exception> exceptionFactory)
         {
-            if (exceptionFactory is null) { throw new ANException(nameof(exceptionFactory)); }
-
-            return IsSome ? Value : throw exceptionFactory();
+            if (IsSome)
+            {
+                return Value;
+            }
+            else
+            {
+                if (exceptionFactory is null) { throw new ANException(nameof(exceptionFactory)); }
+                throw exceptionFactory();
+            }
         }
 
         public bool Contains(T value)
@@ -241,7 +269,8 @@ namespace Abc
     // Standard API.
     public partial struct Maybe<T>
     {
-        public Maybe<TResult> ReplaceWith<TResult>([AllowNull]TResult value)
+        public Maybe<TResult> ReplaceWith<TResult>(TResult value)
+            where TResult : notnull
         {
 #if MONADS_PURE
             return Select(_ => value);
@@ -251,6 +280,7 @@ namespace Abc
         }
 
         public Maybe<TResult> ContinueWith<TResult>(Maybe<TResult> other)
+            where TResult : notnull
         {
 #if MONADS_PURE
             return Bind(_ => other);
@@ -260,6 +290,7 @@ namespace Abc
         }
 
         public Maybe<T> PassThru<TOther>(Maybe<TOther> other)
+            where TOther : notnull
         {
 #if MONADS_PURE
             return ZipWith(other, (x, _) => x);
@@ -282,6 +313,8 @@ namespace Abc
 
         public Maybe<TResult> ZipWith<TOther, TResult>(
             Maybe<TOther> other, Func<T, TOther, TResult> zipper)
+            where TOther : notnull
+            where TResult : notnull
         {
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
@@ -300,6 +333,9 @@ namespace Abc
             Maybe<T1> first,
             Maybe<T2> second,
             Func<T, T1, T2, TResult> zipper)
+            where T1 : notnull
+            where T2 : notnull
+            where TResult : notnull
         {
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
@@ -319,6 +355,10 @@ namespace Abc
              Maybe<T2> second,
              Maybe<T3> third,
              Func<T, T1, T2, T3, TResult> zipper)
+            where T1 : notnull
+            where T2 : notnull
+            where T3 : notnull
+            where TResult : notnull
         {
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
@@ -341,6 +381,11 @@ namespace Abc
             Maybe<T3> third,
             Maybe<T4> fourth,
             Func<T, T1, T2, T3, T4, TResult> zipper)
+            where T1 : notnull
+            where T2 : notnull
+            where T3 : notnull
+            where T4 : notnull
+            where TResult : notnull
         {
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
@@ -363,6 +408,7 @@ namespace Abc
         #region Query Expression Pattern
 
         public Maybe<TResult> Select<TResult>(Func<T, TResult> selector)
+            where TResult : notnull
         {
             if (selector is null) { throw new ANException(nameof(selector)); }
 
@@ -389,6 +435,8 @@ namespace Abc
         public Maybe<TResult> SelectMany<TMiddle, TResult>(
             Func<T, Maybe<TMiddle>> selector,
             Func<T, TMiddle, TResult> resultSelector)
+            where TMiddle : notnull
+            where TResult : notnull
         {
             if (selector is null) { throw new ANException(nameof(selector)); }
             if (resultSelector is null) { throw new ANException(nameof(resultSelector)); }
@@ -412,6 +460,8 @@ namespace Abc
             Func<T, TKey> outerKeySelector,
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector)
+            where TInner : notnull
+            where TResult : notnull
         {
             return Join(inner, outerKeySelector, innerKeySelector, resultSelector, null);
         }
@@ -422,6 +472,8 @@ namespace Abc
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector,
             IEqualityComparer<TKey>? comparer)
+            where TInner : notnull
+            where TResult : notnull
         {
             if (outerKeySelector is null) { throw new ANException(nameof(outerKeySelector)); }
             if (innerKeySelector is null) { throw new ANException(nameof(innerKeySelector)); }

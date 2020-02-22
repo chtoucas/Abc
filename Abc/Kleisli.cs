@@ -11,12 +11,16 @@ namespace Abc
     {
         public static Maybe<TResult> Invoke<TSource, TResult>(
             this Func<TSource, Maybe<TResult>> @this, Maybe<TSource> value)
+            where TSource : notnull
+            where TResult : notnull
         {
             return value.Bind(@this);
         }
 
         public static Func<TSource, Maybe<TResult>> Compose<TSource, TMiddle, TResult>(
             this Func<TSource, Maybe<TMiddle>> @this, Func<TMiddle, Maybe<TResult>> other)
+            where TMiddle : notnull
+            where TResult : notnull
         {
             if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
 
@@ -25,6 +29,8 @@ namespace Abc
 
         public static Func<TSource, Maybe<TResult>> ComposeBack<TSource, TMiddle, TResult>(
             this Func<TMiddle, Maybe<TResult>> @this, Func<TSource, Maybe<TMiddle>> other)
+            where TMiddle : notnull
+            where TResult : notnull
         {
             if (other is null) { throw new ArgumentNullException(nameof(other)); }
 
