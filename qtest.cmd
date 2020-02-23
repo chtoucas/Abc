@@ -8,7 +8,7 @@
 @echo off
 @setlocal
 
-@call dotnet test .\play\ %* -c Release --no-restore
+@call dotnet test .\Abc.Tests\ %* -c Release --no-restore
 
 @endlocal
 @exit /b %ERRORLEVEL%
