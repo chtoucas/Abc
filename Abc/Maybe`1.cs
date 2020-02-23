@@ -4,6 +4,7 @@ namespace Abc
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -21,11 +22,12 @@ namespace Abc
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
     /// value at all.
+    /// <para><see cref="Maybe{T}"/> is an immutable struct.</para>
     /// </summary>
     /// <typeparam name="T">The underlying type of the value.</typeparam>
     [DebuggerDisplay("IsSome = {IsSome}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
-    public partial struct Maybe<T> : IEquatable<Maybe<T>> where T : notnull
+    public readonly partial struct Maybe<T> : IEquatable<Maybe<T>> where T : notnull
     {
         /// <summary>
         /// Represents the enclosed value.
@@ -53,6 +55,7 @@ namespace Abc
         /// Most of the time, we don't need to access this property. We are
         /// better off using the rich API that this struct has to offer.
         /// </remarks>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
 #if MONADS_PURE
         private bool IsSome { get; }
@@ -67,6 +70,7 @@ namespace Abc
         /// Any access to this property MUST be protected by checking before that
         /// <see cref="IsSome"/> is true.
         /// </remarks>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
 #if MONADS_PURE
         private T Value { get { Debug.Assert(IsSome); return _value; } }

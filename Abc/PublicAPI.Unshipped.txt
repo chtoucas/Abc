@@ -35,6 +35,7 @@ Abc.Maybe<T>.ZipWith<T1, T2, TResult>(Abc.Maybe<T1> first, Abc.Maybe<T2> second,
 Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TOther, TResult> zipper) -> Abc.Maybe<TResult>
 Abc.Unit
 Abc.Unit.Equals(Abc.Unit other) -> bool
+Abc.Unit.Equals(System.ValueTuple other) -> bool
 Abc.Unit.Unit() -> void
 override Abc.Maybe<T>.Equals(object obj) -> bool
 override Abc.Maybe<T>.GetHashCode() -> int
@@ -71,6 +72,10 @@ static Abc.Maybe.ValueOrEmpty<T>(this Abc.Maybe<System.Collections.Generic.IEnum
 static Abc.Maybe<T>.None.get -> Abc.Maybe<T>
 static Abc.Maybe<T>.operator !=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
-static Abc.Unit.Default.get -> Abc.Unit
 static Abc.Unit.operator !=(Abc.Unit left, Abc.Unit right) -> bool
+static Abc.Unit.operator !=(Abc.Unit left, System.ValueTuple right) -> bool
+static Abc.Unit.operator !=(System.ValueTuple left, Abc.Unit right) -> bool
 static Abc.Unit.operator ==(Abc.Unit left, Abc.Unit right) -> bool
+static Abc.Unit.operator ==(Abc.Unit left, System.ValueTuple right) -> bool
+static Abc.Unit.operator ==(System.ValueTuple left, Abc.Unit right) -> bool
+static readonly Abc.Unit.Default -> Abc.Unit
