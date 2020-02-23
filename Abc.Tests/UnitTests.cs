@@ -47,7 +47,7 @@ namespace Abc.Tests
             Assert.True(unit.Equals((object)unit));
             Assert.True(unit.Equals((object)same));
             Assert.True(unit.Equals((object)tupl));
-            Assert.False(unit.Equals(null));
+            Assert.False(unit.Equals(null!));
             Assert.False(unit.Equals(new object()));
         }
 

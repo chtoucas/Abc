@@ -11,7 +11,7 @@ namespace Abc
     using ANException = System.ArgumentNullException;
 
     // REVIEW: disposable exts, async exts, nullable attrs, notnull constraints.
-    // Maybe<T> where T : notnull ???
+    // Maybe<T> where T : notnull ??? <- only works if nullable is enabled.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
 
