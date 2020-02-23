@@ -10,7 +10,7 @@ namespace Abc
     // See https://en.wikipedia.org/wiki/Unit_type
 
     /// <summary>
-    /// Represents an Unit type.
+    /// Defines a Unit type.
     /// <para><see cref="Unit"/> is an immutable struct.</para>
     /// </summary>
     public readonly struct Unit : IEquatable<Unit>, IEquatable<ValueTuple>

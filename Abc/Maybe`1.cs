@@ -97,6 +97,7 @@ namespace Abc
         /// <summary>
         /// Obtains an instance of <see cref="Maybe{T}" /> that does not enclose
         /// any value.
+        /// <para>This static property is thread-safe.</para>
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1000:Do not declare static members on generic types", Justification = "There is no such thing as a generic static property on a non-generic type.")]
         public static Maybe<T> None { get; } = default;
