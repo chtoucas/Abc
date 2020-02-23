@@ -9,8 +9,6 @@ namespace Abc
 
     using static global::My;
 
-    using Assert = AssertEx;
-
     // Even if "nullable" is globally enabled, we still have to test null's.
     public static class NullableReferenceTypeFacts
     {

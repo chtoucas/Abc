@@ -4,7 +4,6 @@ namespace Abc
 {
     using Xunit;
 
-    // Xunit extensions.
     public sealed class AssertEx : Assert
     {
         public static void None<T>(Maybe<T> maybe)

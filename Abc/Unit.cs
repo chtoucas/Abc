@@ -1,7 +1,5 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-#pragma warning disable IDE0060 // Remove unused parameter
-
 namespace Abc
 {
     using System;

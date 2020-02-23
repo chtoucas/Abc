@@ -19,7 +19,7 @@ namespace Abc
         /// Gets the unit for the type <see cref="Maybe{T}"/>.
         /// <para>This static property is thread-safe.</para>
         /// </summary>
-        public static Maybe<Unit> Unit { get; } = new Maybe<Unit>(Abc.Unit.Default);
+        public static Maybe<Unit> Unit { get; } = Of(Abc.Unit.Default);
 
         /// <summary>
         /// Gets the zero for <see cref="Maybe{T}.Bind"/>.

@@ -59,10 +59,9 @@ namespace Abc
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
 #if MONADS_PURE
-        private bool IsSome { get; }
-#else
-        internal bool IsSome { get; }
+        [InternalForTesting]
 #endif
+        internal bool IsSome { get; }
 
         /// <summary>
         /// Gets the enclosed value.
@@ -74,10 +73,9 @@ namespace Abc
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
 #if MONADS_PURE
-        private T Value { get { Debug.Assert(IsSome); return _value; } }
-#else
-        internal T Value { get { Debug.Assert(IsSome); return _value; } }
+        [InternalForTesting]
 #endif
+        internal T Value { get { Debug.Assert(IsSome); return _value; } }
 
         /// <summary>
         /// Returns a string representation of the current instance.
@@ -154,7 +152,6 @@ namespace Abc
         /// <paramref name="some"/>, otherwise it executes
         /// <paramref name="none"/>.
         /// </summary>
-        [return: MaybeNull]
         public TResult Match<TResult>(Func<T, TResult> some, Func<TResult> none)
         {
             if (IsSome)
@@ -233,7 +230,6 @@ namespace Abc
         public T ValueOrElse([DisallowNull]T other)
             => IsSome ? Value : other;
 
-        [return: MaybeNull]
         public T ValueOrElse(Func<T> valueFactory)
         {
             if (IsSome)

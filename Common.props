@@ -18,9 +18,10 @@
     <WarningsAsErrors>NU1605</WarningsAsErrors>
 
     <!--
+      IDE0060     Remove unused parameter (covered by CA1801)
       IDE1006     Naming Styles
     -->
-    <NoWarn>$(NoWarn);IDE1006</NoWarn>
+    <NoWarn>$(NoWarn);IDE0060;IDE1006</NoWarn>
     <!--
       RS0016      Symbol XXX is not part of the declared API
       RS0017      Symbol XXX is part of the declared API, but is either not public
