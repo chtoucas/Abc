@@ -16,16 +16,16 @@ namespace Abc
     public partial class Maybe
     {
         /// <summary>
-        /// Gets the unit for the type <see cref="Maybe{T}"/>.
-        /// <para>This static property is thread-safe.</para>
+        /// Represents the unit for the type <see cref="Maybe{T}"/>.
+        /// <para>This field is read-only.</para>
         /// </summary>
-        public static Maybe<Unit> Unit { get; } = Of(Abc.Unit.Default);
+        public static readonly Maybe<Unit> Unit = Some(Abc.Unit.Default);
 
         /// <summary>
-        /// Gets the zero for <see cref="Maybe{T}.Bind"/>.
-        /// <para>This static property is thread-safe.</para>
+        /// Represents the zero for <see cref="Maybe{T}.Bind"/>.
+        /// <para>This field is read-only.</para>
         /// </summary>
-        public static Maybe<Unit> None { get; } = Maybe<Unit>.None;
+        public static readonly Maybe<Unit> None = Maybe<Unit>.None;
 
         /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
