@@ -11,6 +11,7 @@ namespace Abc
     using ANException = System.ArgumentNullException;
 
     // REVIEW: disposable exts, async exts, nullable attrs, notnull constraints.
+    // Maybe<T> where T : notnull ???
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
 
@@ -27,7 +28,7 @@ namespace Abc
     /// <typeparam name="T">The underlying type of the value.</typeparam>
     [DebuggerDisplay("IsSome = {IsSome}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
-    public readonly partial struct Maybe<T> : IEquatable<Maybe<T>> where T : notnull
+    public readonly partial struct Maybe<T> : IEquatable<Maybe<T>>
     {
         /// <summary>
         /// Represents the enclosed value.
@@ -103,7 +104,6 @@ namespace Abc
         public static Maybe<T> None { get; } = default;
 
         public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
-            where TResult : notnull
         {
             if (binder is null) { throw new ANException(nameof(binder)); }
 
@@ -230,9 +230,11 @@ namespace Abc
         /// </summary>
         /// <param name="other">A default value to be used if if there is no
         /// underlying value.</param>
+        [return: MaybeNull]
         public T ValueOrElse(T other)
             => IsSome ? Value : other;
 
+        [return: MaybeNull]
         public T ValueOrElse(Func<T> valueFactory)
         {
             if (IsSome)
@@ -285,7 +287,6 @@ namespace Abc
         }
 
         public Maybe<TResult> ContinueWith<TResult>(Maybe<TResult> other)
-            where TResult : notnull
         {
 #if MONADS_PURE
             return Bind(_ => other);
@@ -295,7 +296,6 @@ namespace Abc
         }
 
         public Maybe<T> PassThru<TOther>(Maybe<TOther> other)
-            where TOther : notnull
         {
 #if MONADS_PURE
             return ZipWith(other, (x, _) => x);
@@ -318,8 +318,6 @@ namespace Abc
 
         public Maybe<TResult> ZipWith<TOther, TResult>(
             Maybe<TOther> other, Func<T, TOther, TResult> zipper)
-            where TOther : notnull
-            where TResult : notnull
         {
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
@@ -338,9 +336,6 @@ namespace Abc
             Maybe<T1> first,
             Maybe<T2> second,
             Func<T, T1, T2, TResult> zipper)
-            where T1 : notnull
-            where T2 : notnull
-            where TResult : notnull
         {
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
@@ -360,10 +355,6 @@ namespace Abc
              Maybe<T2> second,
              Maybe<T3> third,
              Func<T, T1, T2, T3, TResult> zipper)
-            where T1 : notnull
-            where T2 : notnull
-            where T3 : notnull
-            where TResult : notnull
         {
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
@@ -386,11 +377,6 @@ namespace Abc
             Maybe<T3> third,
             Maybe<T4> fourth,
             Func<T, T1, T2, T3, T4, TResult> zipper)
-            where T1 : notnull
-            where T2 : notnull
-            where T3 : notnull
-            where T4 : notnull
-            where TResult : notnull
         {
             if (zipper is null) { throw new ANException(nameof(zipper)); }
 
@@ -413,7 +399,6 @@ namespace Abc
         #region Query Expression Pattern
 
         public Maybe<TResult> Select<TResult>(Func<T, TResult> selector)
-            where TResult : notnull
         {
             if (selector is null) { throw new ANException(nameof(selector)); }
 
@@ -440,8 +425,6 @@ namespace Abc
         public Maybe<TResult> SelectMany<TMiddle, TResult>(
             Func<T, Maybe<TMiddle>> selector,
             Func<T, TMiddle, TResult> resultSelector)
-            where TMiddle : notnull
-            where TResult : notnull
         {
             if (selector is null) { throw new ANException(nameof(selector)); }
             if (resultSelector is null) { throw new ANException(nameof(resultSelector)); }
@@ -465,8 +448,6 @@ namespace Abc
             Func<T, TKey> outerKeySelector,
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector)
-            where TInner : notnull
-            where TResult : notnull
         {
             return Join(inner, outerKeySelector, innerKeySelector, resultSelector, null);
         }
@@ -477,8 +458,6 @@ namespace Abc
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector,
             IEqualityComparer<TKey>? comparer)
-            where TInner : notnull
-            where TResult : notnull
         {
             if (outerKeySelector is null) { throw new ANException(nameof(outerKeySelector)); }
             if (innerKeySelector is null) { throw new ANException(nameof(innerKeySelector)); }

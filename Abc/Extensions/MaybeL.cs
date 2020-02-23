@@ -22,7 +22,6 @@ namespace Abc.Extensions
     {
         // Maybe<IEnumerable<TSource>>?
         public static IEnumerable<TSource> RepeatAny<TSource>(Maybe<TSource> value, int count)
-            where TSource : notnull
         {
 #if MONADS_PURE
             return value.Select(x => Enumerable.Repeat(x, count)).ValueOrEmpty();
@@ -38,7 +37,6 @@ namespace Abc.Extensions
     {
         public static IEnumerable<TResult> SelectAny<TSource, TResult>(
             this IEnumerable<TSource> source, Func<TSource, Maybe<TResult>> selector)
-            where TResult : notnull
         {
             if (source is null) { throw new ANException(nameof(source)); }
             if (selector is null) { throw new ANException(nameof(selector)); }
@@ -110,7 +108,6 @@ namespace Abc.Extensions
             this IEnumerable<TSource> source,
             TAccumulate seed,
             Func<TAccumulate, TSource, Maybe<TAccumulate>> accumulator)
-            where TAccumulate : notnull
         {
             if (source is null) { throw new ANException(nameof(source)); }
             if (accumulator is null) { throw new ANException(nameof(accumulator)); }
@@ -136,7 +133,6 @@ namespace Abc.Extensions
             TAccumulate seed,
             Func<TAccumulate, TSource, Maybe<TAccumulate>> accumulator,
             Func<Maybe<TAccumulate>, bool> predicate)
-            where TAccumulate : notnull
         {
             if (source is null) { throw new ANException(nameof(source)); }
             if (accumulator is null) { throw new ANException(nameof(accumulator)); }
@@ -160,7 +156,6 @@ namespace Abc.Extensions
         public static Maybe<TSource> MayReduce<TSource>(
             this IEnumerable<TSource> source,
             Func<TSource, TSource, Maybe<TSource>> accumulator)
-            where TSource : notnull
         {
             if (source is null) { throw new ANException(nameof(source)); }
             if (accumulator is null) { throw new ANException(nameof(accumulator)); }
@@ -186,7 +181,6 @@ namespace Abc.Extensions
             this IEnumerable<TSource> source,
             Func<TSource, TSource, Maybe<TSource>> accumulator,
             Func<Maybe<TSource>, bool> predicate)
-            where TSource : notnull
         {
             if (source is null) { throw new ANException(nameof(source)); }
             if (accumulator is null) { throw new ANException(nameof(accumulator)); }
@@ -217,7 +211,6 @@ namespace Abc.Extensions
             this IEnumerable<T1> first,
             IEnumerable<T2> second,
             Func<T1, T2, Maybe<TResult>> resultSelector)
-            where TResult : notnull
         {
             return CollectAny(first.Zip(second, resultSelector));
         }
@@ -231,7 +224,6 @@ namespace Abc.Extensions
         // Maybe<IEnumerable<TSource>>?
         public static IEnumerable<TSource> CollectAny<TSource>(
             this IEnumerable<Maybe<TSource>> source)
-            where TSource : notnull
         {
             if (source is null) { throw new ANException(nameof(source)); }
 
@@ -258,7 +250,6 @@ namespace Abc.Extensions
 
         public static Maybe<TSource> SumAny<TSource>(
             this IEnumerable<Maybe<TSource>> source)
-            where TSource : notnull
         {
             return source.Aggregate(Maybe<TSource>.None, (m, n) => m.OrElse(n));
         }
