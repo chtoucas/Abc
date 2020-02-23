@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Tests
+namespace Abc
 {
     using Xunit;
 
@@ -8,30 +8,31 @@ namespace Abc.Tests
 
     using Assert = AssertEx;
 
-    public static partial class MaybeTests
+    public static partial class MaybeTests { }
+
+    public partial class MaybeTests
     {
         [Fact]
-        public static void ReplaceWith_ValueType()
+        public static void ReplaceWith()
         {
             // Arrange
             var some = Maybe.Of(1);
             var none = Maybe<int>.None;
-            int newVal = 2;
-            // Act & Assert
-            Assert.Some(newVal, some.ReplaceWith(newVal));
-            Assert.None(none.ReplaceWith(newVal));
-        }
 
-        [Fact]
-        public static void ReplaceWith_RefType()
-        {
-            // Arrange
-            var some = Maybe.Of(new Mutable());
-            var none = Maybe<Mutable>.None;
-            var newVal = new Mutable("newVal");
             // Act & Assert
-            Assert.Some(newVal, some.ReplaceWith(newVal));
-            Assert.None(none.ReplaceWith(newVal));
+            Assert.Some("value", some.ReplaceWith("value"));
+            Assert.None(none.ReplaceWith("value"));
+
+            Assert.None(some.ReplaceWith(NullString));
+            Assert.None(none.ReplaceWith(NullString));
+
+#nullable disable
+            Assert.Some(2, some.ReplaceWith((int?)2));
+            Assert.None(none.ReplaceWith((int?)2));
+
+            Assert.None(some.ReplaceWith(NullNullString));
+            Assert.None(none.ReplaceWith(NullNullString));
+#nullable restore
         }
     }
 }
