@@ -16,8 +16,8 @@ namespace Abc
         public static void ReplaceWith()
         {
             // Arrange
-            var some = Maybe.Of(1);
-            var none = Maybe<int>.None;
+            var some = Maybe.Unit;
+            var none = Maybe.None;
 
             // Act & Assert
             Assert.Some("value", some.ReplaceWith("value"));

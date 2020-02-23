@@ -66,6 +66,7 @@ static Abc.Maybe.Invoke<TSource, TResult>(this Abc.Maybe<System.Func<TSource, TR
 static Abc.Maybe.None.get -> Abc.Maybe<Abc.Unit>
 static Abc.Maybe.Of<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.Of<T>(T? value) -> Abc.Maybe<T>
+static Abc.Maybe.Some<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.Squash<T>(this Abc.Maybe<T?> this) -> Abc.Maybe<T>
 static Abc.Maybe.ToNullable<T>(this Abc.Maybe<T> this) -> T?
 static Abc.Maybe.ToNullable<T>(this Abc.Maybe<T?> this) -> T?

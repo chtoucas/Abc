@@ -77,7 +77,7 @@ namespace Abc.Extensions
 #if MONADS_PURE
             IEnumerable<TSource> __impl()
             {
-                var seed = Maybe.Of(Enumerable.Empty<TSource>());
+                var seed = Maybe.Empty<TSource>();
 
                 return source.Aggregate(
                     seed,
@@ -114,7 +114,7 @@ namespace Abc.Extensions
 
             return __impl();
 
-            // TODO: optimiser (break the lopp early).
+            // TODO: optimiser (break the loop early).
             Maybe<TAccumulate> __impl()
             {
                 using var iter = source.GetEnumerator();
@@ -232,7 +232,7 @@ namespace Abc.Extensions
 #if MONADS_PURE
             IEnumerable<TSource> __impl()
             {
-                var seed = Maybe.Of(Enumerable.Empty<TSource>());
+                var seed = Maybe.Empty<TSource>();
 
                 return source.Aggregate(seed, (x, y) => x.ZipWith(y, Enumerable.Append))
                     .ValueOrEmpty();

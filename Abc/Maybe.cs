@@ -31,20 +31,23 @@ namespace Abc
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified value.
         /// </summary>
-        /// <param name="value">A value to be wrapped in an object of type
-        /// <see cref="Maybe{T}"/>.</param>
+        public static Maybe<T> Some<T>(T value) where T : struct
+            => new Maybe<T>(value);
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
+        /// specified nullable value.
+        /// </summary>
         public static Maybe<T> Of<T>([AllowNull]T value)
             => value is null ? Maybe<T>.None : new Maybe<T>(value);
 
         /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
-        /// specified value.
+        /// specified nullable value.
         /// </summary>
-        /// <param name="value">A value to be wrapped in an object of type
-        /// <see cref="Maybe{T}"/>.</param>
         public static Maybe<T> Of<T>(T? value) where T : struct
             // This method makes it impossible to create a Maybe<T?> **directly**.
-            => value.HasValue ? new Maybe<T>(value.Value) : Maybe<T>.None;
+            => value.HasValue ? Some(value.Value) : Maybe<T>.None;
 
         /// <summary>
         /// Removes one level of structure, projecting the bound value into the
@@ -79,12 +82,21 @@ namespace Abc
     // Extension methods when T is enumerable.
     public partial class Maybe
     {
+        internal static Maybe<IEnumerable<T>> Empty<T>()
+            => MaybeEnumerable_<T>.Empty;
+
         public static IEnumerable<T> ValueOrEmpty<T>(this Maybe<IEnumerable<T>> @this)
 #if MONADS_PURE
             => @this.ValueOrElse(Enumerable.Empty<T>());
 #else
             => @this.IsSome ? @this.Value : Enumerable.Empty<T>();
 #endif
+
+        private static class MaybeEnumerable_<T>
+        {
+            internal static readonly Maybe<IEnumerable<T>> Empty
+                = Of(Enumerable.Empty<T>());
+        }
     }
 
     // Extension methods when T is a struct.
@@ -95,9 +107,9 @@ namespace Abc
             // NB: When IsSome is true, Value.HasValue is also true, therefore
             // we can safely access Value.Value.
 #if MONADS_PURE
-            => @this.Bind(x => new Maybe<T>(x!.Value));
+            => @this.Bind(x => Some(x!.Value));
 #else
-            => @this.IsSome ? new Maybe<T>(@this.Value!.Value) : Maybe<T>.None;
+            => @this.IsSome ? Some(@this.Value!.Value) : Maybe<T>.None;
 #endif
 
         // Conversion from Maybe<T?> to T?.
