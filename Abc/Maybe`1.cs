@@ -309,7 +309,7 @@ namespace Abc
 #endif
         }
 
-        #region ZipWith()
+#region ZipWith()
 
         public Maybe<TResult> ZipWith<TOther, TResult>(
             Maybe<TOther> other, Func<T, TOther, TResult> zipper)
@@ -389,9 +389,9 @@ namespace Abc
 #endif
         }
 
-        #endregion
+#endregion
 
-        #region Query Expression Pattern
+#region Query Expression Pattern
 
         public Maybe<TResult> Select<TResult>(Func<T, TResult> selector)
         {
@@ -522,7 +522,7 @@ namespace Abc
         //    return Maybe<TResult>.None;
         //}
 
-        #endregion
+#endregion
     }
 
     // Interface IEquatable<>.

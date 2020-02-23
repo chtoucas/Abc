@@ -1,9 +1,10 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
+#pragma warning disable CA1801 // Review unused parameters
+
 namespace Abc
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
 
     // See https://en.wikipedia.org/wiki/Unit_type
 
@@ -27,37 +28,31 @@ namespace Abc
         /// <summary>
         /// Always returns true.
         /// </summary>
-        [SuppressMessage("Usage", "CA1801:Review unused parameters")]
         public static bool operator ==(Unit left, Unit right) => true;
 
         /// <summary>
         /// Always returns true.
         /// </summary>
-        [SuppressMessage("Usage", "CA1801:Review unused parameters")]
         public static bool operator ==(Unit left, ValueTuple right) => true;
 
         /// <summary>
         /// Always returns true.
         /// </summary>
-        [SuppressMessage("Usage", "CA1801:Review unused parameters")]
         public static bool operator ==(ValueTuple left, Unit right) => true;
 
         /// <summary>
         /// Always returns false.
         /// </summary>
-        [SuppressMessage("Usage", "CA1801:Review unused parameters")]
         public static bool operator !=(Unit left, Unit right) => false;
 
         /// <summary>
         /// Always returns false.
         /// </summary>
-        [SuppressMessage("Usage", "CA1801:Review unused parameters")]
         public static bool operator !=(Unit left, ValueTuple right) => false;
 
         /// <summary>
         /// Always returns false.
         /// </summary>
-        [SuppressMessage("Usage", "CA1801:Review unused parameters")]
         public static bool operator !=(ValueTuple left, Unit right) => false;
 
         /// <summary>
