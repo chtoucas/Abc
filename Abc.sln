@@ -5,22 +5,18 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc", "Abc\Abc.csproj", "{F0ABA4D7-5247-428D-B334-18B709597617}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{A103A23E-EDA8-485E-BBCB-07B8447D14B6}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "play", "play\play.fsproj", "{CD2DD134-444A-467F-83AD-5CA696691E64}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc.Tests", "Abc.Tests\Abc.Tests.csproj", "{97EEB1BB-E86D-4BA2-B9EA-FABF10631507}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4B926891-DAB0-4792-AB7B-E1A0C001843A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		Common.props = Common.props
-		qtest.cmd = qtest.cmd
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{BBE17D96-73CC-48B2-B07F-E6A2185B1D4F}"
-	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
+		qtest.cmd = qtest.cmd
 		README.md = README.md
 	EndProjectSection
-EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "play", "play\play.fsproj", "{CD2DD134-444A-467F-83AD-5CA696691E64}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abc.Tests", "Abc.Tests\Abc.Tests.csproj", "{97EEB1BB-E86D-4BA2-B9EA-FABF10631507}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
