@@ -230,8 +230,7 @@ namespace Abc
         /// </summary>
         /// <param name="other">A default value to be used if if there is no
         /// underlying value.</param>
-        [return: MaybeNull]
-        public T ValueOrElse(T other)
+        public T ValueOrElse([DisallowNull]T other)
             => IsSome ? Value : other;
 
         [return: MaybeNull]
