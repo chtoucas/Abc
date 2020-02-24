@@ -104,10 +104,10 @@ namespace Abc
     // Extension methods when T is enumerable.
     // Operations on IEnumerable<Maybe<T>>.
     // Filtering: CollectAny (deferred).
-    // Aggregation: FirstAny.
+    // Aggregation: Any.
     public partial class Maybe
     {
-        internal static Maybe<IEnumerable<T>> Empty<T>()
+        public static Maybe<IEnumerable<T>> Empty<T>()
             => MaybeEnumerable_<T>.Empty;
 
         public static IEnumerable<T> ValueOrEmpty<T>(this Maybe<IEnumerable<T>> @this)
@@ -140,7 +140,7 @@ namespace Abc
 #endif
         }
 
-        public static Maybe<T> FirstAny<T>(IEnumerable<Maybe<T>> source)
+        public static Maybe<T> Any<T>(IEnumerable<Maybe<T>> source)
         {
 #if MONADS_PURE
             return source.Aggregate(Maybe<T>.None, (m, n) => m.OrElse(n));

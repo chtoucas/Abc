@@ -16,9 +16,9 @@ namespace Abc.Extensions
     /// Provides extension methods for <see cref="NameValueCollection"/>
     /// and <see cref="IDictionary{T,U}"/>.
     /// </summary>
-    public static partial class MaybeC { }
+    public static partial class CollectionExtensions { }
 
-    public partial class MaybeC
+    public partial class CollectionExtensions
     {
         public static Maybe<TValue> MayGetValue<TKey, TValue>(
             this IDictionary<TKey, TValue> @this, TKey key)
@@ -31,7 +31,7 @@ namespace Abc.Extensions
         }
     }
 
-    public partial class MaybeC
+    public partial class CollectionExtensions
     {
         public static Maybe<string> MayGetSingle(this NameValueCollection @this, string name)
         {
