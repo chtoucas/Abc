@@ -108,7 +108,11 @@ namespace Abc
         /// Returns a string representation of the current instance.
         /// </summary>
         public override string ToString()
+#if MONADS_PURE
+            => Unwrap(x => $"Maybe({x})", "Maybe(None)");
+#else
             => _isSome ? $"Maybe({_value})" : "Maybe(None)";
+#endif
 
         #region Core monadic methods
 
@@ -149,27 +153,45 @@ namespace Abc
         }
     }
 
-    // "Pattern matching" to escape the monad.
+    // Escaping the monad.
     public partial struct Maybe<T>
     {
         // REVIEW: delayed throw?
 
         /// <summary>
         /// If the current instance encloses a value, it executes
-        /// <paramref name="some"/>, otherwise it executes
-        /// <paramref name="none"/>.
+        /// <paramref name="caseSome"/>, otherwise it executes
+        /// <paramref name="caseNone"/>.
         /// </summary>
-        public TResult Unwrap<TResult>(Func<T, TResult> some, Func<TResult> none)
+        public TResult Unwrap<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
         {
             if (_isSome)
             {
-                if (some is null) { throw new ArgumentNullException(nameof(some)); }
-                return some(_value);
+                if (caseSome is null) { throw new ArgumentNullException(nameof(caseSome)); }
+                return caseSome(_value);
             }
             else
             {
-                if (none is null) { throw new ArgumentNullException(nameof(none)); }
-                return none();
+                if (caseNone is null) { throw new ArgumentNullException(nameof(caseNone)); }
+                return caseNone();
+            }
+        }
+
+        /// <summary>
+        /// If the current instance encloses a value, it executes
+        /// <paramref name="caseSome"/>, otherwise it returns
+        /// <paramref name="caseNone"/>.
+        /// </summary>
+        public TResult Unwrap<TResult>(Func<T, TResult> caseSome, TResult caseNone)
+        {
+            if (_isSome)
+            {
+                if (caseSome is null) { throw new ArgumentNullException(nameof(caseSome)); }
+                return caseSome(_value);
+            }
+            else
+            {
+                return caseNone;
             }
         }
 
@@ -228,7 +250,7 @@ namespace Abc
         [return: MaybeNull]
         public T ValueOrDefault()
 #if MONADS_PURE
-            => Unwrap(Thunks<T>.Ident, () => default!);
+            => Unwrap(Thunks<T>.Ident, default(T)!);
 #else
             => _isSome ? _value : default;
 #endif
@@ -239,7 +261,7 @@ namespace Abc
         /// </summary>
         public T ValueOrElse([DisallowNull]T other)
 #if MONADS_PURE
-            => Unwrap(Thunks<T>.Ident, () => other);
+            => Unwrap(Thunks<T>.Ident, other);
 #else
             => _isSome ? _value : other;
 #endif
@@ -657,11 +679,15 @@ namespace Abc
 
         /// <inheritdoc />
         public override int GetHashCode()
+#if MONADS_PURE
+            => Unwrap(x => x!.GetHashCode(), 0);
+#else
             => _value?.GetHashCode() ?? 0;
+#endif
 
         public int GetHashCode(IEqualityComparer<T> comparer)
 #if MONADS_PURE
-            => Unwrap((comparer ?? s_DefaultComparer).GetHashCode, () => 0);
+            => Unwrap((comparer ?? s_DefaultComparer).GetHashCode, 0);
 #else
             => _isSome ? (comparer ?? s_DefaultComparer).GetHashCode(_value) : 0;
 #endif
