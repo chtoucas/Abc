@@ -13,7 +13,7 @@ namespace Abc
     using Abc.Utilities;
 #endif
 
-    // The symbol MONADS_PURE is not for production, it is for educational
+    // The symbol MONADS_PURE is not production-friendly, it is for educational
     // purposes only. Everything is defined using only the core monadic methods
     // Bind() and None; we could have used Select() and Flatten() instead of
     // Bind().
@@ -50,6 +50,9 @@ namespace Abc
     [SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix")]
     public readonly partial struct Maybe<T> : IEquatable<Maybe<T>>
     {
+        private static readonly IEqualityComparer<T> s_DefaultComparer
+            = EqualityComparer<T>.Default;
+
         private readonly bool _isSome;
 
         /// <summary>
@@ -146,7 +149,7 @@ namespace Abc
         }
     }
 
-    // Pattern matching to escape the monad.
+    // "Pattern matching" to escape the monad.
     public partial struct Maybe<T>
     {
         // REVIEW: delayed throw?
@@ -156,7 +159,7 @@ namespace Abc
         /// <paramref name="some"/>, otherwise it executes
         /// <paramref name="none"/>.
         /// </summary>
-        public TResult Match<TResult>(Func<T, TResult> some, Func<TResult> none)
+        public TResult Unwrap<TResult>(Func<T, TResult> some, Func<TResult> none)
         {
             if (_isSome)
             {
@@ -178,7 +181,7 @@ namespace Abc
         public void Do(Action<T> onSome, Action onNone)
         {
 #if MONADS_PURE
-            Match(__some, __none);
+            Unwrap(__some, __none);
 
             Unit __some(T x) { onSome(x); return Unit.Default; }
             Unit __none() { onNone(); return Unit.Default; }
@@ -225,7 +228,7 @@ namespace Abc
         [return: MaybeNull]
         public T ValueOrDefault()
 #if MONADS_PURE
-            => Match(Thunks<T>.Ident, () => default!);
+            => Unwrap(Thunks<T>.Ident, () => default!);
 #else
             => _isSome ? _value : default;
 #endif
@@ -236,7 +239,7 @@ namespace Abc
         /// </summary>
         public T ValueOrElse([DisallowNull]T other)
 #if MONADS_PURE
-            => Match(Thunks<T>.Ident, () => other);
+            => Unwrap(Thunks<T>.Ident, () => other);
 #else
             => _isSome ? _value : other;
 #endif
@@ -244,9 +247,9 @@ namespace Abc
         public T ValueOrElse(Func<T> valueFactory)
         {
 #if MONADS_PURE
-            return Match(Thunks<T>.Ident, __caseNone);
+            return Unwrap(Thunks<T>.Ident, __none);
 
-            T __caseNone()
+            T __none()
             {
                 if (valueFactory is null) { throw new ArgumentNullException(nameof(valueFactory)); }
                 return valueFactory();
@@ -266,7 +269,7 @@ namespace Abc
 
         public T ValueOrThrow()
 #if MONADS_PURE
-            => Match(Thunks<T>.Ident, () => throw new InvalidOperationException());
+            => Unwrap(Thunks<T>.Ident, () => throw new InvalidOperationException());
 #else
             => _isSome ? _value : throw new InvalidOperationException();
 #endif
@@ -274,7 +277,7 @@ namespace Abc
         public T ValueOrThrow(Func<Exception> exceptionFactory)
         {
 #if MONADS_PURE
-            return Match(Thunks<T>.Ident, __caseNone);
+            return Unwrap(Thunks<T>.Ident, __caseNone);
 
             T __caseNone()
             {
@@ -296,16 +299,16 @@ namespace Abc
 
         public bool Contains(T value)
 #if MONADS_PURE
-            => Match(x => EqualityComparer<T>.Default.Equals(x, value), Predicates.False);
+            => Unwrap(x => s_DefaultComparer.Equals(x, value), Predicates.False);
 #else
-            => _isSome && EqualityComparer<T>.Default.Equals(_value, value);
+            => _isSome && s_DefaultComparer.Equals(_value, value);
 #endif
 
         public bool Contains(T value, IEqualityComparer<T> comparer)
 #if MONADS_PURE
-            => Match(x => (comparer ?? EqualityComparer<T>.Default).Equals(x, value), Predicates.False);
+            => Unwrap(x => (comparer ?? s_DefaultComparer).Equals(x, value), Predicates.False);
 #else
-            => _isSome && (comparer ?? EqualityComparer<T>.Default).Equals(_value, value);
+            => _isSome && (comparer ?? s_DefaultComparer).Equals(_value, value);
 #endif
 
         #endregion
@@ -314,7 +317,9 @@ namespace Abc
     // Kind of IEnumerable<>.
     public partial struct Maybe<T>
     {
-        // REVIEW: IEnumerable<T> or not? Test LINQ before.
+        // REVIEW: IEnumerable<T> or not? Test LINQ before (conflicts?).
+        // Also, Maybe<> is a struct and I am worry with hidden casts if this
+        // type implements IEnumerable<>.
 
         public IEnumerable<T> ToEnumerable()
         {
@@ -635,14 +640,12 @@ namespace Abc
         /// </summary>
         public bool Equals(Maybe<T> other)
             => _isSome
-              ? other._isSome
-                  && EqualityComparer<T>.Default.Equals(_value, other._value)
+              ? other._isSome && s_DefaultComparer.Equals(_value, other._value)
               : !other._isSome;
 
         public bool Equals(Maybe<T> other, IEqualityComparer<T> comparer)
             => _isSome
-                ? other._isSome
-                    && (comparer ?? EqualityComparer<T>.Default).Equals(_value, other._value)
+                ? other._isSome && (comparer ?? s_DefaultComparer).Equals(_value, other._value)
                 : !other._isSome;
 
         /// <inheritdoc />
@@ -653,11 +656,14 @@ namespace Abc
             => other is Maybe<T> maybe && Equals(maybe, comparer);
 
         /// <inheritdoc />
-        public override int GetHashCode() => _value?.GetHashCode() ?? 0;
+        public override int GetHashCode()
+            => _value?.GetHashCode() ?? 0;
 
         public int GetHashCode(IEqualityComparer<T> comparer)
-            => _isSome
-                ? (comparer ?? EqualityComparer<T>.Default).GetHashCode(_value)
-                : 0;
+#if MONADS_PURE
+            => Unwrap((comparer ?? s_DefaultComparer).GetHashCode, () => 0);
+#else
+            => _isSome ? (comparer ?? s_DefaultComparer).GetHashCode(_value) : 0;
+#endif
     }
 }
