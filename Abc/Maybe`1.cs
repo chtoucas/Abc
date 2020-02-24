@@ -30,7 +30,6 @@ namespace Abc
     // Maybe<T> where T : notnull ??? <- only works if nullable is enabled.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
-    // IEquatable<T>?
 
     // TODO: voir les derniers ajouts dans
     // http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
@@ -318,20 +317,6 @@ namespace Abc
             }
 #endif
         }
-
-        public bool Contains(T value)
-#if MONADS_PURE
-            => Unwrap(x => s_DefaultComparer.Equals(x, value), Predicates.False);
-#else
-            => _isSome && s_DefaultComparer.Equals(_value, value);
-#endif
-
-        public bool Contains(T value, IEqualityComparer<T> comparer)
-#if MONADS_PURE
-            => Unwrap(x => (comparer ?? s_DefaultComparer).Equals(x, value), Predicates.False);
-#else
-            => _isSome && (comparer ?? s_DefaultComparer).Equals(_value, value);
-#endif
 
         #endregion
     }
@@ -656,19 +641,55 @@ namespace Abc
         public static bool operator !=(Maybe<T> left, Maybe<T> right)
             => !left.Equals(right);
 
+        public static bool operator ==(Maybe<T> left, T right)
+            => left.Contains(right);
+
+        public static bool operator ==(T left, Maybe<T> right)
+            => right.Contains(left);
+
+        public static bool operator !=(Maybe<T> left, T right)
+            => !left.Contains(right);
+
+        public static bool operator !=(T left, Maybe<T> right)
+            => !right.Contains(left);
+
         /// <summary>
         /// Determines whether this instance is equal to the value of the
         /// specified <see cref="Maybe{T}"/>.
         /// </summary>
         public bool Equals(Maybe<T> other)
+#if MONADS_PURE
+            => Unwrap(x => other.Contains(x), !other._isSome);
+#else
             => _isSome
               ? other._isSome && s_DefaultComparer.Equals(_value, other._value)
               : !other._isSome;
+#endif
 
         public bool Equals(Maybe<T> other, IEqualityComparer<T> comparer)
+#if MONADS_PURE
+            => Unwrap(x => other.Contains(x, comparer), !other._isSome);
+#else
             => _isSome
                 ? other._isSome && (comparer ?? s_DefaultComparer).Equals(_value, other._value)
                 : !other._isSome;
+#endif
+
+        // REVIEW: IEquatable<T>?
+
+        public bool Contains(T value)
+#if MONADS_PURE
+            => Unwrap(x => s_DefaultComparer.Equals(x, value), Predicates.False);
+#else
+            => _isSome && s_DefaultComparer.Equals(_value, value);
+#endif
+
+        public bool Contains(T value, IEqualityComparer<T> comparer)
+#if MONADS_PURE
+            => Unwrap(x => (comparer ?? s_DefaultComparer).Equals(x, value), Predicates.False);
+#else
+            => _isSome && (comparer ?? s_DefaultComparer).Equals(_value, value);
+#endif
 
         /// <inheritdoc />
         public override bool Equals(object obj)
