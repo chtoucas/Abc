@@ -6,6 +6,10 @@ namespace Abc.Extensions
     using System.Collections.Generic;
     using System.Collections.Specialized;
 
+#if MONADS_PURE
+    using Abc.Linq;
+#endif
+
     // REVIEW: MayGetValues, Maybe<IEnumerable>?
 
     /// <summary>
@@ -47,15 +51,17 @@ namespace Abc.Extensions
         public static IEnumerable<T> ParseValues<T>(
             this NameValueCollection @this, string name, Func<string, Maybe<T>> parser)
         {
-            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
 
 #if MONADS_PURE
             var q = from values in @this.MayGetValues(name) select values.SelectAny(parser);
             return q.ValueOrEmpty();
 #else
-            return __impl();
+            // Check args eagerly.
+            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
 
-            IEnumerable<T> __impl()
+            return __iterator();
+
+            IEnumerable<T> __iterator()
             {
                 foreach (string item in @this.GetValues(name))
                 {

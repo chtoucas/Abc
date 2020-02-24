@@ -64,79 +64,6 @@ namespace Abc
             => predicate ? Unit : None;
     }
 
-    // Operations on IEnumerable<Maybe<T>>.
-    // Filtering: CollectAny (deferred).
-    // Aggregation: SumAny.
-    public partial class Maybe
-    {
-        // Maybe<IEnumerable<TSource>>?
-        public static IEnumerable<TSource> CollectAny<TSource>(
-            IEnumerable<Maybe<TSource>> source)
-        {
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
-
-            return __iterator();
-
-#if MONADS_PURE
-            IEnumerable<TSource> __iterator()
-            {
-                var seed = Maybe.Empty<TSource>();
-
-                return source.Aggregate(seed, (x, y) => x.ZipWith(y, Enumerable.Append))
-                    .ValueOrEmpty();
-            }
-#else
-            IEnumerable<TSource> __iterator()
-            {
-                foreach (var item in source)
-                {
-                    if (item.IsSome) { yield return item.Value; }
-                }
-            }
-#endif
-        }
-
-        public static Maybe<TSource> SumAny<TSource>(IEnumerable<Maybe<TSource>> source)
-        {
-            return source.Aggregate(Maybe<TSource>.None, (m, n) => m.OrElse(n));
-        }
-    }
-
-    // Extension methods when T is a func.
-    public partial class Maybe
-    {
-        public static Maybe<TResult> Invoke<TSource, TResult>(
-            this Maybe<Func<TSource, TResult>> @this, Maybe<TSource> value)
-        {
-#if MONADS_PURE
-            return @this.Bind(x => value.Select(x));
-#else
-            return value.IsSome && @this.IsSome ? Of(@this.Value(value.Value))
-                : Maybe<TResult>.None;
-#endif
-        }
-    }
-
-    // Extension methods when T is enumerable.
-    public partial class Maybe
-    {
-        internal static Maybe<IEnumerable<T>> Empty<T>()
-            => MaybeEnumerable_<T>.Empty;
-
-        public static IEnumerable<T> ValueOrEmpty<T>(this Maybe<IEnumerable<T>> @this)
-#if MONADS_PURE
-            => @this.ValueOrElse(Enumerable.Empty<T>());
-#else
-            => @this.IsSome ? @this.Value : Enumerable.Empty<T>();
-#endif
-
-        private static class MaybeEnumerable_<T>
-        {
-            internal static readonly Maybe<IEnumerable<T>> Empty
-                = Of(Enumerable.Empty<T>());
-        }
-    }
-
     // Extension methods when T is a struct.
     public partial class Maybe
     {
@@ -172,6 +99,83 @@ namespace Abc
 #else
             => @this.IsSome ? @this.Value : (T?)null;
 #endif
+    }
+
+    // Extension methods when T is enumerable.
+    // Operations on IEnumerable<Maybe<T>>.
+    // Filtering: CollectAny (deferred).
+    // Aggregation: FirstAny.
+    public partial class Maybe
+    {
+        internal static Maybe<IEnumerable<T>> Empty<T>()
+            => MaybeEnumerable_<T>.Empty;
+
+        public static IEnumerable<T> ValueOrEmpty<T>(this Maybe<IEnumerable<T>> @this)
+#if MONADS_PURE
+            => @this.ValueOrElse(Enumerable.Empty<T>());
+#else
+            => @this.IsSome ? @this.Value : Enumerable.Empty<T>();
+#endif
+
+        // Maybe<IEnumerable<T>>?
+        public static IEnumerable<T> CollectAny<T>(IEnumerable<Maybe<T>> source)
+        {
+#if MONADS_PURE
+            var seed = MaybeEnumerable_<T>.Empty;
+            var seq = source.Aggregate(seed, (x, y) => x.ZipWith(y, Enumerable.Append));
+            return seq.ValueOrEmpty();
+#else
+            // Check args eagerly.
+            if (source is null) { throw new ArgumentNullException(nameof(source)); }
+
+            return __iterator();
+
+            IEnumerable<T> __iterator()
+            {
+                foreach (var item in source)
+                {
+                    if (item.IsSome) { yield return item.Value; }
+                }
+            }
+#endif
+        }
+
+        public static Maybe<T> FirstAny<T>(IEnumerable<Maybe<T>> source)
+        {
+#if MONADS_PURE
+            return source.Aggregate(Maybe<T>.None, (m, n) => m.OrElse(n));
+#else
+            if (source is null) { throw new ArgumentNullException(nameof(source)); }
+
+            foreach (var item in source)
+            {
+                if (item.IsSome) { return item; }
+            }
+
+            return Maybe<T>.None;
+#endif
+        }
+
+        private static class MaybeEnumerable_<T>
+        {
+            internal static readonly Maybe<IEnumerable<T>> Empty
+                = Of(Enumerable.Empty<T>());
+        }
+    }
+
+    // Extension methods when T is a func.
+    public partial class Maybe
+    {
+        public static Maybe<TResult> Invoke<TSource, TResult>(
+            this Maybe<Func<TSource, TResult>> @this, Maybe<TSource> value)
+        {
+#if MONADS_PURE
+            return @this.Bind(x => value.Select(x));
+#else
+            return value.IsSome && @this.IsSome ? Of(@this.Value(value.Value))
+                : Maybe<TResult>.None;
+#endif
+        }
     }
 
     // Extension methods when T is disposable.

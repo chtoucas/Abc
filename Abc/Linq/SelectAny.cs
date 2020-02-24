@@ -4,6 +4,9 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+#if MONADS_PURE
+    using System.Linq;
+#endif
 
     // Projection: SelectAny (deferred).
     public static partial class Qperators
@@ -11,17 +14,15 @@ namespace Abc.Linq
         public static IEnumerable<TResult> SelectAny<TSource, TResult>(
             this IEnumerable<TSource> source, Func<TSource, Maybe<TResult>> selector)
         {
+#if MONADS_PURE
+            return Maybe.CollectAny(source.Select(selector));
+#else
+            // Check args eagerly.
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
             if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
 
             return __iterator();
 
-#if MONADS_PURE
-            IEnumerable<TResult> __iterator()
-            {
-                return CollectAny(source.Select(selector));
-            }
-#else
             IEnumerable<TResult> __iterator()
             {
                 foreach (var item in source)

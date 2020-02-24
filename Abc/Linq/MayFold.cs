@@ -16,20 +16,15 @@ namespace Abc.Linq
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
             if (accumulator is null) { throw new ArgumentNullException(nameof(accumulator)); }
 
-            return __impl();
-
             // TODO: optimiser (break the loop early).
-            Maybe<TAccumulate> __impl()
-            {
-                using var iter = source.GetEnumerator();
+            using var iter = source.GetEnumerator();
 
-                var r = Maybe.Of(seed);
-                while (iter.MoveNext())
-                {
-                    r = r.Bind(x => accumulator(x, iter.Current));
-                }
-                return r;
+            var r = Maybe.Of(seed);
+            while (iter.MoveNext())
+            {
+                r = r.Bind(x => accumulator(x, iter.Current));
             }
+            return r;
         }
 
         public static Maybe<TAccumulate> MayFold<TSource, TAccumulate>(
@@ -42,19 +37,14 @@ namespace Abc.Linq
             if (accumulator is null) { throw new ArgumentNullException(nameof(accumulator)); }
             if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
 
-            return __impl();
+            using var iter = source.GetEnumerator();
 
-            Maybe<TAccumulate> __impl()
+            var r = Maybe.Of(seed);
+            while (predicate(r) && iter.MoveNext())
             {
-                using var iter = source.GetEnumerator();
-
-                var r = Maybe.Of(seed);
-                while (predicate(r) && iter.MoveNext())
-                {
-                    r = r.Bind(x => accumulator(x, iter.Current));
-                }
-                return r;
+                r = r.Bind(x => accumulator(x, iter.Current));
             }
+            return r;
         }
     }
 }

@@ -4,6 +4,9 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+#if MONADS_PURE
+    using System.Linq;
+#endif
 
     // Filtering: WhereAny (deferred).
     public static partial class Qperators
@@ -12,25 +15,20 @@ namespace Abc.Linq
         public static IEnumerable<TSource> WhereAny<TSource>(
             this IEnumerable<TSource> source, Func<TSource, Maybe<bool>> predicate)
         {
+#if MONADS_PURE
+            var seed = Maybe.Empty<TSource>();
+            var seq = source.Aggregate(seed, (x, y) => predicate(y).ZipWith(x, __zipper(y)));
+            return seq.ValueOrEmpty();
+
+            Func<bool, IEnumerable<TSource>, IEnumerable<TSource>> __zipper(TSource item)
+                => (b, seq) => b ? seq.Append(item) : seq;
+#else
+            // Check args eagerly.
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
             if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
 
             return __iterator();
 
-#if MONADS_PURE
-            IEnumerable<TSource> __iterator()
-            {
-                var seed = Maybe.Empty<TSource>();
-
-                return source.Aggregate(
-                    seed,
-                    (x, y) => predicate(y).ZipWith(x, __zipper(y)))
-                    .ValueOrEmpty();
-            }
-
-            Func<bool, IEnumerable<TSource>, IEnumerable<TSource>> __zipper(TSource item)
-                => (b, seq) => b ? seq.Append(item) : seq;
-#else
             IEnumerable<TSource> __iterator()
             {
                 foreach (var item in source)

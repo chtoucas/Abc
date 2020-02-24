@@ -24,10 +24,9 @@ namespace Abc.Linq
             }
 
             // Slow track.
-            using (var iter = source.GetEnumerator())
-            {
-                return iter.MoveNext() ? Maybe.Of(iter.Current) : Maybe<TSource>.None;
-            }
+            using var iter = source.GetEnumerator();
+
+            return iter.MoveNext() ? Maybe.Of(iter.Current) : Maybe<TSource>.None;
         }
 
         /// <summary>

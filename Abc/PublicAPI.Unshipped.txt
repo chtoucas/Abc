@@ -68,7 +68,8 @@ static Abc.Linq.Qperators.SingleOrNone<TSource>(this System.Collections.Generic.
 static Abc.Linq.Qperators.SingleOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.WhereAny<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Maybe<bool>> predicate) -> System.Collections.Generic.IEnumerable<TSource>
 static Abc.Linq.Qperators.ZipAny<T1, T2, TResult>(this System.Collections.Generic.IEnumerable<T1> first, System.Collections.Generic.IEnumerable<T2> second, System.Func<T1, T2, Abc.Maybe<TResult>> resultSelector) -> System.Collections.Generic.IEnumerable<TResult>
-static Abc.Maybe.CollectAny<TSource>(System.Collections.Generic.IEnumerable<Abc.Maybe<TSource>> source) -> System.Collections.Generic.IEnumerable<TSource>
+static Abc.Maybe.CollectAny<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> System.Collections.Generic.IEnumerable<T>
+static Abc.Maybe.FirstAny<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> Abc.Maybe<T>
 static Abc.Maybe.Flatten<T>(this Abc.Maybe<Abc.Maybe<T>> this) -> Abc.Maybe<T>
 static Abc.Maybe.Guard(bool predicate) -> Abc.Maybe<Abc.Unit>
 static Abc.Maybe.Invoke<TSource, TResult>(this Abc.Maybe<System.Func<TSource, TResult>> this, Abc.Maybe<TSource> value) -> Abc.Maybe<TResult>
@@ -76,7 +77,6 @@ static Abc.Maybe.Of<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.Of<T>(T? value) -> Abc.Maybe<T>
 static Abc.Maybe.Some<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.Squash<T>(this Abc.Maybe<T?> this) -> Abc.Maybe<T>
-static Abc.Maybe.SumAny<TSource>(System.Collections.Generic.IEnumerable<Abc.Maybe<TSource>> source) -> Abc.Maybe<TSource>
 static Abc.Maybe.ToNullable<T>(this Abc.Maybe<T> this) -> T?
 static Abc.Maybe.ToNullable<T>(this Abc.Maybe<T?> this) -> T?
 static Abc.Maybe.ValueOrEmpty<T>(this Abc.Maybe<System.Collections.Generic.IEnumerable<T>> this) -> System.Collections.Generic.IEnumerable<T>
