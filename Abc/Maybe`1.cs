@@ -18,6 +18,7 @@ namespace Abc
     // Maybe<T> where T : notnull ??? <- only works if nullable is enabled.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
+    // IEquatable<T>?
 
     // TODO: voir les derniers ajouts dans
     // http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
@@ -35,6 +36,8 @@ namespace Abc
     [SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix")]
     public readonly partial struct Maybe<T> : IEquatable<Maybe<T>>, IEnumerable<T>
     {
+        // We use an explicit backing-field to be able to quickly check that,
+        // with MONADS_PURE, IsSome is only used by AssertEx in Abc.Testing.
         private readonly bool _isSome;
 
         /// <summary>
@@ -331,15 +334,7 @@ namespace Abc
     // Interface IEnumerable<>.
     public partial struct Maybe<T>
     {
-        // REVIEW: IEnumerable<T>???
-
-        //public IEnumerable<T> ToEnumerable()
-        //{
-        //    if (_isSome)
-        //    {
-        //        yield return Value;
-        //    }
-        //}
+        // REVIEW: IEnumerable<T> or not?
 
         public IEnumerator<T> GetEnumerator()
         {
