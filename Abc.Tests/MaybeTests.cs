@@ -167,7 +167,7 @@ namespace Abc
             var q = from i in none1
                     from j in none2
                     select resultSelector(i, j);
-            Assert.None(qNone);
+            Assert.None(q);
         }
 
         [Fact]
