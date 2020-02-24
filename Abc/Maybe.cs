@@ -7,6 +7,10 @@ namespace Abc
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
+#if MONADS_PURE
+    using Abc.Utilities;
+#endif
+
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
     /// </summary>
@@ -55,7 +59,7 @@ namespace Abc
         /// </summary>
         public static Maybe<T> Flatten<T>(this Maybe<Maybe<T>> @this)
 #if MONADS_PURE
-            => Maybe<T>.μ(@this);
+            => @this.Bind(Stubs<Maybe<T>>.Ident);
 #else
             => @this.IsSome ? @this.Value : Maybe<T>.None;
 #endif

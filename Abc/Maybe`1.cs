@@ -3,7 +3,6 @@
 namespace Abc
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -15,7 +14,9 @@ namespace Abc
 #endif
 
     // The symbol MONADS_PURE is not for production, it is for educational
-    // purposes only: everything is defined using only the core monadic methods.
+    // purposes only. Everything is defined using only the core monadic methods
+    // Bind() and None; we could have used Select() and Flatten() instead of
+    // Bind().
     //
     // Maybe<T> is a Monad:
     // - Maybe.Of()      <-- Maybe<T>.η() or simply the ctor
@@ -98,7 +99,7 @@ namespace Abc
         [ExcludeFromCodeCoverage]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        private string DebuggerDisplay => $"IsSome = {IsSome}";
+        private string DebuggerDisplay => $"IsSome = {_isSome}";
 
         /// <summary>
         /// Returns a string representation of the current instance.
@@ -122,14 +123,6 @@ namespace Abc
 
             return _isSome ? binder(_value) : Maybe<TResult>.None;
         }
-
-#if MONADS_PURE
-
-        [DebuggerHidden]
-        internal static Maybe<T> μ(Maybe<Maybe<T>> square)
-            => square._isSome ? square._value : None;
-
-#endif
 
         public Maybe<T> OrElse(Maybe<T> other)
             => _isSome ? this : other;
