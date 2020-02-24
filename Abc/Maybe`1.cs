@@ -175,13 +175,13 @@ namespace Abc
         /// <paramref name="onSome"/>, otherwise it executes
         /// <paramref name="onNone"/>.
         /// </summary>
-        public void Match(Action<T> onSome, Action onNone)
+        public void Do(Action<T> onSome, Action onNone)
         {
 #if MONADS_PURE
-            Match(__caseSome, __caseNone);
+            Match(__some, __none);
 
-            Unit __caseSome(T x) { onSome(x); return Unit.Default; }
-            Unit __caseNone() { onNone(); return Unit.Default; }
+            Unit __some(T x) { onSome(x); return Unit.Default; }
+            Unit __none() { onNone(); return Unit.Default; }
 #else
             if (_isSome)
             {
@@ -196,6 +196,9 @@ namespace Abc
 #endif
         }
 
+        // We do not provide OnNone(action), it is much simpler to write
+        //   if (maybe.IsNone) { action(); }
+
         /// <summary>
         /// If the current instance encloses a value, it executes
         /// <paramref name="action"/>.
@@ -203,29 +206,12 @@ namespace Abc
         public void OnSome(Action<T> action)
         {
 #if MONADS_PURE
-            Match(action, Stubs.Noop);
+            Do(action, Thunks.Noop);
 #else
             if (_isSome)
             {
                 if (action is null) { throw new ArgumentNullException(nameof(action)); }
                 action(_value);
-            }
-#endif
-        }
-
-        /// <summary>
-        /// If the current instance does NOT enclose a value, it executes
-        /// <paramref name="action"/>.
-        /// </summary>
-        public void OnNone(Action action)
-        {
-#if MONADS_PURE
-            Match(Stubs<T>.Ignore, action);
-#else
-            if (!_isSome)
-            {
-                if (action is null) { throw new ArgumentNullException(nameof(action)); }
-                action();
             }
 #endif
         }
@@ -239,7 +225,7 @@ namespace Abc
         [return: MaybeNull]
         public T ValueOrDefault()
 #if MONADS_PURE
-            => Match(Stubs<T>.Ident, Stubs<T>.ReturnsDefault);
+            => Match(Thunks<T>.Ident, () => default!);
 #else
             => _isSome ? _value : default;
 #endif
@@ -250,7 +236,7 @@ namespace Abc
         /// </summary>
         public T ValueOrElse([DisallowNull]T other)
 #if MONADS_PURE
-            => Match(Stubs<T>.Ident, () => other);
+            => Match(Thunks<T>.Ident, () => other);
 #else
             => _isSome ? _value : other;
 #endif
@@ -258,7 +244,7 @@ namespace Abc
         public T ValueOrElse(Func<T> valueFactory)
         {
 #if MONADS_PURE
-            return Match(Stubs<T>.Ident, __caseNone);
+            return Match(Thunks<T>.Ident, __caseNone);
 
             T __caseNone()
             {
@@ -280,7 +266,7 @@ namespace Abc
 
         public T ValueOrThrow()
 #if MONADS_PURE
-            => Match(Stubs<T>.Ident, () => throw new InvalidOperationException());
+            => Match(Thunks<T>.Ident, () => throw new InvalidOperationException());
 #else
             => _isSome ? _value : throw new InvalidOperationException();
 #endif
@@ -288,7 +274,7 @@ namespace Abc
         public T ValueOrThrow(Func<Exception> exceptionFactory)
         {
 #if MONADS_PURE
-            return Match(Stubs<T>.Ident, __caseNone);
+            return Match(Thunks<T>.Ident, __caseNone);
 
             T __caseNone()
             {

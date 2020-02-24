@@ -4,7 +4,7 @@ namespace Abc.Utilities
 {
     using System;
 
-    internal static class Stubs
+    internal static class Thunks
     {
         /// <summary>
         /// Represents the action that does nothing.
@@ -13,14 +13,8 @@ namespace Abc.Utilities
         public static readonly Action Noop = () => { };
     }
 
-    internal static class Stubs<T>
+    internal static class Thunks<T>
     {
-        /// <summary>
-        /// Represents the function that always returns the default value.
-        /// <para>This field is read-only.</para>
-        /// </summary>
-        public static readonly Func<T> ReturnsDefault = () => default!;
-
         /// <summary>
         /// Represents the identity map.
         /// <para>This field is read-only.</para>
@@ -32,14 +26,5 @@ namespace Abc.Utilities
         /// <para>This field is read-only.</para>
         /// </summary>
         public static readonly Action<T> Ignore = _ => { };
-    }
-
-    internal static class Stubs<TSource, TResult>
-    {
-        /// <summary>
-        /// Represents the function that always evaluates to the default value.
-        /// <para>This field is read-only.</para>
-        /// </summary>
-        public static readonly Func<TSource, TResult> ReturnsDefault = _ => default!;
     }
 }

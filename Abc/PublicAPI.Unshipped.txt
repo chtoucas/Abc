@@ -8,6 +8,7 @@ Abc.Maybe<T>.BindAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<Abc.M
 Abc.Maybe<T>.Contains(T value) -> bool
 Abc.Maybe<T>.Contains(T value, System.Collections.Generic.IEqualityComparer<T> comparer) -> bool
 Abc.Maybe<T>.ContinueWith<TResult>(Abc.Maybe<TResult> other) -> Abc.Maybe<TResult>
+Abc.Maybe<T>.Do(System.Action<T> onSome, System.Action onNone) -> void
 Abc.Maybe<T>.Equals(Abc.Maybe<T> other) -> bool
 Abc.Maybe<T>.Equals(Abc.Maybe<T> other, System.Collections.Generic.IEqualityComparer<T> comparer) -> bool
 Abc.Maybe<T>.Equals(object other, System.Collections.Generic.IEqualityComparer<T> comparer) -> bool
@@ -16,9 +17,7 @@ Abc.Maybe<T>.GetHashCode(System.Collections.Generic.IEqualityComparer<T> compare
 Abc.Maybe<T>.IsNone.get -> bool
 Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> Abc.Maybe<TResult>
-Abc.Maybe<T>.Match(System.Action<T> onSome, System.Action onNone) -> void
 Abc.Maybe<T>.Match<TResult>(System.Func<T, TResult> some, System.Func<TResult> none) -> TResult
-Abc.Maybe<T>.OnNone(System.Action action) -> void
 Abc.Maybe<T>.OnSome(System.Action<T> action) -> void
 Abc.Maybe<T>.OrElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.PassThru<TOther>(Abc.Maybe<TOther> other) -> Abc.Maybe<T>

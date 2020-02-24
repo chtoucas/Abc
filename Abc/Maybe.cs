@@ -59,7 +59,7 @@ namespace Abc
         /// </summary>
         public static Maybe<T> Flatten<T>(this Maybe<Maybe<T>> @this)
 #if MONADS_PURE
-            => @this.Bind(Stubs<Maybe<T>>.Ident);
+            => @this.Bind(Thunks<Maybe<T>>.Ident);
 #else
             => @this.IsSome ? @this.Value : Maybe<T>.None;
 #endif
