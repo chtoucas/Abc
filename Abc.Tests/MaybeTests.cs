@@ -145,12 +145,12 @@ namespace Abc
             Func<int, int, int> resultSelector = (i, j) => i + j;
 
             var m1 = none.SelectMany(valueSelector, resultSelector);
-            Assert.True(m1.IsNone);
+            Assert.None(m1);
 
             var q = from i in none
                     from j in some
                     select resultSelector(i, j);
-            Assert.True(q.IsNone);
+            Assert.None(q);
         }
 
         [Fact]
@@ -162,12 +162,12 @@ namespace Abc
             Func<int, int, int> resultSelector = (i, j) => i + j;
 
             var m1 = none1.SelectMany(valueSelector, resultSelector);
-            Assert.True(m1.IsNone);
+            Assert.None(m1);
 
             var q = from i in none1
                     from j in none2
                     select resultSelector(i, j);
-            Assert.True(q.IsNone);
+            Assert.None(qNone);
         }
 
         [Fact]
@@ -179,12 +179,12 @@ namespace Abc
             Func<int, int, int> resultSelector = (i, j) => i + j;
 
             var m1 = some.SelectMany(valueSelector, resultSelector);
-            Assert.True(m1.IsNone);
+            Assert.None(m1);
 
             var q = from i in some
                     from j in none
                     select resultSelector(i, j);
-            Assert.True(q.IsNone);
+            Assert.None(q);
         }
 
         [Fact]
@@ -194,12 +194,12 @@ namespace Abc
             var some2 = Maybe.Of(2);
 
             var m1 = some1.Join(some2, i => i, i => i, (i, j) => i + j);
-            Assert.True(m1.IsNone);
+            Assert.None(m1);
 
             var q = from i in some1
                     join j in some2 on i equals j
                     select i + j;
-            Assert.True(q.IsNone);
+            Assert.None(q);
         }
     }
 
