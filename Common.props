@@ -29,25 +29,30 @@
     -->
     <NoWarn Condition="'$(Configuration)' == 'Debug'">$(NoWarn);RS0016;RS0017</NoWarn>
 
-    <!-- Analyzers by Microsoft. -->
+    <!-- Analyzers by Microsoft -->
     <Features>$(Features);flow-analysis</Features>
 
-    <!-- Disable warnings when using a preview version of .NET Core. -->
+    <!-- Disable warnings when using a preview version of .NET Core -->
     <SuppressNETCoreSdkPreviewMessage Condition="'$(_NETCoreSdkIsPreview)' == 'true'">true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 
-  <!-- DEBUG: checked arithmetic. -->
+  <!-- DEBUG: checked arithmetic -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <DefineConstants>TRACE;DEBUG;CONTRACTS_FULL</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
-  <!-- RELEASE: UNCHECKED arithmetic. -->
+  <!-- RELEASE: UNCHECKED arithmetic -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DefineConstants>TRACE;CONTRACTS_FULL</DefineConstants>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <!-- Optional symbols -->
+  <PropertyGroup>
+    <!--<DefineConstants>$(DefineConstants);MONADS_PURE</DefineConstants>-->
   </PropertyGroup>
 
 </Project>

@@ -5,7 +5,6 @@ namespace Abc
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
@@ -13,6 +12,17 @@ namespace Abc
 #if MONADS_PURE
     using Abc.Utilities;
 #endif
+
+    // The symbol MONADS_PURE is not for production, it is for educational
+    // purposes only: everything is defined using only the core monadic methods.
+    //
+    // Maybe<T> is a Monad:
+    // - Maybe.Of()      <-- Maybe<T>.η() or simply the ctor
+    // - Maybe.Flatten() <-- Maybe<T>.μ()
+    // - Maybe<T>.Bind()
+    // Maybe<T> is a MonadOr:
+    // - Maybe<T>.None
+    // - Maybe<T>.OrElse()
 
     // REVIEW: disposable exts, async exts, nullable attrs, notnull constraints.
     // Maybe<T> where T : notnull ??? <- only works if nullable is enabled.
@@ -24,6 +34,8 @@ namespace Abc
     // http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
     // https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.13.0.0/Control-Monad.html
     // https://www.haskell.org/onlinereport/monad.html
+    // Si je me rappelle bien, à l'époque je ne m'étais intéressé qu'à la version
+    // Haskell 98.
 
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
@@ -36,8 +48,6 @@ namespace Abc
     [SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix")]
     public readonly partial struct Maybe<T> : IEquatable<Maybe<T>>, IEnumerable<T>
     {
-        // We use an explicit backing-field to be able to quickly check that,
-        // with MONADS_PURE, IsSome is only used by AssertEx in Abc.Testing.
         private readonly bool _isSome;
 
         /// <summary>
@@ -60,48 +70,37 @@ namespace Abc
         }
 
         /// <summary>
-        /// Checks whether the object does hold a value or not.
+        /// Checks whether the current instance is "none" or not.
+        /// </summary>
+        public bool IsNone => !_isSome;
+
+#if !MONADS_PURE
+
+        /// <summary>
+        /// Checks whether the current instance does hold a value or not.
         /// </summary>
         /// <remarks>
         /// Most of the time, we don't need to access this property. We are
         /// better off using the rich API that this struct has to offer.
         /// </remarks>
-        [EditorBrowsable(EditorBrowsableState.Never)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#if MONADS_PURE
-        [InternalForTesting]
-#endif
         internal bool IsSome => _isSome;
 
         /// <summary>
         /// Gets the enclosed value.
         /// </summary>
-        /// <remarks>
-        /// Any access to this property MUST be protected by checking before that
-        /// <see cref="_isSome"/> is true.
-        /// </remarks>
-        [EditorBrowsable(EditorBrowsableState.Never)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#if MONADS_PURE
-        [InternalForTesting]
-#endif
         internal T Value { get { Debug.Assert(_isSome); return _value; } }
+
+#endif
 
         /// <summary>
         /// Returns a string representation of the current instance.
         /// </summary>
         public override string ToString()
-            => _isSome ? $"Maybe({Value})" : "Maybe(None)";
+            => _isSome ? $"Maybe({_value})" : "Maybe(None)";
 
         #region Core monadic methods
-
-        // Maybe<T> is a Monad:
-        // - Maybe.Of() aka Maybe<T>.η(), or simply the ctor
-        // - Maybe.Flatten() aka Maybe<T>.μ()
-        // - Maybe<T>.Bind()
-        // Maybe<T> is a MonadOr:
-        // - Maybe<T>.None
-        // - Maybe<T>.OrElse()
 
         /// <summary>
         /// Obtains an instance of <see cref="Maybe{T}" /> that does not enclose
@@ -115,14 +114,14 @@ namespace Abc
         {
             if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
 
-            return _isSome ? binder(Value) : Maybe<TResult>.None;
+            return _isSome ? binder(_value) : Maybe<TResult>.None;
         }
 
 #if MONADS_PURE
 
         [DebuggerHidden]
         internal static Maybe<T> μ(Maybe<Maybe<T>> square)
-            => square._isSome ? square.Value : None;
+            => square._isSome ? square._value : None;
 
 #endif
 
@@ -134,10 +133,6 @@ namespace Abc
         /// <summary>
         /// Represents a debugger type proxy for <see cref="Maybe{T}"/>.
         /// </summary>
-        /// <remarks>
-        /// Ensures that <see cref="Maybe{T}.Value"/> does NOT throw in the
-        /// debugger.
-        /// </remarks>
         [ExcludeFromCodeCoverage]
         [SuppressMessage("Microsoft.Design", "CA1812:Avoid uninstantiated internal classes", Justification = "DebuggerTypeProxy")]
         private sealed class DebugView_
@@ -167,7 +162,7 @@ namespace Abc
             if (_isSome)
             {
                 if (some is null) { throw new ArgumentNullException(nameof(some)); }
-                return some(Value);
+                return some(_value);
             }
             else
             {
@@ -192,7 +187,7 @@ namespace Abc
             if (_isSome)
             {
                 if (onSome is null) { throw new ArgumentNullException(nameof(onSome)); }
-                onSome(Value);
+                onSome(_value);
             }
             else
             {
@@ -214,7 +209,7 @@ namespace Abc
             if (_isSome)
             {
                 if (action is null) { throw new ArgumentNullException(nameof(action)); }
-                action(Value);
+                action(_value);
             }
 #endif
         }
@@ -247,7 +242,7 @@ namespace Abc
 #if MONADS_PURE
             => Match(Stubs<T>.Ident, Stubs<T>.ReturnsDefault);
 #else
-            => _isSome ? Value : default;
+            => _isSome ? _value : default;
 #endif
 
         /// <summary>
@@ -258,7 +253,7 @@ namespace Abc
 #if MONADS_PURE
             => Match(Stubs<T>.Ident, () => other);
 #else
-            => _isSome ? Value : other;
+            => _isSome ? _value : other;
 #endif
 
         public T ValueOrElse(Func<T> valueFactory)
@@ -274,7 +269,7 @@ namespace Abc
 #else
             if (_isSome)
             {
-                return Value;
+                return _value;
             }
             else
             {
@@ -288,7 +283,7 @@ namespace Abc
 #if MONADS_PURE
             => Match(Stubs<T>.Ident, () => throw new InvalidOperationException());
 #else
-            => _isSome ? Value : throw new InvalidOperationException();
+            => _isSome ? _value : throw new InvalidOperationException();
 #endif
 
         public T ValueOrThrow(Func<Exception> exceptionFactory)
@@ -304,7 +299,7 @@ namespace Abc
 #else
             if (_isSome)
             {
-                return Value;
+                return _value;
             }
             else
             {
@@ -318,14 +313,14 @@ namespace Abc
 #if MONADS_PURE
             => Match(x => EqualityComparer<T>.Default.Equals(x, value), Predicates.False);
 #else
-            => _isSome && EqualityComparer<T>.Default.Equals(Value, value);
+            => _isSome && EqualityComparer<T>.Default.Equals(_value, value);
 #endif
 
         public bool Contains(T value, IEqualityComparer<T> comparer)
 #if MONADS_PURE
             => Match(x => (comparer ?? EqualityComparer<T>.Default).Equals(x, value), Predicates.False);
 #else
-            => _isSome && (comparer ?? EqualityComparer<T>.Default).Equals(Value, value);
+            => _isSome && (comparer ?? EqualityComparer<T>.Default).Equals(_value, value);
 #endif
 
         #endregion
@@ -340,7 +335,7 @@ namespace Abc
         {
             if (_isSome)
             {
-                yield return Value;
+                yield return _value;
             }
         }
 
@@ -402,7 +397,7 @@ namespace Abc
                     y => zipper(x, y)));
 #else
             return _isSome && other._isSome
-                ? Maybe.Of(zipper(Value, other.Value))
+                ? Maybe.Of(zipper(_value, other._value))
                 : Maybe<TResult>.None;
 #endif
         }
@@ -420,7 +415,7 @@ namespace Abc
                     second, (y, z) => zipper(x, y, z)));
 #else
             return _isSome && first._isSome && second._isSome
-                ? Maybe.Of(zipper(Value, first.Value, second.Value))
+                ? Maybe.Of(zipper(_value, first._value, second._value))
                 : Maybe<TResult>.None;
 #endif
         }
@@ -441,7 +436,7 @@ namespace Abc
                     (y, z, a) => zipper(x, y, z, a)));
 #else
             return _isSome && first._isSome && second._isSome && third._isSome
-                ? Maybe.Of(zipper(Value, first.Value, second.Value, third.Value))
+                ? Maybe.Of(zipper(_value, first._value, second._value, third._value))
                 : Maybe<TResult>.None;
 #endif
         }
@@ -464,7 +459,7 @@ namespace Abc
                     (y, z, a, b) => zipper(x, y, z, a, b)));
 #else
             return _isSome && first._isSome && second._isSome && third._isSome && fourth._isSome
-                ? Maybe.Of(zipper(Value, first.Value, second.Value, third.Value, fourth.Value))
+                ? Maybe.Of(zipper(_value, first._value, second._value, third._value, fourth._value))
                 : Maybe<TResult>.None;
 #endif
         }
@@ -480,7 +475,7 @@ namespace Abc
 #if MONADS_PURE
             return Bind(x => Maybe.Of(selector(x)));
 #else
-            return _isSome ? Maybe.Of(selector(Value)) : Maybe<TResult>.None;
+            return _isSome ? Maybe.Of(selector(_value)) : Maybe<TResult>.None;
 #endif
         }
 
@@ -492,7 +487,7 @@ namespace Abc
             // NB: x is never null.
             return Bind(x => predicate(x) ? new Maybe<T>(x) : None);
 #else
-            return _isSome && predicate(Value) ? this : None;
+            return _isSome && predicate(_value) ? this : None;
 #endif
         }
 
@@ -511,10 +506,10 @@ namespace Abc
 #else
             if (!_isSome) { return Maybe<TResult>.None; }
 
-            var middle = selector(Value);
+            var middle = selector(_value);
             if (!middle._isSome) { return Maybe<TResult>.None; }
 
-            return Maybe.Of(resultSelector(Value, middle.Value));
+            return Maybe.Of(resultSelector(_value, middle._value));
 #endif
         }
 
@@ -560,12 +555,12 @@ namespace Abc
 #else
             if (_isSome && inner._isSome)
             {
-                var outerKey = outerKeySelector(Value);
-                var innerKey = innerKeySelector(inner.Value);
+                var outerKey = outerKeySelector(_value);
+                var innerKey = innerKeySelector(inner._value);
 
                 if ((comparer ?? EqualityComparer<TKey>.Default).Equals(outerKey, innerKey))
                 {
-                    return Maybe.Of(resultSelector(Value, inner.Value));
+                    return Maybe.Of(resultSelector(_value, inner._value));
                 }
             }
 
@@ -590,12 +585,12 @@ namespace Abc
 
         //    if (_isSome && inner._isSome)
         //    {
-        //        var outerKey = outerKeySelector(Value);
-        //        var innerKey = innerKeySelector(inner.Value);
+        //        var outerKey = outerKeySelector(_value);
+        //        var innerKey = innerKeySelector(inner._value);
 
         //        if ((comparer ?? EqualityComparer<TKey>.Default).Equals(outerKey, innerKey))
         //        {
-        //            return Maybe.Of(resultSelector(Value, inner));
+        //            return Maybe.Of(resultSelector(_value, inner));
         //        }
         //    }
 
@@ -611,7 +606,7 @@ namespace Abc
         {
             if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
 
-            return _isSome ? await binder(Value).ConfigureAwait(false)
+            return _isSome ? await binder(_value).ConfigureAwait(false)
                 : Maybe<TResult>.None; ;
         }
 
@@ -620,7 +615,7 @@ namespace Abc
         {
             if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
 
-            return _isSome ? Maybe.Of(await selector(Value).ConfigureAwait(false))
+            return _isSome ? Maybe.Of(await selector(_value).ConfigureAwait(false))
                 : Maybe<TResult>.None;
         }
 
@@ -651,13 +646,13 @@ namespace Abc
         public bool Equals(Maybe<T> other)
             => _isSome
               ? other._isSome
-                  && EqualityComparer<T>.Default.Equals(Value, other.Value)
+                  && EqualityComparer<T>.Default.Equals(_value, other._value)
               : !other._isSome;
 
         public bool Equals(Maybe<T> other, IEqualityComparer<T> comparer)
             => _isSome
                 ? other._isSome
-                    && (comparer ?? EqualityComparer<T>.Default).Equals(Value, other.Value)
+                    && (comparer ?? EqualityComparer<T>.Default).Equals(_value, other._value)
                 : !other._isSome;
 
         /// <inheritdoc />
@@ -672,7 +667,7 @@ namespace Abc
 
         public int GetHashCode(IEqualityComparer<T> comparer)
             => _isSome
-                ? (comparer ?? EqualityComparer<T>.Default).GetHashCode(Value)
+                ? (comparer ?? EqualityComparer<T>.Default).GetHashCode(_value)
                 : 0;
     }
 }
