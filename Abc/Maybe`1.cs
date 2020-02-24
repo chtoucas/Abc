@@ -328,13 +328,13 @@ namespace Abc
         // Also, Maybe<> is a struct and I am worry with hidden casts if this
         // type implements IEnumerable<>.
 
-        public IEnumerable<T> ToEnumerable()
-        {
-            if (_isSome)
-            {
-                yield return _value;
-            }
-        }
+        //public IEnumerable<T> ToEnumerable()
+        //{
+        //    if (_isSome)
+        //    {
+        //        yield return _value;
+        //    }
+        //}
 
         public IEnumerator<T> GetEnumerator()
         {
