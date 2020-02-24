@@ -2,16 +2,18 @@
 
 namespace Abc
 {
-    using System;
-    using System.Linq;
-
     using Xunit;
 
     using static global::My;
 
     using Assert = AssertEx;
 
-    public static partial class MaybeTests { }
+    public static partial class MaybeTests
+    {
+        private static readonly Maybe<int> Ø = Maybe<int>.None;
+        private static readonly Maybe<int> One = Maybe.Some(1);
+        private static readonly Maybe<int> Two = Maybe.Some(2);
+    }
 
     // Construction, properties
     public partial class MaybeTests
@@ -68,16 +70,16 @@ namespace Abc
     // Iterable.
     public partial class MaybeTests
     {
-        [Fact]
-        public static void ToEnumerable()
-        {
-            // Arrange
-            var some = Maybe.Of("value");
-            var none = Maybe<string>.None;
-            // Act & Assert
-            Assert.Equal(Enumerable.Repeat("value", 1), some.ToEnumerable());
-            Assert.Empty(none.ToEnumerable());
-        }
+        //[Fact]
+        //public static void ToEnumerable()
+        //{
+        //    // Arrange
+        //    var some = Maybe.Of("value");
+        //    var none = Maybe<string>.None;
+        //    // Act & Assert
+        //    Assert.Equal(Enumerable.Repeat("value", 1), some.ToEnumerable());
+        //    Assert.Empty(none.ToEnumerable());
+        //}
 
         [Fact]
         public static void GetEnumerator_Some()
@@ -108,98 +110,47 @@ namespace Abc
         [Fact]
         public static void Select()
         {
-            // Arrange
-            var some = Maybe.Of(1);
-            var none = Maybe<int>.None;
+            Assert.Some(2, One.Select(x => 2 * x));
+            Assert.Some(2, from x in One select 2 * x);
 
-            // Act & Assert
-            Assert.Some(2, some.Select(__selector));
-            Assert.Some(2, from x in some select __selector(x));
-
-            Assert.None(none.Select(__selector));
-            Assert.None(from x in none select __selector(x));
-
-            static int __selector(int x) => 2 * x;
+            Assert.None(Ø.Select(x => 2 * x));
+            Assert.None(from x in Ø select 2 * x);
         }
 
         [Fact]
         public static void Where()
         {
-            // Arrange
-            var some = Maybe.Of(1);
+            Assert.None(One.Where(x => x == 2));
+            Assert.None(from x in One where x == 2 select x);
 
-            // Act & Assert
-            Assert.None(some.Where(Returns<int>.False));
-            Assert.None(from x in some where Returns<int>.False(x) select x);
+            Assert.Some(1, One.Where(x => x == 1));
+            Assert.Some(1, from x in One where x == 1 select x);
 
-            Assert.Some(1, some.Where(Returns<int>.True));
-            Assert.Some(1, from x in some where Returns<int>.True(x) select x);
+            Assert.None(Ø.Where(x => x == 2));
+            Assert.None(from x in Ø where x == 2 select x);
+
+            Assert.None(Ø.Where(x => x == 1));
+            Assert.None(from x in Ø where x == 1 select x);
         }
 
         [Fact]
-        public static void SelectMany1()
+        public static void SelectMany()
         {
-            var none = Maybe<int>.None;
-            var some = Maybe.Of(2);
-            Func<int, Maybe<int>> valueSelector = _ => some;
-            Func<int, int, int> resultSelector = (i, j) => i + j;
+            Assert.None(Ø.SelectMany(i => Maybe.Some(2 * i), (i, j) => i + j));
+            Assert.None(from i in Ø from j in Maybe.Some(2 * i) select i + j);
 
-            var m1 = none.SelectMany(valueSelector, resultSelector);
-            Assert.None(m1);
+            Assert.None(Ø.SelectMany(_ => Ø, (i, j) => i + j));
+            Assert.None(from i in Ø from j in Ø select i + j);
 
-            var q = from i in none
-                    from j in some
-                    select resultSelector(i, j);
-            Assert.None(q);
+            Assert.None(One.SelectMany(_ => Ø, (i, j) => i + j));
+            Assert.None(from i in One from j in Ø select i + j);
         }
 
         [Fact]
-        public static void SelectMany2()
+        public static void Join()
         {
-            var none1 = Maybe<int>.None;
-            var none2 = Maybe<int>.None;
-            Func<int, Maybe<int>> valueSelector = _ => none2;
-            Func<int, int, int> resultSelector = (i, j) => i + j;
-
-            var m1 = none1.SelectMany(valueSelector, resultSelector);
-            Assert.None(m1);
-
-            var q = from i in none1
-                    from j in none2
-                    select resultSelector(i, j);
-            Assert.None(q);
-        }
-
-        [Fact]
-        public static void SelectMany3()
-        {
-            var some = Maybe.Of(1);
-            var none = Maybe<int>.None;
-            Func<int, Maybe<int>> valueSelector = _ => none;
-            Func<int, int, int> resultSelector = (i, j) => i + j;
-
-            var m1 = some.SelectMany(valueSelector, resultSelector);
-            Assert.None(m1);
-
-            var q = from i in some
-                    from j in none
-                    select resultSelector(i, j);
-            Assert.None(q);
-        }
-
-        [Fact]
-        public static void Join1()
-        {
-            var some1 = Maybe.Of(1);
-            var some2 = Maybe.Of(2);
-
-            var m1 = some1.Join(some2, i => i, i => i, (i, j) => i + j);
-            Assert.None(m1);
-
-            var q = from i in some1
-                    join j in some2 on i equals j
-                    select i + j;
-            Assert.None(q);
+            Assert.None(One.Join(Two, i => i, i => i, (i, j) => i + j));
+            Assert.None(from i in One join j in Two on i equals j select i + j);
         }
     }
 
@@ -210,21 +161,20 @@ namespace Abc
         {
             // Arrange
             var some = Maybe.Unit;
-            var none = Maybe.None;
 
             // Act & Assert
             Assert.Some("value", some.ReplaceWith("value"));
-            Assert.None(none.ReplaceWith("value"));
+            Assert.None(Ø.ReplaceWith("value"));
 
             Assert.None(some.ReplaceWith(NullString));
-            Assert.None(none.ReplaceWith(NullString));
+            Assert.None(Ø.ReplaceWith(NullString));
 
 #nullable disable
             Assert.Some(2, some.ReplaceWith((int?)2));
-            Assert.None(none.ReplaceWith((int?)2));
+            Assert.None(Ø.ReplaceWith((int?)2));
 
             Assert.None(some.ReplaceWith(NullNullString));
-            Assert.None(none.ReplaceWith(NullNullString));
+            Assert.None(Ø.ReplaceWith(NullNullString));
 #nullable restore
         }
     }
