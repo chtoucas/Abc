@@ -5,6 +5,7 @@ namespace Abc
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
@@ -43,10 +44,10 @@ namespace Abc
     /// <para><see cref="Maybe{T}"/> is an immutable struct.</para>
     /// </summary>
     /// <typeparam name="T">The underlying type of the value.</typeparam>
-    [DebuggerDisplay("IsSome = {IsSome}")]
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
     [SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix")]
-    public readonly partial struct Maybe<T> : IEquatable<Maybe<T>>, IEnumerable<T>
+    public readonly partial struct Maybe<T> : IEquatable<Maybe<T>>
     {
         private readonly bool _isSome;
 
@@ -93,6 +94,11 @@ namespace Abc
         internal T Value { get { Debug.Assert(_isSome); return _value; } }
 
 #endif
+
+        [ExcludeFromCodeCoverage]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        private string DebuggerDisplay => $"IsSome = {IsSome}";
 
         /// <summary>
         /// Returns a string representation of the current instance.
@@ -326,10 +332,18 @@ namespace Abc
         #endregion
     }
 
-    // Interface IEnumerable<>.
+    // Kind of IEnumerable<>.
     public partial struct Maybe<T>
     {
-        // REVIEW: IEnumerable<T> or not?
+        // REVIEW: IEnumerable<T> or not? Test LINQ before.
+
+        public IEnumerable<T> ToEnumerable()
+        {
+            if (_isSome)
+            {
+                yield return _value;
+            }
+        }
 
         public IEnumerator<T> GetEnumerator()
         {
@@ -338,9 +352,6 @@ namespace Abc
                 yield return _value;
             }
         }
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator();
     }
 
     // Standard API.
