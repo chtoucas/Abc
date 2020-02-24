@@ -3,12 +3,16 @@
 namespace Abc
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
 
-    using ANException = System.ArgumentNullException;
+#if MONADS_PURE
+    using Abc.Utilities;
+#endif
 
     // REVIEW: disposable exts, async exts, nullable attrs, notnull constraints.
     // Maybe<T> where T : notnull ??? <- only works if nullable is enabled.
@@ -28,8 +32,11 @@ namespace Abc
     /// <typeparam name="T">The underlying type of the value.</typeparam>
     [DebuggerDisplay("IsSome = {IsSome}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
-    public readonly partial struct Maybe<T> : IEquatable<Maybe<T>>
+    [SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix")]
+    public readonly partial struct Maybe<T> : IEquatable<Maybe<T>>, IEnumerable<T>
     {
+        private readonly bool _isSome;
+
         /// <summary>
         /// Represents the enclosed value.
         /// <para>This field is read-only.</para>
@@ -45,8 +52,8 @@ namespace Abc
         {
             Debug.Assert(value != null);
 
+            _isSome = true;
             _value = value;
-            IsSome = true;
         }
 
         /// <summary>
@@ -61,27 +68,27 @@ namespace Abc
 #if MONADS_PURE
         [InternalForTesting]
 #endif
-        internal bool IsSome { get; }
+        internal bool IsSome => _isSome;
 
         /// <summary>
         /// Gets the enclosed value.
         /// </summary>
         /// <remarks>
         /// Any access to this property MUST be protected by checking before that
-        /// <see cref="IsSome"/> is true.
+        /// <see cref="_isSome"/> is true.
         /// </remarks>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
 #if MONADS_PURE
         [InternalForTesting]
 #endif
-        internal T Value { get { Debug.Assert(IsSome); return _value; } }
+        internal T Value { get { Debug.Assert(_isSome); return _value; } }
 
         /// <summary>
         /// Returns a string representation of the current instance.
         /// </summary>
         public override string ToString()
-            => IsSome ? $"Maybe({Value})" : "Maybe(None)";
+            => _isSome ? $"Maybe({Value})" : "Maybe(None)";
 
         #region Core monadic methods
 
@@ -103,21 +110,21 @@ namespace Abc
 
         public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
         {
-            if (binder is null) { throw new ANException(nameof(binder)); }
+            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
 
-            return IsSome ? binder(Value) : Maybe<TResult>.None;
+            return _isSome ? binder(Value) : Maybe<TResult>.None;
         }
 
 #if MONADS_PURE
 
         [DebuggerHidden]
         internal static Maybe<T> μ(Maybe<Maybe<T>> square)
-            => square.IsSome ? square.Value : None;
+            => square._isSome ? square.Value : None;
 
 #endif
 
         public Maybe<T> OrElse(Maybe<T> other)
-            => IsSome ? this : other;
+            => _isSome ? this : other;
 
         #endregion
 
@@ -134,18 +141,18 @@ namespace Abc
         {
             private readonly Maybe<T> _inner;
 
-            public DebugView_(Maybe<T> inner) => _inner = inner;
+            public DebugView_(Maybe<T> inner) { _inner = inner; }
 
-            public bool IsSome => _inner.IsSome;
+            public bool IsSome => _inner._isSome;
 
             public T Value => _inner._value;
         }
     }
 
-    // Pattern matching.
+    // Pattern matching to escape the monad.
     public partial struct Maybe<T>
     {
-        // REVIEW: throw or not? delayed?
+        // REVIEW: delayed throw?
 
         /// <summary>
         /// If the current instance encloses a value, it executes
@@ -154,14 +161,14 @@ namespace Abc
         /// </summary>
         public TResult Match<TResult>(Func<T, TResult> some, Func<TResult> none)
         {
-            if (IsSome)
+            if (_isSome)
             {
-                if (some is null) { throw new ANException(nameof(some)); }
+                if (some is null) { throw new ArgumentNullException(nameof(some)); }
                 return some(Value);
             }
             else
             {
-                if (none is null) { throw new ANException(nameof(none)); }
+                if (none is null) { throw new ArgumentNullException(nameof(none)); }
                 return none();
             }
         }
@@ -173,16 +180,23 @@ namespace Abc
         /// </summary>
         public void Match(Action<T> onSome, Action onNone)
         {
-            if (IsSome)
+#if MONADS_PURE
+            Match(__caseSome, __caseNone);
+
+            Unit __caseSome(T x) { onSome(x); return Unit.Default; }
+            Unit __caseNone() { onNone(); return Unit.Default; }
+#else
+            if (_isSome)
             {
-                if (onSome is null) { throw new ANException(nameof(onSome)); }
+                if (onSome is null) { throw new ArgumentNullException(nameof(onSome)); }
                 onSome(Value);
             }
             else
             {
-                if (onNone is null) { throw new ANException(nameof(onNone)); }
+                if (onNone is null) { throw new ArgumentNullException(nameof(onNone)); }
                 onNone();
             }
+#endif
         }
 
         /// <summary>
@@ -191,11 +205,15 @@ namespace Abc
         /// </summary>
         public void OnSome(Action<T> action)
         {
-            if (IsSome)
+#if MONADS_PURE
+            Match(action, Stubs.Noop);
+#else
+            if (_isSome)
             {
-                if (action is null) { throw new ANException(nameof(action)); }
+                if (action is null) { throw new ArgumentNullException(nameof(action)); }
                 action(Value);
             }
+#endif
         }
 
         /// <summary>
@@ -204,68 +222,135 @@ namespace Abc
         /// </summary>
         public void OnNone(Action action)
         {
-            if (!IsSome)
+#if MONADS_PURE
+            Match(Stubs<T>.Ignore, action);
+#else
+            if (!_isSome)
             {
-                if (action is null) { throw new ANException(nameof(action)); }
+                if (action is null) { throw new ArgumentNullException(nameof(action)); }
                 action();
             }
+#endif
         }
 
         #region Specialized versions
 
         /// <summary>
         /// Obtains the enclosed value if any; otherwise this method returns the
-        /// default value of <typeparamref name="T"/>.
+        /// default value of the <typeparamref name="T"/> type.
         /// </summary>
         [return: MaybeNull]
         public T ValueOrDefault()
-            => IsSome ? Value : default;
+#if MONADS_PURE
+            => Match(Stubs<T>.Ident, Stubs<T>.ReturnsDefault);
+#else
+            => _isSome ? Value : default;
+#endif
 
         /// <summary>
         /// Obtains the enclosed value if any; otherwise this method returns
         /// <paramref name="other"/>.
         /// </summary>
-        /// <param name="other">A default value to be used if if there is no
-        /// underlying value.</param>
         public T ValueOrElse([DisallowNull]T other)
-            => IsSome ? Value : other;
+#if MONADS_PURE
+            => Match(Stubs<T>.Ident, () => other);
+#else
+            => _isSome ? Value : other;
+#endif
 
         public T ValueOrElse(Func<T> valueFactory)
         {
-            if (IsSome)
+#if MONADS_PURE
+            return Match(Stubs<T>.Ident, __caseNone);
+
+            T __caseNone()
+            {
+                if (valueFactory is null) { throw new ArgumentNullException(nameof(valueFactory)); }
+                return valueFactory();
+            }
+#else
+            if (_isSome)
             {
                 return Value;
             }
             else
             {
-                if (valueFactory is null) { throw new ANException(nameof(valueFactory)); }
+                if (valueFactory is null) { throw new ArgumentNullException(nameof(valueFactory)); }
                 return valueFactory();
             }
+#endif
         }
 
         public T ValueOrThrow()
-            => IsSome ? Value : throw new InvalidOperationException();
+#if MONADS_PURE
+            => Match(Stubs<T>.Ident, () => throw new InvalidOperationException());
+#else
+            => _isSome ? Value : throw new InvalidOperationException();
+#endif
 
         public T ValueOrThrow(Func<Exception> exceptionFactory)
         {
-            if (IsSome)
+#if MONADS_PURE
+            return Match(Stubs<T>.Ident, __caseNone);
+
+            T __caseNone()
+            {
+                if (exceptionFactory is null) { throw new ArgumentNullException(nameof(exceptionFactory)); }
+                throw exceptionFactory(); ;
+            }
+#else
+            if (_isSome)
             {
                 return Value;
             }
             else
             {
-                if (exceptionFactory is null) { throw new ANException(nameof(exceptionFactory)); }
+                if (exceptionFactory is null) { throw new ArgumentNullException(nameof(exceptionFactory)); }
                 throw exceptionFactory();
             }
+#endif
         }
 
         public bool Contains(T value)
-            => IsSome && EqualityComparer<T>.Default.Equals(Value, value);
+#if MONADS_PURE
+            => Match(x => EqualityComparer<T>.Default.Equals(x, value), Predicates.False);
+#else
+            => _isSome && EqualityComparer<T>.Default.Equals(Value, value);
+#endif
 
         public bool Contains(T value, IEqualityComparer<T> comparer)
-            => IsSome && (comparer ?? EqualityComparer<T>.Default).Equals(Value, value);
+#if MONADS_PURE
+            => Match(x => (comparer ?? EqualityComparer<T>.Default).Equals(x, value), Predicates.False);
+#else
+            => _isSome && (comparer ?? EqualityComparer<T>.Default).Equals(Value, value);
+#endif
 
         #endregion
+    }
+
+    // Interface IEnumerable<>.
+    public partial struct Maybe<T>
+    {
+        // REVIEW: IEnumerable<T>???
+
+        //public IEnumerable<T> ToEnumerable()
+        //{
+        //    if (_isSome)
+        //    {
+        //        yield return Value;
+        //    }
+        //}
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            if (_isSome)
+            {
+                yield return Value;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => GetEnumerator();
     }
 
     // Standard API.
@@ -277,7 +362,7 @@ namespace Abc
 #if MONADS_PURE
             return Select(_ => value);
 #else
-            return IsSome ? Maybe.Of(value) : Maybe<TResult>.None;
+            return _isSome ? Maybe.Of(value) : Maybe<TResult>.None;
 #endif
         }
 
@@ -286,7 +371,7 @@ namespace Abc
 #if MONADS_PURE
             return Bind(_ => other);
 #else
-            return IsSome ? other : Maybe<TResult>.None;
+            return _isSome ? other : Maybe<TResult>.None;
 #endif
         }
 
@@ -295,7 +380,7 @@ namespace Abc
 #if MONADS_PURE
             return ZipWith(other, (x, _) => x);
 #else
-            return other.IsSome ? this : None;
+            return other._isSome ? this : None;
 #endif
         }
 
@@ -305,23 +390,23 @@ namespace Abc
 #if MONADS_PURE
             return ContinueWith(Maybe.Unit);
 #else
-            return IsSome ? Maybe.Unit : Maybe.None;
+            return _isSome ? Maybe.Unit : Maybe.None;
 #endif
         }
 
-#region ZipWith()
+        #region ZipWith()
 
         public Maybe<TResult> ZipWith<TOther, TResult>(
             Maybe<TOther> other, Func<T, TOther, TResult> zipper)
         {
-            if (zipper is null) { throw new ANException(nameof(zipper)); }
+            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
 
 #if MONADS_PURE
             return Bind(
                 x => other.Select(
                     y => zipper(x, y)));
 #else
-            return IsSome && other.IsSome
+            return _isSome && other._isSome
                 ? Maybe.Of(zipper(Value, other.Value))
                 : Maybe<TResult>.None;
 #endif
@@ -332,14 +417,14 @@ namespace Abc
             Maybe<T2> second,
             Func<T, T1, T2, TResult> zipper)
         {
-            if (zipper is null) { throw new ANException(nameof(zipper)); }
+            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
 
 #if MONADS_PURE
             return Bind(
                 x => first.ZipWith(
                     second, (y, z) => zipper(x, y, z)));
 #else
-            return IsSome && first.IsSome && second.IsSome
+            return _isSome && first._isSome && second._isSome
                 ? Maybe.Of(zipper(Value, first.Value, second.Value))
                 : Maybe<TResult>.None;
 #endif
@@ -351,7 +436,7 @@ namespace Abc
              Maybe<T3> third,
              Func<T, T1, T2, T3, TResult> zipper)
         {
-            if (zipper is null) { throw new ANException(nameof(zipper)); }
+            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
 
 #if MONADS_PURE
             return Bind(
@@ -360,7 +445,7 @@ namespace Abc
                     third,
                     (y, z, a) => zipper(x, y, z, a)));
 #else
-            return IsSome && first.IsSome && second.IsSome && third.IsSome
+            return _isSome && first._isSome && second._isSome && third._isSome
                 ? Maybe.Of(zipper(Value, first.Value, second.Value, third.Value))
                 : Maybe<TResult>.None;
 #endif
@@ -373,7 +458,7 @@ namespace Abc
             Maybe<T4> fourth,
             Func<T, T1, T2, T3, T4, TResult> zipper)
         {
-            if (zipper is null) { throw new ANException(nameof(zipper)); }
+            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
 
 #if MONADS_PURE
             return Bind(
@@ -383,36 +468,36 @@ namespace Abc
                     fourth,
                     (y, z, a, b) => zipper(x, y, z, a, b)));
 #else
-            return IsSome && first.IsSome && second.IsSome && third.IsSome && fourth.IsSome
+            return _isSome && first._isSome && second._isSome && third._isSome && fourth._isSome
                 ? Maybe.Of(zipper(Value, first.Value, second.Value, third.Value, fourth.Value))
                 : Maybe<TResult>.None;
 #endif
         }
 
-#endregion
+        #endregion
 
-#region Query Expression Pattern
+        #region Query Expression Pattern
 
         public Maybe<TResult> Select<TResult>(Func<T, TResult> selector)
         {
-            if (selector is null) { throw new ANException(nameof(selector)); }
+            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
 
 #if MONADS_PURE
             return Bind(x => Maybe.Of(selector(x)));
 #else
-            return IsSome ? Maybe.Of(selector(Value)) : Maybe<TResult>.None;
+            return _isSome ? Maybe.Of(selector(Value)) : Maybe<TResult>.None;
 #endif
         }
 
         public Maybe<T> Where(Func<T, bool> predicate)
         {
-            if (predicate is null) { throw new ANException(nameof(predicate)); }
+            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
 
 #if MONADS_PURE
             // NB: x is never null.
             return Bind(x => predicate(x) ? new Maybe<T>(x) : None);
 #else
-            return IsSome && predicate(Value) ? this : None;
+            return _isSome && predicate(Value) ? this : None;
 #endif
         }
 
@@ -421,18 +506,18 @@ namespace Abc
             Func<T, Maybe<TMiddle>> selector,
             Func<T, TMiddle, TResult> resultSelector)
         {
-            if (selector is null) { throw new ANException(nameof(selector)); }
-            if (resultSelector is null) { throw new ANException(nameof(resultSelector)); }
+            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
 
 #if MONADS_PURE
             return Bind(
                 x => selector(x).Select(
                     middle => resultSelector(x, middle)));
 #else
-            if (!IsSome) { return Maybe<TResult>.None; }
+            if (!_isSome) { return Maybe<TResult>.None; }
 
             var middle = selector(Value);
-            if (!middle.IsSome) { return Maybe<TResult>.None; }
+            if (!middle._isSome) { return Maybe<TResult>.None; }
 
             return Maybe.Of(resultSelector(Value, middle.Value));
 #endif
@@ -454,9 +539,9 @@ namespace Abc
             Func<T, TInner, TResult> resultSelector,
             IEqualityComparer<TKey>? comparer)
         {
-            if (outerKeySelector is null) { throw new ANException(nameof(outerKeySelector)); }
-            if (innerKeySelector is null) { throw new ANException(nameof(innerKeySelector)); }
-            if (resultSelector is null) { throw new ANException(nameof(resultSelector)); }
+            if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
 
 #if MONADS_PURE
             var keyLookup = __getKeyLookup(inner, innerKeySelector, comparer);
@@ -478,7 +563,7 @@ namespace Abc
                         .ContinueWith(inner);
             }
 #else
-            if (IsSome && inner.IsSome)
+            if (_isSome && inner._isSome)
             {
                 var outerKey = outerKeySelector(Value);
                 var innerKey = innerKeySelector(inner.Value);
@@ -504,11 +589,11 @@ namespace Abc
         //    Func<T, Maybe<TInner>, TResult> resultSelector,
         //    IEqualityComparer<TKey> comparer)
         //{
-        //    if (outerKeySelector is null) { throw new ANException(nameof(outerKeySelector)); }
-        //    if (innerKeySelector is null) { throw new ANException(nameof(innerKeySelector)); }
-        //    if (resultSelector is null) { throw new ANException(nameof(resultSelector)); }
+        //    if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
+        //    if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
+        //    if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
 
-        //    if (IsSome && inner.IsSome)
+        //    if (_isSome && inner._isSome)
         //    {
         //        var outerKey = outerKeySelector(Value);
         //        var innerKey = innerKeySelector(inner.Value);
@@ -522,7 +607,29 @@ namespace Abc
         //    return Maybe<TResult>.None;
         //}
 
-#endregion
+        #endregion
+
+        #region Async methods
+
+        public async Task<Maybe<TResult>> BindAsync<TResult>(
+            Func<T, Task<Maybe<TResult>>> binder)
+        {
+            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
+
+            return _isSome ? await binder(Value).ConfigureAwait(false)
+                : Maybe<TResult>.None; ;
+        }
+
+        public async Task<Maybe<TResult>> SelectAsync<TResult>(
+            Func<T, Task<TResult>> selector)
+        {
+            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+
+            return _isSome ? Maybe.Of(await selector(Value).ConfigureAwait(false))
+                : Maybe<TResult>.None;
+        }
+
+        #endregion
     }
 
     // Interface IEquatable<>.
@@ -547,16 +654,16 @@ namespace Abc
         /// specified <see cref="Maybe{T}"/>.
         /// </summary>
         public bool Equals(Maybe<T> other)
-            => IsSome
-              ? other.IsSome
+            => _isSome
+              ? other._isSome
                   && EqualityComparer<T>.Default.Equals(Value, other.Value)
-              : !other.IsSome;
+              : !other._isSome;
 
         public bool Equals(Maybe<T> other, IEqualityComparer<T> comparer)
-            => IsSome
-                ? other.IsSome
+            => _isSome
+                ? other._isSome
                     && (comparer ?? EqualityComparer<T>.Default).Equals(Value, other.Value)
-                : !other.IsSome;
+                : !other._isSome;
 
         /// <inheritdoc />
         public override bool Equals(object obj)
@@ -569,7 +676,7 @@ namespace Abc
         public override int GetHashCode() => _value?.GetHashCode() ?? 0;
 
         public int GetHashCode(IEqualityComparer<T> comparer)
-            => IsSome
+            => _isSome
                 ? (comparer ?? EqualityComparer<T>.Default).GetHashCode(Value)
                 : 0;
     }

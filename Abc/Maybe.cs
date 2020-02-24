@@ -64,6 +64,44 @@ namespace Abc
             => predicate ? Unit : None;
     }
 
+    // Operations on IEnumerable<Maybe<T>>.
+    // Filtering: CollectAny (deferred).
+    // Aggregation: SumAny.
+    public partial class Maybe
+    {
+        // Maybe<IEnumerable<TSource>>?
+        public static IEnumerable<TSource> CollectAny<TSource>(
+            IEnumerable<Maybe<TSource>> source)
+        {
+            if (source is null) { throw new ArgumentNullException(nameof(source)); }
+
+            return __iterator();
+
+#if MONADS_PURE
+            IEnumerable<TSource> __iterator()
+            {
+                var seed = Maybe.Empty<TSource>();
+
+                return source.Aggregate(seed, (x, y) => x.ZipWith(y, Enumerable.Append))
+                    .ValueOrEmpty();
+            }
+#else
+            IEnumerable<TSource> __iterator()
+            {
+                foreach (var item in source)
+                {
+                    if (item.IsSome) { yield return item.Value; }
+                }
+            }
+#endif
+        }
+
+        public static Maybe<TSource> SumAny<TSource>(IEnumerable<Maybe<TSource>> source)
+        {
+            return source.Aggregate(Maybe<TSource>.None, (m, n) => m.OrElse(n));
+        }
+    }
+
     // Extension methods when T is a func.
     public partial class Maybe
     {

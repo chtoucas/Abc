@@ -14,7 +14,7 @@ namespace Abc.Extensions
     /// </summary>
     public static partial class MaybeC { }
 
-    public static partial class MaybeC
+    public partial class MaybeC
     {
         public static Maybe<TValue> MayGetValue<TKey, TValue>(
             this IDictionary<TKey, TValue> @this, TKey key)
@@ -27,7 +27,7 @@ namespace Abc.Extensions
         }
     }
 
-    public static partial class MaybeC
+    public partial class MaybeC
     {
         public static Maybe<string> MayGetSingle(this NameValueCollection @this, string name)
         {
