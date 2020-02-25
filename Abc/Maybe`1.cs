@@ -10,10 +10,6 @@ namespace Abc
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
-#if MONADS_PURE
-    using Abc.Utilities;
-#endif
-
     // The symbol MONADS_PURE is not production-friendly, it is for educational
     // purposes only. Everything is defined using only the core monadic methods
     // Bind() and None; we could have used Select() and Flatten() instead of
@@ -78,8 +74,6 @@ namespace Abc
         /// </summary>
         public bool IsNone => !_isSome;
 
-#if !MONADS_PURE
-
         /// <summary>
         /// Checks whether the current instance does hold a value or not.
         /// </summary>
@@ -96,8 +90,6 @@ namespace Abc
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal T Value { get { Debug.Assert(_isSome); return _value; } }
 
-#endif
-
         [ExcludeFromCodeCoverage]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -108,11 +100,7 @@ namespace Abc
         /// </summary>
         [Pure]
         public override string ToString()
-#if MONADS_PURE
-            => Unwrap(x => $"Maybe({x})", "Maybe(None)");
-#else
             => _isSome ? $"Maybe({_value})" : "Maybe(None)";
-#endif
 
         #region Core monadic methods
 
@@ -206,14 +194,6 @@ namespace Abc
         /// </summary>
         public void Do(Action<T> onSome, Action onNone)
         {
-#if MONADS_PURE
-#pragma warning disable CA1806 // Do not ignore method results
-            Unwrap(__some, __none);
-#pragma warning restore CA1806
-
-            Unit __some(T x) { onSome(x); return Unit.Default; }
-            Unit __none() { onNone(); return Unit.Default; }
-#else
             if (_isSome)
             {
                 if (onSome is null) { throw new ArgumentNullException(nameof(onSome)); }
@@ -224,7 +204,6 @@ namespace Abc
                 if (onNone is null) { throw new ArgumentNullException(nameof(onNone)); }
                 onNone();
             }
-#endif
         }
 
         // We do not provide OnNone(action), it is much simpler to write
@@ -236,15 +215,11 @@ namespace Abc
         /// </summary>
         public void OnSome(Action<T> action)
         {
-#if MONADS_PURE
-            Do(action, Thunks.Noop);
-#else
             if (_isSome)
             {
                 if (action is null) { throw new ArgumentNullException(nameof(action)); }
                 action(_value);
             }
-#endif
         }
 
         #region Specialized versions
@@ -256,11 +231,7 @@ namespace Abc
         [Pure]
         [return: MaybeNull]
         public T ValueOrDefault()
-#if MONADS_PURE
-            => Unwrap(Thunks<T>.Ident, default(T)!);
-#else
             => _isSome ? _value : default;
-#endif
 
         /// <summary>
         /// Obtains the enclosed value if any; otherwise this method returns
@@ -268,24 +239,11 @@ namespace Abc
         /// </summary>
         [Pure]
         public T ValueOrElse([DisallowNull]T other)
-#if MONADS_PURE
-            => Unwrap(Thunks<T>.Ident, other);
-#else
             => _isSome ? _value : other;
-#endif
 
         [Pure]
         public T ValueOrElse(Func<T> valueFactory)
         {
-#if MONADS_PURE
-            return Unwrap(Thunks<T>.Ident, __none);
-
-            T __none()
-            {
-                if (valueFactory is null) { throw new ArgumentNullException(nameof(valueFactory)); }
-                return valueFactory();
-            }
-#else
             if (_isSome)
             {
                 return _value;
@@ -295,29 +253,15 @@ namespace Abc
                 if (valueFactory is null) { throw new ArgumentNullException(nameof(valueFactory)); }
                 return valueFactory();
             }
-#endif
         }
 
         [Pure]
         public T ValueOrThrow()
-#if MONADS_PURE
-            => Unwrap(Thunks<T>.Ident, () => throw new InvalidOperationException());
-#else
             => _isSome ? _value : throw new InvalidOperationException();
-#endif
 
         [Pure]
         public T ValueOrThrow(Func<Exception> exceptionFactory)
         {
-#if MONADS_PURE
-            return Unwrap(Thunks<T>.Ident, __caseNone);
-
-            T __caseNone()
-            {
-                if (exceptionFactory is null) { throw new ArgumentNullException(nameof(exceptionFactory)); }
-                throw exceptionFactory(); ;
-            }
-#else
             if (_isSome)
             {
                 return _value;
@@ -327,7 +271,6 @@ namespace Abc
                 if (exceptionFactory is null) { throw new ArgumentNullException(nameof(exceptionFactory)); }
                 throw exceptionFactory();
             }
-#endif
         }
 
         #endregion
@@ -341,11 +284,7 @@ namespace Abc
         {
             if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
 
-#if MONADS_PURE
-            return Bind(x => Maybe.Of(selector(x)));
-#else
             return _isSome ? Maybe.Of(selector(_value)) : Maybe<TResult>.None;
-#endif
         }
 
         [Pure]
@@ -353,12 +292,7 @@ namespace Abc
         {
             if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
 
-#if MONADS_PURE
-            // NB: x is never null.
-            return Bind(x => predicate(x) ? new Maybe<T>(x) : None);
-#else
             return _isSome && predicate(_value) ? this : None;
-#endif
         }
 
         // Generalizes both Bind() and ZipWith<T, TMiddle, TResult>().
@@ -370,18 +304,12 @@ namespace Abc
             if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
             if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
 
-#if MONADS_PURE
-            return Bind(
-                x => selector(x).Select(
-                    middle => resultSelector(x, middle)));
-#else
             if (!_isSome) { return Maybe<TResult>.None; }
 
             var middle = selector(_value);
             if (!middle._isSome) { return Maybe<TResult>.None; }
 
             return Maybe.Of(resultSelector(_value, middle._value));
-#endif
         }
 
         [Pure]
@@ -406,26 +334,6 @@ namespace Abc
             if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
             if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
 
-#if MONADS_PURE
-            var keyLookup = __getKeyLookup(inner, innerKeySelector, comparer);
-
-            return SelectMany(__valueSelector, resultSelector);
-
-            Maybe<TInner> __valueSelector(T outer) => keyLookup(outerKeySelector(outer));
-
-            static Func<TKey, Maybe<TInner>> __getKeyLookup(
-               Maybe<TInner> inner,
-               Func<TInner, TKey> innerKeySelector,
-               IEqualityComparer<TKey>? comparer)
-            {
-                return outerKey =>
-                    inner.Select(innerKeySelector)
-                        .Where(innerKey =>
-                            (comparer ?? EqualityComparer<TKey>.Default)
-                                .Equals(innerKey, outerKey))
-                        .ContinueWith(inner);
-            }
-#else
             if (_isSome && inner._isSome)
             {
                 var outerKey = outerKeySelector(_value);
@@ -438,7 +346,6 @@ namespace Abc
             }
 
             return Maybe<TResult>.None;
-#endif
         }
 
         //
@@ -504,42 +411,26 @@ namespace Abc
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
             where TResult : notnull
         {
-#if MONADS_PURE
-            return Select(_ => value);
-#else
             return _isSome ? Maybe.Of(value) : Maybe<TResult>.None;
-#endif
         }
 
         [Pure]
         public Maybe<TResult> ContinueWith<TResult>(Maybe<TResult> other)
         {
-#if MONADS_PURE
-            return Bind(_ => other);
-#else
             return _isSome ? other : Maybe<TResult>.None;
-#endif
         }
 
         [Pure]
         public Maybe<T> PassThru<TOther>(Maybe<TOther> other)
         {
-#if MONADS_PURE
-            return ZipWith(other, (x, _) => x);
-#else
             return other._isSome ? this : None;
-#endif
         }
 
         // REVIEW: Skip(predicate).
         [Pure]
         public Maybe<Unit> Skip()
         {
-#if MONADS_PURE
-            return ContinueWith(Maybe.Unit);
-#else
             return _isSome ? Maybe.Unit : Maybe.None;
-#endif
         }
 
         #region ZipWith()
@@ -550,15 +441,9 @@ namespace Abc
         {
             if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
 
-#if MONADS_PURE
-            return Bind(
-                x => other.Select(
-                    y => zipper(x, y)));
-#else
             return _isSome && other._isSome
                 ? Maybe.Of(zipper(_value, other._value))
                 : Maybe<TResult>.None;
-#endif
         }
 
         [Pure]
@@ -569,15 +454,9 @@ namespace Abc
         {
             if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
 
-#if MONADS_PURE
-            return Bind(
-                x => first.ZipWith(
-                    second, (y, z) => zipper(x, y, z)));
-#else
             return _isSome && first._isSome && second._isSome
                 ? Maybe.Of(zipper(_value, first._value, second._value))
                 : Maybe<TResult>.None;
-#endif
         }
 
         [Pure]
@@ -589,17 +468,9 @@ namespace Abc
         {
             if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
 
-#if MONADS_PURE
-            return Bind(
-                x => first.ZipWith(
-                    second,
-                    third,
-                    (y, z, a) => zipper(x, y, z, a)));
-#else
             return _isSome && first._isSome && second._isSome && third._isSome
                 ? Maybe.Of(zipper(_value, first._value, second._value, third._value))
                 : Maybe<TResult>.None;
-#endif
         }
 
         [Pure]
@@ -612,18 +483,9 @@ namespace Abc
         {
             if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
 
-#if MONADS_PURE
-            return Bind(
-                x => first.ZipWith(
-                    second,
-                    third,
-                    fourth,
-                    (y, z, a, b) => zipper(x, y, z, a, b)));
-#else
             return _isSome && first._isSome && second._isSome && third._isSome && fourth._isSome
                 ? Maybe.Of(zipper(_value, first._value, second._value, third._value, fourth._value))
                 : Maybe<TResult>.None;
-#endif
         }
 
         #endregion
@@ -690,41 +552,25 @@ namespace Abc
         /// </summary>
         [Pure]
         public bool Equals(Maybe<T> other)
-#if MONADS_PURE
-            => Unwrap(x => other.Contains(x), !other._isSome);
-#else
             => _isSome
               ? other._isSome && s_DefaultComparer.Equals(_value, other._value)
               : !other._isSome;
-#endif
 
         [Pure]
         public bool Equals(Maybe<T> other, IEqualityComparer<T> comparer)
-#if MONADS_PURE
-            => Unwrap(x => other.Contains(x, comparer), !other._isSome);
-#else
             => _isSome
                 ? other._isSome && (comparer ?? s_DefaultComparer).Equals(_value, other._value)
                 : !other._isSome;
-#endif
 
         // REVIEW: IEquatable<T>?
 
         [Pure]
         public bool Contains(T value)
-#if MONADS_PURE
-            => Unwrap(x => s_DefaultComparer.Equals(x, value), Predicates.False);
-#else
             => _isSome && s_DefaultComparer.Equals(_value, value);
-#endif
 
         [Pure]
         public bool Contains(T value, IEqualityComparer<T> comparer)
-#if MONADS_PURE
-            => Unwrap(x => (comparer ?? s_DefaultComparer).Equals(x, value), Predicates.False);
-#else
             => _isSome && (comparer ?? s_DefaultComparer).Equals(_value, value);
-#endif
 
         /// <inheritdoc />
         [Pure]
@@ -738,18 +584,10 @@ namespace Abc
         /// <inheritdoc />
         [Pure]
         public override int GetHashCode()
-#if MONADS_PURE
-            => Unwrap(x => x!.GetHashCode(), 0);
-#else
             => _value?.GetHashCode() ?? 0;
-#endif
 
         [Pure]
         public int GetHashCode(IEqualityComparer<T> comparer)
-#if MONADS_PURE
-            => Unwrap((comparer ?? s_DefaultComparer).GetHashCode, 0);
-#else
             => _isSome ? (comparer ?? s_DefaultComparer).GetHashCode(_value) : 0;
-#endif
     }
 }

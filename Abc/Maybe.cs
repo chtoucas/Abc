@@ -8,10 +8,6 @@ namespace Abc
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-#if MONADS_PURE
-    using Abc.Utilities;
-#endif
-
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
     /// <para>This class cannot be inherited.</para>
@@ -64,11 +60,7 @@ namespace Abc
         /// </summary>
         [Pure]
         public static Maybe<T> Flatten<T>(this Maybe<Maybe<T>> @this)
-#if MONADS_PURE
-            => @this.Bind(Thunks<Maybe<T>>.Ident);
-#else
             => @this.IsSome ? @this.Value : Maybe<T>.None;
-#endif
 
         [Pure]
         public static Maybe<Unit> Guard(bool predicate)
@@ -112,18 +104,11 @@ namespace Abc
         public static Maybe<T> Squash<T>(this Maybe<T?> @this) where T : struct
             // NB: When IsSome is true, Value.HasValue is also true, therefore
             // we can safely access Value.Value.
-#if MONADS_PURE
-            => @this.Bind(x => Some(x!.Value));
-#else
             => @this.IsSome ? Some(@this.Value!.Value) : Maybe<T>.None;
-#endif
 
         // Conversion from Maybe<T?> to T?.
         [Pure]
         public static T? ToNullable<T>(this Maybe<T?> @this) where T : struct
-#if MONADS_PURE
-            => @this.ValueOrDefault();
-#else
 #if DEBUG
             // We have to be careful in Debug mode since the access to Value is
             // protected by a Debug.Assert.
@@ -132,16 +117,11 @@ namespace Abc
             // If the object is "none", Value is default(T?) ie null.
             => @this.Value;
 #endif
-#endif
 
         // Conversion from Maybe<T> to T?.
         [Pure]
         public static T? ToNullable<T>(this Maybe<T> @this) where T : struct
-#if MONADS_PURE
-            => @this.ValueOrDefault();
-#else
             => @this.IsSome ? @this.Value : (T?)null;
-#endif
     }
 
     // Extension methods for Maybe<T> where T is enumerable.
@@ -156,21 +136,12 @@ namespace Abc
 
         [Pure]
         public static IEnumerable<T> ValueOrEmpty<T>(this Maybe<IEnumerable<T>> @this)
-#if MONADS_PURE
-            => @this.ValueOrElse(Enumerable.Empty<T>());
-#else
             => @this.IsSome ? @this.Value : Enumerable.Empty<T>();
-#endif
 
         // Maybe<IEnumerable<T>>?
         [Pure]
         public static IEnumerable<T> CollectAny<T>(IEnumerable<Maybe<T>> source)
         {
-#if MONADS_PURE
-            var seed = MaybeEnumerable_<T>.Empty;
-            var seq = source.Aggregate(seed, (x, y) => x.ZipWith(y, Enumerable.Append));
-            return seq.ValueOrEmpty();
-#else
             // Check args eagerly.
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
 
@@ -183,15 +154,11 @@ namespace Abc
                     if (item.IsSome) { yield return item.Value; }
                 }
             }
-#endif
         }
 
         [Pure]
         public static Maybe<T> Any<T>(IEnumerable<Maybe<T>> source)
         {
-#if MONADS_PURE
-            return source.Aggregate(Maybe<T>.None, (m, n) => m.OrElse(n));
-#else
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
 
             foreach (var item in source)
@@ -200,7 +167,6 @@ namespace Abc
             }
 
             return Maybe<T>.None;
-#endif
         }
 
         private static class MaybeEnumerable_<T>
@@ -217,12 +183,8 @@ namespace Abc
         public static Maybe<TResult> Invoke<TSource, TResult>(
             this Maybe<Func<TSource, TResult>> @this, Maybe<TSource> value)
         {
-#if MONADS_PURE
-            return @this.Bind(x => value.Select(x));
-#else
             return value.IsSome && @this.IsSome ? Of(@this.Value(value.Value))
                 : Maybe<TResult>.None;
-#endif
         }
     }
 
