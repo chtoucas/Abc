@@ -13,6 +13,9 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <!-- UNCHECKED arithmetic -->
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <!--

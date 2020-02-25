@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <Authors>Narvalo.Org</Authors>
+    <Authors>Chtoucas</Authors>
     <Company>Narvalo.Org</Company>
     <Product>Abc</Product>
     <Copyright>Copyright © 2013 Narvalo.Org</Copyright>
@@ -36,18 +36,18 @@
     <SuppressNETCoreSdkPreviewMessage Condition="'$(_NETCoreSdkIsPreview)' == 'true'">true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 
-  <!-- DEBUG: checked arithmetic -->
+  <!-- DEBUG -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <DefineConstants>TRACE;DEBUG;CONTRACTS_FULL</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
-  <!-- RELEASE: UNCHECKED arithmetic -->
+  <!-- RELEASE -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DefineConstants>TRACE;CONTRACTS_FULL</DefineConstants>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
   <!-- Optional symbols -->

@@ -7,8 +7,6 @@
 
     <IsPackable>false</IsPackable>
 
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-
     <!--
       CA1707      Identifiers should not contain underscores
       IDE0002     Simplify Member Access
