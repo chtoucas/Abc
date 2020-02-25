@@ -9,6 +9,7 @@ namespace Abc.Linq
     /// <summary>
     /// Provides a set of extension methods for querying objects that implement
     /// <see cref="IEnumerable{T}"/>.
+    /// <para>This class cannot be inherited.</para>
     /// </summary>
     public static partial class Qperators { }
 }

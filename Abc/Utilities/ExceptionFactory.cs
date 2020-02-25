@@ -2,7 +2,7 @@
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters.
 
-namespace Abc.Utitilies
+namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics.Contracts;

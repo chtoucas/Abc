@@ -14,26 +14,10 @@ namespace Abc.Extensions
     // REVIEW: MayGetValues, Maybe<IEnumerable>?
 
     /// <summary>
-    /// Provides extension methods for <see cref="NameValueCollection"/>
-    /// and <see cref="IDictionary{T,U}"/>.
+    /// Provides extension methods for <see cref="NameValueCollection"/>.
+    /// <para>This class cannot be inherited.</para>
     /// </summary>
-    public static partial class CollectionExtensions { }
-
-    public partial class CollectionExtensions
-    {
-        [Pure]
-        public static Maybe<TValue> MayGetValue<TKey, TValue>(
-            this IDictionary<TKey, TValue> @this, TKey key)
-        {
-            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
-
-            return !(key is null) && @this.TryGetValue(key, out TValue value)
-                ? Maybe.Of(value)
-                : Maybe<TValue>.None;
-        }
-    }
-
-    public partial class CollectionExtensions
+    public static class NameValueCollectionX
     {
         [Pure]
         public static Maybe<string> MayGetSingle(this NameValueCollection @this, string name)

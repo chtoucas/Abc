@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc
+namespace Abc.Utilities
 {
     // XML comments are copied from the following reference:
     // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/accessibility-levels

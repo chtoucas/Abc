@@ -45,10 +45,8 @@ namespace Abc
     /// value at all.
     /// <para><see cref="Maybe{T}"/> is an immutable struct.</para>
     /// </summary>
-    /// <typeparam name="T">The underlying type of the value.</typeparam>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
-    [SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix")]
     public readonly partial struct Maybe<T> : IEquatable<Maybe<T>>
     {
         private static readonly IEqualityComparer<T> s_DefaultComparer
@@ -209,7 +207,9 @@ namespace Abc
         public void Do(Action<T> onSome, Action onNone)
         {
 #if MONADS_PURE
+#pragma warning disable CA1806 // Do not ignore method results
             Unwrap(__some, __none);
+#pragma warning restore CA1806
 
             Unit __some(T x) { onSome(x); return Unit.Default; }
             Unit __none() { onNone(); return Unit.Default; }

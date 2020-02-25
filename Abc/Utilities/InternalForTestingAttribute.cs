@@ -1,12 +1,13 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc
+namespace Abc.Utilities
 {
     using System;
 
     /// <summary>
     /// Indicates that a method or a field has been made internal for testing
     /// purposes.
+    /// <para>This class cannot be inherited.</para>
     /// </summary>
     [AttributeUsage(
         AttributeTargets.Constructor

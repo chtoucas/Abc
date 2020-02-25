@@ -14,6 +14,7 @@ namespace Abc
 
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
+    /// <para>This class cannot be inherited.</para>
     /// </summary>
     public static partial class Maybe { }
 
@@ -74,7 +75,36 @@ namespace Abc
             => predicate ? Unit : None;
     }
 
-    // Extension methods when T is a struct.
+    // Extension methods for functions in the Kleisli category.
+    public partial class Maybe
+    {
+        [Pure]
+        public static Maybe<TResult> Invoke<TSource, TResult>(
+            this Func<TSource, Maybe<TResult>> @this, Maybe<TSource> value)
+        {
+            return value.Bind(@this);
+        }
+
+        [Pure]
+        public static Func<TSource, Maybe<TResult>> Compose<TSource, TMiddle, TResult>(
+            this Func<TSource, Maybe<TMiddle>> @this, Func<TMiddle, Maybe<TResult>> other)
+        {
+            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+
+            return x => @this(x).Bind(other);
+        }
+
+        [Pure]
+        public static Func<TSource, Maybe<TResult>> ComposeBack<TSource, TMiddle, TResult>(
+            this Func<TMiddle, Maybe<TResult>> @this, Func<TSource, Maybe<TMiddle>> other)
+        {
+            if (other is null) { throw new ArgumentNullException(nameof(other)); }
+
+            return x => other(x).Bind(@this);
+        }
+    }
+
+    // Extension methods for Maybe<T> where T is a struct.
     public partial class Maybe
     {
         // Conversion from Maybe<T?> to  Maybe<T>.
@@ -114,7 +144,7 @@ namespace Abc
 #endif
     }
 
-    // Extension methods when T is enumerable.
+    // Extension methods for Maybe<T> where T is enumerable.
     // Operations on IEnumerable<Maybe<T>>.
     // - Filtering: CollectAny (deferred).
     // - Aggregation: Any.
@@ -180,7 +210,7 @@ namespace Abc
         }
     }
 
-    // Extension methods when T is a func.
+    // Extension methods for Maybe<T> where T is a function.
     public partial class Maybe
     {
         [Pure]
@@ -196,7 +226,7 @@ namespace Abc
         }
     }
 
-    // Extension methods when T is disposable.
+    // Extension methods for Maybe<T> where T is disposable.
     public partial class Maybe
     {
         //// Bind() with automatic resource management.

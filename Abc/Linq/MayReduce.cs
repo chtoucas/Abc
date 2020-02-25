@@ -6,7 +6,7 @@ namespace Abc.Linq
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
-    using EF = Abc.Utitilies.ExceptionFactory;
+    using EF = Abc.Utilities.ExceptionFactory;
 
     // Aggregation: MayReduce.
     public partial class Qperators

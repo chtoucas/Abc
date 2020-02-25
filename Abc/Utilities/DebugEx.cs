@@ -1,12 +1,13 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Utitilies
+namespace Abc.Utilities
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Provides static methods that help debug the code.
+    /// <para>This class cannot be inherited.</para>
     /// </summary>
     [ExcludeFromCodeCoverage]
     internal static class DebugEx
