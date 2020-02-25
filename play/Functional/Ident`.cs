@@ -4,6 +4,7 @@ namespace Play.Functional
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using static Require;
 
@@ -36,13 +37,13 @@ namespace Play.Functional
 
         private Ident(T value)
         {
-            _value = value;
+            _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public bool Contains(T value)
+        public bool Contains([AllowNull]T value)
             => Equals(value);
 
-        public bool Contains(T value, IEqualityComparer<T> comparer)
+        public bool Contains([AllowNull]T value, IEqualityComparer<T> comparer)
             => Equals(value, comparer);
 
         public IEnumerator<T> GetEnumerator()
@@ -118,10 +119,10 @@ namespace Play.Functional
         public bool Equals(Ident<T> other, IEqualityComparer<T> comparer)
             => (comparer ?? s_DefaultComparer).Equals(_value, other._value);
 
-        public bool Equals(T other)
+        public bool Equals([AllowNull]T other)
             => s_DefaultComparer.Equals(_value, other);
 
-        public bool Equals(T other, IEqualityComparer<T> comparer)
+        public bool Equals([AllowNull]T other, IEqualityComparer<T> comparer)
             => (comparer ?? s_DefaultComparer).Equals(_value, other);
 
         public override bool Equals(object? obj)
