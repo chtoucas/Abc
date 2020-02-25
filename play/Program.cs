@@ -1,14 +1,11 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc
+namespace Play
 {
-    using System;
-
     class Program
     {
-        static void Main(/*string[] args*/)
+        static void Main()
         {
-            Console.WriteLine("Hello World!");
         }
     }
 }
