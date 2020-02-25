@@ -37,6 +37,7 @@ namespace Abc
     // https://www.haskell.org/onlinereport/monad.html
     // Si je me rappelle bien, à l'époque je ne m'étais intéressé qu'à la version
     // Haskell 98.
+    // Removed methods: Lift, Gather.
 
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
@@ -321,33 +322,165 @@ namespace Abc
         #endregion
     }
 
-    // Kind of IEnumerable<>.
+    // Query Expression Pattern aka LINQ.
     public partial struct Maybe<T>
     {
-        // REVIEW: IEnumerable<T> or not? Test LINQ before (conflicts?).
-        // Also, Maybe<> is a struct and I am worry with hidden casts if this
-        // type implements IEnumerable<>.
-
-        //public IEnumerable<T> ToEnumerable()
-        //{
-        //    if (_isSome)
-        //    {
-        //        yield return _value;
-        //    }
-        //}
-
-        public IEnumerator<T> GetEnumerator()
+        public Maybe<TResult> Select<TResult>(Func<T, TResult> selector)
         {
-            if (_isSome)
+            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+
+#if MONADS_PURE
+            return Bind(x => Maybe.Of(selector(x)));
+#else
+            return _isSome ? Maybe.Of(selector(_value)) : Maybe<TResult>.None;
+#endif
+        }
+
+        public Maybe<T> Where(Func<T, bool> predicate)
+        {
+            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
+
+#if MONADS_PURE
+            // NB: x is never null.
+            return Bind(x => predicate(x) ? new Maybe<T>(x) : None);
+#else
+            return _isSome && predicate(_value) ? this : None;
+#endif
+        }
+
+        // Generalizes both Bind() and ZipWith<T, TMiddle, TResult>().
+        public Maybe<TResult> SelectMany<TMiddle, TResult>(
+            Func<T, Maybe<TMiddle>> selector,
+            Func<T, TMiddle, TResult> resultSelector)
+        {
+            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+
+#if MONADS_PURE
+            return Bind(
+                x => selector(x).Select(
+                    middle => resultSelector(x, middle)));
+#else
+            if (!_isSome) { return Maybe<TResult>.None; }
+
+            var middle = selector(_value);
+            if (!middle._isSome) { return Maybe<TResult>.None; }
+
+            return Maybe.Of(resultSelector(_value, middle._value));
+#endif
+        }
+
+        public Maybe<TResult> Join<TInner, TKey, TResult>(
+            Maybe<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector)
+        {
+            return Join(inner, outerKeySelector, innerKeySelector, resultSelector, null!);
+        }
+
+        public Maybe<TResult> Join<TInner, TKey, TResult>(
+            Maybe<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector,
+            IEqualityComparer<TKey> comparer)
+        {
+            if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+
+#if MONADS_PURE
+            var keyLookup = __getKeyLookup(inner, innerKeySelector, comparer);
+
+            return SelectMany(__valueSelector, resultSelector);
+
+            Maybe<TInner> __valueSelector(T outer) => keyLookup(outerKeySelector(outer));
+
+            static Func<TKey, Maybe<TInner>> __getKeyLookup(
+               Maybe<TInner> inner,
+               Func<TInner, TKey> innerKeySelector,
+               IEqualityComparer<TKey>? comparer)
             {
-                yield return _value;
+                return outerKey =>
+                    inner.Select(innerKeySelector)
+                        .Where(innerKey =>
+                            (comparer ?? EqualityComparer<TKey>.Default)
+                                .Equals(innerKey, outerKey))
+                        .ContinueWith(inner);
             }
+#else
+            if (_isSome && inner._isSome)
+            {
+                var outerKey = outerKeySelector(_value);
+                var innerKey = innerKeySelector(inner._value);
+
+                if ((comparer ?? EqualityComparer<TKey>.Default).Equals(outerKey, innerKey))
+                {
+                    return Maybe.Of(resultSelector(_value, inner._value));
+                }
+            }
+
+            return Maybe<TResult>.None;
+#endif
+        }
+
+        //
+        // GroupJoin currently disabled.
+        //
+
+        //public Maybe<TResult> GroupJoin<TInner, TKey, TResult>(
+        //    Maybe<TInner> inner,
+        //    Func<T, TKey> outerKeySelector,
+        //    Func<TInner, TKey> innerKeySelector,
+        //    Func<T, Maybe<TInner>, TResult> resultSelector,
+        //    IEqualityComparer<TKey> comparer)
+        //{
+        //    if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
+        //    if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
+        //    if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+
+        //    if (_isSome && inner._isSome)
+        //    {
+        //        var outerKey = outerKeySelector(_value);
+        //        var innerKey = innerKeySelector(inner._value);
+
+        //        if ((comparer ?? EqualityComparer<TKey>.Default).Equals(outerKey, innerKey))
+        //        {
+        //            return Maybe.Of(resultSelector(_value, inner));
+        //        }
+        //    }
+
+        //    return Maybe<TResult>.None;
+        //}
+    }
+
+    // Async methods.
+    public partial struct Maybe<T>
+    {
+        public async Task<Maybe<TResult>> BindAsync<TResult>(
+            Func<T, Task<Maybe<TResult>>> binder)
+        {
+            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
+
+            return _isSome ? await binder(_value).ConfigureAwait(false)
+                : Maybe<TResult>.None; ;
+        }
+
+        public async Task<Maybe<TResult>> SelectAsync<TResult>(
+            Func<T, Task<TResult>> selector)
+        {
+            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+
+            return _isSome ? Maybe.Of(await selector(_value).ConfigureAwait(false))
+                : Maybe<TResult>.None;
         }
     }
 
     // Standard API.
     public partial struct Maybe<T>
     {
+        // REVIEW: ReplaceWith -> ContinueWith?
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
             where TResult : notnull
         {
@@ -467,161 +600,30 @@ namespace Abc
         }
 
         #endregion
+    }
 
-        #region Query Expression Pattern
+    // Iterable.
+    public partial struct Maybe<T>
+    {
+        // REVIEW: IEnumerable<T> or not? Test LINQ before (conflicts?).
+        // Also, Maybe<> is a struct and I am worry with hidden casts if this
+        // type implements IEnumerable<>.
 
-        public Maybe<TResult> Select<TResult>(Func<T, TResult> selector)
-        {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
-
-#if MONADS_PURE
-            return Bind(x => Maybe.Of(selector(x)));
-#else
-            return _isSome ? Maybe.Of(selector(_value)) : Maybe<TResult>.None;
-#endif
-        }
-
-        public Maybe<T> Where(Func<T, bool> predicate)
-        {
-            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
-
-#if MONADS_PURE
-            // NB: x is never null.
-            return Bind(x => predicate(x) ? new Maybe<T>(x) : None);
-#else
-            return _isSome && predicate(_value) ? this : None;
-#endif
-        }
-
-        // Generalizes both Bind() and ZipWith<T, TMiddle, TResult>().
-        public Maybe<TResult> SelectMany<TMiddle, TResult>(
-            Func<T, Maybe<TMiddle>> selector,
-            Func<T, TMiddle, TResult> resultSelector)
-        {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
-            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
-
-#if MONADS_PURE
-            return Bind(
-                x => selector(x).Select(
-                    middle => resultSelector(x, middle)));
-#else
-            if (!_isSome) { return Maybe<TResult>.None; }
-
-            var middle = selector(_value);
-            if (!middle._isSome) { return Maybe<TResult>.None; }
-
-            return Maybe.Of(resultSelector(_value, middle._value));
-#endif
-        }
-
-        public Maybe<TResult> Join<TInner, TKey, TResult>(
-            Maybe<TInner> inner,
-            Func<T, TKey> outerKeySelector,
-            Func<TInner, TKey> innerKeySelector,
-            Func<T, TInner, TResult> resultSelector)
-        {
-            return Join(inner, outerKeySelector, innerKeySelector, resultSelector, null);
-        }
-
-        public Maybe<TResult> Join<TInner, TKey, TResult>(
-            Maybe<TInner> inner,
-            Func<T, TKey> outerKeySelector,
-            Func<TInner, TKey> innerKeySelector,
-            Func<T, TInner, TResult> resultSelector,
-            IEqualityComparer<TKey>? comparer)
-        {
-            if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
-            if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
-            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
-
-#if MONADS_PURE
-            var keyLookup = __getKeyLookup(inner, innerKeySelector, comparer);
-
-            return SelectMany(__valueSelector, resultSelector);
-
-            Maybe<TInner> __valueSelector(T outer) => keyLookup(outerKeySelector(outer));
-
-            static Func<TKey, Maybe<TInner>> __getKeyLookup(
-               Maybe<TInner> inner,
-               Func<TInner, TKey> innerKeySelector,
-               IEqualityComparer<TKey>? comparer)
-            {
-                return outerKey =>
-                    inner.Select(innerKeySelector)
-                        .Where(innerKey =>
-                            (comparer ?? EqualityComparer<TKey>.Default)
-                                .Equals(innerKey, outerKey))
-                        .ContinueWith(inner);
-            }
-#else
-            if (_isSome && inner._isSome)
-            {
-                var outerKey = outerKeySelector(_value);
-                var innerKey = innerKeySelector(inner._value);
-
-                if ((comparer ?? EqualityComparer<TKey>.Default).Equals(outerKey, innerKey))
-                {
-                    return Maybe.Of(resultSelector(_value, inner._value));
-                }
-            }
-
-            return Maybe<TResult>.None;
-#endif
-        }
-
-        //
-        // GroupJoin currently disabled.
-        //
-
-        //public Maybe<TResult> GroupJoin<TInner, TKey, TResult>(
-        //    Maybe<TInner> inner,
-        //    Func<T, TKey> outerKeySelector,
-        //    Func<TInner, TKey> innerKeySelector,
-        //    Func<T, Maybe<TInner>, TResult> resultSelector,
-        //    IEqualityComparer<TKey> comparer)
+        //public IEnumerable<T> ToEnumerable()
         //{
-        //    if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
-        //    if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
-        //    if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
-
-        //    if (_isSome && inner._isSome)
+        //    if (_isSome)
         //    {
-        //        var outerKey = outerKeySelector(_value);
-        //        var innerKey = innerKeySelector(inner._value);
-
-        //        if ((comparer ?? EqualityComparer<TKey>.Default).Equals(outerKey, innerKey))
-        //        {
-        //            return Maybe.Of(resultSelector(_value, inner));
-        //        }
+        //        yield return _value;
         //    }
-
-        //    return Maybe<TResult>.None;
         //}
 
-        #endregion
-
-        #region Async methods
-
-        public async Task<Maybe<TResult>> BindAsync<TResult>(
-            Func<T, Task<Maybe<TResult>>> binder)
+        public IEnumerator<T> GetEnumerator()
         {
-            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
-
-            return _isSome ? await binder(_value).ConfigureAwait(false)
-                : Maybe<TResult>.None; ;
+            if (_isSome)
+            {
+                yield return _value;
+            }
         }
-
-        public async Task<Maybe<TResult>> SelectAsync<TResult>(
-            Func<T, Task<TResult>> selector)
-        {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
-
-            return _isSome ? Maybe.Of(await selector(_value).ConfigureAwait(false))
-                : Maybe<TResult>.None;
-        }
-
-        #endregion
     }
 
     // Interface IEquatable<>.
