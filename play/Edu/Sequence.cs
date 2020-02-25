@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Play.Edu
+namespace Abc.Edu
 {
     using System;
     using System.Collections.Generic;

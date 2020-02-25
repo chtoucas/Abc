@@ -1,10 +1,12 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Play.Edu
+namespace Abc.Edu
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+
+    // REVIEW: IStructuralComparable, IComparable?
 
     /// <summary>
     /// Provides static helpers for <see cref="Ident{T}"/>.
@@ -12,43 +14,44 @@ namespace Play.Edu
     /// </summary>
     public static class Ident
     {
-        public static Ident<T> Of<T>([DisallowNull]T value)
+        public static Ident<T> Of<T>(T value) where T : notnull
             => Ident<T>.η(value);
 
-        public static Ident<T> Flatten<T>(Ident<Ident<T>> square)
+        public static Ident<T> Flatten<T>(Ident<Ident<T>> square) where T : notnull
             => Ident<T>.μ(square);
 
-        [return: NotNull]
-        public static T Extract<T>(Ident<T> ident)
+        public static T Extract<T>(Ident<T> ident) where T : notnull
             => Ident<T>.ε(ident);
 
-        public static Ident<Ident<T>> Duplicate<T>(Ident<T> ident)
+        public static Ident<Ident<T>> Duplicate<T>(Ident<T> ident) where T : notnull
             => Ident<T>.δ(ident);
-
-        public static ValueTuple x => new ValueTuple();
     }
 
     /// <summary>
     /// Defines the trivial monad/comonad (pretty useless).
     /// <para><see cref="Ident{T}"/> is an immutable struct.</para>
     /// </summary>
-    public readonly partial struct Ident<T> : IEquatable<Ident<T>>, IEquatable<T>
+    public readonly partial struct Ident<T> : IEquatable<Ident<T>>, IStructuralEquatable
+        where T : notnull
     {
-        private static readonly IEqualityComparer<T> s_DefaultComparer
+        private static readonly IEqualityComparer s_DefaultComparer
             = EqualityComparer<T>.Default;
 
         private readonly T _value;
 
-        private Ident([DisallowNull]T value)
+        private Ident(T value)
         {
             _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public bool Contains([AllowNull]T value)
-            => Equals(value);
+        public override string ToString()
+            => $"({_value})";
 
-        public bool Contains([AllowNull]T value, IEqualityComparer<T> comparer)
-            => Equals(value, comparer);
+        public bool Contains(T value)
+            => s_DefaultComparer.Equals(_value, value);
+
+        public bool Contains(T value, IEqualityComparer comparer)
+            => (comparer ?? s_DefaultComparer).Equals(_value, value);
 
         public IEnumerator<T> GetEnumerator()
         {
@@ -60,6 +63,7 @@ namespace Play.Edu
     public partial struct Ident<T>
     {
         public Ident<TResult> Bind<TResult>(Func<T, Ident<TResult>> binder)
+            where TResult : notnull
         {
             Require.NotNull(binder, nameof(binder));
 
@@ -67,7 +71,7 @@ namespace Play.Edu
         }
 
         // The unit (wrap, public ctor).
-        internal static Ident<T> η([DisallowNull]T value)
+        internal static Ident<T> η(T value)
             => new Ident<T>(value);
 
         // The multiplication or composition.
@@ -87,7 +91,6 @@ namespace Play.Edu
         }
 
         // The counit (unwrap, property Value).
-        [return: NotNull]
         internal static T ε(Ident<T> ident)
             => ident._value;
 
@@ -96,7 +99,7 @@ namespace Play.Edu
             => new Ident<Ident<T>>(ident);
     }
 
-    // Interface IEquatable<>.
+    // Interfaces IEquatable<>, IStructuralEquatable.
     public partial struct Ident<T>
     {
         public static bool operator ==(Ident<T> left, Ident<T> right)
@@ -105,44 +108,38 @@ namespace Play.Edu
         public static bool operator !=(Ident<T> left, Ident<T> right)
             => !left.Equals(right);
 
-        public static bool operator ==(Ident<T> left, [AllowNull]T right)
-            => left.Equals(right);
+        public static bool operator ==(Ident<T> left, T right)
+            => left.Contains(right);
 
-        public static bool operator !=(Ident<T> left, [AllowNull]T right)
-            => !left.Equals(right);
+        public static bool operator !=(Ident<T> left, T right)
+            => !left.Contains(right);
 
-        public static bool operator ==([AllowNull]T left, Ident<T> right)
-            => right.Equals(left);
+        public static bool operator ==(T left, Ident<T> right)
+            => right.Contains(left);
 
-        public static bool operator !=([AllowNull]T left, Ident<T> right)
-            => !right.Equals(left);
+        public static bool operator !=(T left, Ident<T> right)
+            => !right.Contains(left);
 
         public bool Equals(Ident<T> other)
             => s_DefaultComparer.Equals(_value, other._value);
 
-        public bool Equals(Ident<T> other, IEqualityComparer<T> comparer)
+        public bool Equals(Ident<T> other, IEqualityComparer comparer)
             => (comparer ?? s_DefaultComparer).Equals(_value, other._value);
-
-        public bool Equals([AllowNull]T other)
-            => s_DefaultComparer.Equals(_value, other);
-
-        public bool Equals([AllowNull]T other, IEqualityComparer<T> comparer)
-            => (comparer ?? s_DefaultComparer).Equals(_value, other);
 
         public override bool Equals(object? obj)
             => obj is Ident<T> ident ? Equals(ident)
-                : obj is T value ? Equals(value)
+                : obj is T value ? Contains(value)
                 : false;
 
-        public bool Equals(object? other, IEqualityComparer<T> comparer)
+        bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer)
             => other is Ident<T> ident ? Equals(ident, comparer)
-                : other is T value ? Equals(value, comparer)
+                : other is T value ? Contains(value, comparer)
                 : false;
 
         public override int GetHashCode()
-            => _value?.GetHashCode() ?? 0;
+            => _value.GetHashCode();
 
-        public int GetHashCode(IEqualityComparer<T> comparer)
+        int IStructuralEquatable.GetHashCode(IEqualityComparer comparer)
             => (comparer ?? s_DefaultComparer).GetHashCode(_value);
     }
 }
