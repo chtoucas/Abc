@@ -107,8 +107,8 @@ namespace Abc
 
     // Extension methods when T is enumerable.
     // Operations on IEnumerable<Maybe<T>>.
-    // Filtering: CollectAny (deferred).
-    // Aggregation: Any.
+    // - Filtering: CollectAny (deferred).
+    // - Aggregation: Any.
     public partial class Maybe
     {
         public static Maybe<IEnumerable<T>> Empty<T>()
