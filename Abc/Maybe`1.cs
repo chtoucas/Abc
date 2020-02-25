@@ -7,6 +7,7 @@ namespace Abc
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
 #if MONADS_PURE
@@ -107,6 +108,7 @@ namespace Abc
         /// <summary>
         /// Returns a string representation of the current instance.
         /// </summary>
+        [Pure]
         public override string ToString()
 #if MONADS_PURE
             => Unwrap(x => $"Maybe({x})", "Maybe(None)");
@@ -124,6 +126,7 @@ namespace Abc
         [SuppressMessage("Microsoft.Design", "CA1000:Do not declare static members on generic types", Justification = "There is no such thing as a generic static property on a non-generic type.")]
         public static Maybe<T> None { get; } = default;
 
+        [Pure]
         public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
         {
             if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
@@ -131,6 +134,7 @@ namespace Abc
             return _isSome ? binder(_value) : Maybe<TResult>.None;
         }
 
+        [Pure]
         public Maybe<T> OrElse(Maybe<T> other)
             => _isSome ? this : other;
 
@@ -163,6 +167,7 @@ namespace Abc
         /// <paramref name="caseSome"/>, otherwise it executes
         /// <paramref name="caseNone"/>.
         /// </summary>
+        [Pure]
         public TResult Unwrap<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
         {
             if (_isSome)
@@ -182,6 +187,7 @@ namespace Abc
         /// <paramref name="caseSome"/>, otherwise it returns
         /// <paramref name="caseNone"/>.
         /// </summary>
+        [Pure]
         public TResult Unwrap<TResult>(Func<T, TResult> caseSome, TResult caseNone)
         {
             if (_isSome)
@@ -247,6 +253,7 @@ namespace Abc
         /// Obtains the enclosed value if any; otherwise this method returns the
         /// default value of the <typeparamref name="T"/> type.
         /// </summary>
+        [Pure]
         [return: MaybeNull]
         public T ValueOrDefault()
 #if MONADS_PURE
@@ -259,6 +266,7 @@ namespace Abc
         /// Obtains the enclosed value if any; otherwise this method returns
         /// <paramref name="other"/>.
         /// </summary>
+        [Pure]
         public T ValueOrElse([DisallowNull]T other)
 #if MONADS_PURE
             => Unwrap(Thunks<T>.Ident, other);
@@ -266,6 +274,7 @@ namespace Abc
             => _isSome ? _value : other;
 #endif
 
+        [Pure]
         public T ValueOrElse(Func<T> valueFactory)
         {
 #if MONADS_PURE
@@ -289,6 +298,7 @@ namespace Abc
 #endif
         }
 
+        [Pure]
         public T ValueOrThrow()
 #if MONADS_PURE
             => Unwrap(Thunks<T>.Ident, () => throw new InvalidOperationException());
@@ -296,6 +306,7 @@ namespace Abc
             => _isSome ? _value : throw new InvalidOperationException();
 #endif
 
+        [Pure]
         public T ValueOrThrow(Func<Exception> exceptionFactory)
         {
 #if MONADS_PURE
@@ -325,6 +336,7 @@ namespace Abc
     // Query Expression Pattern aka LINQ.
     public partial struct Maybe<T>
     {
+        [Pure]
         public Maybe<TResult> Select<TResult>(Func<T, TResult> selector)
         {
             if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
@@ -336,6 +348,7 @@ namespace Abc
 #endif
         }
 
+        [Pure]
         public Maybe<T> Where(Func<T, bool> predicate)
         {
             if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
@@ -349,6 +362,7 @@ namespace Abc
         }
 
         // Generalizes both Bind() and ZipWith<T, TMiddle, TResult>().
+        [Pure]
         public Maybe<TResult> SelectMany<TMiddle, TResult>(
             Func<T, Maybe<TMiddle>> selector,
             Func<T, TMiddle, TResult> resultSelector)
@@ -370,6 +384,7 @@ namespace Abc
 #endif
         }
 
+        [Pure]
         public Maybe<TResult> Join<TInner, TKey, TResult>(
             Maybe<TInner> inner,
             Func<T, TKey> outerKeySelector,
@@ -379,6 +394,7 @@ namespace Abc
             return Join(inner, outerKeySelector, innerKeySelector, resultSelector, null!);
         }
 
+        [Pure]
         public Maybe<TResult> Join<TInner, TKey, TResult>(
             Maybe<TInner> inner,
             Func<T, TKey> outerKeySelector,
@@ -429,6 +445,7 @@ namespace Abc
         // GroupJoin currently disabled.
         //
 
+        //[Pure]
         //public Maybe<TResult> GroupJoin<TInner, TKey, TResult>(
         //    Maybe<TInner> inner,
         //    Func<T, TKey> outerKeySelector,
@@ -458,6 +475,7 @@ namespace Abc
     // Async methods.
     public partial struct Maybe<T>
     {
+        [Pure]
         public async Task<Maybe<TResult>> BindAsync<TResult>(
             Func<T, Task<Maybe<TResult>>> binder)
         {
@@ -467,6 +485,7 @@ namespace Abc
                 : Maybe<TResult>.None; ;
         }
 
+        [Pure]
         public async Task<Maybe<TResult>> SelectAsync<TResult>(
             Func<T, Task<TResult>> selector)
         {
@@ -481,6 +500,7 @@ namespace Abc
     public partial struct Maybe<T>
     {
         // REVIEW: ReplaceWith -> ContinueWith?
+        [Pure]
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
             where TResult : notnull
         {
@@ -491,6 +511,7 @@ namespace Abc
 #endif
         }
 
+        [Pure]
         public Maybe<TResult> ContinueWith<TResult>(Maybe<TResult> other)
         {
 #if MONADS_PURE
@@ -500,6 +521,7 @@ namespace Abc
 #endif
         }
 
+        [Pure]
         public Maybe<T> PassThru<TOther>(Maybe<TOther> other)
         {
 #if MONADS_PURE
@@ -510,6 +532,7 @@ namespace Abc
         }
 
         // REVIEW: Skip(predicate).
+        [Pure]
         public Maybe<Unit> Skip()
         {
 #if MONADS_PURE
@@ -521,6 +544,7 @@ namespace Abc
 
         #region ZipWith()
 
+        [Pure]
         public Maybe<TResult> ZipWith<TOther, TResult>(
             Maybe<TOther> other, Func<T, TOther, TResult> zipper)
         {
@@ -537,6 +561,7 @@ namespace Abc
 #endif
         }
 
+        [Pure]
         public Maybe<TResult> ZipWith<T1, T2, TResult>(
             Maybe<T1> first,
             Maybe<T2> second,
@@ -555,6 +580,7 @@ namespace Abc
 #endif
         }
 
+        [Pure]
         public Maybe<TResult> ZipWith<T1, T2, T3, TResult>(
              Maybe<T1> first,
              Maybe<T2> second,
@@ -576,6 +602,7 @@ namespace Abc
 #endif
         }
 
+        [Pure]
         public Maybe<TResult> ZipWith<T1, T2, T3, T4, TResult>(
             Maybe<T1> first,
             Maybe<T2> second,
@@ -609,6 +636,7 @@ namespace Abc
         // Also, Maybe<> is a struct and I am worry with hidden casts if this
         // type implements IEnumerable<>.
 
+        //[Pure]
         //public IEnumerable<T> ToEnumerable()
         //{
         //    if (_isSome)
@@ -617,6 +645,7 @@ namespace Abc
         //    }
         //}
 
+        [Pure]
         public IEnumerator<T> GetEnumerator()
         {
             if (_isSome)
@@ -659,6 +688,7 @@ namespace Abc
         /// Determines whether this instance is equal to the value of the
         /// specified <see cref="Maybe{T}"/>.
         /// </summary>
+        [Pure]
         public bool Equals(Maybe<T> other)
 #if MONADS_PURE
             => Unwrap(x => other.Contains(x), !other._isSome);
@@ -668,6 +698,7 @@ namespace Abc
               : !other._isSome;
 #endif
 
+        [Pure]
         public bool Equals(Maybe<T> other, IEqualityComparer<T> comparer)
 #if MONADS_PURE
             => Unwrap(x => other.Contains(x, comparer), !other._isSome);
@@ -679,6 +710,7 @@ namespace Abc
 
         // REVIEW: IEquatable<T>?
 
+        [Pure]
         public bool Contains(T value)
 #if MONADS_PURE
             => Unwrap(x => s_DefaultComparer.Equals(x, value), Predicates.False);
@@ -686,6 +718,7 @@ namespace Abc
             => _isSome && s_DefaultComparer.Equals(_value, value);
 #endif
 
+        [Pure]
         public bool Contains(T value, IEqualityComparer<T> comparer)
 #if MONADS_PURE
             => Unwrap(x => (comparer ?? s_DefaultComparer).Equals(x, value), Predicates.False);
@@ -694,13 +727,16 @@ namespace Abc
 #endif
 
         /// <inheritdoc />
+        [Pure]
         public override bool Equals(object obj)
             => obj is Maybe<T> maybe && Equals(maybe);
 
+        [Pure]
         public bool Equals(object other, IEqualityComparer<T> comparer)
             => other is Maybe<T> maybe && Equals(maybe, comparer);
 
         /// <inheritdoc />
+        [Pure]
         public override int GetHashCode()
 #if MONADS_PURE
             => Unwrap(x => x!.GetHashCode(), 0);
@@ -708,6 +744,7 @@ namespace Abc
             => _value?.GetHashCode() ?? 0;
 #endif
 
+        [Pure]
         public int GetHashCode(IEqualityComparer<T> comparer)
 #if MONADS_PURE
             => Unwrap((comparer ?? s_DefaultComparer).GetHashCode, 0);

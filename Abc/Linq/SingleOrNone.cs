@@ -4,6 +4,7 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     // For IEnumerable<T?>, prefer SingleOrDefault() over SingleOrNone().
@@ -17,6 +18,7 @@ namespace Abc.Linq
         /// SingleOrDefault which throws an exception if there is more than one
         /// element in the sequence.</para>
         /// </summary>
+        [Pure]
         public static Maybe<TSource> SingleOrNone<TSource>(this IEnumerable<TSource> source)
         {
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
@@ -47,6 +49,7 @@ namespace Abc.Linq
         /// SingleOrDefault which throws an exception if more than one element
         /// satisfies the predicate.</para>
         /// </summary>
+        [Pure]
         public static Maybe<TSource> SingleOrNone<TSource>(
             this IEnumerable<TSource> source,
             Func<TSource, bool> predicate)

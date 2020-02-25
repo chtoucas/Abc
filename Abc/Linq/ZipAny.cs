@@ -4,11 +4,13 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     // Concatenation: ZipAny.
     public partial class Qperators
     {
+        [Pure]
         public static IEnumerable<TResult> ZipAny<T1, T2, TResult>(
             this IEnumerable<T1> first,
             IEnumerable<T2> second,

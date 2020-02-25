@@ -4,6 +4,7 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
 #if MONADS_PURE
     using System.Linq;
 #endif
@@ -12,6 +13,7 @@ namespace Abc.Linq
     public static partial class Qperators
     {
         // Maybe<IEnumerable<TSource>>?
+        [Pure]
         public static IEnumerable<TSource> WhereAny<TSource>(
             this IEnumerable<TSource> source, Func<TSource, Maybe<bool>> predicate)
         {

@@ -5,6 +5,7 @@
 namespace Abc.Utitilies
 {
     using System;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Provides static methods to create exceptions.
@@ -12,6 +13,7 @@ namespace Abc.Utitilies
     /// </summary>
     internal static class ExceptionFactory
     {
+        [Pure]
         public static InvalidOperationException EmptySequence
             => new InvalidOperationException("The sequence was empty.");
     }

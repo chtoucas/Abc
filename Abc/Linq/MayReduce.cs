@@ -4,12 +4,14 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
 
     using EF = Abc.Utitilies.ExceptionFactory;
 
     // Aggregation: MayReduce.
     public partial class Qperators
     {
+        [Pure]
         public static Maybe<TSource> MayReduce<TSource>(
             this IEnumerable<TSource> source,
             Func<TSource, TSource, Maybe<TSource>> accumulator)
@@ -29,6 +31,7 @@ namespace Abc.Linq
             return r;
         }
 
+        [Pure]
         public static Maybe<TSource> MayReduce<TSource>(
             this IEnumerable<TSource> source,
             Func<TSource, TSource, Maybe<TSource>> accumulator,

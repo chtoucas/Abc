@@ -5,6 +5,7 @@ namespace Abc
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
 #if MONADS_PURE
@@ -35,6 +36,7 @@ namespace Abc
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified value.
         /// </summary>
+        [Pure]
         public static Maybe<T> Some<T>(T value) where T : struct
             => new Maybe<T>(value);
 
@@ -42,6 +44,7 @@ namespace Abc
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
         /// </summary>
+        [Pure]
         public static Maybe<T> Of<T>([AllowNull]T value)
             => value is null ? Maybe<T>.None : new Maybe<T>(value);
 
@@ -49,6 +52,7 @@ namespace Abc
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
         /// </summary>
+        [Pure]
         public static Maybe<T> Of<T>(T? value) where T : struct
             // This method makes it impossible to create a Maybe<T?> **directly**.
             => value.HasValue ? Some(value.Value) : Maybe<T>.None;
@@ -57,6 +61,7 @@ namespace Abc
         /// Removes one level of structure, projecting the bound value into the
         /// outer level.
         /// </summary>
+        [Pure]
         public static Maybe<T> Flatten<T>(this Maybe<Maybe<T>> @this)
 #if MONADS_PURE
             => @this.Bind(Thunks<Maybe<T>>.Ident);
@@ -64,6 +69,7 @@ namespace Abc
             => @this.IsSome ? @this.Value : Maybe<T>.None;
 #endif
 
+        [Pure]
         public static Maybe<Unit> Guard(bool predicate)
             => predicate ? Unit : None;
     }
@@ -72,6 +78,7 @@ namespace Abc
     public partial class Maybe
     {
         // Conversion from Maybe<T?> to  Maybe<T>.
+        [Pure]
         public static Maybe<T> Squash<T>(this Maybe<T?> @this) where T : struct
             // NB: When IsSome is true, Value.HasValue is also true, therefore
             // we can safely access Value.Value.
@@ -82,6 +89,7 @@ namespace Abc
 #endif
 
         // Conversion from Maybe<T?> to T?.
+        [Pure]
         public static T? ToNullable<T>(this Maybe<T?> @this) where T : struct
 #if MONADS_PURE
             => @this.ValueOrDefault();
@@ -97,6 +105,7 @@ namespace Abc
 #endif
 
         // Conversion from Maybe<T> to T?.
+        [Pure]
         public static T? ToNullable<T>(this Maybe<T> @this) where T : struct
 #if MONADS_PURE
             => @this.ValueOrDefault();
@@ -111,9 +120,11 @@ namespace Abc
     // - Aggregation: Any.
     public partial class Maybe
     {
+        [Pure]
         public static Maybe<IEnumerable<T>> Empty<T>()
             => MaybeEnumerable_<T>.Empty;
 
+        [Pure]
         public static IEnumerable<T> ValueOrEmpty<T>(this Maybe<IEnumerable<T>> @this)
 #if MONADS_PURE
             => @this.ValueOrElse(Enumerable.Empty<T>());
@@ -122,6 +133,7 @@ namespace Abc
 #endif
 
         // Maybe<IEnumerable<T>>?
+        [Pure]
         public static IEnumerable<T> CollectAny<T>(IEnumerable<Maybe<T>> source)
         {
 #if MONADS_PURE
@@ -144,6 +156,7 @@ namespace Abc
 #endif
         }
 
+        [Pure]
         public static Maybe<T> Any<T>(IEnumerable<Maybe<T>> source)
         {
 #if MONADS_PURE
@@ -170,6 +183,7 @@ namespace Abc
     // Extension methods when T is a func.
     public partial class Maybe
     {
+        [Pure]
         public static Maybe<TResult> Invoke<TSource, TResult>(
             this Maybe<Func<TSource, TResult>> @this, Maybe<TSource> value)
         {
@@ -186,6 +200,7 @@ namespace Abc
     public partial class Maybe
     {
         //// Bind() with automatic resource management.
+        //[Pure]
         //public static Maybe<TResult> BindDispose<TSource, TResult>(
         //    this Maybe<TSource> @this, Func<TSource, Maybe<TResult>> binder)
         //    where TSource : IDisposable
@@ -196,6 +211,7 @@ namespace Abc
         //}
 
         //// Select() with automatic resource management.
+        //[Pure]
         //public static Maybe<TResult> SelectDispose<TSource, TResult>(
         //    this Maybe<TSource> @this, Func<TSource, TResult> selector)
         //    where TSource : IDisposable

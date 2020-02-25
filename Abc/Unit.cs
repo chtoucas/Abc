@@ -5,6 +5,7 @@
 namespace Abc
 {
     using System;
+    using System.Diagnostics.Contracts;
 
     // See https://en.wikipedia.org/wiki/Unit_type
 
@@ -23,6 +24,7 @@ namespace Abc
         /// <summary>
         /// Returns a string representation of the current instance.
         /// </summary>
+        [Pure]
         public override string ToString() => "()";
 
         /// <summary>
@@ -58,17 +60,21 @@ namespace Abc
         /// <summary>
         /// Always returns true.
         /// </summary>
+        [Pure]
         public bool Equals(Unit other) => true;
 
         /// <summary>
         /// Always returns true.
         /// </summary>
+        [Pure]
         public bool Equals(ValueTuple other) => true;
 
         /// <inheritdoc />
+        [Pure]
         public override bool Equals(object obj) => obj is Unit || obj is ValueTuple;
 
         /// <inheritdoc />
+        [Pure]
         public override int GetHashCode() => 0;
     }
 }

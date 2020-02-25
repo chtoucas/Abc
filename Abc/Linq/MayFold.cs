@@ -4,10 +4,12 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
 
     // Aggregation: MayFold.
     public partial class Qperators
     {
+        [Pure]
         public static Maybe<TAccumulate> MayFold<TSource, TAccumulate>(
             this IEnumerable<TSource> source,
             TAccumulate seed,
@@ -27,6 +29,7 @@ namespace Abc.Linq
             return r;
         }
 
+        [Pure]
         public static Maybe<TAccumulate> MayFold<TSource, TAccumulate>(
             this IEnumerable<TSource> source,
             TAccumulate seed,

@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Play.Functional.Linq
+namespace Play.Edu.Linq
 {
     public interface IQuerySyntax
     {

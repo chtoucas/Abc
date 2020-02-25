@@ -4,6 +4,7 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     // For IEnumerable<T?>, prefer FirstOrDefault() over FirstOrNone().
@@ -13,6 +14,7 @@ namespace Abc.Linq
         /// Returns the first element of a sequence, or
         /// <see cref="Maybe{TSource}.None"/> if the sequence contains no elements.
         /// </summary>
+        [Pure]
         public static Maybe<TSource> FirstOrNone<TSource>(this IEnumerable<TSource> source)
         {
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
@@ -34,6 +36,7 @@ namespace Abc.Linq
         /// <paramref name="predicate"/>, or <see cref="Maybe{TSource}.None"/>
         /// if no such element is found.
         /// </summary>
+        [Pure]
         public static Maybe<TSource> FirstOrNone<TSource>(
             this IEnumerable<TSource> source,
             Func<TSource, bool> predicate)

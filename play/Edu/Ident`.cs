@@ -1,12 +1,9 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Play.Functional
+namespace Play.Edu
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-
-    using static Require;
 
     public static class Ident
     {
@@ -40,10 +37,10 @@ namespace Play.Functional
             _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public bool Contains([AllowNull]T value)
+        public bool Contains(T value)
             => Equals(value);
 
-        public bool Contains([AllowNull]T value, IEqualityComparer<T> comparer)
+        public bool Contains(T value, IEqualityComparer<T> comparer)
             => Equals(value, comparer);
 
         public IEnumerator<T> GetEnumerator()
@@ -52,13 +49,13 @@ namespace Play.Functional
         }
     }
 
-    // Monad.
+    // It's a monad.
     public partial struct Ident<T>
     {
         public Ident<TResult> Bind<TResult>(Func<T, Ident<TResult>> binder)
             where TResult : notnull
         {
-            NotNull(binder, nameof(binder));
+            Require.NotNull(binder, nameof(binder));
 
             return binder(_value);
         }
@@ -72,13 +69,13 @@ namespace Play.Functional
             => square._value;
     }
 
-    // Comonad.
+    // It's a comonad.
     public partial struct Ident<T>
     {
         public Ident<TResult> Extend<TResult>(Func<Ident<T>, TResult> extender)
             where TResult : notnull
         {
-            NotNull(extender, nameof(extender));
+            Require.NotNull(extender, nameof(extender));
 
             return new Ident<TResult>(extender(this));
         }
@@ -119,10 +116,10 @@ namespace Play.Functional
         public bool Equals(Ident<T> other, IEqualityComparer<T> comparer)
             => (comparer ?? s_DefaultComparer).Equals(_value, other._value);
 
-        public bool Equals([AllowNull]T other)
+        public bool Equals(T other)
             => s_DefaultComparer.Equals(_value, other);
 
-        public bool Equals([AllowNull]T other, IEqualityComparer<T> comparer)
+        public bool Equals(T other, IEqualityComparer<T> comparer)
             => (comparer ?? s_DefaultComparer).Equals(_value, other);
 
         public override bool Equals(object? obj)

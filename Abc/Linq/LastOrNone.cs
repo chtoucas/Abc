@@ -4,6 +4,7 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
 
     // For IEnumerable<T?>, prefer LastOrDefault() over LastOrNone().
     public static partial class Qperators
@@ -12,6 +13,7 @@ namespace Abc.Linq
         /// Returns the last element of a sequence, or
         /// <see cref="Maybe{TSource}.None"/> if the sequence contains no elements.
         /// </summary>
+        [Pure]
         public static Maybe<TSource> LastOrNone<TSource>(this IEnumerable<TSource> source)
         {
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
@@ -42,6 +44,7 @@ namespace Abc.Linq
         /// <paramref name="predicate"/>, or <see cref="Maybe{TSource}.None"/>
         /// if no such element is found.
         /// </summary>
+        [Pure]
         public static Maybe<TSource> LastOrNone<TSource>(
             this IEnumerable<TSource> source,
             Func<TSource, bool> predicate)

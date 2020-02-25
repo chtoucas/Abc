@@ -5,6 +5,7 @@ namespace Abc.Extensions
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Diagnostics.Contracts;
 
 #if MONADS_PURE
     using Abc.Linq;
@@ -20,6 +21,7 @@ namespace Abc.Extensions
 
     public partial class CollectionExtensions
     {
+        [Pure]
         public static Maybe<TValue> MayGetValue<TKey, TValue>(
             this IDictionary<TKey, TValue> @this, TKey key)
         {
@@ -33,6 +35,7 @@ namespace Abc.Extensions
 
     public partial class CollectionExtensions
     {
+        [Pure]
         public static Maybe<string> MayGetSingle(this NameValueCollection @this, string name)
         {
             return from values in @this.MayGetValues(name)
@@ -40,6 +43,7 @@ namespace Abc.Extensions
                    select values[0];
         }
 
+        [Pure]
         public static Maybe<string[]> MayGetValues(
             this NameValueCollection @this, string name)
         {
@@ -48,6 +52,7 @@ namespace Abc.Extensions
             return Maybe.Of(@this.GetValues(name));
         }
 
+        [Pure]
         public static IEnumerable<T> ParseValues<T>(
             this NameValueCollection @this, string name, Func<string, Maybe<T>> parser)
         {

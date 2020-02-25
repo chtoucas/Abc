@@ -1,11 +1,9 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Play.Functional
+namespace Play.Edu
 {
     using System;
     using System.Collections.Generic;
-
-    using static Require;
 
     /// <summary>
     /// Provides static methods for producing sequences.
@@ -34,7 +32,7 @@ namespace Play.Functional
 
         public static IEnumerable<T> Generate<T>(T seed, Func<T, T> generator)
         {
-            NotNull(generator, nameof(generator));
+            Require.NotNull(generator, nameof(generator));
 
             return __iterator();
 
@@ -56,8 +54,8 @@ namespace Play.Functional
             Func<T, T> generator,
             Func<T, bool> predicate)
         {
-            NotNull(generator, nameof(generator));
-            NotNull(predicate, nameof(predicate));
+            Require.NotNull(generator, nameof(generator));
+            Require.NotNull(predicate, nameof(predicate));
 
             return __iterator();
 
@@ -78,7 +76,7 @@ namespace Play.Functional
             TState seed,
             Func<TState, (TState, TResult)> generator)
         {
-            NotNull(generator, nameof(generator));
+            Require.NotNull(generator, nameof(generator));
 
             return __iterator();
 
@@ -101,8 +99,8 @@ namespace Play.Functional
             Func<TState, (TState, TResult)> generator,
             Func<TState, bool> predicate)
         {
-            NotNull(generator, nameof(generator));
-            NotNull(predicate, nameof(predicate));
+            Require.NotNull(generator, nameof(generator));
+            Require.NotNull(predicate, nameof(predicate));
 
             return __iterator();
 
@@ -131,8 +129,8 @@ namespace Play.Functional
             Func<TState, TState> generator,
             Func<TState, TResult> resultSelector)
         {
-            NotNull(generator, nameof(generator));
-            NotNull(resultSelector, nameof(resultSelector));
+            Require.NotNull(generator, nameof(generator));
+            Require.NotNull(resultSelector, nameof(resultSelector));
 
             return __iterator();
 
@@ -161,9 +159,9 @@ namespace Play.Functional
             Func<TState, TResult> resultSelector,
             Func<TState, bool> predicate)
         {
-            NotNull(generator, nameof(generator));
-            NotNull(resultSelector, nameof(resultSelector));
-            NotNull(predicate, nameof(predicate));
+            Require.NotNull(generator, nameof(generator));
+            Require.NotNull(resultSelector, nameof(resultSelector));
+            Require.NotNull(predicate, nameof(predicate));
 
             return __iterator();
 

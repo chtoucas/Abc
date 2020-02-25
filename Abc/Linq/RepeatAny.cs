@@ -3,12 +3,14 @@
 namespace Abc.Linq
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     // Generation: RepeatAny.
     public partial class Qperators
     {
         // Maybe<IEnumerable<TSource>>?
+        [Pure]
         public static IEnumerable<TSource> RepeatAny<TSource>(Maybe<TSource> value, int count)
         {
 #if MONADS_PURE

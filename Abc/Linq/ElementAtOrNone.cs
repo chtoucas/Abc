@@ -4,6 +4,7 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
 
     // For IEnumerable<T?>, prefer ElementAtOrDefault() over ElementAtOrNone().
     public static partial class Qperators
@@ -13,6 +14,7 @@ namespace Abc.Linq
         /// <see cref="Maybe{TSource}.None"/> if the index is out of range.
         /// </summary>
         // Adapted from https://github.com/jskeet/edulinq/blob/master/src/Edulinq/ElementAt.cs
+        [Pure]
         public static Maybe<TSource> ElementAtOrNone<TSource>(
             this IEnumerable<TSource> source,
             int index)
