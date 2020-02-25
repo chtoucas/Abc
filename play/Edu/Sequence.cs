@@ -6,7 +6,8 @@ namespace Play.Edu
     using System.Collections.Generic;
 
     /// <summary>
-    /// Provides static methods for producing sequences.
+    /// Provides static helpers to produce new sequences.
+    /// <para>This class cannot be inherited.</para>
     /// </summary>
     public static class Sequence
     {
