@@ -9,10 +9,6 @@ namespace Abc.Fx
 
     // REVIEW: IStructuralComparable, IComparable?
 
-    /// <summary>
-    /// Provides static helpers for <see cref="Ident{T}"/>.
-    /// <para>This class cannot be inherited.</para>
-    /// </summary>
     public static class Ident
     {
         [Pure]

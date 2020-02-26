@@ -10,6 +10,7 @@ namespace Abc.Fx
     using System.Threading.Tasks;
 
     // TODO: voir les derniers ajouts dans
+    //   https://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Functor.html
     //   http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
     //   https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.13.0.0/Control-Monad.html
     // Si je me rappelle bien, à l'époque je ne m'étais basé sur
@@ -68,9 +69,11 @@ namespace Abc.Fx
 
         // The unit (wrap a value, public ctor).
         //
-        // [Control.Applicative] pure :: a -> f a
+        // [Applicative]
+        //   pure :: a -> f a
         //   Embed pure expressions, ie lift a value.
-        // [Control.Monad] return :: a -> m a
+        // [Monad]
+        //   return :: a -> m a
         //   Inject a value into the monadic type.
         [Pure]
         internal static Mayhap<T> Some([DisallowNull]T value)
@@ -82,7 +85,8 @@ namespace Abc.Fx
 
         // The multiplication or composition.
         //
-        // [Control.Monad] join :: Monad m => m (m a) -> m a
+        // [Monad]
+        //   join :: Monad m => m (m a) -> m a
         //   The join function is the conventional monad join operator. It is
         //   used to remove one level of monadic structure, projecting its bound
         //   argument into the outer level.
@@ -90,10 +94,25 @@ namespace Abc.Fx
         internal static Mayhap<T> μ(Mayhap<Mayhap<T>> square)
             => square._value;
 
-        // [Data.Functor] fmap :: (a -> b) -> f a -> f b
-        // [Control.Applicative] liftA :: Applicative f => (a -> b) -> f a -> f b
-        //   Lift a function to actions. A synonym of fmap for a functor.
-        // [Control.Monad] fmap :: (a -> b) -> f a -> f b
+        // [Functor]
+        //   fmap :: (a -> b) -> f a -> f b
+        //
+        // [Functor]
+        //   (<$>) :: Functor f => (a -> b) -> f a -> f b
+        //   (<$>) = fmap
+        //
+        //   An infix synonym for fmap.
+        //   The name of this operator is an allusion to $.
+        //
+        // [Applicative]
+        //   liftA :: Applicative f => (a -> b) -> f a -> f b
+        //   liftA f a = pure f <*> a
+        //
+        //   Lift a function to actions.
+        //   This function may be used as a value for `fmap` in a `Functor` instance.
+        //
+        // [Monad]
+        //   fmap :: (a -> b) -> f a -> f b
         [Pure]
         public Mayhap<TResult> Select<TResult>(Func<T, TResult> selector)
         {
@@ -171,7 +190,7 @@ namespace Abc.Fx
         public void OnSome(Action<T> action)
             => Do(action, () => { });
 
-#region Specialized versions
+        #region Specialized versions
 
         [Pure]
         [return: MaybeNull]
@@ -210,7 +229,7 @@ namespace Abc.Fx
             }
         }
 
-#endregion
+        #endregion
     }
 
     // Query Expression Pattern aka LINQ.
@@ -338,32 +357,37 @@ namespace Abc.Fx
     // Standard API.
     public partial struct Mayhap<T>
     {
-        [Pure]
-        public Mayhap<TResult> ReplaceWith<TResult>(TResult value)
-            where TResult : notnull
-        {
-            return Select(_ => value);
-        }
-
+        // [Applicative]
+        //   (*>) :: f a -> f b -> f b
+        //   a1 *> a2 = (id <$ a1) <*> a2
+        //
+        //   Sequence actions, discarding the value of the first argument.
+        //   This is essentially the same as liftA2 (flip const), but if the
+        //   Functor instance has an optimized(<$), it may be better to use
+        //   that instead.Before liftA2 became a method, this definition
+        //   was strictly better, but now it depends on the functor.For a
+        //   functor supporting a sharing-enhancing (<$), this definition
+        //   may reduce allocation by preventing a1 from ever being fully
+        //   realized.In an implementation with a boring(<$) but an optimizing
+        //   liftA2, it would likely be better to define(*>) using liftA2.
         [Pure]
         public Mayhap<TResult> ContinueWith<TResult>(Mayhap<TResult> other)
         {
             return Bind(_ => other);
         }
 
+        // [Applicative]
+        //   (<*) :: f a -> f b -> f a
+        //   (<*) = liftA2 const
+        //
+        //   Sequence actions, discarding the value of the second argument.
         [Pure]
         public Mayhap<T> PassThru<TOther>(Mayhap<TOther> other)
         {
             return ZipWith(other, (x, _) => x);
         }
 
-        [Pure]
-        public Mayhap<Unit> Skip()
-        {
-            return ContinueWith(Mayhap.Unit);
-        }
-
-#region ZipWith()
+        #region ZipWith()
 
         [Pure]
         public Mayhap<TResult> ZipWith<TOther, TResult>(
@@ -423,7 +447,7 @@ namespace Abc.Fx
                     (y, z, a, b) => zipper(x, y, z, a, b)));
         }
 
-#endregion
+        #endregion
     }
 
     // Iterable.
