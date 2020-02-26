@@ -9,6 +9,7 @@ namespace Abc.Fx
 
     // Data.Functor
     // ============
+    //
     // Functors: uniform action over a parameterized type, generalizing the map
     // function on lists.
     // The Functor class is used for types that can be mapped over.
@@ -17,9 +18,10 @@ namespace Abc.Fx
     //
     // Methods
     // -------
-    // Minimal implementation: fmap
+    // Bare bone:
+    // - fmap   obj.Select()
     //
-    // - fmap   obj.Select()            [required]
+    // Standard API:
     // - <$     obj.ReplaceWith()
     // - $>     obj.ReplaceWith()
     // - <$>    obj.Select()
@@ -94,13 +96,17 @@ namespace Abc.Fx
     //
     // Methods
     // -------
-    // Minimal implementation: pure, (<*> or liftA2)
-    //   (<*>) = liftA2 id
-    //   liftA2 f x y = f <$> x <*> y
-    //
+    // Bare bone (<*> or liftA2):
     // - pure
     // - <*>
     // - liftA2
+    //
+    // Standard API:
+    // - *>
+    // - <*
+    // - <**>
+    // - liftA
+    // - liftA3
     //
     // Applicative rules
     // -----------------
@@ -114,12 +120,65 @@ namespace Abc.Fx
     //   u <*> pure y = pure ($ y) <*> u
     public partial class Mayhap
     {
+        /// <summary>Applicative (&lt;*&gt;)</summary>
+        // [Applicative]
+        //   (<*>) :: f (a -> b) -> f a -> f b
+        //   (<*>) = liftA2 id
+        //
+        //   Sequential application.
+        //   A few functors support an implementation of <*> that is more efficient
+        //   than the default one.
+        //
+        // [Monad]
+        //   ap :: Monad m => m (a -> b) -> m a -> m b
+        //   ap m1 m2 = do { x1 <- m1; x2 <- m2; return (x1 x2) }
+        //
+        //   In many situations, the liftM operations can be replaced by uses of
+        //   ap, which promotes function application.
+        [Pure]
+        public static Mayhap<TResult> Invoke<TSource, TResult>(
+            this Mayhap<Func<TSource, TResult>> @this, Mayhap<TSource> value)
+        {
+            return @this.Bind(func => value.Select(func));
+        }
 
-    }
+        /// <summary>Applicative (*&gt;)</summary>
+        // [Applicative]
+        //   (*>) :: f a -> f b -> f b
+        //   a1 *> a2 = (id <$ a1) <*> a2
+        //
+        //   Sequence actions, discarding the value of the first argument.
+        //   This is essentially the same as liftA2 (flip const), but if the
+        //   Functor instance has an optimized(<$), it may be better to use
+        //   that instead.Before liftA2 became a method, this definition
+        //   was strictly better, but now it depends on the functor.For a
+        //   functor supporting a sharing-enhancing (<$), this definition
+        //   may reduce allocation by preventing a1 from ever being fully
+        //   realized.In an implementation with a boring(<$) but an optimizing
+        //   liftA2, it would likely be better to define(*>) using liftA2.
+        [Pure]
+        public static Mayhap<TResult> ContinueWith<TSource, TResult>(
+            this Mayhap<TSource> @this,
+            Mayhap<TResult> other)
+        {
+            return @this.Bind(_ => other);
+        }
 
-    // Monad syntax.
-    public partial class Mayhap
-    {
+        /// <summary>Applicative (&lt;*)</summary>
+        // [Applicative]
+        //   (<*) :: f a -> f b -> f a
+        //   (<*) = liftA2 const
+        //
+        //   Sequence actions, discarding the value of the second argument.
+        [Pure]
+        public static Mayhap<TSource> PassThru<TSource, TOther>(
+            this Mayhap<TSource> @this,
+            Mayhap<TOther> other)
+        {
+            return @this.ZipWith(other, (x, _) => x);
+        }
+
+        /// <summary>Applicative (&lt;**&gt;)</summary>
         // [Applicative]
         //   (<**>) :: Applicative f => f a -> f (a -> b) -> f b
         //   (<**>) = liftA2(\a f -> f a)
@@ -132,6 +191,31 @@ namespace Abc.Fx
         {
             return applicative.Bind(func => @this.Select(func));
         }
+    }
+
+    // Control.Alternative
+    // ===================
+    public partial class Mayhap
+    {
+    }
+
+    // Control.Monad
+    // =============
+    //
+    // http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
+    // https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.13.0.0/Control-Monad.html
+    //
+    // Methods
+    // -------
+    // Bare bone:
+    // - >>=
+    // - >>
+    // - return
+    // - fail
+    //
+    // Standard API:
+    public partial class Mayhap
+    {
     }
 
     public partial class Mayhap
@@ -227,66 +311,38 @@ namespace Abc.Fx
         }
     }
 
-    // Extension methods for Mayhap<T> where T is a function.
-    public partial class Mayhap
-    {
-        // [Monad]
-        //   ap :: Monad m => m (a -> b) -> m a -> m b
-        //   ap m1 m2 = do { x1 <- m1; x2 <- m2; return (x1 x2) }
-        //
-        //   In many situations, the liftM operations can be replaced by uses of
-        //   ap, which promotes function application.
-        //
-        // [Applicative]
-        //   (<*>) :: f (a -> b) -> f a -> f b
-        //   (<*>) = liftA2 id
-        //
-        //   Sequential application.
-        //   A few functors support an implementation of <*> that is more efficient
-        //   than the default one.
-        [Pure]
-        public static Mayhap<TResult> Invoke<TSource, TResult>(
-            this Mayhap<Func<TSource, TResult>> @this, Mayhap<TSource> value)
-        {
-            return @this.Bind(func => value.Select(func));
-        }
-    }
-
-    // Lift:
+    // Lift/ZipWith
     //   Promote a function to a monad, scanning the monadic arguments from
     //   left to right.
     // See also Select() and ZipWith().
     public partial class Mayhap
     {
-        // [Monad]
-        //   liftM :: (Monad m) => (a1 -> r) -> m a1 -> m r
-        //   liftM f m1 = do { x1 <- m1; return (f x1) }
-        //
+        /// <summary>Applicative liftA</summary>
         // [Applicative]
         //   liftA :: Applicative f => (a -> b) -> f a -> f b
         //   liftA f a = pure f <*> a
         //
-        //   Lift a function to actions. This function may be used as a value
-        //   for fmap in a Functor instance.
+        //   Lift a function to actions.
+        //   This function may be used as a value for `fmap` in a `Functor`
+        //   instance.
+        [Pure]
         public static Func<Mayhap<TSource>, Mayhap<TResult>> Lift<TSource, TResult>(
             Func<TSource, TResult> func)
         {
-            return m => m.Bind(x => Of(func(x)));
+            return m => Of(func).Invoke(m);
         }
 
-        // [Monad]
-        //   liftM2 :: Monad m => (a1 -> a2 -> r) -> m a1 -> m a2 -> m r
-        //   liftM2 f m1 m2 = do { x1 <- m1; x2 <- m2; return (f x1 x2) }
-        //
         // [Applicative]
         //   liftA2 :: (a -> b -> c) -> f a -> f b -> f c
         //   liftA2 f x = (<*>) (fmap f x)
+        //   liftA2 f x y = f <$> x <*> y
         //
         //   Lift a binary function to actions.
         //   Some functors support an implementation of liftA2 that is more efficient
         //   than the default one.In particular, if fmap is an expensive operation,
         //   it is likely better to use liftA2 than to fmap over the structure and
         //   then use<*>.
+        [Pure]
         public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<TResult>> Lift<T1, T2, TResult>(
             Func<T1, T2, TResult> func)
         {
@@ -297,15 +353,32 @@ namespace Abc.Fx
         }
 
         // [Monad]
-        //   liftM3 :: (Monad m) => (a1 -> a2 -> a3 -> r) -> m a1 -> m a2 -> m a3 -> m r
-        //   liftM3 f m1 m2 m3 = do { x1 <- m1; x2 <- m2; x3 <- m3; return (f x1 x2 x3) }
+        //   liftM2 :: Monad m => (a1 -> a2 -> r) -> m a1 -> m a2 -> m r
+        //   liftM2 f m1 m2 = do { x1 <- m1; x2 <- m2; return (f x1 x2) }
         //
+        //   Promote a function to a monad, scanning the monadic arguments from
+        //   left to right.
+        [Pure]
+        public static Mayhap<TResult> ZipWith<TSource, TOther, TResult>(
+            this Mayhap<TSource> @this,
+            Mayhap<TOther> other,
+            Func<TSource, TOther, TResult> zipper)
+        {
+            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
+
+            return @this.Bind(
+                x => other.Bind(
+                    y => Of(zipper(x, y))));
+        }
+
         // [Applicative]
         //   liftA3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
         //   liftA3 f a b c = liftA2 f a b <*> c
         //
         //   Lift a ternary function to actions.
-        public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<T3>, Mayhap<TResult>> Lift<T1, T2, T3, TResult>(
+        [Pure]
+        public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<T3>, Mayhap<TResult>>
+            Lift<T1, T2, T3, TResult>(
             Func<T1, T2, T3, TResult> func)
         {
             return (m1, m2, m3) =>
@@ -316,8 +389,28 @@ namespace Abc.Fx
         }
 
         // [Monad]
+        //   liftM3 :: (Monad m) => (a1 -> a2 -> a3 -> r) -> m a1 -> m a2 -> m a3 -> m r
+        //   liftM3 f m1 m2 m3 = do { x1 <- m1; x2 <- m2; x3 <- m3; return (f x1 x2 x3) }
+        //
+        //   Promote a function to a monad, scanning the monadic arguments from
+        //   left to right.
+        [Pure]
+        public static Mayhap<TResult> ZipWith<TSource, T1, T2, TResult>(
+            this Mayhap<TSource> @this,
+            Mayhap<T1> m1,
+            Mayhap<T2> m2,
+            Func<TSource, T1, T2, TResult> zipper)
+        {
+            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
+
+            return @this.Bind(
+                x => m1.ZipWith(m2, (y, z) => zipper(x, y, z)));
+        }
+
+        // [Monad]
         //   liftM4 :: (Monad m) => (a1 -> a2 -> a3 -> a4 -> r) -> m a1 -> m a2 -> m a3 -> m a4 -> m r
         //   liftM4 f m1 m2 m3 m4 = do { x1 <- m1; x2 <- m2; x3 <- m3; x4 <- m4; return (f x1 x2 x3 x4) }
+        [Pure]
         public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<T3>, Mayhap<T4>, Mayhap<TResult>>
             Lift<T1, T2, T3, T4, TResult>(
             Func<T1, T2, T3, T4, TResult> func)
@@ -330,9 +423,27 @@ namespace Abc.Fx
                                 x4 => Of(func(x1, x2, x3, x4))))));
         }
 
+        [Pure]
+        public static Mayhap<TResult> ZipWith<TSource, T1, T2, T3, TResult>(
+            this Mayhap<TSource> @this,
+             Mayhap<T1> first,
+             Mayhap<T2> second,
+             Mayhap<T3> third,
+             Func<TSource, T1, T2, T3, TResult> zipper)
+        {
+            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
+
+            return @this.Bind(
+                x => first.ZipWith(
+                    second,
+                    third,
+                    (y, z, a) => zipper(x, y, z, a)));
+        }
+
         // [Monad]
         //   liftM5 :: (Monad m) => (a1 -> a2 -> a3 -> a4 -> a5 -> r) -> m a1 -> m a2 -> m a3 -> m a4 -> m a5 -> m r
         //   liftM5 f m1 m2 m3 m4 m5 = do { x1 <- m1; x2 <- m2; x3 <- m3; x4 <- m4; x5 <- m5; return (f x1 x2 x3 x4 x5) }
+        [Pure]
         public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<T3>, Mayhap<T4>, Mayhap<T5>, Mayhap<TResult>>
             Lift<T1, T2, T3, T4, T5, TResult>(Func<T1, T2, T3, T4, T5, TResult> func)
         {

@@ -9,11 +9,8 @@ namespace Abc.Fx
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
-    // TODO: voir les derniers ajouts dans
-    //   https://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Functor.html
-    //   http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
-    //   https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.13.0.0/Control-Monad.html
-    // Si je me rappelle bien, à l'époque je ne m'étais basé sur
+    // TODO: voir les derniers ajouts. Si je me rappelle bien, à l'époque je
+    // m'étais basé sur
     // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).
 
     public static partial class Mayhap
@@ -104,15 +101,14 @@ namespace Abc.Fx
         //   An infix synonym for fmap.
         //   The name of this operator is an allusion to $.
         //
-        // [Applicative]
-        //   liftA :: Applicative f => (a -> b) -> f a -> f b
-        //   liftA f a = pure f <*> a
-        //
-        //   Lift a function to actions.
-        //   This function may be used as a value for `fmap` in a `Functor` instance.
-        //
         // [Monad]
         //   fmap :: (a -> b) -> f a -> f b
+        //
+        // [Monad]
+        //   liftM :: (Monad m) => (a1 -> r) -> m a1 -> m r
+        //   liftM f m1 = do { x1 <- m1; return (f x1) }
+        //
+        //   Promote a function to a monad.
         [Pure]
         public Mayhap<TResult> Select<TResult>(Func<T, TResult> selector)
         {
@@ -352,102 +348,6 @@ namespace Abc.Fx
             return _isSome ? Mayhap.Of(await selector(_value).ConfigureAwait(false))
                 : Mayhap<TResult>.None;
         }
-    }
-
-    // Standard API.
-    public partial struct Mayhap<T>
-    {
-        // [Applicative]
-        //   (*>) :: f a -> f b -> f b
-        //   a1 *> a2 = (id <$ a1) <*> a2
-        //
-        //   Sequence actions, discarding the value of the first argument.
-        //   This is essentially the same as liftA2 (flip const), but if the
-        //   Functor instance has an optimized(<$), it may be better to use
-        //   that instead.Before liftA2 became a method, this definition
-        //   was strictly better, but now it depends on the functor.For a
-        //   functor supporting a sharing-enhancing (<$), this definition
-        //   may reduce allocation by preventing a1 from ever being fully
-        //   realized.In an implementation with a boring(<$) but an optimizing
-        //   liftA2, it would likely be better to define(*>) using liftA2.
-        [Pure]
-        public Mayhap<TResult> ContinueWith<TResult>(Mayhap<TResult> other)
-        {
-            return Bind(_ => other);
-        }
-
-        // [Applicative]
-        //   (<*) :: f a -> f b -> f a
-        //   (<*) = liftA2 const
-        //
-        //   Sequence actions, discarding the value of the second argument.
-        [Pure]
-        public Mayhap<T> PassThru<TOther>(Mayhap<TOther> other)
-        {
-            return ZipWith(other, (x, _) => x);
-        }
-
-        #region ZipWith()
-
-        [Pure]
-        public Mayhap<TResult> ZipWith<TOther, TResult>(
-            Mayhap<TOther> other, Func<T, TOther, TResult> zipper)
-        {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
-
-            return Bind(
-                x => other.Select(
-                    y => zipper(x, y)));
-        }
-
-        [Pure]
-        public Mayhap<TResult> ZipWith<T1, T2, TResult>(
-            Mayhap<T1> first,
-            Mayhap<T2> second,
-            Func<T, T1, T2, TResult> zipper)
-        {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
-
-            return Bind(
-                x => first.ZipWith(
-                    second, (y, z) => zipper(x, y, z)));
-        }
-
-        [Pure]
-        public Mayhap<TResult> ZipWith<T1, T2, T3, TResult>(
-             Mayhap<T1> first,
-             Mayhap<T2> second,
-             Mayhap<T3> third,
-             Func<T, T1, T2, T3, TResult> zipper)
-        {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
-
-            return Bind(
-                x => first.ZipWith(
-                    second,
-                    third,
-                    (y, z, a) => zipper(x, y, z, a)));
-        }
-
-        [Pure]
-        public Mayhap<TResult> ZipWith<T1, T2, T3, T4, TResult>(
-            Mayhap<T1> first,
-            Mayhap<T2> second,
-            Mayhap<T3> third,
-            Mayhap<T4> fourth,
-            Func<T, T1, T2, T3, T4, TResult> zipper)
-        {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
-
-            return Bind(
-                x => first.ZipWith(
-                    second,
-                    third,
-                    fourth,
-                    (y, z, a, b) => zipper(x, y, z, a, b)));
-        }
-
-        #endregion
     }
 
     // Iterable.
