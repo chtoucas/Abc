@@ -28,14 +28,6 @@ namespace Abc
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
 
-    // TODO: voir les derniers ajouts dans
-    // http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
-    // https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.13.0.0/Control-Monad.html
-    // https://www.haskell.org/onlinereport/monad.html
-    // Si je me rappelle bien, à l'époque je ne m'étais intéressé qu'à la version
-    // Haskell 98.
-    // Removed methods: Lift, Gather.
-
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
     /// value at all.
