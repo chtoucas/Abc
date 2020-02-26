@@ -1,81 +1,129 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Edu
+namespace Abc.Fx
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
+    // TODO: voir les derniers ajouts dans
+    //   http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
+    //   https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.13.0.0/Control-Monad.html
+    // Si je me rappelle bien, à l'époque je ne m'étais basé sur
+    // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).
+
+    public static partial class Mayhap
+    {
+        [Pure]
+        public static Mayhap<T> Of<T>([AllowNull]T value)
+            => Mayhap<T>.η(value);
+
+        [Pure]
+        public static Mayhap<T> Of<T>(T? value) where T : struct
+            => value.HasValue ? Mayhap<T>.Some(value.Value) : Mayhap<T>.None;
+
+        [Pure]
+        public static Mayhap<T> Some<T>(T value) where T : struct
+            => Mayhap<T>.Some(value);
+
+        [Pure]
+        public static Mayhap<T> Flatten<T>(this Mayhap<Mayhap<T>> @this)
+            => Mayhap<T>.μ(@this);
+    }
+
     /// <summary>
-    /// Represents an object that is either a single value of type T, or no
-    /// value at all.
+    /// Represents the Maybe monad.
     /// <para><see cref="Mayhap{T}"/> is an immutable struct.</para>
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    [DebuggerTypeProxy(typeof(Mayhap<>.DebugView_))]
     public readonly partial struct Mayhap<T> : IEquatable<Mayhap<T>>
     {
         private static readonly IEqualityComparer<T> s_DefaultComparer
             = EqualityComparer<T>.Default;
 
         private readonly bool _isSome;
-
         private readonly T _value;
 
-        internal Mayhap([DisallowNull]T value)
+        private Mayhap([DisallowNull]T value)
         {
-            Debug.Assert(value != null);
-
             _isSome = true;
             _value = value;
         }
 
-        public bool IsNone => !_isSome;
-
-        [ExcludeFromCodeCoverage]
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
         private string DebuggerDisplay => $"IsSome = {_isSome}";
 
         [Pure]
         public override string ToString()
             => Unwrap(x => $"Mayhap({x})", "Mayhap(None)");
+    }
 
-        #region Core monadic methods
-
-        [SuppressMessage("Microsoft.Design", "CA1000:Do not declare static members on generic types", Justification = "There is no such thing as a generic static property on a non-generic type.")]
+    public partial struct Mayhap<T>
+    {
+#pragma warning disable CA1000 // Do not declare static members on generic types
         public static Mayhap<T> None { get; } = default;
+#pragma warning restore CA1812
 
+        // The unit (wrap a value, public ctor).
+        //
+        // [Control.Applicative] pure :: a -> f a
+        //   Embed pure expressions, ie lift a value.
+        // [Control.Monad] return :: a -> m a
+        //   Inject a value into the monadic type.
+        [Pure]
+        internal static Mayhap<T> Some([DisallowNull]T value)
+            => new Mayhap<T>(value);
+
+        [Pure]
+        internal static Mayhap<T> η(T value)
+            => value is null ? Mayhap<T>.None : Mayhap<T>.Some(value);
+
+        // The multiplication or composition.
+        //
+        // [Control.Monad] join :: Monad m => m (m a) -> m a
+        //   The join function is the conventional monad join operator. It is
+        //   used to remove one level of monadic structure, projecting its bound
+        //   argument into the outer level.
+        [Pure]
+        internal static Mayhap<T> μ(Mayhap<Mayhap<T>> square)
+            => square._value;
+
+        // [Data.Functor] fmap :: (a -> b) -> f a -> f b
+        // [Control.Applicative] liftA :: Applicative f => (a -> b) -> f a -> f b
+        //   Lift a function to actions. A synonym of fmap for a functor.
+        // [Control.Monad] fmap :: (a -> b) -> f a -> f b
+        [Pure]
+        public Mayhap<TResult> Select<TResult>(Func<T, TResult> selector)
+        {
+            Require.NotNull(selector, nameof(selector));
+
+#if MONADS_VIA_MAP_MULTIPLY
+            return _isSome ? Mayhap<TResult>.η(selector(_value)) : Mayhap<TResult>.None;
+#else
+            return Bind(x => Mayhap<TResult>.η(selector(x)));
+#endif
+        }
+
+        // [Control.Monad] (>>=) :: forall a b. m a -> (a -> m b) -> m b
+        //   Sequentially compose two actions, passing any value produced by the
+        //   first as an argument to the second.
         [Pure]
         public Mayhap<TResult> Bind<TResult>(Func<T, Mayhap<TResult>> binder)
         {
-            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
+            Require.NotNull(binder, nameof(binder));
 
+#if MONADS_VIA_MAP_MULTIPLY
+            return Mayhap<TResult>.μ(Select(binder));
+#else
             return _isSome ? binder(_value) : Mayhap<TResult>.None;
+#endif
         }
 
         [Pure]
         public Mayhap<T> OrElse(Mayhap<T> other)
             => _isSome ? this : other;
-
-        #endregion
-
-        [ExcludeFromCodeCoverage]
-        [SuppressMessage("Microsoft.Design", "CA1812:Avoid uninstantiated internal classes", Justification = "DebuggerTypeProxy")]
-        private sealed class DebugView_
-        {
-            private readonly Mayhap<T> _inner;
-
-            public DebugView_(Mayhap<T> inner) { _inner = inner; }
-
-            public bool IsSome => _inner._isSome;
-
-            public T Value => _inner._value;
-        }
     }
 
     // Escaping the monad.
@@ -123,7 +171,7 @@ namespace Abc.Edu
         public void OnSome(Action<T> action)
             => Do(action, () => { });
 
-        #region Specialized versions
+#region Specialized versions
 
         [Pure]
         [return: MaybeNull]
@@ -162,27 +210,19 @@ namespace Abc.Edu
             }
         }
 
-        #endregion
+#endregion
     }
 
     // Query Expression Pattern aka LINQ.
     public partial struct Mayhap<T>
     {
         [Pure]
-        public Mayhap<TResult> Select<TResult>(Func<T, TResult> selector)
-        {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
-
-            return Bind(x => Mayhap.Of(selector(x)));
-        }
-
-        [Pure]
         public Mayhap<T> Where(Func<T, bool> predicate)
         {
             if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
 
             // NB: x is never null.
-            return Bind(x => predicate(x) ? new Mayhap<T>(x) : None);
+            return Bind(x => predicate(x) ? Some(x) : None);
         }
 
         [Pure]
@@ -323,7 +363,7 @@ namespace Abc.Edu
             return ContinueWith(Mayhap.Unit);
         }
 
-        #region ZipWith()
+#region ZipWith()
 
         [Pure]
         public Mayhap<TResult> ZipWith<TOther, TResult>(
@@ -383,7 +423,7 @@ namespace Abc.Edu
                     (y, z, a, b) => zipper(x, y, z, a, b)));
         }
 
-        #endregion
+#endregion
     }
 
     // Iterable.

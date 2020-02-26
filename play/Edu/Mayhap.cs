@@ -1,10 +1,9 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Edu
+namespace Abc.Fx
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -14,28 +13,40 @@ namespace Abc.Edu
     /// </summary>
     public static partial class Mayhap { }
 
-    // Core monadic methods.
+    // Monad syntax.
+    public partial class Mayhap
+    {
+        // [Control.Monad] ap :: Monad m => m (a -> b) -> m a -> m b
+        //   In many situations, the liftM operations can be replaced by uses of
+        //   ap, which promotes function application.
+        [Pure]
+        public static Maybe<TResult> Gather<TSource, TResult>(
+            this Maybe<TSource> @this,
+            Maybe<Func<TSource, TResult>> applicative)
+        {
+            return applicative.Bind(func => @this.Select(func));
+        }
+
+        [Pure]
+        public static Mayhap<TResult> Lift<TSource, TResult>(
+            this Mayhap<Func<TSource, TResult>> @this, Mayhap<TSource> value)
+        {
+            return @this.Bind(x => value.Select(x));
+        }
+
+        [Pure]
+        public static Mayhap<TResult> Invoke<TSource, TResult>(
+            this Mayhap<Func<TSource, TResult>> @this, Mayhap<TSource> value)
+        {
+            return @this.Bind(x => value.Select(x));
+        }
+    }
+
     public partial class Mayhap
     {
         public static readonly Mayhap<Unit> Unit = Some(Abc.Unit.Default);
 
         public static readonly Mayhap<Unit> None = Mayhap<Unit>.None;
-
-        [Pure]
-        public static Mayhap<T> Some<T>(T value) where T : struct
-            => new Mayhap<T>(value);
-
-        [Pure]
-        public static Mayhap<T> Of<T>([AllowNull]T value)
-            => value is null ? Mayhap<T>.None : new Mayhap<T>(value);
-
-        [Pure]
-        public static Mayhap<T> Of<T>(T? value) where T : struct
-            => value.HasValue ? Some(value.Value) : Mayhap<T>.None;
-
-        [Pure]
-        public static Mayhap<T> Flatten<T>(this Mayhap<Mayhap<T>> @this)
-            => @this.Bind(x => x);
 
         [Pure]
         public static Mayhap<Unit> Guard(bool predicate)
@@ -127,11 +138,5 @@ namespace Abc.Edu
     // Extension methods for Mayhap<T> where T is a function.
     public partial class Mayhap
     {
-        [Pure]
-        public static Mayhap<TResult> Invoke<TSource, TResult>(
-            this Mayhap<Func<TSource, TResult>> @this, Mayhap<TSource> value)
-        {
-            return @this.Bind(x => value.Select(x));
-        }
     }
 }

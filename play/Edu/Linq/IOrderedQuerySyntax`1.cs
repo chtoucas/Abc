@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Edu.Linq
+namespace Abc.Fx.Linq
 {
     using System;
 
