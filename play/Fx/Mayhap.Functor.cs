@@ -63,6 +63,8 @@ namespace Abc.Fx
         {
 #if STRICT_HASKELL
             return Map(_ => value, mayhap);
+
+            //TResult __const(TSource x) => Stubs<TResult, TSource>.Const1(value, x);
 #else
             return mayhap.Select(_ => value);
 #endif
