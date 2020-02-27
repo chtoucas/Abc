@@ -25,6 +25,6 @@ namespace Abc.Utilities
         /// Represents the action that does nothing.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Action<T> Ignore = _ => { };
+        public static readonly Action<T> Noop = _ => { };
     }
 }
