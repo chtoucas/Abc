@@ -71,7 +71,7 @@ namespace Abc
 
         /// <inheritdoc />
         [Pure]
-        public override bool Equals(object obj) => obj is Unit || obj is ValueTuple;
+        public override bool Equals(object? obj) => obj is Unit || obj is ValueTuple;
 
         /// <inheritdoc />
         [Pure]

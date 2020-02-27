@@ -566,11 +566,11 @@ namespace Abc
 
         /// <inheritdoc />
         [Pure]
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
             => obj is Maybe<T> maybe && Equals(maybe);
 
         [Pure]
-        public bool Equals(object other, IEqualityComparer<T> comparer)
+        public bool Equals(object? other, IEqualityComparer<T> comparer)
             => other is Maybe<T> maybe && Equals(maybe, comparer);
 
         /// <inheritdoc />
