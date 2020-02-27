@@ -14,6 +14,8 @@ Overview
 
 Compiler switches
 -----------------
+- `STRICT_HASKELL`.
+  Follow as closely as possible the Haskell code.
 - `MONADS_VIA_MAP_MULTIPLY`.
   The default behaviour is to define monads via Bind.
 - `COMONADS_VIA_MAP_COMULTIPLY`.
