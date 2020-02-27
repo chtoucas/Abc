@@ -21,10 +21,10 @@ namespace Abc.Fx
     //
     // Standard API:
     // - <$     Mayhap.ReplaceWith()
-    // - $>     ext.ReplaceWith()
-    // - <$>    obj.Select()
-    // - <&>    Func.Invoke()
-    // - void   ext.Skip()
+    // - $>     obj.ReplaceWith()
+    // - <$>    func.Invoke()
+    // - <&>    obj.Select()
+    // - void   obj.Skip()
     //
     // Functor rules
     // -------------
@@ -39,10 +39,10 @@ namespace Abc.Fx
         //   fmap :: (a -> b) -> f a -> f b
         [Pure]
         public static Mayhap<TResult> Map<TSource, TResult>(
-            Func<TSource, TResult> selector,
+            Func<TSource, TResult> mapper,
             Mayhap<TSource> mayhap)
         {
-            return mayhap.Select(selector);
+            return mayhap.Select(mapper);
         }
 
         /// <summary>(&lt;$)</summary>
@@ -56,13 +56,13 @@ namespace Abc.Fx
         //   definition is fmap . const, but this may be overridden with a more
         //   efficient version.
         [Pure]
-        public static Mayhap<T> ReplaceWith<T, TSource>(
-            T value,
+        public static Mayhap<TResult> ReplaceWith<TSource, TResult>(
+            TResult value,
             Mayhap<TSource> mayhap)
-            where T : notnull
+            where TResult : notnull
         {
 #if STRICT_HASKELL
-            return mayhap.Select(_ => value);
+            return Map(_ => value, mayhap);
 #else
             return mayhap.Select(_ => value);
 #endif
@@ -95,7 +95,8 @@ namespace Abc.Fx
         //   void value discards or ignores the result of evaluation, such as
         //   the return value of an IO action.
         [Pure]
-        public static Mayhap<Unit> Skip<TSource>(this Mayhap<TSource> @this)
+        public static Mayhap<Unit> Skip<TSource>(
+            this Mayhap<TSource> @this)
         {
 #if STRICT_HASKELL
             return ReplaceWith(Abc.Unit.Default, @this);
@@ -108,12 +109,13 @@ namespace Abc.Fx
     // Extension methods for Mayhap<T> where T is a func.
     public partial class Mayhap
     {
-        /// <summary>(&lt;&amp;&gt;)</summary>
+        /// <summary>(&lt;$&gt;></summary>
         // [Functor]
-        //   (<&>) :: Functor f => f a -> (a -> b) -> f b | infixl 1 |
-        //   (<&>) = flip fmap
+        //   (<$>) :: Functor f => (a -> b) -> f a -> f b | infixl 4 |
+        //   (<$>) = fmap
         //
-        //    Flipped version of <$>.
+        //   An infix synonym for fmap.
+        //   The name of this operator is an allusion to $.
         [Pure]
         public static Mayhap<TResult> Invoke<TSource, TResult>(
             this Func<TSource, TResult> @this,
