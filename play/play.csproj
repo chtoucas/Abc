@@ -13,6 +13,7 @@
 
     <!-- Optional symbols -->
     <!--<DefineConstants>$(DefineConstants);MONADS_VIA_MAP_MULTIPLY</DefineConstants>-->
+    <!--<DefineConstants>$(DefineConstants);COMONADS_VIA_MAP_COMULTIPLY</DefineConstants>-->
   </PropertyGroup>
 
   <ItemGroup>

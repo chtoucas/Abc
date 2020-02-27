@@ -1,7 +1,8 @@
 ﻿A word of caution
 -----------------
-The classes found here exist for the sole purpose of documentation.
-API and documentation are **adapted** from the Haskell sources.
+The classes found here exist for the sole purpose of my own education.
+API and documentation are **adapted** (copied) from the Haskell sources.
+The port from Haskell is quite loose and the result is NOT meant for efficiency.
 
 Overview
 --------
@@ -13,8 +14,7 @@ Overview
 
 Compiler switches
 -----------------
-- `MONAD_VIA_MAP_MULTIPLY`.
-  The default behaviour is to define Monads via Bind.
-- `COMONAD_VIA_MAP_COMULTIPLY`.
-  The default behaviour is to define Comonads via cobind.
-- `APPLICATIVE_USE_GHC_BASE`.
+- `MONADS_VIA_MAP_MULTIPLY`.
+  The default behaviour is to define monads via Bind.
+- `COMONADS_VIA_MAP_COMULTIPLY`.
+  The default behaviour is to define comonads via cobind.
