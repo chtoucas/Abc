@@ -16,18 +16,15 @@ namespace Abc.Fx
     //
     // Methods
     // -------
-    // Bare bone:
-    // - fmap   obj.Select()
+    // Bare minimum:
+    // - fmap   Mayhap.Map()
     //
     // Standard API:
-    // - <$     obj.ReplaceWith()
-    // - $>     obj.ReplaceWith()
+    // - <$     Mayhap.ReplaceWith()
+    // - $>     ext.ReplaceWith()
     // - <$>    obj.Select()
     // - <&>    Func.Invoke()
-    // - void   obj.Skip()
-    //
-    // NB: if we followed the signature, fmap (resp. <&>) would rather be
-    // Func.Invoke() (resp. obj.Select()).
+    // - void   ext.Skip()
     //
     // Functor rules
     // -------------
@@ -37,9 +34,20 @@ namespace Abc.Fx
     //   fmap (f . g)  ==  fmap f . fmap g
     public partial class Mayhap
     {
+        /// <summary>fmap</summary>
+        // [Functor]
+        //   fmap :: (a -> b) -> f a -> f b
+        [Pure]
+        public static Mayhap<TResult> Map<TSource, TResult>(
+            Func<TSource, TResult> selector,
+            Mayhap<TSource> mayhap)
+        {
+            return mayhap.Select(selector);
+        }
+
         /// <summary>(&lt;$)</summary>
         // [Functor]
-        //   (<$) :: Functor f => a -> f b -> f a
+        //   (<$) :: Functor f => a -> f b -> f a | infixl 4 |
         //
         //   (<$) :: a -> f b -> f a
         //   (<$) =  fmap . const
@@ -47,9 +55,22 @@ namespace Abc.Fx
         //   Replace all locations in the input with the same value. The default
         //   definition is fmap . const, but this may be overridden with a more
         //   efficient version.
-        //
+        [Pure]
+        public static Mayhap<T> ReplaceWith<T, TSource>(
+            T value,
+            Mayhap<TSource> mayhap)
+            where T : notnull
+        {
+#if STRICT_HASKELL
+            return mayhap.Select(_ => value);
+#else
+            return mayhap.Select(_ => value);
+#endif
+        }
+
+        /// <summary>($&gt;)</summary>
         // [Functor]
-        //   ($>) :: Functor f => f a -> b -> f b
+        //   ($>) :: Functor f => f a -> b -> f b | infixl 4 |
         //   ($>) = flip (<$)
         //
         //   Flipped version of <$.
@@ -59,23 +80,11 @@ namespace Abc.Fx
             TResult value)
             where TResult : notnull
         {
+#if STRICT_HASKELL
+            return ReplaceWith(value, @this);
+#else
             return @this.Select(_ => value);
-        }
-
-        /// <summary>(&lt;&amp;&gt;)</summary>
-        // [Functor]
-        //   (<&>) :: Functor f => f a -> (a -> b) -> f b
-        //   (<&>) = flip fmap
-        //
-        //    Flipped version of <$>.
-        [Pure]
-        public static Mayhap<TResult> Invoke<TSource, TResult>(
-            this Func<TSource, TResult> @this,
-            Mayhap<TSource> maybe)
-        {
-            Require.NotNull(@this, nameof(@this));
-
-            return maybe.Select(x => @this(x));
+#endif
         }
 
         /// <summary>void</summary>
@@ -87,6 +96,36 @@ namespace Abc.Fx
         //   the return value of an IO action.
         [Pure]
         public static Mayhap<Unit> Skip<TSource>(this Mayhap<TSource> @this)
-            => @this.Select(_ => Abc.Unit.Default);
+        {
+#if STRICT_HASKELL
+            return ReplaceWith(Abc.Unit.Default, @this);
+#else
+            return @this.Select(_ => Abc.Unit.Default);
+#endif
+        }
+    }
+
+    // Extension methods for Mayhap<T> where T is a func.
+    public partial class Mayhap
+    {
+        /// <summary>(&lt;&amp;&gt;)</summary>
+        // [Functor]
+        //   (<&>) :: Functor f => f a -> (a -> b) -> f b | infixl 1 |
+        //   (<&>) = flip fmap
+        //
+        //    Flipped version of <$>.
+        [Pure]
+        public static Mayhap<TResult> Invoke<TSource, TResult>(
+            this Func<TSource, TResult> @this,
+            Mayhap<TSource> mayhap)
+        {
+#if STRICT_HASKELL
+            return Map(@this, mayhap);
+#else
+            Require.NotNull(@this, nameof(@this));
+
+            return mayhap.Select(x => @this(x));
+#endif
+        }
     }
 }

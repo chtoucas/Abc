@@ -103,7 +103,7 @@ namespace Abc.Fx
         //   fmap :: (a -> b) -> f a -> f b
         //
         // [Functor]
-        //   (<$>) :: Functor f => (a -> b) -> f a -> f b
+        //   (<$>) :: Functor f => (a -> b) -> f a -> f b | infixl 4 |
         //   (<$>) = fmap
         //
         //   An infix synonym for fmap.

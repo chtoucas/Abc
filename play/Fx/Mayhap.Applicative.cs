@@ -12,17 +12,17 @@ namespace Abc.Fx
     //
     // Methods
     // -------
-    // Bare bone (<*> or liftA2, here we choose <*>):
-    // - pure
-    // - <*>        Maybe<Func>.Invoke()
-    // - liftA2     Func.Lift()
+    // Bare minimum (<*> or liftA2, here we choose <*>):
+    // - pure       Mayhap.Of()
+    // - <*>        Mayhap<Func>$.Invoke()
+    // - liftA2     Mayhap.Lift()
     //
     // Standard API:
-    // - *>         obj.ContinueWith()
-    // - <*         obj.PassThru()
-    // - <**>       obj.Apply()
-    // - liftA      Func.Lift()
-    // - liftA3     Func.Lift()
+    // - *>         ext.ContinueWith()
+    // - <*         ext.PassThru()
+    // - <**>       ext.Apply()
+    // - liftA      Mayhap.Lift()
+    // - liftA3     Mayhap.Lift()
     //
     // Applicative rules
     // -----------------
@@ -36,28 +36,6 @@ namespace Abc.Fx
     //   u <*> pure y = pure ($ y) <*> u
     public partial class Mayhap
     {
-        /// <summary>(&lt;*&gt;) / ap</summary>
-        // [Applicative]
-        //   (<*>) :: f (a -> b) -> f a -> f b
-        //   (<*>) = liftA2 id
-        //
-        //   Sequential application.
-        //   A few functors support an implementation of <*> that is more efficient
-        //   than the default one.
-        //
-        // [Monad]
-        //   ap :: Monad m => m (a -> b) -> m a -> m b
-        //   ap m1 m2 = do { x1 <- m1; x2 <- m2; return (x1 x2) }
-        //
-        //   In many situations, the liftM operations can be replaced by uses of
-        //   ap, which promotes function application.
-        [Pure]
-        public static Mayhap<TResult> Invoke<TSource, TResult>(
-            this Mayhap<Func<TSource, TResult>> @this, Mayhap<TSource> value)
-        {
-            return @this.Bind(func => value.Select(func));
-        }
-
         /// <summary>(*&gt;)</summary>
         // [Applicative]
         //   (*>) :: f a -> f b -> f b
@@ -91,7 +69,11 @@ namespace Abc.Fx
             this Mayhap<TSource> @this,
             Mayhap<TOther> other)
         {
-            return @this.ZipWith(other, (x, _) => x);
+#if STRICT_HASKELL
+            return Lift(Stubs<TSource, TOther>.Const1).Invoke(@this, other);
+#else
+            return @this.ZipWith(other, Stubs<TSource, TOther>.Const1);
+#endif
         }
 
         /// <summary>(&lt;**&gt;)</summary>
@@ -109,7 +91,33 @@ namespace Abc.Fx
         }
     }
 
-    // Lift, promote functions to actions (that is monads here).
+    // Extension methods for Mayhap<T> where T is a func.
+    public partial class Mayhap
+    {
+        /// <summary>(&lt;*&gt;) / ap</summary>
+        // [Applicative]
+        //   (<*>) :: f (a -> b) -> f a -> f b
+        //   (<*>) = liftA2 id
+        //
+        //   Sequential application.
+        //   A few functors support an implementation of <*> that is more efficient
+        //   than the default one.
+        //
+        // [Monad]
+        //   ap :: Monad m => m (a -> b) -> m a -> m b
+        //   ap m1 m2 = do { x1 <- m1; x2 <- m2; return (x1 x2) }
+        //
+        //   In many situations, the liftM operations can be replaced by uses of
+        //   ap, which promotes function application.
+        [Pure]
+        public static Mayhap<TResult> Invoke<TSource, TResult>(
+            this Mayhap<Func<TSource, TResult>> @this, Mayhap<TSource> mayhap)
+        {
+            return @this.Bind(func => mayhap.Select(func));
+        }
+    }
+
+    // Lift, promote functions to actions (ie Mayhap's).
     public partial class Mayhap
     {
         /// <summary>liftA</summary>

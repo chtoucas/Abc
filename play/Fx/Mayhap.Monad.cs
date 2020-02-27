@@ -13,8 +13,8 @@ namespace Abc.Fx
     //
     // Methods
     // -------
-    // Bare bone:
-    // - >>=
+    // Bare minimum:
+    // - >>=        obj.Bind()
     // - >>
     // - return
     // - fail
