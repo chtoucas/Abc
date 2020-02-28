@@ -5,11 +5,12 @@ namespace Abc.Fx
     using System;
     using System.Diagnostics.Contracts;
 
-    // Control.Monad
-    // =============
+    // Monad
+    // =====
     //
-    // http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
-    // https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.13.0.0/Control-Monad.html
+    // References:
+    // - http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
+    // - https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.13.0.0/Control-Monad.html
     //
     // Methods
     // -------

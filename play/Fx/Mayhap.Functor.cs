@@ -5,14 +5,16 @@ namespace Abc.Fx
     using System;
     using System.Diagnostics.Contracts;
 
-    // Data.Functor
-    // ============
+    // Functor
+    // =======
     //
     // Functors: uniform action over a parameterized type, generalizing the map
     // function on lists.
     // The Functor class is used for types that can be mapped over.
     //
-    // https://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Functor.html
+    // References:
+    // - https://wiki.haskell.org/Functor
+    // - https://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Functor.html
     //
     // Methods
     // -------
@@ -23,7 +25,7 @@ namespace Abc.Fx
     // - <$     Mayhap.ReplaceWith()
     // - $>     obj.ReplaceWith()
     // - <$>    func.Invoke()
-    // - <&>    obj.Select()
+    // - <&>    obj.Select()            [instance method]
     // - void   obj.Skip()
     //
     // Functor rules
@@ -34,54 +36,71 @@ namespace Abc.Fx
     //   fmap (f . g)  ==  fmap f . fmap g
     public partial class Mayhap
     {
-        /// <summary>fmap</summary>
-        // [Functor]
-        //   fmap :: (a -> b) -> f a -> f b
+        /// <summary>
+        /// fmap
+        /// <para>a = TSource, b = TResult</para>
+        /// <para>Create a new f b from an f a using the results of calling a
+        /// function on every value in the f a.</para>
+        /// </summary>
         [Pure]
         public static Mayhap<TResult> Map<TSource, TResult>(
             Func<TSource, TResult> mapper,
             Mayhap<TSource> mayhap)
         {
+            // fmap :: (a -> b) -> f a -> f b
+
+            // Default implementation when Mayhap is a monad.
             return mayhap.Select(mapper);
         }
 
-        /// <summary>(&lt;$)</summary>
-        // [Functor]
-        //   (<$) :: Functor f => a -> f b -> f a | infixl 4 |
-        //
-        //   (<$) :: a -> f b -> f a
-        //   (<$) =  fmap . const
-        //
-        //   Replace all locations in the input with the same value. The default
-        //   definition is fmap . const, but this may be overridden with a more
-        //   efficient version.
+        /// <summary>
+        /// (&lt;$)
+        /// <para>a = TResult, b = TSource</para>
+        /// <para>Create a new f a from an f b by replacing all of the values in
+        /// the f b by a given value of type a.</para>
+        /// </summary>
         [Pure]
         public static Mayhap<TResult> ReplaceWith<TSource, TResult>(
             TResult value,
             Mayhap<TSource> mayhap)
             where TResult : notnull
         {
-#if STRICT_HASKELL
-            return Map(_ => value, mayhap);
+            // (<$) :: Functor f => a -> f b -> f a | infixl 4 |
+            //
+            // (<$) :: a -> f b -> f a
+            // (<$) =  fmap . const
+            //
+            // Replace all locations in the input with the same value. The
+            // default definition is fmap . const, but this may be overridden
+            // with a more efficient version.
 
-            //TResult __const(TSource x) => Stubs<TResult, TSource>.Const1(value, x);
+#if STRICT_HASKELL
+            return Map(__const, mayhap);
+
+            // NB: This is just (_ => value).
+            TResult __const(TSource x) => Stubs<TResult, TSource>.Const1(value, x);
 #else
             return mayhap.Select(_ => value);
 #endif
         }
 
-        /// <summary>($&gt;)</summary>
-        // [Functor]
-        //   ($>) :: Functor f => f a -> b -> f b | infixl 4 |
-        //   ($>) = flip (<$)
-        //
-        //   Flipped version of <$.
+        /// <summary>
+        /// ($&gt;)
+        /// <para>a = TSource, b = TResult</para>
+        /// <para>Create a new f b, from an f a by replacing all of the values
+        /// in the f a by a given value of type b.</para>
+        /// </summary>
         [Pure]
         public static Mayhap<TResult> ReplaceWith<TSource, TResult>(
             this Mayhap<TSource> @this,
             TResult value)
             where TResult : notnull
         {
+            // ($>) :: Functor f => f a -> b -> f b | infixl 4 |
+            // ($>) = flip (<$)
+            //
+            // Flipped version of <$.
+
 #if STRICT_HASKELL
             return ReplaceWith(value, @this);
 #else
@@ -89,17 +108,22 @@ namespace Abc.Fx
 #endif
         }
 
-        /// <summary>void</summary>
-        // [Functor]
-        //   void :: Functor f => f a -> f ()
-        //   void x = () <$ x
-        //
-        //   void value discards or ignores the result of evaluation, such as
-        //   the return value of an IO action.
+        /// <summary>
+        /// void
+        /// <para>a = TSource, () = Unit</para>
+        /// <para>Create a new f () from an f a by replacing all of the values
+        /// in the f a by ().</para>
+        /// </summary>
         [Pure]
         public static Mayhap<Unit> Skip<TSource>(
             this Mayhap<TSource> @this)
         {
+            // void :: Functor f => f a -> f ()
+            // void x = () <$ x
+            //
+            // void value discards or ignores the result of evaluation, such as
+            // the return value of an IO action.
+
 #if STRICT_HASKELL
             return ReplaceWith(Abc.Unit.Default, @this);
 #else
@@ -111,18 +135,21 @@ namespace Abc.Fx
     // Extension methods for Mayhap<T> where T is a func.
     public partial class Mayhap
     {
-        /// <summary>(&lt;$&gt;></summary>
-        // [Functor]
-        //   (<$>) :: Functor f => (a -> b) -> f a -> f b | infixl 4 |
-        //   (<$>) = fmap
-        //
-        //   An infix synonym for fmap.
-        //   The name of this operator is an allusion to $.
+        /// <summary>
+        /// (&lt;$&gt;>
+        /// <para>An infix synonym for fmap.</para>
+        /// </summary>
         [Pure]
         public static Mayhap<TResult> Invoke<TSource, TResult>(
             this Func<TSource, TResult> @this,
             Mayhap<TSource> mayhap)
         {
+            // (<$>) :: Functor f => (a -> b) -> f a -> f b | infixl 4 |
+            // (<$>) = fmap
+            //
+            // An infix synonym for fmap.
+            // The name of this operator is an allusion to $.
+
 #if STRICT_HASKELL
             return Map(@this, mayhap);
 #else
@@ -130,6 +157,30 @@ namespace Abc.Fx
 
             return mayhap.Select(x => @this(x));
 #endif
+        }
+    }
+
+    // Functor rules.
+    public partial class Mayhap
+    {
+        internal static class FunctorRules
+        {
+            // First law: the identity map is a fixed point for Select.
+            //   fmap id  ==  id
+            public static bool Identity<T>(Mayhap<T> mayhap)
+            {
+                return Map(Stubs<T>.Ident, mayhap)
+                    == Stubs<Mayhap<T>>.Ident(mayhap);
+            }
+
+            // Second law: Select preserves the composition operator.
+            //   fmap (f . g)  ==  fmap f . fmap g
+            public static bool Composition<T1, T2, T3>(
+                Mayhap<T1> mayhap, Func<T2, T3> f, Func<T1, T2> g)
+            {
+                return Map(x => f(g(x)), mayhap)
+                    == Map(f, Map(g, mayhap));
+            }
         }
     }
 }

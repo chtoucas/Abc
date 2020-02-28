@@ -5,10 +5,12 @@ namespace Abc.Fx
     using System;
     using System.Diagnostics.Contracts;
 
-    // Control.Applicative
+    // Applicative Functor
     // ===================
     //
-    // http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html
+    // References:
+    // - https://wiki.haskell.org/Applicative_functor
+    // - http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Applicative.html
     //
     // Methods
     // -------
