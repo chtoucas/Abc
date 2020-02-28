@@ -147,7 +147,6 @@ namespace Abc.Fx
             // (<$>) :: Functor f => (a -> b) -> f a -> f b | infixl 4 |
             // (<$>) = fmap
             //
-            // An infix synonym for fmap.
             // The name of this operator is an allusion to $.
 
 #if STRICT_HASKELL

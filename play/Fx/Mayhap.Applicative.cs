@@ -47,7 +47,7 @@ namespace Abc.Fx
     {
         /// <summary>
         /// pure
-        /// <para>Lift a value.</para>
+        /// <para>Embed pure expressions, ie lift a value.</para>
         /// </summary>
         [Pure]
         public static Mayhap<T> Pure<T>([AllowNull]T value)
@@ -69,7 +69,6 @@ namespace Abc.Fx
             // (*>) :: f a -> f b -> f b
             // a1 *> a2 = (id <$ a1) <*> a2
             //
-            // Sequence actions, discarding the value of the first argument.
             // This is essentially the same as liftA2 (flip const), but if the
             // Functor instance has an optimized (<$), it may be better to use
             // that instead.Before liftA2 became a method, this definition
@@ -94,8 +93,6 @@ namespace Abc.Fx
         {
             // (<*) :: f a -> f b -> f a
             // (<*) = liftA2 const
-            //
-            // Sequence actions, discarding the value of the second argument.
 
 #if STRICT_HASKELL
             return Lift(Stubs<TSource, TOther>.Const1).Invoke(@this, other);
@@ -104,7 +101,10 @@ namespace Abc.Fx
 #endif
         }
 
-        /// <summary>(&lt;**&gt;)</summary>
+        /// <summary>
+        /// (&lt;**&gt;)
+        /// <para>A variant of (&lt;*&gt;) with the arguments reversed.</para>
+        /// </summary>
         [Pure]
         public static Mayhap<TResult> Apply<TSource, TResult>(
             this Mayhap<TSource> @this,
@@ -140,7 +140,6 @@ namespace Abc.Fx
             // (<*>) :: f (a -> b) -> f a -> f b
             // (<*>) = liftA2 id
             //
-            // Sequential application.
             // A few functors support an implementation of <*> that is more efficient
             // than the default one.
             //
@@ -152,7 +151,10 @@ namespace Abc.Fx
     // Lift, promote functions to actions (ie Mayhap's).
     public partial class Mayhap
     {
-        /// <summary>liftA</summary>
+        /// <summary>
+        /// liftA
+        /// <para>Lift a function to actions.</para>
+        /// </summary>
         [Pure]
         public static Func<Mayhap<TSource>, Mayhap<TResult>> Lift<TSource, TResult>(
             Func<TSource, TResult> func)
@@ -160,7 +162,6 @@ namespace Abc.Fx
             // liftA :: Applicative f => (a -> b) -> f a -> f b
             // liftA f a = pure f <*> a
             //
-            // Lift a function to actions.
             // This function may be used as a value for `fmap` in a `Functor`
             // instance.
 
@@ -179,19 +180,25 @@ namespace Abc.Fx
             // liftA2 f x = (<*>) (fmap f x)
             // liftA2 f x y = f <$> x <*> y
             //
-            // Lift a binary function to actions.
             // Some functors support an implementation of liftA2 that is more efficient
             // than the default one.In particular, if fmap is an expensive operation,
             // it is likely better to use liftA2 than to fmap over the structure and
             // then use<*>.
 
+#if STRICT_HASKELL
+            throw new NotImplementedException();
+#else
             return (m1, m2) =>
                 m1.Bind(
                     x1 => m2.Bind(
                         x2 => Of(func(x1, x2))));
+#endif
         }
 
-        /// <summary>liftA3</summary>
+        /// <summary>
+        /// liftA3
+        /// <para>Lift a ternary function to actions.</para>
+        /// </summary>
         [Pure]
         public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<T3>, Mayhap<TResult>>
             Lift<T1, T2, T3, TResult>(
@@ -199,8 +206,6 @@ namespace Abc.Fx
         {
             // liftA3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
             // liftA3 f a b c = liftA2 f a b <*> c
-            //
-            // Lift a ternary function to actions.
 
             return (m1, m2, m3) =>
                 m1.Bind(

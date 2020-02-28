@@ -15,21 +15,22 @@ namespace Abc.Fx
 
     public static partial class Mayhap
     {
-        /// <summary>return / pure</summary>
+        /// <summary>return</summary>
         [Pure]
         public static Mayhap<T> Of<T>([AllowNull]T value)
             => Mayhap<T>.η(value);
 
-        /// <summary>return / pure</summary>
+        /// <summary>return</summary>
         [Pure]
         public static Mayhap<T> Of<T>(T? value) where T : struct
             => value.HasValue ? Mayhap<T>.Some(value.Value) : Mayhap<T>.None;
 
-        /// <summary>return / pure</summary>
+        /// <summary>Just</summary>
         [Pure]
         public static Mayhap<T> Some<T>(T value) where T : struct
             => Mayhap<T>.Some(value);
 
+        /// <summary>join</summary>
         [Pure]
         public static Mayhap<T> Flatten<T>(this Mayhap<Mayhap<T>> @this)
             => Mayhap<T>.μ(@this);
@@ -64,15 +65,12 @@ namespace Abc.Fx
     public partial struct Mayhap<T>
     {
 #pragma warning disable CA1000 // Do not declare static members on generic types
+        /// <summary>Nothing</summary>
         public static Mayhap<T> None { get; } = default;
 #pragma warning restore CA1812
 
-        /// <summary>return / pure</summary>
+        /// <summary>Just</summary>
         // The unit (wrap a value, public ctor).
-        //
-        // [Applicative]
-        //   pure :: a -> f a
-        //   Embed pure expressions, ie lift a value.
         //
         // [Monad]
         //   return :: a -> m a
@@ -81,7 +79,7 @@ namespace Abc.Fx
         internal static Mayhap<T> Some([DisallowNull]T value)
             => new Mayhap<T>(value);
 
-        /// <summary>return / pure</summary>
+        /// <summary>return</summary>
         [Pure]
         internal static Mayhap<T> η(T value)
             => value is null ? Mayhap<T>.None : Mayhap<T>.Some(value);
