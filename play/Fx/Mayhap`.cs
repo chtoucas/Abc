@@ -9,8 +9,6 @@ namespace Abc.Fx
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
-    // TODO: voir les derniers ajouts. Si je me rappelle bien, à l'époque je
-    // m'étais basé sur
     // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).
 
     public static partial class Mayhap
@@ -59,7 +57,51 @@ namespace Abc.Fx
 
         [Pure]
         public override string ToString()
-            => Unwrap(x => $"Mayhap({x})", "Mayhap(None)");
+            => _isSome ? $"Mayhap({_value})" : "Mayhap(None)";
+
+        [Pure]
+        public TResult Match<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
+        {
+            if (_isSome)
+            {
+                Require.NotNull(caseSome, nameof(caseSome));
+                return caseSome(_value);
+            }
+            else
+            {
+                Require.NotNull(caseNone, nameof(caseNone));
+                return caseNone();
+            }
+        }
+
+        [Pure]
+        [return: NotNullIfNotNull("caseNone")]
+        public TResult Match<TResult>(Func<T, TResult> caseSome, TResult caseNone)
+        {
+            if (_isSome)
+            {
+                Require.NotNull(caseSome, nameof(caseSome));
+                return caseSome(_value);
+            }
+            else
+            {
+                return caseNone;
+            }
+        }
+
+        internal void Do(Action<T> caseSome, Action caseNone)
+        {
+            if (_isSome)
+            {
+                Require.NotNull(caseSome, nameof(caseSome));
+                caseSome(_value);
+            }
+            else
+            {
+                Require.NotNull(caseNone, nameof(caseNone));
+                caseNone();
+            }
+        }
     }
 
     public partial struct Mayhap<T>
@@ -144,93 +186,6 @@ namespace Abc.Fx
         [Pure]
         public Mayhap<T> OrElse(Mayhap<T> other)
             => _isSome ? this : other;
-    }
-
-    // Escaping the monad.
-    public partial struct Mayhap<T>
-    {
-        [Pure]
-        public TResult Unwrap<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
-        {
-            if (_isSome)
-            {
-                if (caseSome is null) { throw new ArgumentNullException(nameof(caseSome)); }
-                return caseSome(_value);
-            }
-            else
-            {
-                if (caseNone is null) { throw new ArgumentNullException(nameof(caseNone)); }
-                return caseNone();
-            }
-        }
-
-        [Pure]
-        public TResult Unwrap<TResult>(Func<T, TResult> caseSome, TResult caseNone)
-        {
-            if (_isSome)
-            {
-                if (caseSome is null) { throw new ArgumentNullException(nameof(caseSome)); }
-                return caseSome(_value);
-            }
-            else
-            {
-                return caseNone;
-            }
-        }
-
-        public void Do(Action<T> onSome, Action onNone)
-        {
-#pragma warning disable CA1806 // Do not ignore method results
-            Unwrap(__some, __none);
-#pragma warning restore CA1806
-
-            Unit __some(T x) { onSome(x); return Unit.Default; }
-            Unit __none() { onNone(); return Unit.Default; }
-        }
-
-        public void OnSome(Action<T> action)
-            => Do(action, () => { });
-
-        #region Specialized versions
-
-        [Pure]
-        [return: MaybeNull]
-        public T ValueOrDefault()
-            => Unwrap(x => x, default(T)!);
-
-        [Pure]
-        public T ValueOrElse([DisallowNull]T other)
-            => Unwrap(x => x, other);
-
-        [Pure]
-        public T ValueOrElse(Func<T> valueFactory)
-        {
-            return Unwrap(x => x, __none);
-
-            T __none()
-            {
-                if (valueFactory is null) { throw new ArgumentNullException(nameof(valueFactory)); }
-                return valueFactory();
-            }
-        }
-
-        [Pure]
-        public T ValueOrThrow()
-            => Unwrap(x => x, () => throw new InvalidOperationException());
-
-        [Pure]
-        public T ValueOrThrow(Func<Exception> exceptionFactory)
-        {
-            return Unwrap(x => x, __caseNone);
-
-            T __caseNone()
-            {
-                if (exceptionFactory is null) { throw new ArgumentNullException(nameof(exceptionFactory)); }
-                throw exceptionFactory(); ;
-            }
-        }
-
-        #endregion
     }
 
     // Query Expression Pattern aka LINQ.
@@ -400,19 +355,19 @@ namespace Abc.Fx
 
         [Pure]
         public bool Equals(Mayhap<T> other)
-            => Unwrap(x => other.Contains(x), !other._isSome);
+            => Match(x => other.Contains(x), !other._isSome);
 
         [Pure]
         public bool Equals(Mayhap<T> other, IEqualityComparer<T> comparer)
-            => Unwrap(x => other.Contains(x, comparer), !other._isSome);
+            => Match(x => other.Contains(x, comparer), !other._isSome);
 
         [Pure]
         public bool Contains(T value)
-            => Unwrap(x => s_DefaultComparer.Equals(x, value), false);
+            => Match(x => s_DefaultComparer.Equals(x, value), false);
 
         [Pure]
         public bool Contains(T value, IEqualityComparer<T> comparer)
-            => Unwrap(x => (comparer ?? s_DefaultComparer).Equals(x, value), false);
+            => Match(x => (comparer ?? s_DefaultComparer).Equals(x, value), false);
 
         [Pure]
         public override bool Equals(object? obj)
@@ -424,10 +379,10 @@ namespace Abc.Fx
 
         [Pure]
         public override int GetHashCode()
-            => Unwrap(x => x!.GetHashCode(), 0);
+            => Match(x => x!.GetHashCode(), 0);
 
         [Pure]
         public int GetHashCode(IEqualityComparer<T> comparer)
-            => Unwrap((comparer ?? s_DefaultComparer).GetHashCode, 0);
+            => Match((comparer ?? s_DefaultComparer).GetHashCode, 0);
     }
 }
