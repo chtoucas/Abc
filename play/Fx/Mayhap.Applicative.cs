@@ -3,6 +3,7 @@
 namespace Abc.Fx
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     // Applicative Functor
@@ -14,8 +15,10 @@ namespace Abc.Fx
     //
     // Methods
     // -------
+    // First, an applicative functor is a functor...
+    //
     // Bare minimum (<*> or liftA2, here we choose <*>):
-    // - pure       Mayhap.Of()
+    // - pure       Mayhap.Pure()
     // - <*>        Mayhap<Func>$.Invoke()
     // - liftA2     Mayhap.Lift()
     //
@@ -25,6 +28,10 @@ namespace Abc.Fx
     // - <**>       ext.Apply()
     // - liftA      Mayhap.Lift()
     // - liftA3     Mayhap.Lift()
+    //
+    // If an applicative functor is also a monad, it should satisfy:
+    // - pure = return
+    // - (<*>) = ap
     //
     // Applicative rules
     // -----------------
@@ -38,39 +45,58 @@ namespace Abc.Fx
     //   u <*> pure y = pure ($ y) <*> u
     public partial class Mayhap
     {
-        /// <summary>(*&gt;)</summary>
-        // [Applicative]
-        //   (*>) :: f a -> f b -> f b
-        //   a1 *> a2 = (id <$ a1) <*> a2
-        //
-        //   Sequence actions, discarding the value of the first argument.
-        //   This is essentially the same as liftA2 (flip const), but if the
-        //   Functor instance has an optimized(<$), it may be better to use
-        //   that instead.Before liftA2 became a method, this definition
-        //   was strictly better, but now it depends on the functor.For a
-        //   functor supporting a sharing-enhancing (<$), this definition
-        //   may reduce allocation by preventing a1 from ever being fully
-        //   realized.In an implementation with a boring(<$) but an optimizing
-        //   liftA2, it would likely be better to define(*>) using liftA2.
+        /// <summary>
+        /// pure
+        /// <para>Lift a value.</para>
+        /// </summary>
+        [Pure]
+        public static Mayhap<T> Pure<T>([AllowNull]T value)
+        {
+            // Default implementation when Mayhap is a monad.
+            return Of(value);
+        }
+
+        /// <summary>
+        /// (*&gt;)
+        /// <para>Sequence actions, discarding the value of the first argument.
+        /// </para>
+        /// </summary>
         [Pure]
         public static Mayhap<TResult> ContinueWith<TSource, TResult>(
             this Mayhap<TSource> @this,
             Mayhap<TResult> other)
         {
+            // (*>) :: f a -> f b -> f b
+            // a1 *> a2 = (id <$ a1) <*> a2
+            //
+            // Sequence actions, discarding the value of the first argument.
+            // This is essentially the same as liftA2 (flip const), but if the
+            // Functor instance has an optimized (<$), it may be better to use
+            // that instead.Before liftA2 became a method, this definition
+            // was strictly better, but now it depends on the functor.For a
+            // functor supporting a sharing-enhancing (<$), this definition
+            // may reduce allocation by preventing a1 from ever being fully
+            // realized.In an implementation with a boring (<$) but an optimizing
+            // liftA2, it would likely be better to define (*>) using liftA2.
+
             return @this.Bind(_ => other);
         }
 
-        /// <summary>(&lt;*)</summary>
-        // [Applicative]
-        //   (<*) :: f a -> f b -> f a
-        //   (<*) = liftA2 const
-        //
-        //   Sequence actions, discarding the value of the second argument.
+        /// <summary>
+        /// (&lt;*)
+        /// <para>Sequence actions, discarding the value of the second argument.
+        /// </para>
+        /// </summary>
         [Pure]
         public static Mayhap<TSource> PassThru<TSource, TOther>(
             this Mayhap<TSource> @this,
             Mayhap<TOther> other)
         {
+            // (<*) :: f a -> f b -> f a
+            // (<*) = liftA2 const
+            //
+            // Sequence actions, discarding the value of the second argument.
+
 #if STRICT_HASKELL
             return Lift(Stubs<TSource, TOther>.Const1).Invoke(@this, other);
 #else
@@ -79,16 +105,16 @@ namespace Abc.Fx
         }
 
         /// <summary>(&lt;**&gt;)</summary>
-        // [Applicative]
-        //   (<**>) :: Applicative f => f a -> f (a -> b) -> f b
-        //   (<**>) = liftA2(\a f -> f a)
-        //
-        //   A variant of '<*>' with the arguments reversed.
         [Pure]
         public static Mayhap<TResult> Apply<TSource, TResult>(
             this Mayhap<TSource> @this,
             Mayhap<Func<TSource, TResult>> applicative)
         {
+            // (<**>) :: Applicative f => f a -> f (a -> b) -> f b
+            // (<**>) = liftA2(\a f -> f a)
+            //
+            // A variant of '<*>' with the arguments reversed.
+
             return applicative.Bind(func => @this.Select(func));
         }
     }
@@ -96,15 +122,10 @@ namespace Abc.Fx
     // Extension methods for Mayhap<T> where T is a func.
     public partial class Mayhap
     {
-        /// <summary>(&lt;*&gt;) / ap</summary>
-        // [Applicative]
-        //   (<*>) :: f (a -> b) -> f a -> f b
-        //   (<*>) = liftA2 id
-        //
-        //   Sequential application.
-        //   A few functors support an implementation of <*> that is more efficient
-        //   than the default one.
-        //
+        /// <summary>
+        /// (&lt;*&gt;)
+        /// <para>Sequential application.</para>
+        /// </summary>
         // [Monad]
         //   ap :: Monad m => m (a -> b) -> m a -> m b
         //   ap m1 m2 = do { x1 <- m1; x2 <- m2; return (x1 x2) }
@@ -113,8 +134,17 @@ namespace Abc.Fx
         //   ap, which promotes function application.
         [Pure]
         public static Mayhap<TResult> Invoke<TSource, TResult>(
-            this Mayhap<Func<TSource, TResult>> @this, Mayhap<TSource> mayhap)
+            this Mayhap<Func<TSource, TResult>> @this,
+            Mayhap<TSource> mayhap)
         {
+            // (<*>) :: f (a -> b) -> f a -> f b
+            // (<*>) = liftA2 id
+            //
+            // Sequential application.
+            // A few functors support an implementation of <*> that is more efficient
+            // than the default one.
+            //
+
             return @this.Bind(func => mayhap.Select(func));
         }
     }
@@ -123,35 +153,38 @@ namespace Abc.Fx
     public partial class Mayhap
     {
         /// <summary>liftA</summary>
-        // [Applicative]
-        //   liftA :: Applicative f => (a -> b) -> f a -> f b
-        //   liftA f a = pure f <*> a
-        //
-        //   Lift a function to actions.
-        //   This function may be used as a value for `fmap` in a `Functor`
-        //   instance.
         [Pure]
         public static Func<Mayhap<TSource>, Mayhap<TResult>> Lift<TSource, TResult>(
             Func<TSource, TResult> func)
         {
+            // liftA :: Applicative f => (a -> b) -> f a -> f b
+            // liftA f a = pure f <*> a
+            //
+            // Lift a function to actions.
+            // This function may be used as a value for `fmap` in a `Functor`
+            // instance.
+
             return m => Of(func).Invoke(m);
         }
 
-        /// <summary>liftA2</summary>
-        // [Applicative]
-        //   liftA2 :: (a -> b -> c) -> f a -> f b -> f c
-        //   liftA2 f x = (<*>) (fmap f x)
-        //   liftA2 f x y = f <$> x <*> y
-        //
-        //   Lift a binary function to actions.
-        //   Some functors support an implementation of liftA2 that is more efficient
-        //   than the default one.In particular, if fmap is an expensive operation,
-        //   it is likely better to use liftA2 than to fmap over the structure and
-        //   then use<*>.
+        /// <summary>
+        /// liftA2
+        /// <para>Lift a binary function to actions.</para>
+        /// </summary>
         [Pure]
         public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<TResult>> Lift<T1, T2, TResult>(
             Func<T1, T2, TResult> func)
         {
+            // liftA2 :: (a -> b -> c) -> f a -> f b -> f c
+            // liftA2 f x = (<*>) (fmap f x)
+            // liftA2 f x y = f <$> x <*> y
+            //
+            // Lift a binary function to actions.
+            // Some functors support an implementation of liftA2 that is more efficient
+            // than the default one.In particular, if fmap is an expensive operation,
+            // it is likely better to use liftA2 than to fmap over the structure and
+            // then use<*>.
+
             return (m1, m2) =>
                 m1.Bind(
                     x1 => m2.Bind(
@@ -159,21 +192,54 @@ namespace Abc.Fx
         }
 
         /// <summary>liftA3</summary>
-        // [Applicative]
-        //   liftA3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
-        //   liftA3 f a b c = liftA2 f a b <*> c
-        //
-        //   Lift a ternary function to actions.
         [Pure]
         public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<T3>, Mayhap<TResult>>
             Lift<T1, T2, T3, TResult>(
             Func<T1, T2, T3, TResult> func)
         {
+            // liftA3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
+            // liftA3 f a b c = liftA2 f a b <*> c
+            //
+            // Lift a ternary function to actions.
+
             return (m1, m2, m3) =>
                 m1.Bind(
                     x1 => m2.Bind(
                         x2 => m3.Bind(
                             x3 => Of(func(x1, x2, x3)))));
+        }
+    }
+
+    // Applicative rules.
+    public partial class Mayhap
+    {
+        internal static class ApplicativeRules
+        {
+            // pure id <*> v = v
+            public static bool IdentityRule<T>(Mayhap<T> mayhap)
+            {
+                return Pure(Stubs<T>.Ident).Invoke(mayhap)
+                    == mayhap;
+            }
+
+            // pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
+            public static bool Composition()
+            {
+                throw new NotImplementedException();
+            }
+
+            // pure f <*> pure x = pure (f x)
+            public static bool HomomorphismRule<T1, T2>(Func<T1, T2> f, T1 value)
+            {
+                return Pure(f).Invoke(Pure(value))
+                    == Pure(f(value));
+            }
+
+            // u <*> pure y = pure ($ y) <*> u
+            public static bool Interchange()
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

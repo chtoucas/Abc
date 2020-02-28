@@ -167,19 +167,29 @@ namespace Abc.Fx
         {
             // First law: the identity map is a fixed point for Select.
             //   fmap id  ==  id
-            public static bool Identity<T>(Mayhap<T> mayhap)
+            public static bool IdentityRule<T>(Mayhap<T> mayhap)
             {
+#if STRICT_HASKELL
                 return Map(Stubs<T>.Ident, mayhap)
                     == Stubs<Mayhap<T>>.Ident(mayhap);
+#else
+                return mayhap.Select(Stubs<T>.Ident)
+                    == Stubs<Mayhap<T>>.Ident(mayhap);
+#endif
             }
 
             // Second law: Select preserves the composition operator.
             //   fmap (f . g)  ==  fmap f . fmap g
-            public static bool Composition<T1, T2, T3>(
+            public static bool CompositionRule<T1, T2, T3>(
                 Mayhap<T1> mayhap, Func<T2, T3> f, Func<T1, T2> g)
             {
+#if STRICT_HASKELL
                 return Map(x => f(g(x)), mayhap)
                     == Map(f, Map(g, mayhap));
+#else
+                return mayhap.Select(_ => f(g(_)))
+                    == mayhap.Select(g).Select(f);
+#endif
             }
         }
     }
