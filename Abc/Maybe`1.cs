@@ -94,30 +94,6 @@ namespace Abc
         public override string ToString()
             => _isSome ? $"Maybe({_value})" : "Maybe(None)";
 
-        #region Core monadic methods
-
-        /// <summary>
-        /// Obtains an instance of <see cref="Maybe{T}" /> that does not enclose
-        /// any value.
-        /// <para>This static property is thread-safe.</para>
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1000:Do not declare static members on generic types", Justification = "There is no such thing as a generic static property on a non-generic type.")]
-        public static Maybe<T> None { get; } = default;
-
-        [Pure]
-        public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
-        {
-            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
-
-            return _isSome ? binder(_value) : Maybe<TResult>.None;
-        }
-
-        [Pure]
-        public Maybe<T> OrElse(Maybe<T> other)
-            => _isSome ? this : other;
-
-        #endregion
-
         /// <summary>
         /// Represents a debugger type proxy for <see cref="Maybe{T}"/>.
         /// </summary>
@@ -135,18 +111,18 @@ namespace Abc
         }
     }
 
-    // Escaping the monad.
+    // Pattern matching, escaping the monad.
     public partial struct Maybe<T>
     {
         // REVIEW: delayed throw?
 
         /// <summary>
-        /// If the current instance encloses a value, it executes
+        /// If the current instance encloses a value, it unwraps it using
         /// <paramref name="caseSome"/>, otherwise it executes
         /// <paramref name="caseNone"/>.
         /// </summary>
         [Pure]
-        public TResult Unwrap<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
+        public TResult Switch<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
         {
             if (_isSome)
             {
@@ -161,12 +137,13 @@ namespace Abc
         }
 
         /// <summary>
-        /// If the current instance encloses a value, it executes
+        /// If the current instance encloses a value, it unwraps it using
         /// <paramref name="caseSome"/>, otherwise it returns
         /// <paramref name="caseNone"/>.
         /// </summary>
         [Pure]
-        public TResult Unwrap<TResult>(Func<T, TResult> caseSome, TResult caseNone)
+        [return: NotNullIfNotNull("caseNone")]
+        public TResult Switch<TResult>(Func<T, TResult> caseSome, TResult caseNone)
         {
             if (_isSome)
             {
@@ -266,6 +243,30 @@ namespace Abc
         }
 
         #endregion
+    }
+
+    // Core monadic methods.
+    public partial struct Maybe<T>
+    {
+        /// <summary>
+        /// Obtains an instance of <see cref="Maybe{T}" /> that does not enclose
+        /// any value.
+        /// <para>This static property is thread-safe.</para>
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1000:Do not declare static members on generic types", Justification = "There is no such thing as a generic static property on a non-generic type.")]
+        public static Maybe<T> None { get; } = default;
+
+        [Pure]
+        public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
+        {
+            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
+
+            return _isSome ? binder(_value) : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public Maybe<T> OrElse(Maybe<T> other)
+            => _isSome ? this : other;
     }
 
     // Query Expression Pattern aka LINQ.
@@ -392,6 +393,22 @@ namespace Abc
 
             return _isSome ? Maybe.Of(await selector(_value).ConfigureAwait(false))
                 : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public async Task<TResult> SwitchAsync<TResult>(
+            Func<T, Task<TResult>> caseSome, Task<TResult> caseNone)
+        {
+            if (_isSome)
+            {
+                if (caseSome is null) { throw new ArgumentNullException(nameof(caseSome)); }
+                return await caseSome(_value).ConfigureAwait(false);
+            }
+            else
+            {
+                if (caseNone is null) { throw new ArgumentNullException(nameof(caseNone)); }
+                return await caseNone.ConfigureAwait(false);
+            }
         }
     }
 

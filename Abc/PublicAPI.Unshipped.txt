@@ -25,8 +25,9 @@ Abc.Maybe<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Maybe<TRes
 Abc.Maybe<T>.SelectAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<TResult>> selector) -> System.Threading.Tasks.Task<Abc.Maybe<TResult>>
 Abc.Maybe<T>.SelectMany<TMiddle, TResult>(System.Func<T, Abc.Maybe<TMiddle>> selector, System.Func<T, TMiddle, TResult> resultSelector) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Skip() -> Abc.Maybe<Abc.Unit>
-Abc.Maybe<T>.Unwrap<TResult>(System.Func<T, TResult> caseSome, System.Func<TResult> caseNone) -> TResult
-Abc.Maybe<T>.Unwrap<TResult>(System.Func<T, TResult> caseSome, TResult caseNone) -> TResult
+Abc.Maybe<T>.Switch<TResult>(System.Func<T, TResult> caseSome, System.Func<TResult> caseNone) -> TResult
+Abc.Maybe<T>.Switch<TResult>(System.Func<T, TResult> caseSome, TResult caseNone) -> TResult
+Abc.Maybe<T>.SwitchAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<TResult>> caseSome, System.Threading.Tasks.Task<TResult> caseNone) -> System.Threading.Tasks.Task<TResult>
 Abc.Maybe<T>.ValueOrDefault() -> T
 Abc.Maybe<T>.ValueOrElse(System.Func<T> valueFactory) -> T
 Abc.Maybe<T>.ValueOrElse(T other) -> T
