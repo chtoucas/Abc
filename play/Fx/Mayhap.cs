@@ -26,7 +26,7 @@ namespace Abc.Fx
         public static async Task<Mayhap<TResult>> BindAsync<T, TResult>(
             this Mayhap<T> @this,
             Func<T, Task<Mayhap<TResult>>> binder,
-            bool continueOnCapturedContext = false)
+            bool continueOnCapturedContext)
         {
             Require.NotNull(binder, nameof(binder));
 
@@ -41,7 +41,7 @@ namespace Abc.Fx
         public static async Task<Mayhap<TResult>> SelectAsync<T, TResult>(
             this Mayhap<T> @this,
             Func<T, Task<TResult>> selector,
-            bool continueOnCapturedContext = false)
+            bool continueOnCapturedContext)
         {
             Require.NotNull(selector, nameof(selector));
 
@@ -50,6 +50,20 @@ namespace Abc.Fx
             return iter.MoveNext()
                 ? Of(await selector(iter.Current).ConfigureAwait(continueOnCapturedContext))
                 : Mayhap<TResult>.None;
+        }
+
+        [Pure]
+        public static async Task<Mayhap<T>> WhereAsync<T>(
+            this Mayhap<T> @this,
+            Func<T, Task<bool>> predicate)
+        {
+            Require.NotNull(predicate, nameof(predicate));
+
+            return await @this.BindAsync(__binder).ConfigureAwait(false);
+
+            async Task<Mayhap<T>> __binder(T x)
+                => await predicate(x).ConfigureAwait(false) ? Mayhap<T>.Some(x)
+                    : Mayhap<T>.None;
         }
     }
 

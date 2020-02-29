@@ -3,7 +3,6 @@
 namespace Abc.Fx
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -47,10 +46,7 @@ namespace Abc.Fx
     /// <para><see cref="Mayhap{T}"/> is an immutable struct.</para>
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-#pragma warning disable CA1710 // Identifiers should have correct suffix
-    public readonly partial struct Mayhap<T>
-        : IEquatable<Mayhap<T>>, IEnumerable<T>
-#pragma warning restore CA1710
+    public readonly partial struct Mayhap<T> : IEquatable<Mayhap<T>>
     {
         private static readonly IEqualityComparer<T> s_DefaultComparer
             = EqualityComparer<T>.Default;
@@ -159,23 +155,50 @@ namespace Abc.Fx
     public partial struct Mayhap<T>
     {
         [Pure]
-        public async Task<Mayhap<TResult>> BindAsync<TResult>(
-            Func<T, Task<Mayhap<TResult>>> binder)
-        {
-            Require.NotNull(binder, nameof(binder));
-
-            return _isSome ? await binder(_value).ConfigureAwait(false)
-                : Mayhap<TResult>.None;
-        }
-
-        [Pure]
         public async Task<Mayhap<TResult>> SelectAsync<TResult>(
             Func<T, Task<TResult>> selector)
         {
             Require.NotNull(selector, nameof(selector));
 
+#if MONADS_VIA_MAP_MULTIPLY
             return _isSome ? Mayhap<TResult>.η(await selector(_value).ConfigureAwait(false))
                 : Mayhap<TResult>.None;
+#else
+            return await BindAsync(__binder).ConfigureAwait(false);
+
+            async Task<Mayhap<TResult>> __binder(T x)
+                => Mayhap<TResult>.η(await selector(x).ConfigureAwait(false));
+#endif
+        }
+
+        [Pure]
+        public async Task<Mayhap<TResult>> BindAsync<TResult>(
+            Func<T, Task<Mayhap<TResult>>> binder)
+        {
+            Require.NotNull(binder, nameof(binder));
+
+#if MONADS_VIA_MAP_MULTIPLY
+            return Mayhap<TResult>.μ(await SelectAsync(binder).ConfigureAwait(false));
+#else
+            return _isSome ? await binder(_value).ConfigureAwait(false)
+                : Mayhap<TResult>.None;
+#endif
+        }
+
+        [Pure]
+        public async Task<TResult> SwitchAsync<TResult>(
+            Func<T, Task<TResult>> caseSome, Task<TResult> caseNone)
+        {
+            if (_isSome)
+            {
+                Require.NotNull(caseSome, nameof(caseSome));
+                return await caseSome(_value).ConfigureAwait(false);
+            }
+            else
+            {
+                Require.NotNull(caseNone, nameof(caseNone));
+                return await caseNone.ConfigureAwait(false);
+            }
         }
     }
 
@@ -238,7 +261,7 @@ namespace Abc.Fx
             => _isSome ? caseSome(_value) : caseNone;
     }
 
-    // Interface IEnumerable<>.
+    // Pseudo-interface IEnumerable<>.
     public partial struct Mayhap<T>
     {
         [Pure]
@@ -249,9 +272,6 @@ namespace Abc.Fx
                 yield return _value;
             }
         }
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator();
     }
 
     // Interface IEquatable<>.
