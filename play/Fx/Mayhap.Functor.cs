@@ -53,8 +53,35 @@ namespace Abc.Fx
             //   fmap (+1) (Just 1)  ==  Just 2
             //   fmap (+1) Nothing   ==  Nothing
 
+#if STRICT_HASKELL
+            throw new NotImplementedException("Functor fmap");
+#else
             // Default implementation when Mayhap is a monad.
             return mayhap.Select(mapper);
+#endif
+        }
+
+        /// <summary>(&lt;&amp;&gt;)</summary>
+        [Pure]
+        public static Mayhap<TResult> Map<TSource, TResult>(
+            this Mayhap<TSource> @this,
+            Func<TSource, TResult> mapper)
+        {
+            // [Functor]
+            //   (<&>) :: Functor f => f a -> (a -> b) -> f b | infixl 1 |
+            //   (<&>) = flip fmap
+            //
+            //    Flipped version of <$>.
+            //
+            // Examples:
+            //   Just 1  <&> (+1)  ==  Just 2
+            //   Nothing <&> (+1)  ==  Nothing
+
+#if STRICT_HASKELL
+            return Map(mapper, @this);
+#else
+            return @this.Select(mapper);
+#endif
         }
 
         /// <summary>
@@ -77,6 +104,10 @@ namespace Abc.Fx
             // Replace all locations in the input with the same value. The
             // default definition is fmap . const, but this may be overridden
             // with a more efficient version.
+            //
+            // Examples:
+            //   "xxx" <$ Nothing == Nothing
+            //   "xxx" <$ Just 1  == Just "xxx"
 
 #if STRICT_HASKELL
             return Map(__const, mayhap);
@@ -104,6 +135,10 @@ namespace Abc.Fx
             // ($>) = flip (<$)
             //
             // Flipped version of <$.
+            //
+            // Examples:
+            //   Nothing $> "xxx" == Nothing
+            //   Just 1 $> "xxx"  == Just "xxx"
 
 #if STRICT_HASKELL
             return ReplaceWith(value, @this);

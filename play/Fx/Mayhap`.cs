@@ -161,13 +161,7 @@ namespace Abc.Fx
         internal static Mayhap<T> μ(Mayhap<Mayhap<T>> square)
             => square._value;
 
-        /// <summary>(&lt;&amp;&gt;) / fmap / liftM</summary>
-        // [Functor]
-        //   (<&>) :: Functor f => f a -> (a -> b) -> f b | infixl 1 |
-        //   (<&>) = flip fmap
-        //
-        //    Flipped version of <$>.
-        //
+        /// <summary>fmap / liftM</summary>
         // [Monad]
         //   fmap :: (a -> b) -> f a -> f b
         //

@@ -21,5 +21,8 @@ namespace Abc
     {
         /// <summary>const</summary>
         public static readonly Func<T1, T2, T1> Const1 = (x, _) => x;
+
+        /// <summary>flip const</summary>
+        public static readonly Func<T1, T2, T2> Const2 = (_, x) => x;
     }
 }

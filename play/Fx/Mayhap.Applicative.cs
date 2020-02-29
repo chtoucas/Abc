@@ -33,6 +33,9 @@ namespace Abc.Fx
     // - pure = return
     // - (<*>) = ap
     //
+    // NB: <*> is used in conjuction with <$> but the lack of partial functions
+    // in C# makes it hard to use here.
+    //
     // Applicative rules
     // -----------------
     // Identity
@@ -52,8 +55,12 @@ namespace Abc.Fx
         [Pure]
         public static Mayhap<T> Pure<T>([AllowNull]T value)
         {
+#if STRICT_HASKELL
+            throw new NotImplementedException("Applicative pure");
+#else
             // Default implementation when Mayhap is a monad.
             return Of(value);
+#endif
         }
 
         /// <summary>
@@ -78,7 +85,11 @@ namespace Abc.Fx
             // realized.In an implementation with a boring (<$) but an optimizing
             // liftA2, it would likely be better to define (*>) using liftA2.
 
+#if STRICT_HASKELL
+            return Lift(Stubs<TSource, TResult>.Const2).Invoke(@this, other);
+#else
             return @this.Bind(_ => other);
+#endif
         }
 
         /// <summary>
@@ -97,7 +108,7 @@ namespace Abc.Fx
 #if STRICT_HASKELL
             return Lift(Stubs<TSource, TOther>.Const1).Invoke(@this, other);
 #else
-            return @this.ZipWith(other, Stubs<TSource, TOther>.Const1);
+            return other.Bind(_ => @this);
 #endif
         }
 
@@ -115,7 +126,11 @@ namespace Abc.Fx
             //
             // A variant of '<*>' with the arguments reversed.
 
+#if STRICT_HASKELL
+            return Invoke(applicative, @this);
+#else
             return applicative.Bind(func => @this.Select(func));
+#endif
         }
     }
 
@@ -144,10 +159,14 @@ namespace Abc.Fx
             // than the default one.
             //
             // Examples:
-            //   pure (+1) (Just 1) == Just 2
+            //   pure (+1) <*> Just 1 == Just 2
 
+#if STRICT_HASKELL
+            throw new NotImplementedException("Applicative <*>");
+#else
             // Default implementation when Mayhap is a monad.
             return @this.Bind(f => mayhap.Select(f));
+#endif
         }
 
         /// <summary>
@@ -161,13 +180,17 @@ namespace Abc.Fx
             Mayhap<T2> m2)
         {
             // Examples:
-            //   pure (+) (Just 1) (Just 1) == Just 2
+            //   pure (+) <*> Just 1 <*> Just 1 == Just 2
 
+#if STRICT_HASKELL
+            throw new NotImplementedException("Applicative <*>");
+#else
             // Default implementation when Mayhap is a monad.
             return @this.Bind(
                 f => m1.Bind(
                     x1 => m2.Select(
                         x2 => f(x1, x2))));
+#endif
         }
 
         /// <summary>
@@ -181,12 +204,16 @@ namespace Abc.Fx
             Mayhap<T2> m2,
             Mayhap<T3> m3)
         {
+#if STRICT_HASKELL
+            throw new NotImplementedException("Applicative <*>");
+#else
             // Default implementation when Mayhap is a monad.
             return @this.Bind(
                 f => m1.Bind(
                     x1 => m2.Bind(
                         x2 => m3.Select(
                             x3 => f(x1, x2, x3)))));
+#endif
         }
     }
 
@@ -206,8 +233,15 @@ namespace Abc.Fx
             //
             // This function may be used as a value for `fmap` in a `Functor`
             // instance.
+            //
+            // Examples:
+            //   (+1) <$> Just 1 == Just 2
 
-            return m => Of(func).Invoke(m);
+#if STRICT_HASKELL
+            return m => Pure(func).Invoke(m);
+#else
+            return m => m.Select(func);
+#endif
         }
 
         /// <summary>
@@ -222,18 +256,21 @@ namespace Abc.Fx
             // liftA2 f x = (<*>) (fmap f x)
             // liftA2 f x y = f <$> x <*> y
             //
-            // Some functors support an implementation of liftA2 that is more efficient
-            // than the default one.In particular, if fmap is an expensive operation,
-            // it is likely better to use liftA2 than to fmap over the structure and
-            // then use<*>.
+            // Some functors support an implementation of liftA2 that is more
+            // efficient than the default one.In particular, if fmap is an
+            // expensive operation, it is likely better to use liftA2 than to
+            // fmap over the structure and then use <*>.
+            //
+            // Examples:
+            //   (+) <$> Just 1 <*> Just 1 == Just 2
 
 #if STRICT_HASKELL
-            throw new NotImplementedException();
+            return (m1, m2) => Pure(func).Invoke(m1, m2);
 #else
             return (m1, m2) =>
                 m1.Bind(
-                    x1 => m2.Bind(
-                        x2 => Of(func(x1, x2))));
+                    x1 => m2.Select(
+                        x2 => func(x1, x2)));
 #endif
         }
 
@@ -249,11 +286,15 @@ namespace Abc.Fx
             // liftA3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
             // liftA3 f a b c = liftA2 f a b <*> c
 
+#if STRICT_HASKELL
+            return (m1, m2, m3) => Pure(func).Invoke(m1, m2, m3);
+#else
             return (m1, m2, m3) =>
                 m1.Bind(
                     x1 => m2.Bind(
-                        x2 => m3.Bind(
-                            x3 => Of(func(x1, x2, x3)))));
+                        x2 => m3.Select(
+                            x3 => func(x1, x2, x3))));
+#endif
         }
     }
 
