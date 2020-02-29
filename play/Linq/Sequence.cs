@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Fx
+namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;

@@ -67,6 +67,66 @@ namespace Abc.Fx
             => SwitchIntern(x => $"Mayhap({x})", "Mayhap(None)");
     }
 
+    // Pattern matching.
+    public partial struct Mayhap<T>
+    {
+        [Pure]
+        public TResult Switch<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
+        {
+            if (_isSome)
+            {
+                Require.NotNull(caseSome, nameof(caseSome));
+                return caseSome(_value);
+            }
+            else
+            {
+                Require.NotNull(caseNone, nameof(caseNone));
+                return caseNone();
+            }
+        }
+
+        // Could be built upon the other Switch().
+        [Pure]
+        [return: NotNullIfNotNull("caseNone")]
+        public TResult Switch<TResult>(Func<T, TResult> caseSome, TResult caseNone)
+        {
+            if (_isSome)
+            {
+                Require.NotNull(caseSome, nameof(caseSome));
+                return caseSome(_value);
+            }
+            else
+            {
+                return caseNone;
+            }
+        }
+
+        // Could be built upon Switch().
+        internal void Do(Action<T> caseSome, Action caseNone)
+        {
+            if (_isSome)
+            {
+                Require.NotNull(caseSome, nameof(caseSome));
+                caseSome(_value);
+            }
+            else
+            {
+                Require.NotNull(caseNone, nameof(caseNone));
+                caseNone();
+            }
+        }
+
+        [Pure]
+        internal TResult SwitchIntern<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
+            => _isSome ? caseSome(_value) : caseNone();
+
+        [Pure]
+        [return: NotNullIfNotNull("caseNone")]
+        internal TResult SwitchIntern<TResult>(Func<T, TResult> caseSome, TResult caseNone)
+            => _isSome ? caseSome(_value) : caseNone;
+    }
+
+    // Core monadic methods.
     public partial struct Mayhap<T>
     {
 #pragma warning disable CA1000 // Do not declare static members on generic types
@@ -200,65 +260,6 @@ namespace Abc.Fx
                 return await caseNone.ConfigureAwait(false);
             }
         }
-    }
-
-    // Pattern matching.
-    public partial struct Mayhap<T>
-    {
-        [Pure]
-        public TResult Switch<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
-        {
-            if (_isSome)
-            {
-                Require.NotNull(caseSome, nameof(caseSome));
-                return caseSome(_value);
-            }
-            else
-            {
-                Require.NotNull(caseNone, nameof(caseNone));
-                return caseNone();
-            }
-        }
-
-        // Could be built upon the other Switch().
-        [Pure]
-        [return: NotNullIfNotNull("caseNone")]
-        public TResult Switch<TResult>(Func<T, TResult> caseSome, TResult caseNone)
-        {
-            if (_isSome)
-            {
-                Require.NotNull(caseSome, nameof(caseSome));
-                return caseSome(_value);
-            }
-            else
-            {
-                return caseNone;
-            }
-        }
-
-        // Could be built upon Switch().
-        internal void Do(Action<T> caseSome, Action caseNone)
-        {
-            if (_isSome)
-            {
-                Require.NotNull(caseSome, nameof(caseSome));
-                caseSome(_value);
-            }
-            else
-            {
-                Require.NotNull(caseNone, nameof(caseNone));
-                caseNone();
-            }
-        }
-
-        [Pure]
-        internal TResult SwitchIntern<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
-            => _isSome ? caseSome(_value) : caseNone();
-
-        [Pure]
-        [return: NotNullIfNotNull("caseNone")]
-        internal TResult SwitchIntern<TResult>(Func<T, TResult> caseSome, TResult caseNone)
-            => _isSome ? caseSome(_value) : caseNone;
     }
 
     // Pseudo-interface IEnumerable<>.

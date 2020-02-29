@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Fx.Linq
+namespace Abc.Linq
 {
     public interface IGroupingQuerySyntax<TKey, T> : IQuerySyntax<T>
     {
