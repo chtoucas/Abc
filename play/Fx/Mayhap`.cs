@@ -3,6 +3,7 @@
 namespace Abc.Fx
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -10,6 +11,13 @@ namespace Abc.Fx
     using System.Threading.Tasks;
 
     // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).
+
+    // IEnumerable<T>, but a bit missleading?
+    // IEquatable<T>, but a bit missleading?
+    // IComparable? See ValueTuple.
+    // Serializable?
+    // nullable attrs.
+    // Enhance and improve async methods.
 
     public static partial class Mayhap
     {
@@ -39,7 +47,10 @@ namespace Abc.Fx
     /// <para><see cref="Mayhap{T}"/> is an immutable struct.</para>
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    public readonly partial struct Mayhap<T> : IEquatable<Mayhap<T>>
+#pragma warning disable CA1710 // Identifiers should have correct suffix
+    public readonly partial struct Mayhap<T>
+        : IEquatable<Mayhap<T>>, IEnumerable<T>
+#pragma warning restore CA1710
     {
         private static readonly IEqualityComparer<T> s_DefaultComparer
             = EqualityComparer<T>.Default;
@@ -57,51 +68,7 @@ namespace Abc.Fx
 
         [Pure]
         public override string ToString()
-            => _isSome ? $"Mayhap({_value})" : "Mayhap(None)";
-
-        [Pure]
-        public TResult Match<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
-        {
-            if (_isSome)
-            {
-                Require.NotNull(caseSome, nameof(caseSome));
-                return caseSome(_value);
-            }
-            else
-            {
-                Require.NotNull(caseNone, nameof(caseNone));
-                return caseNone();
-            }
-        }
-
-        [Pure]
-        [return: NotNullIfNotNull("caseNone")]
-        public TResult Match<TResult>(Func<T, TResult> caseSome, TResult caseNone)
-        {
-            if (_isSome)
-            {
-                Require.NotNull(caseSome, nameof(caseSome));
-                return caseSome(_value);
-            }
-            else
-            {
-                return caseNone;
-            }
-        }
-
-        internal void Do(Action<T> caseSome, Action caseNone)
-        {
-            if (_isSome)
-            {
-                Require.NotNull(caseSome, nameof(caseSome));
-                caseSome(_value);
-            }
-            else
-            {
-                Require.NotNull(caseNone, nameof(caseNone));
-                caseNone();
-            }
-        }
+            => SwitchIntern(x => $"Mayhap({x})", "Mayhap(None)");
     }
 
     public partial struct Mayhap<T>
@@ -188,104 +155,6 @@ namespace Abc.Fx
             => _isSome ? this : other;
     }
 
-    // Query Expression Pattern aka LINQ.
-    public partial struct Mayhap<T>
-    {
-        [Pure]
-        public Mayhap<T> Where(Func<T, bool> predicate)
-        {
-            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
-
-            // NB: x is never null.
-            return Bind(x => predicate(x) ? Some(x) : None);
-        }
-
-        [Pure]
-        public Mayhap<TResult> SelectMany<TMiddle, TResult>(
-            Func<T, Mayhap<TMiddle>> selector,
-            Func<T, TMiddle, TResult> resultSelector)
-        {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
-            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
-
-            return Bind(
-                x => selector(x).Select(
-                    middle => resultSelector(x, middle)));
-        }
-
-        [Pure]
-        public Mayhap<TResult> Join<TInner, TKey, TResult>(
-            Mayhap<TInner> inner,
-            Func<T, TKey> outerKeySelector,
-            Func<TInner, TKey> innerKeySelector,
-            Func<T, TInner, TResult> resultSelector)
-        {
-            return Join(inner, outerKeySelector, innerKeySelector, resultSelector, null!);
-        }
-
-        [Pure]
-        public Mayhap<TResult> Join<TInner, TKey, TResult>(
-            Mayhap<TInner> inner,
-            Func<T, TKey> outerKeySelector,
-            Func<TInner, TKey> innerKeySelector,
-            Func<T, TInner, TResult> resultSelector,
-            IEqualityComparer<TKey> comparer)
-        {
-            if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
-            if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
-            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
-
-            var keyLookup = __getKeyLookup(inner, innerKeySelector, comparer);
-
-            return SelectMany(__valueSelector, resultSelector);
-
-            Mayhap<TInner> __valueSelector(T outer) => keyLookup(outerKeySelector(outer));
-
-            static Func<TKey, Mayhap<TInner>> __getKeyLookup(
-               Mayhap<TInner> inner,
-               Func<TInner, TKey> innerKeySelector,
-               IEqualityComparer<TKey>? comparer)
-            {
-                return outerKey =>
-                    inner.Select(innerKeySelector)
-                        .Where(innerKey =>
-                            (comparer ?? EqualityComparer<TKey>.Default)
-                                .Equals(innerKey, outerKey))
-                        .ContinueWith(inner);
-            }
-        }
-
-        //
-        // GroupJoin currently disabled.
-        //
-
-        //[Pure]
-        //public Mayhap<TResult> GroupJoin<TInner, TKey, TResult>(
-        //    Mayhap<TInner> inner,
-        //    Func<T, TKey> outerKeySelector,
-        //    Func<TInner, TKey> innerKeySelector,
-        //    Func<T, Mayhap<TInner>, TResult> resultSelector,
-        //    IEqualityComparer<TKey> comparer)
-        //{
-        //    if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
-        //    if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
-        //    if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
-
-        //    if (_isSome && inner._isSome)
-        //    {
-        //        var outerKey = outerKeySelector(_value);
-        //        var innerKey = innerKeySelector(inner._value);
-
-        //        if ((comparer ?? EqualityComparer<TKey>.Default).Equals(outerKey, innerKey))
-        //        {
-        //            return Mayhap.Of(resultSelector(_value, inner));
-        //        }
-        //    }
-
-        //    return Mayhap<TResult>.None;
-        //}
-    }
-
     // Async methods.
     public partial struct Mayhap<T>
     {
@@ -296,7 +165,7 @@ namespace Abc.Fx
             if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
 
             return _isSome ? await binder(_value).ConfigureAwait(false)
-                : Mayhap<TResult>.None; ;
+                : Mayhap<TResult>.None;
         }
 
         [Pure]
@@ -305,23 +174,73 @@ namespace Abc.Fx
         {
             if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
 
-            return _isSome ? Mayhap.Of(await selector(_value).ConfigureAwait(false))
+            return _isSome ? Mayhap<TResult>.η(await selector(_value).ConfigureAwait(false))
                 : Mayhap<TResult>.None;
         }
     }
 
-    // Iterable.
+    // Pattern matching.
     public partial struct Mayhap<T>
     {
-        //[Pure]
-        //public IEnumerable<T> ToEnumerable()
-        //{
-        //    if (_isSome)
-        //    {
-        //        yield return _value;
-        //    }
-        //}
+        [Pure]
+        public TResult Switch<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
+        {
+            if (_isSome)
+            {
+                Require.NotNull(caseSome, nameof(caseSome));
+                return caseSome(_value);
+            }
+            else
+            {
+                Require.NotNull(caseNone, nameof(caseNone));
+                return caseNone();
+            }
+        }
 
+        // Could be built upon the other Switch().
+        [Pure]
+        [return: NotNullIfNotNull("caseNone")]
+        public TResult Switch<TResult>(Func<T, TResult> caseSome, TResult caseNone)
+        {
+            if (_isSome)
+            {
+                Require.NotNull(caseSome, nameof(caseSome));
+                return caseSome(_value);
+            }
+            else
+            {
+                return caseNone;
+            }
+        }
+
+        // Could be built upon Switch().
+        internal void Do(Action<T> caseSome, Action caseNone)
+        {
+            if (_isSome)
+            {
+                Require.NotNull(caseSome, nameof(caseSome));
+                caseSome(_value);
+            }
+            else
+            {
+                Require.NotNull(caseNone, nameof(caseNone));
+                caseNone();
+            }
+        }
+
+        [Pure]
+        internal TResult SwitchIntern<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
+            => _isSome ? caseSome(_value) : caseNone();
+
+        [Pure]
+        [return: NotNullIfNotNull("caseNone")]
+        internal TResult SwitchIntern<TResult>(Func<T, TResult> caseSome, TResult caseNone)
+            => _isSome ? caseSome(_value) : caseNone;
+    }
+
+    // Interface IEnumerable<>.
+    public partial struct Mayhap<T>
+    {
         [Pure]
         public IEnumerator<T> GetEnumerator()
         {
@@ -330,6 +249,9 @@ namespace Abc.Fx
                 yield return _value;
             }
         }
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => GetEnumerator();
     }
 
     // Interface IEquatable<>.
@@ -355,19 +277,19 @@ namespace Abc.Fx
 
         [Pure]
         public bool Equals(Mayhap<T> other)
-            => Match(x => other.Contains(x), !other._isSome);
+            => SwitchIntern(x => other.Contains(x), !other._isSome);
 
         [Pure]
         public bool Equals(Mayhap<T> other, IEqualityComparer<T> comparer)
-            => Match(x => other.Contains(x, comparer), !other._isSome);
+            => SwitchIntern(x => other.Contains(x, comparer), !other._isSome);
 
         [Pure]
         public bool Contains(T value)
-            => Match(x => s_DefaultComparer.Equals(x, value), false);
+            => SwitchIntern(x => s_DefaultComparer.Equals(x, value), false);
 
         [Pure]
         public bool Contains(T value, IEqualityComparer<T> comparer)
-            => Match(x => (comparer ?? s_DefaultComparer).Equals(x, value), false);
+            => SwitchIntern(x => (comparer ?? s_DefaultComparer).Equals(x, value), false);
 
         [Pure]
         public override bool Equals(object? obj)
@@ -379,10 +301,10 @@ namespace Abc.Fx
 
         [Pure]
         public override int GetHashCode()
-            => Match(x => x!.GetHashCode(), 0);
+            => SwitchIntern(x => x!.GetHashCode(), 0);
 
         [Pure]
         public int GetHashCode(IEqualityComparer<T> comparer)
-            => Match((comparer ?? s_DefaultComparer).GetHashCode, 0);
+            => SwitchIntern((comparer ?? s_DefaultComparer).GetHashCode, 0);
     }
 }

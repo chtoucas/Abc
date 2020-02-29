@@ -18,6 +18,108 @@ namespace Abc.Fx
             => predicate ? Unit : None;
     }
 
+    // Query Expression Pattern aka LINQ.
+    public partial class Mayhap
+    {
+        [Pure]
+        public static Mayhap<T> Where<T>(this Mayhap<T> @this, Func<T, bool> predicate)
+        {
+            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
+
+            // NB: x is never null.
+            return @this.Bind(x => predicate(x) ? Mayhap<T>.Some(x) : Mayhap<T>.None);
+        }
+
+        [Pure]
+        public static Mayhap<TResult> SelectMany<T, TMiddle, TResult>(
+            this Mayhap<T> @this,
+            Func<T, Mayhap<TMiddle>> selector,
+            Func<T, TMiddle, TResult> resultSelector)
+        {
+            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+
+            return @this.Bind(
+                x => selector(x).Select(
+                    middle => resultSelector(x, middle)));
+        }
+
+        [Pure]
+        public static Mayhap<TResult> Join<T, TInner, TKey, TResult>(
+            this Mayhap<T> @this,
+            Mayhap<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector)
+        {
+            return Join(@this, inner, outerKeySelector, innerKeySelector, resultSelector, null!);
+        }
+
+        [Pure]
+        public static Mayhap<TResult> Join<T, TInner, TKey, TResult>(
+            this Mayhap<T> @this,
+            Mayhap<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector,
+            IEqualityComparer<TKey> comparer)
+        {
+            if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+
+            var keyLookup = __getKeyLookup(inner, innerKeySelector, comparer);
+
+            return @this.SelectMany(__valueSelector, resultSelector);
+
+            Mayhap<TInner> __valueSelector(T outer) => keyLookup(outerKeySelector(outer));
+
+            static Func<TKey, Mayhap<TInner>> __getKeyLookup(
+               Mayhap<TInner> inner,
+               Func<TInner, TKey> innerKeySelector,
+               IEqualityComparer<TKey>? comparer)
+            {
+                return outerKey =>
+                    inner.Select(innerKeySelector)
+                        .Where(innerKey =>
+                            (comparer ?? EqualityComparer<TKey>.Default)
+                                .Equals(innerKey, outerKey))
+                        .ContinueWith(inner);
+            }
+        }
+
+        //
+        // GroupJoin currently disabled.
+        //
+
+        //[Pure]
+        //public static Mayhap<TResult> GroupJoin<T, TInner, TKey, TResult>(
+        //    this Mayhap<T> @this,
+        //    Mayhap<TInner> inner,
+        //    Func<T, TKey> outerKeySelector,
+        //    Func<TInner, TKey> innerKeySelector,
+        //    Func<T, Mayhap<TInner>, TResult> resultSelector,
+        //    IEqualityComparer<TKey> comparer)
+        //{
+        //    if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
+        //    if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
+        //    if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+
+        //    if (_isSome && inner._isSome)
+        //    {
+        //        var outerKey = outerKeySelector(_value);
+        //        var innerKey = innerKeySelector(inner._value);
+
+        //        if ((comparer ?? EqualityComparer<TKey>.Default).Equals(outerKey, innerKey))
+        //        {
+        //            return Mayhap.Of(resultSelector(_value, inner));
+        //        }
+        //    }
+
+        //    return Mayhap<TResult>.None;
+        //}
+    }
+
     // Extension methods for functions in the Kleisli category.
     public partial class Mayhap
     {
