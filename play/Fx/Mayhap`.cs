@@ -162,7 +162,7 @@ namespace Abc.Fx
         public async Task<Mayhap<TResult>> BindAsync<TResult>(
             Func<T, Task<Mayhap<TResult>>> binder)
         {
-            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
+            Require.NotNull(binder, nameof(binder));
 
             return _isSome ? await binder(_value).ConfigureAwait(false)
                 : Mayhap<TResult>.None;
@@ -172,7 +172,7 @@ namespace Abc.Fx
         public async Task<Mayhap<TResult>> SelectAsync<TResult>(
             Func<T, Task<TResult>> selector)
         {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+            Require.NotNull(selector, nameof(selector));
 
             return _isSome ? Mayhap<TResult>.η(await selector(_value).ConfigureAwait(false))
                 : Mayhap<TResult>.None;

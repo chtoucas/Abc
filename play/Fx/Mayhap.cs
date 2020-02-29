@@ -6,6 +6,7 @@ namespace Abc.Fx
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public partial class Mayhap
     {
@@ -18,13 +19,47 @@ namespace Abc.Fx
             => predicate ? Unit : None;
     }
 
+    // Async extensions.
+    public partial class Mayhap
+    {
+        [Pure]
+        public static async Task<Mayhap<TResult>> BindAsync<T, TResult>(
+            this Mayhap<T> @this,
+            Func<T, Task<Mayhap<TResult>>> binder,
+            bool continueOnCapturedContext = false)
+        {
+            Require.NotNull(binder, nameof(binder));
+
+            using var iter = @this.GetEnumerator();
+
+            return iter.MoveNext()
+                ? await binder(iter.Current).ConfigureAwait(continueOnCapturedContext)
+                : Mayhap<TResult>.None;
+        }
+
+        [Pure]
+        public static async Task<Mayhap<TResult>> SelectAsync<T, TResult>(
+            this Mayhap<T> @this,
+            Func<T, Task<TResult>> selector,
+            bool continueOnCapturedContext = false)
+        {
+            Require.NotNull(selector, nameof(selector));
+
+            using var iter = @this.GetEnumerator();
+
+            return iter.MoveNext()
+                ? Of(await selector(iter.Current).ConfigureAwait(continueOnCapturedContext))
+                : Mayhap<TResult>.None;
+        }
+    }
+
     // Query Expression Pattern aka LINQ.
     public partial class Mayhap
     {
         [Pure]
         public static Mayhap<T> Where<T>(this Mayhap<T> @this, Func<T, bool> predicate)
         {
-            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
+            Require.NotNull(predicate, nameof(predicate));
 
             // NB: x is never null.
             return @this.Bind(x => predicate(x) ? Mayhap<T>.Some(x) : Mayhap<T>.None);
@@ -36,8 +71,8 @@ namespace Abc.Fx
             Func<T, Mayhap<TMiddle>> selector,
             Func<T, TMiddle, TResult> resultSelector)
         {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
-            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+            Require.NotNull(selector, nameof(selector));
+            Require.NotNull(resultSelector, nameof(resultSelector));
 
             return @this.Bind(
                 x => selector(x).Select(
@@ -64,9 +99,9 @@ namespace Abc.Fx
             Func<T, TInner, TResult> resultSelector,
             IEqualityComparer<TKey> comparer)
         {
-            if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
-            if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
-            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+            Require.NotNull(outerKeySelector, nameof(outerKeySelector));
+            Require.NotNull(innerKeySelector, nameof(innerKeySelector));
+            Require.NotNull(resultSelector, nameof(resultSelector));
 
             var keyLookup = __getKeyLookup(inner, innerKeySelector, comparer);
 
@@ -101,9 +136,9 @@ namespace Abc.Fx
         //    Func<T, Mayhap<TInner>, TResult> resultSelector,
         //    IEqualityComparer<TKey> comparer)
         //{
-        //    if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
-        //    if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
-        //    if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+        //    Require.NotNull(outerKeySelector, nameof(outerKeySelector));
+        //    Require.NotNull(innerKeySelector, nameof(innerKeySelector));
+        //    Require.NotNull(resultSelector, nameof(resultSelector));
 
         //    if (_isSome && inner._isSome)
         //    {

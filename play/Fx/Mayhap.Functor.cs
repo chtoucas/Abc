@@ -48,6 +48,10 @@ namespace Abc.Fx
             Mayhap<TSource> mayhap)
         {
             // fmap :: (a -> b) -> f a -> f b
+            //
+            // Examples:
+            //   fmap (+1) (Just 1)  ==  Just 2
+            //   fmap (+1) Nothing   ==  Nothing
 
             // Default implementation when Mayhap is a monad.
             return mayhap.Select(mapper);
@@ -148,6 +152,10 @@ namespace Abc.Fx
             // (<$>) = fmap
             //
             // The name of this operator is an allusion to $.
+            //
+            // Examples:
+            //   (+1) <$> Just 1   ==  Just 2
+            //   (+1) <$> Nothing  ==  Nothing
 
 #if STRICT_HASKELL
             return Map(@this, mayhap);

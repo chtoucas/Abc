@@ -43,7 +43,7 @@ namespace Abc.Fx
             Mayhap<TOther> other,
             Func<TSource, TOther, TResult> zipper)
         {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
+            Require.NotNull(zipper, nameof(zipper));
 
             return @this.Bind(
                 x => other.Bind(
@@ -64,7 +64,7 @@ namespace Abc.Fx
             Mayhap<T2> m2,
             Func<TSource, T1, T2, TResult> zipper)
         {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
+            Require.NotNull(zipper, nameof(zipper));
 
             return @this.Bind(
                 x => m1.ZipWith(m2, (y, z) => zipper(x, y, z)));
@@ -95,7 +95,7 @@ namespace Abc.Fx
              Mayhap<T3> third,
              Func<TSource, T1, T2, T3, TResult> zipper)
         {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
+            Require.NotNull(zipper, nameof(zipper));
 
             return @this.Bind(
                 x => first.ZipWith(

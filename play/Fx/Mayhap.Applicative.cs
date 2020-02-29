@@ -142,9 +142,21 @@ namespace Abc.Fx
             //
             // A few functors support an implementation of <*> that is more efficient
             // than the default one.
-            //
 
             return @this.Bind(func => mayhap.Select(func));
+        }
+
+        /// <summary>
+        /// (&lt;*&gt;)
+        /// <para>Sequential application.</para>
+        /// </summary>
+        [Pure]
+        public static Mayhap<TResult> Invoke<T1, T2, TResult>(
+            this Mayhap<Func<T1, T2, TResult>> @this,
+            Mayhap<T1> m1,
+            Mayhap<T2> m2)
+        {
+            throw new NotImplementedException();
         }
     }
 
