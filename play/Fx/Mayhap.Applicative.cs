@@ -142,8 +142,12 @@ namespace Abc.Fx
             //
             // A few functors support an implementation of <*> that is more efficient
             // than the default one.
+            //
+            // Examples:
+            //   pure (+1) (Just 1) == Just 2
 
-            return @this.Bind(func => mayhap.Select(func));
+            // Default implementation when Mayhap is a monad.
+            return @this.Bind(f => mayhap.Select(f));
         }
 
         /// <summary>
@@ -156,7 +160,33 @@ namespace Abc.Fx
             Mayhap<T1> m1,
             Mayhap<T2> m2)
         {
-            throw new NotImplementedException();
+            // Examples:
+            //   pure (+) (Just 1) (Just 1) == Just 2
+
+            // Default implementation when Mayhap is a monad.
+            return @this.Bind(
+                f => m1.Bind(
+                    x1 => m2.Select(
+                        x2 => f(x1, x2))));
+        }
+
+        /// <summary>
+        /// (&lt;*&gt;)
+        /// <para>Sequential application.</para>
+        /// </summary>
+        [Pure]
+        public static Mayhap<TResult> Invoke<T1, T2, T3, TResult>(
+            this Mayhap<Func<T1, T2, T3, TResult>> @this,
+            Mayhap<T1> m1,
+            Mayhap<T2> m2,
+            Mayhap<T3> m3)
+        {
+            // Default implementation when Mayhap is a monad.
+            return @this.Bind(
+                f => m1.Bind(
+                    x1 => m2.Bind(
+                        x2 => m3.Select(
+                            x3 => f(x1, x2, x3)))));
         }
     }
 
