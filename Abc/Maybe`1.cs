@@ -10,16 +10,10 @@ namespace Abc
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
-    // The symbol MONADS_PURE is not production-friendly, it is for educational
-    // purposes only. Everything is defined using only the core monadic methods
-    // Bind() and None; we could have used Select() and Flatten() instead of
-    // Bind().
-    //
-    // Maybe<T> is a Monad:
-    // - Maybe.Of()      <-- Maybe<T>.η() or simply the ctor
-    // - Maybe.Flatten() <-- Maybe<T>.μ()
-    // - Maybe<T>.Bind()
     // Maybe<T> is a MonadOr:
+    // - Maybe.Of()
+    // - Maybe.Flatten()
+    // - Maybe<T>.Bind()
     // - Maybe<T>.None
     // - Maybe<T>.OrElse()
 
@@ -111,9 +105,29 @@ namespace Abc
         }
     }
 
-    // Pattern matching, escaping the monad.
+    // Core methods.
     public partial struct Maybe<T>
     {
+        /// <summary>
+        /// Obtains an instance of <see cref="Maybe{T}" /> that does not enclose
+        /// any value.
+        /// <para>This static property is thread-safe.</para>
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1000:Do not declare static members on generic types", Justification = "There is no such thing as a generic static property on a non-generic type.")]
+        public static Maybe<T> None { get; } = default;
+
+        [Pure]
+        public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
+        {
+            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
+
+            return _isSome ? binder(_value) : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public Maybe<T> OrElse(Maybe<T> other)
+            => _isSome ? this : other;
+
         // REVIEW: delayed throw?
 
         /// <summary>
@@ -245,30 +259,6 @@ namespace Abc
         #endregion
     }
 
-    // Core monadic methods.
-    public partial struct Maybe<T>
-    {
-        /// <summary>
-        /// Obtains an instance of <see cref="Maybe{T}" /> that does not enclose
-        /// any value.
-        /// <para>This static property is thread-safe.</para>
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1000:Do not declare static members on generic types", Justification = "There is no such thing as a generic static property on a non-generic type.")]
-        public static Maybe<T> None { get; } = default;
-
-        [Pure]
-        public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
-        {
-            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
-
-            return _isSome ? binder(_value) : Maybe<TResult>.None;
-        }
-
-        [Pure]
-        public Maybe<T> OrElse(Maybe<T> other)
-            => _isSome ? this : other;
-    }
-
     // Query Expression Pattern aka LINQ.
     public partial struct Maybe<T>
     {
@@ -393,6 +383,14 @@ namespace Abc
 
             return _isSome ? Maybe.Of(await selector(_value).ConfigureAwait(false))
                 : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public async Task<Maybe<T>> OrElseAsync(Task<Maybe<T>> other)
+        {
+            if (other is null) { throw new ArgumentNullException(nameof(other)); }
+
+            return _isSome ? this : await other.ConfigureAwait(false);
         }
 
         [Pure]

@@ -19,6 +19,7 @@ Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T,
 Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.OnSome(System.Action<T> action) -> void
 Abc.Maybe<T>.OrElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
+Abc.Maybe<T>.OrElseAsync(System.Threading.Tasks.Task<Abc.Maybe<T>> other) -> System.Threading.Tasks.Task<Abc.Maybe<T>>
 Abc.Maybe<T>.PassThru<TOther>(Abc.Maybe<TOther> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.ReplaceWith<TResult>(TResult value) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Maybe<TResult>

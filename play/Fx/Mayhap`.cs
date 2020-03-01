@@ -240,6 +240,14 @@ namespace Abc.Fx
         }
 
         [Pure]
+        public async Task<Mayhap<T>> OrElseAsync(Task<Mayhap<T>> other)
+        {
+            Require.NotNull(other, nameof(other));
+
+            return _isSome ? this : await other.ConfigureAwait(false);
+        }
+
+        [Pure]
         public async Task<TResult> SwitchAsync<TResult>(
             Func<T, Task<TResult>> caseSome, Task<TResult> caseNone)
         {
