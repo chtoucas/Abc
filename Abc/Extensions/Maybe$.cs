@@ -41,7 +41,7 @@ namespace Abc.Extensions
     public partial class MaybeX
     {
         [Pure]
-        public static Maybe<TResult> Invoke<TSource, TResult>(
+        public static Maybe<TResult> Compute<TSource, TResult>(
             this Func<TSource, TResult> @this,
             Maybe<TSource> maybe)
         {
@@ -49,7 +49,7 @@ namespace Abc.Extensions
         }
 
         [Pure]
-        public static Maybe<TResult> Invoke<T1, T2, TResult>(
+        public static Maybe<TResult> Compute<T1, T2, TResult>(
             this Func<T1, T2, TResult> @this,
             Maybe<T1> first,
             Maybe<T2> second)
@@ -62,7 +62,7 @@ namespace Abc.Extensions
         }
 
         [Pure]
-        public static Maybe<TResult> Invoke<T1, T2, T3, TResult>(
+        public static Maybe<TResult> Compute<T1, T2, T3, TResult>(
             this Func<T1, T2, T3, TResult> @this,
             Maybe<T1> first,
             Maybe<T2> second,
@@ -76,7 +76,7 @@ namespace Abc.Extensions
         }
 
         [Pure]
-        public static Maybe<TResult> Invoke<T1, T2, T3, T4, TResult>(
+        public static Maybe<TResult> Compute<T1, T2, T3, T4, TResult>(
             this Func<T1, T2, T3, T4, TResult> @this,
             Maybe<T1> first,
             Maybe<T2> second,
@@ -91,7 +91,7 @@ namespace Abc.Extensions
         }
 
         [Pure]
-        public static Maybe<TResult> Invoke<T1, T2, T3, T4, T5, TResult>(
+        public static Maybe<TResult> Compute<T1, T2, T3, T4, T5, TResult>(
             this Func<T1, T2, T3, T4, T5, TResult> @this,
             Maybe<T1> first,
             Maybe<T2> second,

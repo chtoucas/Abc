@@ -10,7 +10,7 @@ namespace Abc
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
-    // REVIEW: disposable exts, async exts, nullable attrs, notnull constraints.
+    // REVIEW: disposable exts, lazy exts, async exts, nullable attrs, notnull constraints.
     // Maybe<T> where T : notnull ??? <- only works if nullable is enabled.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
@@ -521,27 +521,14 @@ namespace Abc
         // Also, Maybe<> is a struct and I am worry with hidden casts if this
         // type implements IEnumerable<>.
 
-        [Pure]
-        public IEnumerable<T> ToEnumerable()
-        {
-            if (_isSome)
-            {
-                yield return _value;
-            }
-        }
-
-        [Pure]
-        public IEnumerable<T> Repeat(int count)
-        {
-            if (_isSome)
-            {
-                int i = 0;
-                while (++i < count)
-                {
-                    yield return _value;
-                }
-            }
-        }
+        //[Pure]
+        //public IEnumerable<T> ToEnumerable()
+        //{
+        //    if (_isSome)
+        //    {
+        //        yield return _value;
+        //    }
+        //}
 
         [Pure]
         public IEnumerator<T> GetEnumerator()
@@ -549,6 +536,18 @@ namespace Abc
             if (_isSome)
             {
                 yield return _value;
+            }
+        }
+
+        [Pure]
+        public IEnumerable<T> Repeat()
+        {
+            if (_isSome)
+            {
+                while (true)
+                {
+                    yield return _value;
+                }
             }
         }
     }
