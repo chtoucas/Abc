@@ -37,7 +37,6 @@ namespace Abc.Extensions
         }
     }
 
-    // Extension methods for functions.
     // Promote functions to Maybe's; see also Maybe<T>.ZipWith().
     public partial class MaybeX
     {
