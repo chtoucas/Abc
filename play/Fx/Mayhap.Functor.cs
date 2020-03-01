@@ -25,7 +25,7 @@ namespace Abc.Fx
     // - <$     Mayhap.ReplaceWith()
     // - $>     obj.ReplaceWith()
     // - <$>    func.Invoke()
-    // - <&>    obj.Select()            [instance method]
+    // - <&>    obj.Map()
     // - void   obj.Skip()
     //
     // Functor rules
@@ -56,7 +56,6 @@ namespace Abc.Fx
 #if STRICT_HASKELL
             throw new NotImplementedException("Functor fmap");
 #else
-            // Default implementation when Mayhap is a monad.
             return mayhap.Select(mapper);
 #endif
         }

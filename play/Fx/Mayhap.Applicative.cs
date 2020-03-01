@@ -58,7 +58,6 @@ namespace Abc.Fx
 #if STRICT_HASKELL
             throw new NotImplementedException("Applicative pure");
 #else
-            // Default implementation when Mayhap is a monad.
             return Of(value);
 #endif
         }
@@ -129,7 +128,7 @@ namespace Abc.Fx
 #if STRICT_HASKELL
             return Invoke(applicative, @this);
 #else
-            return applicative.Bind(func => @this.Select(func));
+            return applicative.Bind(f => @this.Select(f));
 #endif
         }
     }
@@ -160,11 +159,11 @@ namespace Abc.Fx
             //
             // Examples:
             //   pure (+1) <*> Just 1 == Just 2
+            //        (+1) <$> Just 1 == Just 2
 
 #if STRICT_HASKELL
             throw new NotImplementedException("Applicative <*>");
 #else
-            // Default implementation when Mayhap is a monad.
             return @this.Bind(f => mayhap.Select(f));
 #endif
         }
@@ -180,12 +179,12 @@ namespace Abc.Fx
             Mayhap<T2> m2)
         {
             // Examples:
-            //   pure (+) <*> Just 1 <*> Just 1 == Just 2
+            //   pure (:) <*> Just 1 <*> Just [2] == Just [1, 2]
+            //        (:) <$> Just 1 <*> Just [2] == Just [1, 2]
 
 #if STRICT_HASKELL
             throw new NotImplementedException("Applicative <*>");
 #else
-            // Default implementation when Mayhap is a monad.
             return @this.Bind(
                 f => m1.Bind(
                     x1 => m2.Select(
@@ -207,7 +206,6 @@ namespace Abc.Fx
 #if STRICT_HASKELL
             throw new NotImplementedException("Applicative <*>");
 #else
-            // Default implementation when Mayhap is a monad.
             return @this.Bind(
                 f => m1.Bind(
                     x1 => m2.Bind(
@@ -235,7 +233,7 @@ namespace Abc.Fx
             // instance.
             //
             // Examples:
-            //   (+1) <$> Just 1 == Just 2
+            //   liftA (+1) (Just 1) == Just 2
 
 #if STRICT_HASKELL
             return m => Pure(func).Invoke(m);
@@ -262,7 +260,7 @@ namespace Abc.Fx
             // fmap over the structure and then use <*>.
             //
             // Examples:
-            //   (+) <$> Just 1 <*> Just 1 == Just 2
+            //   liftA2 (:) (Just 1) (Just [2]) == Just [1, 2]
 
 #if STRICT_HASKELL
             return (m1, m2) => Pure(func).Invoke(m1, m2);
