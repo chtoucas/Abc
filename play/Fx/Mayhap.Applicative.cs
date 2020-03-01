@@ -36,16 +36,6 @@ namespace Abc.Fx
     // NB: <*> is used in conjuction with <$> but the lack of partial functions
     // in C# makes it hard to use here.
     //
-    // Applicative rules
-    // -----------------
-    // Identity
-    //   pure id <*> v = v
-    // Composition
-    //   pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
-    // Homomorphism
-    //   pure f <*> pure x = pure (f x)
-    // Interchange
-    //   u <*> pure y = pure ($ y) <*> u
     public partial class Mayhap
     {
         /// <summary>
@@ -301,6 +291,7 @@ namespace Abc.Fx
     {
         internal static class ApplicativeRules
         {
+            // Identity
             // pure id <*> v = v
             public static bool IdentityRule<T>(Mayhap<T> mayhap)
             {
@@ -308,12 +299,14 @@ namespace Abc.Fx
                     == mayhap;
             }
 
+            // Composition
             // pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
             public static bool Composition()
             {
                 throw new NotImplementedException();
             }
 
+            // Homomorphism
             // pure f <*> pure x = pure (f x)
             public static bool HomomorphismRule<T1, T2>(Func<T1, T2> f, T1 value)
             {
@@ -321,6 +314,7 @@ namespace Abc.Fx
                     == Pure(f(value));
             }
 
+            // Interchange
             // u <*> pure y = pure ($ y) <*> u
             public static bool Interchange()
             {

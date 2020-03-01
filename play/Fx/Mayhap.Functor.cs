@@ -28,12 +28,6 @@ namespace Abc.Fx
     // - <&>    obj.Map()
     // - void   obj.Skip()
     //
-    // Functor rules
-    // -------------
-    // First law: the identity map is a fixed point for Select.
-    //   fmap id  ==  id
-    // Second law: Select preserves the composition operator.
-    //   fmap (f . g)  ==  fmap f . fmap g
     public partial class Mayhap
     {
         /// <summary>
