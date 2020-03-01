@@ -65,6 +65,11 @@ namespace Abc.Fx
 #endif
         }
 
+#if STRICT_HASKELL
+        // FIXME: what we do right now is one or empty.
+        // https://stackoverflow.com/questions/7671009/some-and-many-functions-from-the-alternative-type-class
+        // https://www.reddit.com/r/haskell/comments/b71oje/i_dont_understand_how_some_and_many_from_the/
+
         public static Mayhap<IEnumerable<T>> Any<T>(this Mayhap<T> @this)
         {
             // some :: f a -> f [a]
@@ -77,9 +82,6 @@ namespace Abc.Fx
             //
             // One or more.
 
-            // FIXME: what we do right now is one or empty.
-            // https://stackoverflow.com/questions/7671009/some-and-many-functions-from-the-alternative-type-class
-            // https://www.reddit.com/r/haskell/comments/b71oje/i_dont_understand_how_some_and_many_from_the/
             return @this.Select(x => Sequence.Return(x)).Otherwise(Empty<T>());
         }
 
@@ -98,6 +100,17 @@ namespace Abc.Fx
             // FIXME: what we do right now is infinite seq of the value or empty.
             return @this.Select(x => Sequence.Repeat(x)).Otherwise(Empty<T>());
         }
+#else
+        public static IEnumerable<T> Any<T>(this Mayhap<T> @this)
+        {
+            return @this.Select(x => Sequence.Return(x)).ValueOrEmpty();
+        }
+
+        public static IEnumerable<T> Many<T>(this Mayhap<T> @this)
+        {
+            return @this.Select(x => Sequence.Repeat(x)).ValueOrEmpty();
+        }
+#endif
 
         public static Mayhap<Mayhap<T>> Square<T>(this Mayhap<T> @this)
         {
