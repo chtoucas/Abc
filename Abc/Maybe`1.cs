@@ -10,13 +10,6 @@ namespace Abc
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
-    // Maybe<T> is a MonadOr:
-    // - Maybe.Of()
-    // - Maybe.Flatten()
-    // - Maybe<T>.Bind()
-    // - Maybe<T>.None
-    // - Maybe<T>.OrElse()
-
     // REVIEW: disposable exts, async exts, nullable attrs, notnull constraints.
     // Maybe<T> where T : notnull ??? <- only works if nullable is enabled.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
@@ -413,7 +406,13 @@ namespace Abc
     // Standard API.
     public partial struct Maybe<T>
     {
-        // REVIEW: ReplaceWith -> ContinueWith?
+        [Pure]
+        public Maybe<TResult> Apply<TResult>(Maybe<Func<T, TResult>> applicative)
+        {
+            return _isSome && applicative._isSome ? Maybe.Of(applicative._value(_value))
+                : Maybe<TResult>.None;
+        }
+
         [Pure]
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
             where TResult : notnull
@@ -444,7 +443,8 @@ namespace Abc
 
         [Pure]
         public Maybe<TResult> ZipWith<TOther, TResult>(
-            Maybe<TOther> other, Func<T, TOther, TResult> zipper)
+            Maybe<TOther> other,
+            Func<T, TOther, TResult> zipper)
         {
             if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
 
@@ -492,6 +492,22 @@ namespace Abc
 
             return _isSome && first._isSome && second._isSome && third._isSome && fourth._isSome
                 ? Maybe.Of(zipper(_value, first._value, second._value, third._value, fourth._value))
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public Maybe<TResult> ZipWith<T1, T2, T3, T4, T5, TResult>(
+            Maybe<T1> first,
+            Maybe<T2> second,
+            Maybe<T3> third,
+            Maybe<T4> fourth,
+            Maybe<T5> fifth,
+            Func<T, T1, T2, T3, T4, T5, TResult> zipper)
+        {
+            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
+
+            return _isSome && first._isSome && second._isSome && third._isSome && fourth._isSome && fifth._isSome
+                ? Maybe.Of(zipper(_value, first._value, second._value, third._value, fourth._value, fifth._value))
                 : Maybe<TResult>.None;
         }
 

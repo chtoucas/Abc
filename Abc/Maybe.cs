@@ -14,7 +14,7 @@ namespace Abc
     /// </summary>
     public static partial class Maybe { }
 
-    // Core monadic methods.
+    // Core methods.
     public partial class Maybe
     {
         /// <summary>
@@ -72,14 +72,16 @@ namespace Abc
     {
         [Pure]
         public static Maybe<TResult> Invoke<TSource, TResult>(
-            this Func<TSource, Maybe<TResult>> @this, Maybe<TSource> value)
+            this Func<TSource, Maybe<TResult>> @this,
+            Maybe<TSource> maybe)
         {
-            return value.Bind(@this);
+            return maybe.Bind(@this);
         }
 
         [Pure]
         public static Func<TSource, Maybe<TResult>> Compose<TSource, TMiddle, TResult>(
-            this Func<TSource, Maybe<TMiddle>> @this, Func<TMiddle, Maybe<TResult>> other)
+            this Func<TSource, Maybe<TMiddle>> @this,
+            Func<TMiddle, Maybe<TResult>> other)
         {
             if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
 
@@ -88,11 +90,83 @@ namespace Abc
 
         [Pure]
         public static Func<TSource, Maybe<TResult>> ComposeBack<TSource, TMiddle, TResult>(
-            this Func<TMiddle, Maybe<TResult>> @this, Func<TSource, Maybe<TMiddle>> other)
+            this Func<TMiddle, Maybe<TResult>> @this,
+            Func<TSource, Maybe<TMiddle>> other)
         {
             if (other is null) { throw new ArgumentNullException(nameof(other)); }
 
             return x => other(x).Bind(@this);
+        }
+    }
+
+    // Extension methods for functions.
+    // Promote functions to Maybe's.
+    public partial class Maybe
+    {
+        [Pure]
+        public static Maybe<TResult> Invoke<TSource, TResult>(
+            this Func<TSource, TResult> @this,
+            Maybe<TSource> maybe)
+        {
+            return maybe.Select(@this);
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, TResult>(
+            this Func<T1, T2, TResult> @this,
+            Maybe<T1> first,
+            Maybe<T2> second)
+        {
+            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+
+            return first.IsSome && second.IsSome
+                ? Of(@this(first.Value, second.Value))
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, T3, TResult>(
+            this Func<T1, T2, T3, TResult> @this,
+            Maybe<T1> first,
+            Maybe<T2> second,
+            Maybe<T3> third)
+        {
+            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+
+            return first.IsSome && second.IsSome && third.IsSome
+                ? Of(@this(first.Value, second.Value, third.Value))
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, T3, T4, TResult>(
+            this Func<T1, T2, T3, T4, TResult> @this,
+            Maybe<T1> first,
+            Maybe<T2> second,
+            Maybe<T3> third,
+            Maybe<T4> fourth)
+        {
+            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+
+            return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome
+                ? Of(@this(first.Value, second.Value, third.Value, fourth.Value))
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, T3, T4, T5, TResult>(
+            this Func<T1, T2, T3, T4, T5, TResult> @this,
+            Maybe<T1> first,
+            Maybe<T2> second,
+            Maybe<T3> third,
+            Maybe<T4> fourth,
+            Maybe<T5> fifth)
+        {
+            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+
+            return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome && fifth.IsSome
+                ? Of(@this(first.Value, second.Value, third.Value, fourth.Value, fifth.Value))
+                : Maybe<TResult>.None;
         }
     }
 
@@ -181,9 +255,59 @@ namespace Abc
     {
         [Pure]
         public static Maybe<TResult> Invoke<TSource, TResult>(
-            this Maybe<Func<TSource, TResult>> @this, Maybe<TSource> value)
+            this Maybe<Func<TSource, TResult>> @this,
+            Maybe<TSource> maybe)
         {
-            return value.IsSome && @this.IsSome ? Of(@this.Value(value.Value))
+            return maybe.Apply(@this);
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, TResult>(
+            this Maybe<Func<T1, T2, TResult>> @this,
+            Maybe<T1> first,
+            Maybe<T2> second)
+        {
+            return first.IsSome && second.IsSome && @this.IsSome
+                ? Of(@this.Value(first.Value, second.Value))
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, T3, TResult>(
+            this Maybe<Func<T1, T2, T3, TResult>> @this,
+            Maybe<T1> first,
+            Maybe<T2> second,
+            Maybe<T3> third)
+        {
+            return first.IsSome && second.IsSome && third.IsSome && @this.IsSome
+                ? Of(@this.Value(first.Value, second.Value, third.Value))
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, T3, T4, TResult>(
+            this Maybe<Func<T1, T2, T3, T4, TResult>> @this,
+            Maybe<T1> first,
+            Maybe<T2> second,
+            Maybe<T3> third,
+            Maybe<T4> fourth)
+        {
+            return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome && @this.IsSome
+                ? Of(@this.Value(first.Value, second.Value, third.Value, fourth.Value))
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, T3, T4, T5, TResult>(
+            this Maybe<Func<T1, T2, T3, T4, T5, TResult>> @this,
+            Maybe<T1> first,
+            Maybe<T2> second,
+            Maybe<T3> third,
+            Maybe<T4> fourth,
+            Maybe<T5> fifth)
+        {
+            return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome && fifth.IsSome && @this.IsSome
+                ? Of(@this.Value(first.Value, second.Value, third.Value, fourth.Value, fifth.Value))
                 : Maybe<TResult>.None;
         }
     }
