@@ -3,6 +3,7 @@
 namespace Abc
 {
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// Decorating a parameter with this attribute informs the Code Analysis
@@ -17,6 +18,7 @@ namespace Abc
 
     internal static class Require
     {
+        [DebuggerStepThrough]
         public static void NotNull<T>([ValidatedNotNull]T value, string paramName)
             where T : class
         {
