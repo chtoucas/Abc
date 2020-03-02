@@ -4,14 +4,13 @@ namespace Abc.Fx
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
     // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).
 
-    // IEnumerable<T>, but a bit missleading?
+    // TODO:
     // IEquatable<T>, but a bit missleading?
     // IComparable? See ValueTuple.
     // Serializable?
@@ -45,7 +44,6 @@ namespace Abc.Fx
     /// Represents the Maybe monad.
     /// <para><see cref="Mayhap{T}"/> is an immutable struct.</para>
     /// </summary>
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public readonly partial struct Mayhap<T> : IEquatable<Mayhap<T>>
     {
         private static readonly IEqualityComparer<T> s_DefaultComparer
@@ -60,69 +58,24 @@ namespace Abc.Fx
             _value = value;
         }
 
-        private string DebuggerDisplay => $"IsSome = {_isSome}";
-
         [Pure]
         public override string ToString()
-            => SwitchIntern(x => $"Mayhap({x})", "Mayhap(None)");
-    }
+            => Switch(x => $"Mayhap({x})", "Mayhap(None)");
 
-    // Pattern matching.
-    public partial struct Mayhap<T>
-    {
+        // Iterable.
         [Pure]
-        public TResult Switch<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
+        public IEnumerator<T> GetEnumerator()
         {
             if (_isSome)
             {
-                Require.NotNull(caseSome, nameof(caseSome));
-                return caseSome(_value);
-            }
-            else
-            {
-                Require.NotNull(caseNone, nameof(caseNone));
-                return caseNone();
+                yield return _value;
             }
         }
 
-        // Could be built upon the other Switch().
+        // Pattern matching.
         [Pure]
         [return: NotNullIfNotNull("caseNone")]
-        public TResult Switch<TResult>(Func<T, TResult> caseSome, TResult caseNone)
-        {
-            if (_isSome)
-            {
-                Require.NotNull(caseSome, nameof(caseSome));
-                return caseSome(_value);
-            }
-            else
-            {
-                return caseNone;
-            }
-        }
-
-        // Could be built upon Switch().
-        internal void Do(Action<T> caseSome, Action caseNone)
-        {
-            if (_isSome)
-            {
-                Require.NotNull(caseSome, nameof(caseSome));
-                caseSome(_value);
-            }
-            else
-            {
-                Require.NotNull(caseNone, nameof(caseNone));
-                caseNone();
-            }
-        }
-
-        [Pure]
-        internal TResult SwitchIntern<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
-            => _isSome ? caseSome(_value) : caseNone();
-
-        [Pure]
-        [return: NotNullIfNotNull("caseNone")]
-        internal TResult SwitchIntern<TResult>(Func<T, TResult> caseSome, TResult caseNone)
+        private TResult Switch<TResult>(Func<T, TResult> caseSome, TResult caseNone)
             => _isSome ? caseSome(_value) : caseNone;
     }
 
@@ -246,35 +199,6 @@ namespace Abc.Fx
 
             return _isSome ? this : await other.ConfigureAwait(false);
         }
-
-        [Pure]
-        public async Task<TResult> SwitchAsync<TResult>(
-            Func<T, Task<TResult>> caseSome, Task<TResult> caseNone)
-        {
-            if (_isSome)
-            {
-                Require.NotNull(caseSome, nameof(caseSome));
-                return await caseSome(_value).ConfigureAwait(false);
-            }
-            else
-            {
-                Require.NotNull(caseNone, nameof(caseNone));
-                return await caseNone.ConfigureAwait(false);
-            }
-        }
-    }
-
-    // Pseudo-interface IEnumerable<>.
-    public partial struct Mayhap<T>
-    {
-        [Pure]
-        public IEnumerator<T> GetEnumerator()
-        {
-            if (_isSome)
-            {
-                yield return _value;
-            }
-        }
     }
 
     // Interface IEquatable<>.
@@ -300,19 +224,19 @@ namespace Abc.Fx
 
         [Pure]
         public bool Equals(Mayhap<T> other)
-            => SwitchIntern(x => other.Contains(x), !other._isSome);
+            => Switch(x => other.Contains(x), !other._isSome);
 
         [Pure]
         public bool Equals(Mayhap<T> other, IEqualityComparer<T> comparer)
-            => SwitchIntern(x => other.Contains(x, comparer), !other._isSome);
+            => Switch(x => other.Contains(x, comparer), !other._isSome);
 
         [Pure]
         public bool Contains(T value)
-            => SwitchIntern(x => s_DefaultComparer.Equals(x, value), false);
+            => Switch(x => s_DefaultComparer.Equals(x, value), false);
 
         [Pure]
         public bool Contains(T value, IEqualityComparer<T> comparer)
-            => SwitchIntern(x => (comparer ?? s_DefaultComparer).Equals(x, value), false);
+            => Switch(x => (comparer ?? s_DefaultComparer).Equals(x, value), false);
 
         [Pure]
         public override bool Equals(object? obj)
@@ -324,10 +248,10 @@ namespace Abc.Fx
 
         [Pure]
         public override int GetHashCode()
-            => SwitchIntern(x => x!.GetHashCode(), 0);
+            => Switch(x => x!.GetHashCode(), 0);
 
         [Pure]
         public int GetHashCode(IEqualityComparer<T> comparer)
-            => SwitchIntern((comparer ?? s_DefaultComparer).GetHashCode, 0);
+            => Switch((comparer ?? s_DefaultComparer).GetHashCode, 0);
     }
 }

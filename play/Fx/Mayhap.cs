@@ -149,24 +149,6 @@ namespace Abc.Fx
         }
     }
 
-    // Extension methods for Mayhap<T> where T is a struct.
-    public partial class Mayhap
-    {
-        [Pure]
-        public static Mayhap<T> Squash<T>(this Mayhap<T?> @this) where T : struct
-            // NB: When IsSome is true, Value.HasValue is also true, therefore
-            // we can safely access Value.Value.
-            => @this.Bind(x => Some(x!.Value));
-
-        [Pure]
-        public static T? ToNullable<T>(this Mayhap<T?> @this) where T : struct
-            => @this.ValueOrDefault();
-
-        [Pure]
-        public static T? ToNullable<T>(this Mayhap<T> @this) where T : struct
-            => @this.ValueOrDefault();
-    }
-
     // Extension methods for Mayhap<T> where T is enumerable.
     // Operations on IEnumerable<Mayhap<T>>.
     // - Filtering: CollectAny (deferred).
@@ -178,15 +160,10 @@ namespace Abc.Fx
             => MayhapEnumerable_<T>.Empty;
 
         [Pure]
-        public static IEnumerable<T> ValueOrEmpty<T>(this Mayhap<IEnumerable<T>> @this)
-            => @this.ValueOrElse(Enumerable.Empty<T>());
-
-        [Pure]
-        public static IEnumerable<T> CollectAny<T>(IEnumerable<Mayhap<T>> source)
+        public static Mayhap<IEnumerable<T>> CollectAny<T>(IEnumerable<Mayhap<T>> source)
         {
             var seed = MayhapEnumerable_<T>.Empty;
-            var seq = source.Aggregate(seed, (x, y) => x.ZipWith(y, Enumerable.Append));
-            return seq.ValueOrEmpty();
+            return source.Aggregate(seed, (x, y) => x.ZipWith(y, Enumerable.Append));
         }
 
         [Pure]

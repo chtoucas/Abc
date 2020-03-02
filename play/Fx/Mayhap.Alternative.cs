@@ -65,7 +65,6 @@ namespace Abc.Fx
 #endif
         }
 
-#if STRICT_HASKELL
         // FIXME: what we do right now is one or empty,
         // or an infinite seq of the value or empty.
         // https://stackoverflow.com/questions/7671009/some-and-many-functions-from-the-alternative-type-class
@@ -100,17 +99,6 @@ namespace Abc.Fx
 
             return @this.Select(x => Sequence.Repeat(x)).Otherwise(Empty<T>());
         }
-#else
-        public static IEnumerable<T> Any<T>(this Mayhap<T> @this)
-        {
-            return @this.Select(x => Sequence.Return(x)).ValueOrEmpty();
-        }
-
-        public static IEnumerable<T> Many<T>(this Mayhap<T> @this)
-        {
-            return @this.Select(x => Sequence.Repeat(x)).ValueOrEmpty();
-        }
-#endif
 
         public static Mayhap<Mayhap<T>> Square<T>(this Mayhap<T> @this)
         {
@@ -122,7 +110,7 @@ namespace Abc.Fx
 #if STRICT_HASKELL
             return Map(x => Of(x), @this).Otherwise(Pure(Mayhap<T>.None));
 #else
-            return Some(mayhap);
+            return Some(@this);
 #endif
         }
     }
