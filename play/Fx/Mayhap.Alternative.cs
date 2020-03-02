@@ -66,7 +66,8 @@ namespace Abc.Fx
         }
 
 #if STRICT_HASKELL
-        // FIXME: what we do right now is one or empty.
+        // FIXME: what we do right now is one or empty,
+        // or an infinite seq of the value or empty.
         // https://stackoverflow.com/questions/7671009/some-and-many-functions-from-the-alternative-type-class
         // https://www.reddit.com/r/haskell/comments/b71oje/i_dont_understand_how_some_and_many_from_the/
 
@@ -97,7 +98,6 @@ namespace Abc.Fx
             //
             // Zero or more.
 
-            // FIXME: what we do right now is infinite seq of the value or empty.
             return @this.Select(x => Sequence.Repeat(x)).Otherwise(Empty<T>());
         }
 #else
