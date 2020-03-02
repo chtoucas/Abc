@@ -8,6 +8,7 @@ namespace Abc
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Linq;
     using System.Threading.Tasks;
 
     // REVIEW: disposable exts, lazy exts, async exts, nullable attrs, notnull constraints.
@@ -413,6 +414,7 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
+        // REVIEW: ReplaceWith() -> ContinueWith()?
         [Pure]
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
             where TResult : notnull
@@ -519,25 +521,15 @@ namespace Abc
     {
         // REVIEW: IEnumerable<T> or not? Test LINQ before (conflicts?).
         // Also, Maybe<> is a struct and I am worry with hidden casts if this
-        // type implements IEnumerable<>.
-
-        //[Pure]
-        //public IEnumerable<T> ToEnumerable()
-        //{
-        //    if (_isSome)
-        //    {
-        //        yield return _value;
-        //    }
-        //}
+        // type implements IEnumerable<>. Optimize Repeat().
 
         [Pure]
         public IEnumerator<T> GetEnumerator()
-        {
-            if (_isSome)
-            {
-                yield return _value;
-            }
-        }
+            => Repeat(1).GetEnumerator();
+
+        [Pure]
+        public IEnumerable<T> Repeat(int count)
+            => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
         [Pure]
         public IEnumerable<T> Repeat()
