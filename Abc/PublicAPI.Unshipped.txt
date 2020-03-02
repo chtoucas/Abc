@@ -22,8 +22,8 @@ Abc.Maybe<T>.OnSome(System.Action<T> action) -> void
 Abc.Maybe<T>.OrElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.OrElseAsync(System.Threading.Tasks.Task<Abc.Maybe<T>> other) -> System.Threading.Tasks.Task<Abc.Maybe<T>>
 Abc.Maybe<T>.PassThru<TOther>(Abc.Maybe<TOther> other) -> Abc.Maybe<T>
-Abc.Maybe<T>.Repeat() -> System.Collections.Generic.IEnumerable<T>
-Abc.Maybe<T>.Repeat(int count) -> System.Collections.Generic.IEnumerable<T>
+Abc.Maybe<T>.RepeatOrEmpty() -> System.Collections.Generic.IEnumerable<T>
+Abc.Maybe<T>.RepeatOrEmpty(int count) -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.ReplaceWith<TResult>(TResult value) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.SelectAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<TResult>> selector) -> System.Threading.Tasks.Task<Abc.Maybe<TResult>>

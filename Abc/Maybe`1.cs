@@ -461,21 +461,21 @@ namespace Abc
     // 3) Source of confusion (conflicts?) if we import the System.Linq namespace.
     // Mode d'emploi:
     // Iterable)   Implicit; see GetEnumerator().
-    // Enumerable) Requires an explicit conversion; see Repeat().
+    // Enumerable) Requires an explicit conversion; see RepeatOrEmpty().
     public partial struct Maybe<T>
     {
         [Pure]
         public IEnumerator<T> GetEnumerator()
-            => Repeat(1).GetEnumerator();
+            => RepeatOrEmpty(1).GetEnumerator();
 
         [Pure]
-        public IEnumerable<T> Repeat(int count)
+        public IEnumerable<T> RepeatOrEmpty(int count)
             => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
         // REVIEW: Optimize Repeat().
         // Beware, infinite loop!
         [Pure]
-        public IEnumerable<T> Repeat()
+        public IEnumerable<T> RepeatOrEmpty()
         {
             if (_isSome)
             {
