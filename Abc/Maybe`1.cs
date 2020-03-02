@@ -11,6 +11,38 @@ namespace Abc
     using System.Linq;
     using System.Threading.Tasks;
 
+    // API overview.
+    //
+    // Only one property (no property Value).
+    // - IsNone
+    //
+    // Methods.
+    // - Bind()
+    // - OrElse()
+    // - Select()           map the value
+    // - Where()            filter / value
+    // - SelectMany()
+    // - Join()
+    // - Apply()
+    // - ReplaceWith()
+    // - ContinueWith()
+    // - PassThru()
+    // - Skip()
+    // - ZipWith()
+    //
+    // Safe escapes from a maybe.
+    // - Switch()           pattern matching
+    // - ValueOrXXX()       unwrap
+    // - Do()               side-effects actions
+    // - OnSome()           side-effects actions
+    // - GetEnumerator()    iterable
+    // - Repeat()           enumerable
+    // - Contains()         set-like
+
+    // REVIEW: API
+    // - ReplaceWith() -> ContinueWith()
+    // - Skip(predicate)
+
     // REVIEW: disposable exts, lazy exts, async exts, nullable attrs, notnull constraints.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
@@ -33,7 +65,6 @@ namespace Abc
         /// Represents the enclosed value.
         /// <para>This field is read-only.</para>
         /// </summary>
-        // We should NEVER use this field directly, use the property Value instead.
         private readonly T _value;
 
         /// <summary>
@@ -120,7 +151,11 @@ namespace Abc
         [Pure]
         public Maybe<T> OrElse(Maybe<T> other)
             => _isSome ? this : other;
+    }
 
+    // Escape methods.
+    public partial struct Maybe<T>
+    {
         // REVIEW: delayed throw?
 
         /// <summary>
@@ -413,10 +448,6 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        // REVIEW: API
-        // - ReplaceWith() -> ContinueWith()
-        // - Skip(predicate)
-
         [Pure]
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
             where TResult : notnull
@@ -466,16 +497,16 @@ namespace Abc
     {
         [Pure]
         public IEnumerator<T> GetEnumerator()
-            => RepeatOrEmpty(1).GetEnumerator();
+            => Repeat(1).GetEnumerator();
 
         [Pure]
-        public IEnumerable<T> RepeatOrEmpty(int count)
+        public IEnumerable<T> Repeat(int count)
             => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
         // REVIEW: Optimize Repeat().
         // Beware, infinite loop!
         [Pure]
-        public IEnumerable<T> RepeatOrEmpty()
+        public IEnumerable<T> Repeat()
         {
             if (_isSome)
             {
