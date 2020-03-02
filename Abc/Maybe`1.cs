@@ -404,7 +404,7 @@ namespace Abc
         }
     }
 
-    // Standard API.
+    // Misc methods.
     public partial struct Maybe<T>
     {
         [Pure]
@@ -441,8 +441,6 @@ namespace Abc
             return _isSome ? Maybe.Unit : Maybe.None;
         }
 
-        #region ZipWith()
-
         [Pure]
         public Maybe<TResult> ZipWith<TOther, TResult>(
             Maybe<TOther> other,
@@ -454,66 +452,6 @@ namespace Abc
                 ? Maybe.Of(zipper(_value, other._value))
                 : Maybe<TResult>.None;
         }
-
-        [Pure]
-        public Maybe<TResult> ZipWith<T1, T2, TResult>(
-            Maybe<T1> first,
-            Maybe<T2> second,
-            Func<T, T1, T2, TResult> zipper)
-        {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
-
-            return _isSome && first._isSome && second._isSome
-                ? Maybe.Of(zipper(_value, first._value, second._value))
-                : Maybe<TResult>.None;
-        }
-
-        [Pure]
-        public Maybe<TResult> ZipWith<T1, T2, T3, TResult>(
-             Maybe<T1> first,
-             Maybe<T2> second,
-             Maybe<T3> third,
-             Func<T, T1, T2, T3, TResult> zipper)
-        {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
-
-            return _isSome && first._isSome && second._isSome && third._isSome
-                ? Maybe.Of(zipper(_value, first._value, second._value, third._value))
-                : Maybe<TResult>.None;
-        }
-
-        [Pure]
-        public Maybe<TResult> ZipWith<T1, T2, T3, T4, TResult>(
-            Maybe<T1> first,
-            Maybe<T2> second,
-            Maybe<T3> third,
-            Maybe<T4> fourth,
-            Func<T, T1, T2, T3, T4, TResult> zipper)
-        {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
-
-            return _isSome && first._isSome && second._isSome && third._isSome && fourth._isSome
-                ? Maybe.Of(zipper(_value, first._value, second._value, third._value, fourth._value))
-                : Maybe<TResult>.None;
-        }
-
-        [Pure]
-        public Maybe<TResult> ZipWith<T1, T2, T3, T4, T5, TResult>(
-            Maybe<T1> first,
-            Maybe<T2> second,
-            Maybe<T3> third,
-            Maybe<T4> fourth,
-            Maybe<T5> fifth,
-            Func<T, T1, T2, T3, T4, T5, TResult> zipper)
-        {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
-
-            return _isSome && first._isSome && second._isSome && third._isSome && fourth._isSome && fifth._isSome
-                ? Maybe.Of(zipper(_value, first._value, second._value, third._value, fourth._value, fifth._value))
-                : Maybe<TResult>.None;
-        }
-
-        #endregion
     }
 
     // Iterable.
