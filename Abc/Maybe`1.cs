@@ -12,7 +12,6 @@ namespace Abc
     using System.Threading.Tasks;
 
     // REVIEW: disposable exts, lazy exts, async exts, nullable attrs, notnull constraints.
-    // Maybe<T> where T : notnull ??? <- only works if nullable is enabled.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
 
@@ -414,7 +413,10 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        // REVIEW: ReplaceWith() -> ContinueWith()?
+        // REVIEW: API
+        // - ReplaceWith() -> ContinueWith()
+        // - Skip(predicate)
+
         [Pure]
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
             where TResult : notnull
@@ -434,7 +436,6 @@ namespace Abc
             return other._isSome ? this : None;
         }
 
-        // REVIEW: Skip(predicate).
         [Pure]
         public Maybe<Unit> Skip()
         {
@@ -454,13 +455,15 @@ namespace Abc
         }
     }
 
-    // Iterable.
+    // Iterable but not enumerable.
+    // 1) A maybe is a indeed collection but a rather trivial one.
+    // 2) Maybe<T> being a struct, I worry about hidden casts.
+    // 3) Source of confusion (conflicts?) if we import the System.Linq namespace.
+    // Mode d'emploi:
+    // Iterable)   Implicit; see GetEnumerator().
+    // Enumerable) Requires an explicit conversion; see Repeat().
     public partial struct Maybe<T>
     {
-        // REVIEW: IEnumerable<T> or not? Test LINQ before (conflicts?).
-        // Also, Maybe<> is a struct and I am worry with hidden casts if this
-        // type implements IEnumerable<>. Optimize Repeat().
-
         [Pure]
         public IEnumerator<T> GetEnumerator()
             => Repeat(1).GetEnumerator();
@@ -469,6 +472,8 @@ namespace Abc
         public IEnumerable<T> Repeat(int count)
             => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
+        // REVIEW: Optimize Repeat().
+        // Beware, infinite loop!
         [Pure]
         public IEnumerable<T> Repeat()
         {
@@ -483,6 +488,8 @@ namespace Abc
     }
 
     // Interface IEquatable<>.
+    // REVIEW: IEquatable<T>?
+    // We could say that a maybe is either an empty set or a singleton.
     public partial struct Maybe<T>
     {
         /// <summary>
@@ -526,8 +533,6 @@ namespace Abc
             => _isSome
                 ? other._isSome && (comparer ?? s_DefaultComparer).Equals(_value, other._value)
                 : !other._isSome;
-
-        // REVIEW: IEquatable<T>?
 
         [Pure]
         public bool Contains(T value)
