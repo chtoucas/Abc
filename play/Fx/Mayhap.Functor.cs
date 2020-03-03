@@ -190,7 +190,7 @@ namespace Abc.Fx
 #else
             Require.NotNull(@this, nameof(@this));
 
-            return mayhap.Select(x => @this(x));
+            return mayhap.Select(@this);
 #endif
         }
     }

@@ -13,6 +13,7 @@ namespace Abc.Fx
     // =======================
     //
     // A monoid on applicative functors.
+    // Associative operation <|> and identity element "empty".
     //
     // References:
     // - https://en.wikibooks.org/wiki/Haskell/Alternative_and_MonadPlus
@@ -84,7 +85,7 @@ namespace Abc.Fx
             //
             // One or more.
 
-            return @this.Select(x => Sequence.Return(x)).Otherwise(Empty<T>());
+            return @this.Select(Sequence.Return).Otherwise(Empty<T>());
         }
 
         public static Mayhap<IEnumerable<T>> Many<T>(this Mayhap<T> @this)
@@ -99,7 +100,7 @@ namespace Abc.Fx
             //
             // Zero or more.
 
-            return @this.Select(x => Sequence.Repeat(x)).Otherwise(Empty<T>());
+            return @this.Select(Sequence.Repeat).Otherwise(Empty<T>());
         }
 
         public static Mayhap<Mayhap<T>> Square<T>(this Mayhap<T> @this)
@@ -110,10 +111,16 @@ namespace Abc.Fx
             // One or none.
 
 #if STRICT_HASKELL
-            return Map(x => Mayhap<T>.η(x), @this).Otherwise(Pure(Mayhap<T>.None));
+            return Map(Mayhap<T>.Some, @this).Otherwise(Pure(Mayhap<T>.None));
 #else
             return Mayhap<Mayhap<T>>.Some(@this);
 #endif
         }
+    }
+
+    // mzero >>= f  =  mzero
+    // v >> mzero   =  mzero
+    public partial class Mayhap
+    {
     }
 }
