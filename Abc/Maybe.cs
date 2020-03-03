@@ -150,27 +150,27 @@ namespace Abc
     // Extension methods for Maybe<T> where T is disposable.
     public partial class Maybe
     {
-        //// Bind() with automatic resource management.
-        //[Pure]
-        //public static Maybe<TResult> BindDispose<TSource, TResult>(
-        //    this Maybe<TSource> @this, Func<TSource, Maybe<TResult>> binder)
-        //    where TSource : IDisposable
-        //{
-        //    if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
+        // Bind() with automatic resource management.
+        [Pure]
+        public static Maybe<TResult> Use<TDisposable, TResult>(
+            this Maybe<TDisposable> @this, Func<TDisposable, Maybe<TResult>> binder)
+            where TDisposable : IDisposable
+        {
+            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
 
-        //    return @this.Bind(x => { using (x) { return binder(x); } });
-        //}
+            return @this.Bind(x => { using (x) { return binder(x); } });
+        }
 
-        //// Select() with automatic resource management.
-        //[Pure]
-        //public static Maybe<TResult> SelectDispose<TSource, TResult>(
-        //    this Maybe<TSource> @this, Func<TSource, TResult> selector)
-        //    where TSource : IDisposable
-        //{
-        //    if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+        // Select() with automatic resource management.
+        [Pure]
+        public static Maybe<TResult> Use<TDisposable, TResult>(
+            this Maybe<TDisposable> @this, Func<TDisposable, TResult> selector)
+            where TDisposable : IDisposable
+        {
+            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
 
-        //    return @this.Select(x => { using (x) { return selector(x); } });
-        //}
+            return @this.Select(x => { using (x) { return selector(x); } });
+        }
     }
 
     // Extension methods for functions in the Kleisli category.
