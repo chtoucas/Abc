@@ -6,15 +6,12 @@ Abc.Maybe<T>
 Abc.Maybe<T>.Apply<TResult>(Abc.Maybe<System.Func<T, TResult>> applicative) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Bind<TResult>(System.Func<T, Abc.Maybe<TResult>> binder) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.BindAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<Abc.Maybe<TResult>>> binder) -> System.Threading.Tasks.Task<Abc.Maybe<TResult>>
+Abc.Maybe<T>.CompareTo(Abc.Maybe<T> other) -> int
 Abc.Maybe<T>.Contains(T value) -> bool
-Abc.Maybe<T>.Contains(T value, System.Collections.Generic.IEqualityComparer<T> comparer) -> bool
 Abc.Maybe<T>.ContinueWith<TResult>(Abc.Maybe<TResult> other) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Do(System.Action<T> onSome, System.Action onNone) -> void
 Abc.Maybe<T>.Equals(Abc.Maybe<T> other) -> bool
-Abc.Maybe<T>.Equals(Abc.Maybe<T> other, System.Collections.Generic.IEqualityComparer<T> comparer) -> bool
-Abc.Maybe<T>.Equals(object other, System.Collections.Generic.IEqualityComparer<T> comparer) -> bool
 Abc.Maybe<T>.GetEnumerator() -> System.Collections.Generic.IEnumerator<T>
-Abc.Maybe<T>.GetHashCode(System.Collections.Generic.IEqualityComparer<T> comparer) -> int
 Abc.Maybe<T>.IsNone.get -> bool
 Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> Abc.Maybe<TResult>
@@ -98,11 +95,7 @@ static Abc.Maybe.ValueOrEmpty<T>(this Abc.Maybe<System.Collections.Generic.IEnum
 static Abc.Maybe<T>.None.get -> Abc.Maybe<T>
 static Abc.Maybe<T>.explicit operator Abc.Maybe<T>(Abc.Maybe<Abc.Maybe<T>> maybe) -> Abc.Maybe<T>
 static Abc.Maybe<T>.operator !=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
-static Abc.Maybe<T>.operator !=(Abc.Maybe<T> left, T right) -> bool
-static Abc.Maybe<T>.operator !=(T left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
-static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, T right) -> bool
-static Abc.Maybe<T>.operator ==(T left, Abc.Maybe<T> right) -> bool
 static Abc.Unit.operator !=(Abc.Unit left, Abc.Unit right) -> bool
 static Abc.Unit.operator !=(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator !=(System.ValueTuple left, Abc.Unit right) -> bool

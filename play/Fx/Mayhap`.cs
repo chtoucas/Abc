@@ -19,7 +19,7 @@ namespace Abc.Fx
     /// Represents the Maybe monad.
     /// <para><see cref="Mayhap{T}"/> is a read-only struct.</para>
     /// </summary>
-    public readonly partial struct Mayhap<T> : IEquatable<Mayhap<T>>, IStructuralEquatable
+    public readonly partial struct Mayhap<T> : IEquatable<Mayhap<T>>
     {
         private readonly bool _isSome;
         private readonly T _value;
@@ -48,12 +48,6 @@ namespace Abc.Fx
         public bool Contains(T value)
             => match(
                 some: x => EqualityComparer<T>.Default.Equals(x, value),
-                none: false);
-
-        [Pure]
-        public bool Contains(T value, IEqualityComparer<T> comparer)
-            => match(
-                some: x => (comparer ?? EqualityComparer<T>.Default).Equals(x, value),
                 none: false);
 
         [Pure]
@@ -192,45 +186,17 @@ namespace Abc.Fx
         [Pure]
         public bool Equals(Mayhap<T> other)
             => match(
-                some: x => other.Equals(x),
+                some: x => other.Contains(x),
                 none: !other._isSome);
-
-        [Pure]
-        public bool Equals(Mayhap<T> other, IEqualityComparer comparer)
-            => match(
-                some: x => other.Equals(x, comparer),
-                none: !other._isSome);
-
-        [Pure]
-        public bool Equals(T value)
-            => match(
-                some: x => EqualityComparer<T>.Default.Equals(x, value),
-                none: false);
-
-        [Pure]
-        public bool Equals(T value, IEqualityComparer comparer)
-            => match(
-                some: x => (comparer ?? EqualityComparer<T>.Default).Equals(x, value),
-                none: false);
 
         [Pure]
         public override bool Equals(object? obj)
             => obj is Mayhap<T> maybe && Equals(maybe);
 
         [Pure]
-        bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer)
-            => other is Mayhap<T> maybe && Equals(maybe, comparer);
-
-        [Pure]
         public override int GetHashCode()
             => match(
                 some: x => x!.GetHashCode(),
-                none: 0);
-
-        [Pure]
-        int IStructuralEquatable.GetHashCode(IEqualityComparer comparer)
-            => match(
-                some: x => (comparer ?? EqualityComparer<T>.Default).GetHashCode(x!),
                 none: 0);
     }
 }

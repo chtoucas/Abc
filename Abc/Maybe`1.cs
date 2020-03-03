@@ -3,6 +3,7 @@
 namespace Abc
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -10,6 +11,8 @@ namespace Abc
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using EF = Utilities.ExceptionFactory;
 
     // API overview.
     //
@@ -68,11 +71,12 @@ namespace Abc
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
-    public readonly partial struct Maybe<T> : IEquatable<Maybe<T>>
+    // REVIEW: comparable ops.
+    [SuppressMessage("Design", "CA1036:Override methods on comparable types")]
+    public readonly partial struct Maybe<T>
+        : IEquatable<Maybe<T>>, IStructuralEquatable,
+            IComparable<Maybe<T>>, IComparable, IStructuralComparable
     {
-        private static readonly IEqualityComparer<T> s_DefaultComparer
-            = EqualityComparer<T>.Default;
-
         private readonly bool _isSome;
 
         /// <summary>
@@ -532,10 +536,38 @@ namespace Abc
                 }
             }
         }
+
+        // Maybe<T> being a struct it is never equal to null, therefore
+        // Contains(null) always returns false.
+        [Pure]
+        public bool Contains(T value)
+            => _isSome && EqualityComparer<T>.Default.Equals(_value, value);
+    }
+
+    // Interface IComparable<>.
+    public partial struct Maybe<T>
+    {
+        public int CompareTo(Maybe<T> other)
+            => Comparer<T>.Default.Compare(_value, other._value);
+
+        int IComparable.CompareTo(object? other)
+        {
+            if (other is null) { return 1; }
+            if (!(other is Maybe<T> maybe)) { throw EF.InvalidComparaison(nameof(other)); }
+
+            return Comparer<T>.Default.Compare(_value, maybe._value);
+        }
+
+        int IStructuralComparable.CompareTo(object? other, IComparer comparer)
+        {
+            if (other is null) { return 1; }
+            if (!(other is Maybe<T> maybe)) { throw EF.InvalidComparaison(nameof(other)); }
+
+            return (comparer ?? Comparer<T>.Default).Compare(_value, maybe._value);
+        }
     }
 
     // Interface IEquatable<>.
-    // We could say that a maybe is either an empty set or a singleton.
     public partial struct Maybe<T>
     {
         /// <summary>
@@ -552,43 +584,13 @@ namespace Abc
         public static bool operator !=(Maybe<T> left, Maybe<T> right)
             => !left.Equals(right);
 
-        public static bool operator ==(Maybe<T> left, T right)
-            => left.Contains(right);
-
-        public static bool operator ==(T left, Maybe<T> right)
-            => right.Contains(left);
-
-        public static bool operator !=(Maybe<T> left, T right)
-            => !left.Contains(right);
-
-        public static bool operator !=(T left, Maybe<T> right)
-            => !right.Contains(left);
-
         /// <summary>
         /// Determines whether this instance is equal to the value of the
         /// specified <see cref="Maybe{T}"/>.
         /// </summary>
         [Pure]
         public bool Equals(Maybe<T> other)
-            => _isSome
-              ? other._isSome && s_DefaultComparer.Equals(_value, other._value)
-              : !other._isSome;
-
-        [Pure]
-        public bool Equals(Maybe<T> other, IEqualityComparer<T> comparer)
-            => _isSome
-                ? other._isSome && (comparer ?? s_DefaultComparer).Equals(_value, other._value)
-                : !other._isSome;
-
-        // Maybe<T> being a struct it is never equal to null, therefore
-        // Contains(null) always returns false.
-        [Pure]
-        public bool Contains(T value)
-            => _isSome && s_DefaultComparer.Equals(_value, value);
-
-        [Pure]
-        public bool Contains(T value, IEqualityComparer<T> comparer)
-            => _isSome && (comparer ?? s_DefaultComparer).Equals(_value, value);
+            => _isSome ? other.Contains(_value) : !other._isSome;
 
         /// <inheritdoc />
         [Pure]
@@ -596,8 +598,15 @@ namespace Abc
             => obj is Maybe<T> maybe && Equals(maybe);
 
         [Pure]
-        public bool Equals(object? other, IEqualityComparer<T> comparer)
-            => other is Maybe<T> maybe && Equals(maybe, comparer);
+        bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer)
+        {
+            if (!(other is Maybe<T> maybe)) { return false; }
+
+            return _isSome
+                ? maybe._isSome
+                    && (comparer ?? EqualityComparer<T>.Default).Equals(_value, maybe._value)
+                : !maybe._isSome;
+        }
 
         /// <inheritdoc />
         [Pure]
@@ -605,7 +614,7 @@ namespace Abc
             => _value?.GetHashCode() ?? 0;
 
         [Pure]
-        public int GetHashCode(IEqualityComparer<T> comparer)
-            => _isSome ? (comparer ?? s_DefaultComparer).GetHashCode(_value) : 0;
+        int IStructuralEquatable.GetHashCode(IEqualityComparer comparer)
+            => _isSome ? (comparer ?? EqualityComparer<T>.Default).GetHashCode(_value) : 0;
     }
 }

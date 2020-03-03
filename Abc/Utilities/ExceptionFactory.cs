@@ -16,5 +16,10 @@ namespace Abc.Utilities
         [Pure]
         public static InvalidOperationException EmptySequence
             => new InvalidOperationException("The sequence was empty.");
+
+        [Pure]
+        public static ArgumentException InvalidComparaison(string paramName)
+            // TODO: exn message.
+            => new ArgumentException("XXX", paramName);
     }
 }
