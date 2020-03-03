@@ -9,6 +9,7 @@ namespace Abc.Fx
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
+    // WARNING: the code does NOT reflect best practice.
     // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).
 
     // FIXME: nullable attrs.
@@ -76,12 +77,12 @@ namespace Abc.Fx
         //   return :: a -> m a
         //   Inject a value into the monadic type.
         [Pure]
-        internal static Mayhap<T> Some([DisallowNull]T value)
+        public static Mayhap<T> Some([DisallowNull]T value)
             => new Mayhap<T>(value);
 
         /// <summary>return</summary>
         [Pure]
-        internal static Mayhap<T> η([AllowNull]T value)
+        public static Mayhap<T> η([AllowNull]T value)
             => value is null ? Mayhap<T>.None : Mayhap<T>.Some(value);
 
         /// <summary>join</summary>
@@ -93,7 +94,7 @@ namespace Abc.Fx
         //   used to remove one level of monadic structure, projecting its bound
         //   argument into the outer level.
         [Pure]
-        internal static Mayhap<T> μ(Mayhap<Mayhap<T>> square)
+        public static Mayhap<T> μ(Mayhap<Mayhap<T>> square)
             => square._value;
 
         /// <summary>fmap / liftM</summary>
