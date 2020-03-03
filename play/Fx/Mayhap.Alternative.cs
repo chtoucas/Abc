@@ -73,7 +73,7 @@ namespace Abc.Fx
         // https://stackoverflow.com/questions/7671009/some-and-many-functions-from-the-alternative-type-class
         // https://www.reddit.com/r/haskell/comments/b71oje/i_dont_understand_how_some_and_many_from_the/
 
-        public static Mayhap<IEnumerable<T>> Any<T>(this Mayhap<T> @this)
+        public static Mayhap<IEnumerable<T>> Some<T>(this Mayhap<T> @this)
         {
             // some :: f a -> f [a]
             // some v = some_v

@@ -22,15 +22,6 @@ namespace Abc.Fx
     public partial class Mayhap
     {
         [Pure]
-        public static Mayhap<T> Where<T>(this Mayhap<T> @this, Func<T, bool> predicate)
-        {
-            Require.NotNull(predicate, nameof(predicate));
-
-            // NB: x is never null.
-            return @this.Bind(x => predicate(x) ? Mayhap<T>.Some(x) : Mayhap<T>.None);
-        }
-
-        [Pure]
         public static Mayhap<TResult> SelectMany<T, TMiddle, TResult>(
             this Mayhap<T> @this,
             Func<T, Mayhap<TMiddle>> selector,
@@ -164,12 +155,6 @@ namespace Abc.Fx
         {
             var seed = MayhapEnumerable_<T>.Empty;
             return source.Aggregate(seed, (x, y) => x.ZipWith(y, Enumerable.Append));
-        }
-
-        [Pure]
-        public static Mayhap<T> Any<T>(IEnumerable<Mayhap<T>> source)
-        {
-            return source.Aggregate(Mayhap<T>.None, (m, n) => m.OrElse(n));
         }
 
         private static class MayhapEnumerable_<T>

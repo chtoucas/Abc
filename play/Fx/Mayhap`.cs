@@ -10,7 +10,7 @@ namespace Abc.Fx
     using System.Linq;
     using System.Threading.Tasks;
 
-    // WARNING: the code does NOT reflect best practice.
+    // WARNING: This code does NOT reflect best practice.
     // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).
 
     // FIXME: nullable attrs.
@@ -66,7 +66,7 @@ namespace Abc.Fx
     public partial struct Mayhap<T>
     {
 #pragma warning disable CA1000 // Do not declare static members on generic types
-        /// <summary>Nothing</summary>
+        /// <summary>Nothing / mzero</summary>
         public static Mayhap<T> None { get; } = default;
 #pragma warning restore CA1812
 
@@ -131,6 +131,7 @@ namespace Abc.Fx
 #endif
         }
 
+        /// <summary>mplus</summary>
         [Pure]
         public Mayhap<T> OrElse(Mayhap<T> other)
             => _isSome ? this : other;

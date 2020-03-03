@@ -3,7 +3,9 @@
 namespace Abc.Fx
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.Linq;
 
     // Monad
     // =====
@@ -23,6 +25,38 @@ namespace Abc.Fx
     // Standard API:
     public partial class Mayhap
     {
+        /// <summary>mfilter</summary>
+        [Pure]
+        public static Mayhap<T> Where<T>(this Mayhap<T> @this, Func<T, bool> predicate)
+        {
+            // mfilter :: (MonadPlus m) => (a -> Bool) -> m a -> m a
+            // mfilter p ma = do
+            //   a <- ma
+            //   if p a then return a else mzero
+            //
+            // Direct MonadPlus equivalent of filter (for lists).
+
+            Require.NotNull(predicate, nameof(predicate));
+
+            // NB: x is never null.
+            return @this.Bind(x => predicate(x) ? Mayhap<T>.Some(x) : Mayhap<T>.None);
+        }
+    }
+
+    public partial class Mayhap
+    {
+        /// <summary>msum</summary>
+        [Pure]
+        public static Mayhap<T> Any<T>(IEnumerable<Mayhap<T>> source)
+        {
+            // msum :: (Foldable t, MonadPlus m) => t (m a) -> m a
+            // msum = asum
+            //
+            // asum :: (Foldable t, Alternative f) => t (f a) -> f a
+            // asum = foldr (<|>) empty
+
+            return source.Aggregate(Zero<T>(), (m, n) => m.Otherwise(n));
+        }
     }
 
     // ZipWith
@@ -50,25 +84,25 @@ namespace Abc.Fx
                     y => Mayhap<TResult>.η(zipper(x, y))));
         }
 
-        /// <summary>liftM3</summary>
-        // [Monad]
-        //   liftM3 :: (Monad m) => (a1 -> a2 -> a3 -> r) -> m a1 -> m a2 -> m a3 -> m r
-        //   liftM3 f m1 m2 m3 = do { x1 <- m1; x2 <- m2; x3 <- m3; return (f x1 x2 x3) }
-        //
-        //   Promote a function to a monad, scanning the monadic arguments from
-        //   left to right.
-        [Pure]
-        public static Mayhap<TResult> ZipWith<TSource, T1, T2, TResult>(
-            this Mayhap<TSource> @this,
-            Mayhap<T1> m1,
-            Mayhap<T2> m2,
-            Func<TSource, T1, T2, TResult> zipper)
-        {
-            Require.NotNull(zipper, nameof(zipper));
+        ///// <summary>liftM3</summary>
+        //// [Monad]
+        ////   liftM3 :: (Monad m) => (a1 -> a2 -> a3 -> r) -> m a1 -> m a2 -> m a3 -> m r
+        ////   liftM3 f m1 m2 m3 = do { x1 <- m1; x2 <- m2; x3 <- m3; return (f x1 x2 x3) }
+        ////
+        ////   Promote a function to a monad, scanning the monadic arguments from
+        ////   left to right.
+        //[Pure]
+        //public static Mayhap<TResult> ZipWith<TSource, T1, T2, TResult>(
+        //    this Mayhap<TSource> @this,
+        //    Mayhap<T1> m1,
+        //    Mayhap<T2> m2,
+        //    Func<TSource, T1, T2, TResult> zipper)
+        //{
+        //    Require.NotNull(zipper, nameof(zipper));
 
-            return @this.Bind(
-                x => m1.ZipWith(m2, (y, z) => zipper(x, y, z)));
-        }
+        //    return @this.Bind(
+        //        x => m1.ZipWith(m2, (y, z) => zipper(x, y, z)));
+        //}
 
         /// <summary>liftM4</summary>
         // [Monad]
@@ -87,22 +121,22 @@ namespace Abc.Fx
                                 x4 => Mayhap<TResult>.η(func(x1, x2, x3, x4))))));
         }
 
-        [Pure]
-        public static Mayhap<TResult> ZipWith<TSource, T1, T2, T3, TResult>(
-            this Mayhap<TSource> @this,
-             Mayhap<T1> first,
-             Mayhap<T2> second,
-             Mayhap<T3> third,
-             Func<TSource, T1, T2, T3, TResult> zipper)
-        {
-            Require.NotNull(zipper, nameof(zipper));
+        //[Pure]
+        //public static Mayhap<TResult> ZipWith<TSource, T1, T2, T3, TResult>(
+        //    this Mayhap<TSource> @this,
+        //     Mayhap<T1> first,
+        //     Mayhap<T2> second,
+        //     Mayhap<T3> third,
+        //     Func<TSource, T1, T2, T3, TResult> zipper)
+        //{
+        //    Require.NotNull(zipper, nameof(zipper));
 
-            return @this.Bind(
-                x => first.ZipWith(
-                    second,
-                    third,
-                    (y, z, a) => zipper(x, y, z, a)));
-        }
+        //    return @this.Bind(
+        //        x => first.ZipWith(
+        //            second,
+        //            third,
+        //            (y, z, a) => zipper(x, y, z, a)));
+        //}
 
         /// <summary>liftM5</summary>
         // [Monad]
