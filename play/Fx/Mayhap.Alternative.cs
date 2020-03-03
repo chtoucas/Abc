@@ -6,8 +6,7 @@ namespace Abc.Fx
     using System;
 #endif
     using System.Collections.Generic;
-
-    using Abc.Linq;
+    using System.Linq;
 
     // Alternative / MonadPlus
     // =======================
@@ -26,8 +25,8 @@ namespace Abc.Fx
     // - <|>        ext.Otherwise()
     //
     // Standard API:
-    // - some       ext.Any()
-    // - many       ext.Many()
+    // - some       Mayhap.Some()
+    // - many       Mayhap.Many()
     // - optional   ext.Square()
     //
     public partial class Mayhap
@@ -68,12 +67,12 @@ namespace Abc.Fx
 #endif
         }
 
-        // FIXME: what we do right now is one or empty,
-        // or an infinite seq of the value or empty.
+        // FIXME: infinite recursive calls. Clean up
         // https://stackoverflow.com/questions/7671009/some-and-many-functions-from-the-alternative-type-class
         // https://www.reddit.com/r/haskell/comments/b71oje/i_dont_understand_how_some_and_many_from_the/
 
-        public static Mayhap<IEnumerable<T>> Some<T>(this Mayhap<T> @this)
+        /// <summary>some</summary>
+        public static Mayhap<IEnumerable<T>> Some<T>(Mayhap<T> mayhap)
         {
             // some :: f a -> f [a]
             // some v = some_v
@@ -85,10 +84,12 @@ namespace Abc.Fx
             //
             // One or more.
 
-            return @this.Select(Sequence.Return).Otherwise(Empty<T>());
+            Func<T, IEnumerable<T>, IEnumerable<T>> prepend = (x, y) => y.Prepend(x);
+            return Pure(prepend).Invoke(mayhap, Many(mayhap));
         }
 
-        public static Mayhap<IEnumerable<T>> Many<T>(this Mayhap<T> @this)
+        /// <summary>many</summary>
+        public static Mayhap<IEnumerable<T>> Many<T>(Mayhap<T> mayhap)
         {
             // many :: f a -> f [a]
             // many v = many_v
@@ -100,7 +101,7 @@ namespace Abc.Fx
             //
             // Zero or more.
 
-            return @this.Select(Sequence.Repeat).Otherwise(Empty<T>());
+            return Some(mayhap).Otherwise(Empty<T>());
         }
 
         public static Mayhap<Mayhap<T>> Square<T>(this Mayhap<T> @this)

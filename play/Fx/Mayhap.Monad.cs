@@ -7,6 +7,8 @@ namespace Abc.Fx
     using System.Diagnostics.Contracts;
     using System.Linq;
 
+    using Abc.Linq;
+
     // Monad
     // =====
     //
@@ -40,6 +42,16 @@ namespace Abc.Fx
 
             // NB: x is never null.
             return @this.Bind(x => predicate(x) ? Mayhap<T>.Some(x) : Mayhap<T>.None);
+        }
+
+        public static Mayhap<IEnumerable<T>> Replicate<T>(this Mayhap<T> @this, int count)
+        {
+            return @this.Select(x => Enumerable.Repeat(x, count));
+        }
+
+        public static Mayhap<IEnumerable<T>> Replicate<T>(this Mayhap<T> @this)
+        {
+            return @this.Select(Sequence.Repeat);
         }
     }
 
