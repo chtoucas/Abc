@@ -36,29 +36,8 @@ namespace Abc.Fx
             using var iter = @this.GetEnumerator();
 
             return iter.MoveNext()
-                ? Of(await selector(iter.Current).ConfigureAwait(continueOnCapturedContext))
+                ? Mayhap<TResult>.η(await selector(iter.Current).ConfigureAwait(continueOnCapturedContext))
                 : Mayhap<TResult>.None;
-        }
-
-        [Pure]
-        public static async Task<TResult> SwitchAsync<T, TResult>(
-            this Mayhap<T> @this,
-            Func<T, Task<TResult>> caseSome,
-            Task<TResult> caseNone,
-            bool continueOnCapturedContext)
-        {
-            using var iter = @this.GetEnumerator();
-
-            if (iter.MoveNext())
-            {
-                Require.NotNull(caseSome, nameof(caseSome));
-                return await caseSome(iter.Current).ConfigureAwait(continueOnCapturedContext);
-            }
-            else
-            {
-                Require.NotNull(caseNone, nameof(caseNone));
-                return await caseNone.ConfigureAwait(continueOnCapturedContext);
-            }
         }
     }
 

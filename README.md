@@ -9,7 +9,7 @@ Future plans?
 -------------
 
 [Narvalo.NET](https://github.com/chtoucas/Narvalo.NET)
-- other "monadic" types? `Outcome<T>`
+- `Outcome<T>`
 - country codes
 - money and currency
 - BIC and IBAN

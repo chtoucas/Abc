@@ -48,7 +48,7 @@ namespace Abc.Fx
 #if STRICT_HASKELL
             throw new NotImplementedException("Applicative pure");
 #else
-            return Of(value);
+            return Mayhap<T>.η(value);
 #endif
         }
 

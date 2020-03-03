@@ -47,7 +47,7 @@ namespace Abc.Fx
 
             return @this.Bind(
                 x => other.Bind(
-                    y => Of(zipper(x, y))));
+                    y => Mayhap<TResult>.η(zipper(x, y))));
         }
 
         /// <summary>liftM3</summary>
@@ -84,7 +84,7 @@ namespace Abc.Fx
                     x1 => m2.Bind(
                         x2 => m3.Bind(
                             x3 => m4.Bind(
-                                x4 => Of(func(x1, x2, x3, x4))))));
+                                x4 => Mayhap<TResult>.η(func(x1, x2, x3, x4))))));
         }
 
         [Pure]
@@ -118,7 +118,7 @@ namespace Abc.Fx
                         x2 => m3.Bind(
                             x3 => m4.Bind(
                                 x4 => m5.Bind(
-                                    x5 => Of(func(x1, x2, x3, x4, x5)))))));
+                                    x5 => Mayhap<TResult>.η(func(x1, x2, x3, x4, x5)))))));
         }
     }
 }

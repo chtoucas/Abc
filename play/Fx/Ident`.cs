@@ -7,8 +7,6 @@ namespace Abc.Fx
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
-    // REVIEW: IStructuralComparable, IComparable?
-
     public static class Ident
     {
         [Pure]
@@ -30,7 +28,7 @@ namespace Abc.Fx
 
     /// <summary>
     /// Represents the trivial monad/comonad (pretty useless).
-    /// <para><see cref="Ident{T}"/> is an immutable struct.</para>
+    /// <para><see cref="Ident{T}"/> is a read-only struct.</para>
     /// </summary>
     public readonly partial struct Ident<T> : IEquatable<Ident<T>>, IStructuralEquatable
         where T : notnull

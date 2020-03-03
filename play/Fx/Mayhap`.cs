@@ -3,6 +3,7 @@
 namespace Abc.Fx
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -10,45 +11,14 @@ namespace Abc.Fx
 
     // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).
 
-    // TODO:
-    // IEquatable<T>, but a bit missleading?
-    // IComparable? See ValueTuple.
-    // Serializable?
-    // nullable attrs.
-    // Enhance and improve async methods.
-
-    public static partial class Mayhap
-    {
-        /// <summary>return</summary>
-        [Pure]
-        public static Mayhap<T> Of<T>([AllowNull]T value)
-            => Mayhap<T>.η(value);
-
-        /// <summary>return</summary>
-        [Pure]
-        public static Mayhap<T> Of<T>(T? value) where T : struct
-            => value.HasValue ? Mayhap<T>.Some(value.Value) : Mayhap<T>.None;
-
-        /// <summary>Just</summary>
-        [Pure]
-        public static Mayhap<T> Some<T>(T value) where T : struct
-            => Mayhap<T>.Some(value);
-
-        /// <summary>join</summary>
-        [Pure]
-        public static Mayhap<T> Flatten<T>(this Mayhap<Mayhap<T>> @this)
-            => Mayhap<T>.μ(@this);
-    }
+    // FIXME: nullable attrs.
 
     /// <summary>
     /// Represents the Maybe monad.
-    /// <para><see cref="Mayhap{T}"/> is an immutable struct.</para>
+    /// <para><see cref="Mayhap{T}"/> is a read-only struct.</para>
     /// </summary>
-    public readonly partial struct Mayhap<T> : IEquatable<Mayhap<T>>
+    public readonly partial struct Mayhap<T> : IEquatable<Mayhap<T>>, IStructuralEquatable
     {
-        private static readonly IEqualityComparer<T> s_DefaultComparer
-            = EqualityComparer<T>.Default;
-
         private readonly bool _isSome;
         private readonly T _value;
 
@@ -60,9 +30,10 @@ namespace Abc.Fx
 
         [Pure]
         public override string ToString()
-            => Switch(x => $"Mayhap({x})", "Mayhap(None)");
+            => match(
+                some: x => $"Mayhap({x})",
+                none: "Mayhap(None)");
 
-        // Iterable.
         [Pure]
         public IEnumerator<T> GetEnumerator()
         {
@@ -72,14 +43,25 @@ namespace Abc.Fx
             }
         }
 
-        // Pattern matching.
         [Pure]
-        [return: NotNullIfNotNull("caseNone")]
-        private TResult Switch<TResult>(Func<T, TResult> caseSome, TResult caseNone)
-            => _isSome ? caseSome(_value) : caseNone;
+        public bool Contains(T value)
+            => match(
+                some: x => EqualityComparer<T>.Default.Equals(x, value),
+                none: false);
+
+        [Pure]
+        public bool Contains(T value, IEqualityComparer<T> comparer)
+            => match(
+                some: x => (comparer ?? EqualityComparer<T>.Default).Equals(x, value),
+                none: false);
+
+        [Pure]
+        [return: NotNullIfNotNull("none")]
+        private TResult match<TResult>(Func<T, TResult> some, TResult none)
+            => _isSome ? some(_value) : none;
     }
 
-    // Core monadic methods.
+    // Core methods.
     public partial struct Mayhap<T>
     {
 #pragma warning disable CA1000 // Do not declare static members on generic types
@@ -99,7 +81,7 @@ namespace Abc.Fx
 
         /// <summary>return</summary>
         [Pure]
-        internal static Mayhap<T> η(T value)
+        internal static Mayhap<T> η([AllowNull]T value)
             => value is null ? Mayhap<T>.None : Mayhap<T>.Some(value);
 
         /// <summary>join</summary>
@@ -210,48 +192,48 @@ namespace Abc.Fx
         public static bool operator !=(Mayhap<T> left, Mayhap<T> right)
             => !left.Equals(right);
 
-        public static bool operator ==(Mayhap<T> left, T right)
-            => left.Contains(right);
-
-        public static bool operator ==(T left, Mayhap<T> right)
-            => right.Contains(left);
-
-        public static bool operator !=(Mayhap<T> left, T right)
-            => !left.Contains(right);
-
-        public static bool operator !=(T left, Mayhap<T> right)
-            => !right.Contains(left);
-
         [Pure]
         public bool Equals(Mayhap<T> other)
-            => Switch(x => other.Contains(x), !other._isSome);
+            => match(
+                some: x => other.Equals(x),
+                none: !other._isSome);
 
         [Pure]
-        public bool Equals(Mayhap<T> other, IEqualityComparer<T> comparer)
-            => Switch(x => other.Contains(x, comparer), !other._isSome);
+        public bool Equals(Mayhap<T> other, IEqualityComparer comparer)
+            => match(
+                some: x => other.Equals(x, comparer),
+                none: !other._isSome);
 
         [Pure]
-        public bool Contains(T value)
-            => Switch(x => s_DefaultComparer.Equals(x, value), false);
+        public bool Equals(T value)
+            => match(
+                some: x => EqualityComparer<T>.Default.Equals(x, value),
+                none: false);
 
         [Pure]
-        public bool Contains(T value, IEqualityComparer<T> comparer)
-            => Switch(x => (comparer ?? s_DefaultComparer).Equals(x, value), false);
+        public bool Equals(T value, IEqualityComparer comparer)
+            => match(
+                some: x => (comparer ?? EqualityComparer<T>.Default).Equals(x, value),
+                none: false);
 
         [Pure]
         public override bool Equals(object? obj)
             => obj is Mayhap<T> maybe && Equals(maybe);
 
         [Pure]
-        public bool Equals(object? other, IEqualityComparer<T> comparer)
+        bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer)
             => other is Mayhap<T> maybe && Equals(maybe, comparer);
 
         [Pure]
         public override int GetHashCode()
-            => Switch(x => x!.GetHashCode(), 0);
+            => match(
+                some: x => x!.GetHashCode(),
+                none: 0);
 
         [Pure]
-        public int GetHashCode(IEqualityComparer<T> comparer)
-            => Switch((comparer ?? s_DefaultComparer).GetHashCode, 0);
+        int IStructuralEquatable.GetHashCode(IEqualityComparer comparer)
+            => match(
+                some: x => (comparer ?? EqualityComparer<T>.Default).GetHashCode(x!),
+                none: 0);
     }
 }

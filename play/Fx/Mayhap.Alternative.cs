@@ -2,7 +2,9 @@
 
 namespace Abc.Fx
 {
+#if STRICT_HASKELL
     using System;
+#endif
     using System.Collections.Generic;
 
     using Abc.Linq;
@@ -108,9 +110,9 @@ namespace Abc.Fx
             // One or none.
 
 #if STRICT_HASKELL
-            return Map(x => Of(x), @this).Otherwise(Pure(Mayhap<T>.None));
+            return Map(x => Mayhap<T>.η(x), @this).Otherwise(Pure(Mayhap<T>.None));
 #else
-            return Some(@this);
+            return Mayhap<Mayhap<T>>.Some(@this);
 #endif
         }
     }

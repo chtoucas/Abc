@@ -7,9 +7,9 @@ namespace Abc.Fx
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-    public partial class Mayhap
+    public static partial class Mayhap
     {
-        public static readonly Mayhap<Unit> Unit = Some(Abc.Unit.Default);
+        public static readonly Mayhap<Unit> Unit = Mayhap<Unit>.Some(default);
 
         public static readonly Mayhap<Unit> None = Mayhap<Unit>.None;
 
@@ -175,7 +175,7 @@ namespace Abc.Fx
         private static class MayhapEnumerable_<T>
         {
             internal static readonly Mayhap<IEnumerable<T>> Empty
-                = Of(Enumerable.Empty<T>());
+                = Mayhap<IEnumerable<T>>.η(Enumerable.Empty<T>());
         }
     }
 }
