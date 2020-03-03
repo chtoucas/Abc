@@ -126,6 +126,10 @@ namespace Abc
         public override string ToString()
             => _isSome ? $"Maybe({_value})" : "Maybe(None)";
 
+        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Maybe.Flatten()")]
+        public static explicit operator Maybe<T>(Maybe<Maybe<T>> maybe)
+            => maybe._isSome ? maybe._value : Maybe<T>.None;
+
         /// <summary>
         /// Represents a debugger type proxy for <see cref="Maybe{T}"/>.
         /// </summary>
@@ -162,6 +166,7 @@ namespace Abc
             return _isSome ? binder(_value) : Maybe<TResult>.None;
         }
 
+        // Generalizes the null coalescing operator (??).
         [Pure]
         public Maybe<T> OrElse(Maybe<T> other)
             => _isSome ? this : other;
