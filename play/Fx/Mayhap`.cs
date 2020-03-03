@@ -37,12 +37,12 @@ namespace Abc.Fx
                 none: "Mayhap(None)");
 
         [Pure]
-        public IEnumerable<T> ToEnumerable()
+        public IEnumerable<T> Yield()
             => _isSome ? Enumerable.Repeat(_value, 1) : Enumerable.Empty<T>();
 
         [Pure]
         public IEnumerator<T> GetEnumerator()
-            => ToEnumerable().GetEnumerator();
+            => Yield().GetEnumerator();
 
         [Pure]
         public bool Contains(T value)

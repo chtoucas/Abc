@@ -40,8 +40,8 @@ namespace Abc
     // - ValueOrXXX()       unwrap
     // - Do()               side-effects actions
     // - OnSome()           side-effects actions
-    // - GetEnumerator()    iterable
-    // - Repeat()           enumerable
+    // - GetEnumerator()    iterable (implicit)
+    // - Yield()            enumerable (explicit)
     // - Contains()         set-like
 
     // REVIEW: API
@@ -172,7 +172,7 @@ namespace Abc
             => _isSome ? this : other;
     }
 
-    // Escape methods.
+    // Safe escapes.
     public partial struct Maybe<T>
     {
         // REVIEW: delayed throw?
@@ -509,23 +509,20 @@ namespace Abc
     // 1) A maybe is a indeed collection but a rather trivial one.
     // 2) Maybe<T> being a struct, I worry about hidden casts.
     // 3) Source of confusion (conflicts?) if we import the System.Linq namespace.
-    // Mode d'emploi:
-    // Iterable)   Implicit; see GetEnumerator().
-    // Enumerable) Requires an explicit conversion; see RepeatOrEmpty().
     public partial struct Maybe<T>
     {
         [Pure]
         public IEnumerator<T> GetEnumerator()
-            => Repeat(1).GetEnumerator();
+            => Yield(1).GetEnumerator();
 
         [Pure]
-        public IEnumerable<T> Repeat(int count)
+        public IEnumerable<T> Yield(int count)
             => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
-        // REVIEW: Optimize Repeat().
+        // REVIEW: Optimize Yield().
         // Beware, infinite loop!
         [Pure]
-        public IEnumerable<T> Repeat()
+        public IEnumerable<T> Yield()
         {
             if (_isSome)
             {
