@@ -13,10 +13,15 @@ namespace Abc
 
     // API overview.
     //
-    // Only one property (no property Value).
+    // Properties (no property Value).
+    // - None
     // - IsNone
     //
-    // Methods.
+    // Static methods:
+    // - Of()
+    // - Some()
+    //
+    // Instance methods.
     // - Bind()
     // - OrElse()
     // - Select()           map the value
@@ -46,11 +51,20 @@ namespace Abc
     // REVIEW: disposable exts, lazy exts, async exts, nullable attrs, notnull constraints.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
+    // IEquatable<T>, but a bit missleading?
+    // IComparable? See ValueTuple. IStructuralComparable, IComparable?
+    // Serializable?
+    // Enhance and improve async methods.
+    // Set ops (Union(), IntersectWith(), ...)
+    // Struct really? Compare w/ ValueTuple
+    // http://mustoverride.com/tuples_structs/
+    // https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
 
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
     /// value at all.
-    /// <para><see cref="Maybe{T}"/> is an immutable struct.</para>
+    /// <para><see cref="Maybe{T}"/> is a read-only struct. Beware, if T is a
+    /// mutable reference type, it "infects" this struct too.</para>
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
@@ -519,7 +533,6 @@ namespace Abc
     }
 
     // Interface IEquatable<>.
-    // REVIEW: IEquatable<T>?
     // We could say that a maybe is either an empty set or a singleton.
     public partial struct Maybe<T>
     {
@@ -565,6 +578,8 @@ namespace Abc
                 ? other._isSome && (comparer ?? s_DefaultComparer).Equals(_value, other._value)
                 : !other._isSome;
 
+        // Maybe<T> being a struct it is never equal to null, therefore
+        // Contains(null) always returns false.
         [Pure]
         public bool Contains(T value)
             => _isSome && s_DefaultComparer.Equals(_value, value);
