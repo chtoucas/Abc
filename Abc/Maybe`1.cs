@@ -19,33 +19,38 @@ namespace Abc
 
     // Overview.
     //
-    // An option type for C#.
-    // The intended usage for Maybe<T> is when T is a value type, a string,
-    // a read-only record, or a function. For other reference types, I guess
+    // The structure Maybe<T> is an option type for C#.
+    // The intended usage for it is when T is a value type, a string,
+    // a (read-only?) record, or a function. For other reference types,
     // it should be fine as long as T is an **immutable** reference type.
     //
-    // Properties (no property Value).
-    // - None
+    // Static properties.
+    // - Maybe<T>.None
+    // - Maybe.None
+    // - Maybe.Unit
+    //
+    // Instance properties (no public access to the enclosed value, ie no property Value).
     // - IsNone
     //
-    // Static methods:
-    // - Of()
-    // - Some()
+    // Static factories (no public ctor).
+    // - Maybe.Of()
+    // - Maybe.Some()       specialized form of Of() but for value types
+    // - Maybe.Guard()
     //
-    // Instance methods.
+    // Instance methods where the result is another maybe.
     // - Bind()
-    // - OrElse()
-    // - Select()           map the value
-    // - Where()            filter / value
-    // - SelectMany()
-    // - Join()
+    // - Select()           LINQ select
+    // - SelectMany()       LINQ select many
+    // - Where()            LINQ filter
+    // - Join()             LINQ join
+    // - OrElse()           coalescing
+    // - ZipWith()
     // - Apply()
     // - ReplaceWith()
     // - ContinueWith()
     // - PassThru()
     // - Skip()
     // - Replicate()
-    // - ZipWith()
     //
     // Safe escapes from a maybe.
     // - Switch()           pattern matching
@@ -54,13 +59,14 @@ namespace Abc
     // - OnSome()           side-effects actions
     // - GetEnumerator()    iterable (implicit)
     // - Yield()            enumerable (explicit)
-    // - Contains()         set-like
+    // - Contains()         singleton or empty set
 
     // REVIEW: disposable exts, lazy exts, async exts, nullable attrs, notnull constraints.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
     // IEquatable<T>, IComparable<T> but a bit missleading?
     // Serializable?
+    // More LINQ?
     // Enhance and improve async methods.
     // Set ops (Union(), IntersectWith(), ...)
     // Struct really? Compare w/ ValueTuple
