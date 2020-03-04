@@ -149,7 +149,11 @@ namespace Abc
 
         [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Maybe.Flatten()")]
         public static explicit operator Maybe<T>(Maybe<Maybe<T>> maybe)
-            => maybe._isSome ? maybe._value : Maybe<T>.None;
+            => maybe.Flatten();
+
+        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Maybe<T>.Duplicate()")]
+        public static explicit operator Maybe<Maybe<T>>(Maybe<T> maybe)
+            => maybe.Duplicate();
 
         /// <summary>
         /// Represents a debugger type proxy for <see cref="Maybe{T}"/>.
