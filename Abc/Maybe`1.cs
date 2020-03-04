@@ -13,6 +13,7 @@ namespace Abc
     using System.Threading.Tasks;
 
     using EF = Utilities.ExceptionFactory;
+    using Anexn = System.ArgumentNullException;
 
     // API overview.
     //
@@ -47,21 +48,20 @@ namespace Abc
     // - Yield()            enumerable (explicit)
     // - Contains()         set-like
 
-    // REVIEW: API
-    // - ReplaceWith() -> ContinueWith()
-    // - Skip(predicate)
-
     // REVIEW: disposable exts, lazy exts, async exts, nullable attrs, notnull constraints.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
-    // IEquatable<T>, but a bit missleading?
-    // IComparable? See ValueTuple. IStructuralComparable, IComparable?
+    // IEquatable<T>, IComparable<T> but a bit missleading?
     // Serializable?
     // Enhance and improve async methods.
     // Set ops (Union(), IntersectWith(), ...)
     // Struct really? Compare w/ ValueTuple
     // http://mustoverride.com/tuples_structs/
     // https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
+    //
+    // API
+    // - ReplaceWith() -> ContinueWith()
+    // - Skip(predicate)
 
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
@@ -71,8 +71,6 @@ namespace Abc
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
-    // REVIEW: comparable ops.
-    [SuppressMessage("Design", "CA1036:Override methods on comparable types")]
     public readonly partial struct Maybe<T>
         : IEquatable<Maybe<T>>, IStructuralEquatable,
             IComparable<Maybe<T>>, IComparable, IStructuralComparable
@@ -98,7 +96,7 @@ namespace Abc
         }
 
         /// <summary>
-        /// Checks whether the current instance is "none" or not.
+        /// Checks whether the current instance is empty or not.
         /// </summary>
         public bool IsNone => !_isSome;
 
@@ -165,7 +163,7 @@ namespace Abc
         [Pure]
         public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
         {
-            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
+            if (binder is null) { throw new Anexn(nameof(binder)); }
 
             return _isSome ? binder(_value) : Maybe<TResult>.None;
         }
@@ -191,12 +189,12 @@ namespace Abc
         {
             if (_isSome)
             {
-                if (caseSome is null) { throw new ArgumentNullException(nameof(caseSome)); }
+                if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
                 return caseSome(_value);
             }
             else
             {
-                if (caseNone is null) { throw new ArgumentNullException(nameof(caseNone)); }
+                if (caseNone is null) { throw new Anexn(nameof(caseNone)); }
                 return caseNone();
             }
         }
@@ -212,7 +210,7 @@ namespace Abc
         {
             if (_isSome)
             {
-                if (caseSome is null) { throw new ArgumentNullException(nameof(caseSome)); }
+                if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
                 return caseSome(_value);
             }
             else
@@ -230,12 +228,12 @@ namespace Abc
         {
             if (_isSome)
             {
-                if (onSome is null) { throw new ArgumentNullException(nameof(onSome)); }
+                if (onSome is null) { throw new Anexn(nameof(onSome)); }
                 onSome(_value);
             }
             else
             {
-                if (onNone is null) { throw new ArgumentNullException(nameof(onNone)); }
+                if (onNone is null) { throw new Anexn(nameof(onNone)); }
                 onNone();
             }
         }
@@ -251,7 +249,7 @@ namespace Abc
         {
             if (_isSome)
             {
-                if (action is null) { throw new ArgumentNullException(nameof(action)); }
+                if (action is null) { throw new Anexn(nameof(action)); }
                 action(_value);
             }
         }
@@ -284,7 +282,7 @@ namespace Abc
             }
             else
             {
-                if (valueFactory is null) { throw new ArgumentNullException(nameof(valueFactory)); }
+                if (valueFactory is null) { throw new Anexn(nameof(valueFactory)); }
                 return valueFactory();
             }
         }
@@ -302,7 +300,7 @@ namespace Abc
             }
             else
             {
-                if (exceptionFactory is null) { throw new ArgumentNullException(nameof(exceptionFactory)); }
+                if (exceptionFactory is null) { throw new Anexn(nameof(exceptionFactory)); }
                 throw exceptionFactory();
             }
         }
@@ -316,7 +314,7 @@ namespace Abc
         [Pure]
         public Maybe<TResult> Select<TResult>(Func<T, TResult> selector)
         {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+            if (selector is null) { throw new Anexn(nameof(selector)); }
 
             return _isSome ? Maybe.Of(selector(_value)) : Maybe<TResult>.None;
         }
@@ -324,7 +322,7 @@ namespace Abc
         [Pure]
         public Maybe<T> Where(Func<T, bool> predicate)
         {
-            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
+            if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
             return _isSome && predicate(_value) ? this : None;
         }
@@ -335,8 +333,8 @@ namespace Abc
             Func<T, Maybe<TMiddle>> selector,
             Func<T, TMiddle, TResult> resultSelector)
         {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
-            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+            if (selector is null) { throw new Anexn(nameof(selector)); }
+            if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
 
             if (!_isSome) { return Maybe<TResult>.None; }
 
@@ -353,7 +351,13 @@ namespace Abc
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector)
         {
-            return Join(inner, outerKeySelector, innerKeySelector, resultSelector, null!);
+            if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+            return JoinImpl(
+                inner, outerKeySelector, innerKeySelector, resultSelector,
+                EqualityComparer<TKey>.Default);
         }
 
         [Pure]
@@ -364,16 +368,29 @@ namespace Abc
             Func<T, TInner, TResult> resultSelector,
             IEqualityComparer<TKey> comparer)
         {
-            if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
-            if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
-            if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+            if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+            if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
+            return JoinImpl(
+                inner, outerKeySelector, innerKeySelector, resultSelector, comparer);
+        }
+
+        [Pure]
+        private Maybe<TResult> JoinImpl<TInner, TKey, TResult>(
+            Maybe<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector,
+            IEqualityComparer<TKey> comparer)
+        {
             if (_isSome && inner._isSome)
             {
                 var outerKey = outerKeySelector(_value);
                 var innerKey = innerKeySelector(inner._value);
 
-                if ((comparer ?? EqualityComparer<TKey>.Default).Equals(outerKey, innerKey))
+                if (comparer.Equals(outerKey, innerKey))
                 {
                     return Maybe.Of(resultSelector(_value, inner._value));
                 }
@@ -394,16 +411,17 @@ namespace Abc
         //    Func<T, Maybe<TInner>, TResult> resultSelector,
         //    IEqualityComparer<TKey> comparer)
         //{
-        //    if (outerKeySelector is null) { throw new ArgumentNullException(nameof(outerKeySelector)); }
-        //    if (innerKeySelector is null) { throw new ArgumentNullException(nameof(innerKeySelector)); }
-        //    if (resultSelector is null) { throw new ArgumentNullException(nameof(resultSelector)); }
+        //    if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+        //    if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+        //    if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+        //    if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
         //    if (_isSome && inner._isSome)
         //    {
         //        var outerKey = outerKeySelector(_value);
         //        var innerKey = innerKeySelector(inner._value);
 
-        //        if ((comparer ?? EqualityComparer<TKey>.Default).Equals(outerKey, innerKey))
+        //        if (comparer.Equals(outerKey, innerKey))
         //        {
         //            return Maybe.Of(resultSelector(_value, inner));
         //        }
@@ -420,7 +438,7 @@ namespace Abc
         public async Task<Maybe<TResult>> BindAsync<TResult>(
             Func<T, Task<Maybe<TResult>>> binder)
         {
-            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
+            if (binder is null) { throw new Anexn(nameof(binder)); }
 
             return _isSome ? await binder(_value).ConfigureAwait(false)
                 : Maybe<TResult>.None; ;
@@ -430,7 +448,7 @@ namespace Abc
         public async Task<Maybe<TResult>> SelectAsync<TResult>(
             Func<T, Task<TResult>> selector)
         {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+            if (selector is null) { throw new Anexn(nameof(selector)); }
 
             return _isSome ? Maybe.Of(await selector(_value).ConfigureAwait(false))
                 : Maybe<TResult>.None;
@@ -439,7 +457,7 @@ namespace Abc
         [Pure]
         public async Task<Maybe<T>> OrElseAsync(Task<Maybe<T>> other)
         {
-            if (other is null) { throw new ArgumentNullException(nameof(other)); }
+            if (other is null) { throw new Anexn(nameof(other)); }
 
             return _isSome ? this : await other.ConfigureAwait(false);
         }
@@ -450,12 +468,12 @@ namespace Abc
         {
             if (_isSome)
             {
-                if (caseSome is null) { throw new ArgumentNullException(nameof(caseSome)); }
+                if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
                 return await caseSome(_value).ConfigureAwait(false);
             }
             else
             {
-                if (caseNone is null) { throw new ArgumentNullException(nameof(caseNone)); }
+                if (caseNone is null) { throw new Anexn(nameof(caseNone)); }
                 return await caseNone.ConfigureAwait(false);
             }
         }
@@ -501,7 +519,7 @@ namespace Abc
             Maybe<TOther> other,
             Func<T, TOther, TResult> zipper)
         {
-            if (zipper is null) { throw new ArgumentNullException(nameof(zipper)); }
+            if (zipper is null) { throw new Anexn(nameof(zipper)); }
 
             return _isSome && other._isSome
                 ? Maybe.Of(zipper(_value, other._value))
@@ -547,23 +565,69 @@ namespace Abc
     // Interface IComparable<>.
     public partial struct Maybe<T>
     {
+        /// <summary>
+        /// Compares the two specified instances to see if the left one is
+        /// strictly less than the right one.
+        /// </summary>
+        public static bool operator <(Maybe<T> left, Maybe<T> right)
+            => left.CompareTo(right) < 0;
+
+        /// <summary>
+        /// Compares the two specified instances to see if the left one is
+        /// less than or equal to the right one.
+        /// </summary>
+        public static bool operator <=(Maybe<T> left, Maybe<T> right)
+            => left.CompareTo(right) <= 0;
+
+        /// <summary>
+        /// Compares the two specified instances to see if the left one is
+        /// strictly greater than the right one.
+        /// </summary>
+        public static bool operator >(Maybe<T> left, Maybe<T> right)
+            => left.CompareTo(right) > 0;
+
+        /// <summary>
+        /// Compares the two specified instances to see if the left one is
+        /// greater than or equal to the right one.
+        /// </summary>
+        public static bool operator >=(Maybe<T> left, Maybe<T> right)
+            => left.CompareTo(right) >= 0;
+
+        /// <summary>
+        /// Compares this instance to a specified <see cref="Maybe{T}"/> object.
+        /// </summary>
+        /// <remarks>
+        /// The convention is that the empty maybe is strictly less than any
+        /// other maybe.
+        /// </remarks>
         public int CompareTo(Maybe<T> other)
-            => Comparer<T>.Default.Compare(_value, other._value);
+            => _isSome
+                ? other._isSome ? Comparer<T>.Default.Compare(_value, other._value) : 1
+                : other._isSome ? -1 : 0;
 
-        int IComparable.CompareTo(object? other)
+        int IComparable.CompareTo(object? obj)
         {
-            if (other is null) { return 1; }
-            if (!(other is Maybe<T> maybe)) { throw EF.InvalidComparaison(nameof(other)); }
+            if (obj is null) { return 1; }
+            if (!(obj is Maybe<T> maybe))
+            {
+                throw EF.InvalidType(nameof(obj), typeof(Maybe<>), obj);
+            }
 
-            return Comparer<T>.Default.Compare(_value, maybe._value);
+            return CompareTo(maybe);
         }
 
         int IStructuralComparable.CompareTo(object? other, IComparer comparer)
         {
             if (other is null) { return 1; }
-            if (!(other is Maybe<T> maybe)) { throw EF.InvalidComparaison(nameof(other)); }
+            if (!(other is Maybe<T> maybe))
+            {
+                throw EF.InvalidType(nameof(other), typeof(Maybe<>), other);
+            }
+            if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
-            return (comparer ?? Comparer<T>.Default).Compare(_value, maybe._value);
+            return _isSome
+                ? maybe._isSome ? comparer.Compare(_value, maybe._value) : 1
+                : maybe._isSome ? -1 : 0;
         }
     }
 
@@ -585,8 +649,8 @@ namespace Abc
             => !left.Equals(right);
 
         /// <summary>
-        /// Determines whether this instance is equal to the value of the
-        /// specified <see cref="Maybe{T}"/>.
+        /// Determines whether this instance is equal to the specified
+        /// <see cref="Maybe{T}"/>.
         /// </summary>
         [Pure]
         public bool Equals(Maybe<T> other)
@@ -597,14 +661,14 @@ namespace Abc
         public override bool Equals(object? obj)
             => obj is Maybe<T> maybe && Equals(maybe);
 
+        /// <inheritdoc />
         [Pure]
         bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer)
         {
-            if (!(other is Maybe<T> maybe)) { return false; }
+            if (other is null || !(other is Maybe<T> maybe)) { return false; }
+            if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
-            return _isSome
-                ? maybe._isSome
-                    && (comparer ?? EqualityComparer<T>.Default).Equals(_value, maybe._value)
+            return _isSome ? maybe._isSome && comparer.Equals(_value, maybe._value)
                 : !maybe._isSome;
         }
 
@@ -613,8 +677,13 @@ namespace Abc
         public override int GetHashCode()
             => _value?.GetHashCode() ?? 0;
 
+        /// <inheritdoc />
         [Pure]
         int IStructuralEquatable.GetHashCode(IEqualityComparer comparer)
-            => _isSome ? (comparer ?? EqualityComparer<T>.Default).GetHashCode(_value) : 0;
+        {
+            if (comparer is null) { throw new Anexn(nameof(comparer)); }
+
+            return _isSome ? comparer.GetHashCode(_value) : 0;
+        }
     }
 }

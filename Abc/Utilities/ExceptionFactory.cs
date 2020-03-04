@@ -5,6 +5,7 @@
 namespace Abc.Utilities
 {
     using System;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -18,8 +19,11 @@ namespace Abc.Utilities
             => new InvalidOperationException("The sequence was empty.");
 
         [Pure]
-        public static ArgumentException InvalidComparaison(string paramName)
-            // TODO: exn message.
-            => new ArgumentException("XXX", paramName);
+        [DebuggerStepThrough]
+        public static ArgumentException InvalidType(
+            string paramName, Type expected, object obj)
+            => new ArgumentException(
+                $"The object should be of type {expected} but it is of type {obj.GetType()}.",
+                paramName);
     }
 }
