@@ -7,8 +7,6 @@ namespace Abc.Fx
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-    using Abc.Linq;
-
     // Monad
     // =====
     //
@@ -18,15 +16,99 @@ namespace Abc.Fx
     //
     // Methods
     // -------
-    // Bare minimum:
-    // - >>=        obj.Bind()
-    // - >>
-    // - return
+    // Bare minimum (>>= or fmap):
+    // - >>=            obj.Bind()
+    // - fmap           obj.Select()
+    // - >>             ext.ContinueWith() in Applicative
+    // - return         Mayhap<T>.η()
     // - fail
     //
     // Standard API:
+    // - mapM & mapM_
+    // - forM & forM_
+    // - sequence & sequence_
+    // - <<=                        Func$.Invoke()
+    // - >=>                        Func$.Compose()
+    // - <=<                        Func$.ComposeBack()
+    // - forever
+    // - void                       obj.Skip() in Functor
+    //
+    // - join                       Mayhap<T>.μ()
+    // - msum                       IEnumerable<Mayhap<T>>.Collect()
+    // - mfilter                    ext.Where()
+    // - filterM
+    // - mapAndUnzipM
+    // - zipWithM & zipWithM_
+    // - foldM & foldM_
+    // - replicateM & replicateM_   ext.Replicate()
+    //
+    // - guard                      Mayhap.Guard()
+    // - when
+    // - unless
+    //
+    // - liftM
+    // - liftM2
+    // - liftM3
+    // - liftM4
+    // - liftM5
+    // - ap
+    //
+    // - <$!>
     public partial class Mayhap
     {
+        /// <summary>(=&lt;&lt;)</summary>
+        [Pure]
+        public static Mayhap<TResult> Invoke<TSource, TResult>(
+            this Func<TSource, Mayhap<TResult>> @this, Mayhap<TSource> value)
+        {
+            // (=<<) :: Monad m => (a -> m b) -> m a -> m b | infixr 1 |
+            // f =<< x = x >>= f
+
+            return value.Bind(@this);
+        }
+
+        /// <summary>(&gt;=&gt;)</summary>
+        [Pure]
+        public static Func<TSource, Mayhap<TResult>> Compose<TSource, TMiddle, TResult>(
+            this Func<TSource, Mayhap<TMiddle>> @this, Func<TMiddle, Mayhap<TResult>> other)
+        {
+            // (>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c | infixr 1 |
+            // f >=> g = \x -> f x >>= g
+
+            Require.NotNull(@this, nameof(@this));
+
+            return x => @this(x).Bind(other);
+        }
+
+        /// <summary>(&lt;=&lt;)</summary>
+        [Pure]
+        public static Func<TSource, Mayhap<TResult>> ComposeBack<TSource, TMiddle, TResult>(
+            this Func<TMiddle, Mayhap<TResult>> @this, Func<TSource, Mayhap<TMiddle>> other)
+        {
+            // (<=<) :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c | infixr 1 |
+            // (<=<) = flip (>=>)
+
+            Require.NotNull(other, nameof(other));
+
+            return x => other(x).Bind(@this);
+        }
+    }
+
+    public partial class Mayhap
+    {
+        /// <summary>msum</summary>
+        [Pure]
+        public static Mayhap<T> Any<T>(this IEnumerable<Mayhap<T>> source)
+        {
+            // msum :: (Foldable t, MonadPlus m) => t (m a) -> m a
+            // msum = asum
+            //
+            // asum :: (Foldable t, Alternative f) => t (f a) -> f a
+            // asum = foldr (<|>) empty
+
+            return source.Aggregate(Zero<T>(), (m, n) => m.Otherwise(n));
+        }
+
         /// <summary>mfilter</summary>
         [Pure]
         public static Mayhap<T> Where<T>(this Mayhap<T> @this, Func<T, bool> predicate)
@@ -44,31 +126,50 @@ namespace Abc.Fx
             return @this.Bind(x => predicate(x) ? Mayhap<T>.Some(x) : Mayhap<T>.None);
         }
 
+        /// <summary>filterM</summary>
+        [Pure]
+        public static Mayhap<IEnumerable<TSource>> WhereAny<TSource>(
+            this IEnumerable<TSource> source, Func<TSource, Mayhap<bool>> predicate)
+        {
+            // filterM :: Applicative m => (a -> m Bool) -> [a] -> m [a]
+            // filterM p = foldr (\ x -> liftA2 (\ flg -> if flg then (x:) else id) (p x)) (pure [])
+            //
+            // This generalizes the list-based filter function.
+
+            return source.Aggregate(
+                Empty<TSource>(),
+                (m, x) => predicate(x).ZipWith(m, __zipper(x)));
+
+            Func<bool, IEnumerable<TSource>, IEnumerable<TSource>> __zipper(TSource item)
+                => (b, seq) => b ? seq.Append(item) : seq;
+        }
+            /// <summary>replicateM</summary>
+        [Pure]
         public static Mayhap<IEnumerable<T>> Replicate<T>(this Mayhap<T> @this, int count)
         {
-            return @this.Select(x => Enumerable.Repeat(x, count));
-        }
+            // replicateM :: Applicative m => Int -> m a -> m [a]
+            // replicateM cnt0 f =
+            //     loop cnt0
+            //   where
+            //     loop cnt
+            //       | cnt <= 0 = pure []
+            //       | otherwise = liftA2 (:) f (loop (cnt - 1))
+            //
+            // replicateM n act performs the action n times, gathering the results.
 
-        public static Mayhap<IEnumerable<T>> Replicate<T>(this Mayhap<T> @this)
-        {
-            return @this.Select(Sequence.Repeat);
+            return @this.Select(x => Enumerable.Repeat(x, count));
         }
     }
 
     public partial class Mayhap
     {
-        /// <summary>msum</summary>
-        [Pure]
-        public static Mayhap<T> Any<T>(IEnumerable<Mayhap<T>> source)
-        {
-            // msum :: (Foldable t, MonadPlus m) => t (m a) -> m a
-            // msum = asum
-            //
-            // asum :: (Foldable t, Alternative f) => t (f a) -> f a
-            // asum = foldr (<|>) empty
+        public static readonly Mayhap<Unit> Unit = Mayhap<Unit>.Some(default);
 
-            return source.Aggregate(Zero<T>(), (m, n) => m.Otherwise(n));
-        }
+        public static readonly Mayhap<Unit> None = Mayhap<Unit>.None;
+
+        [Pure]
+        public static Mayhap<Unit> Guard(bool predicate)
+            => predicate ? Unit : None;
     }
 
     // ZipWith

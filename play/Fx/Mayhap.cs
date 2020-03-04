@@ -7,19 +7,8 @@ namespace Abc.Fx
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-    public static partial class Mayhap
-    {
-        public static readonly Mayhap<Unit> Unit = Mayhap<Unit>.Some(default);
-
-        public static readonly Mayhap<Unit> None = Mayhap<Unit>.None;
-
-        [Pure]
-        public static Mayhap<Unit> Guard(bool predicate)
-            => predicate ? Unit : None;
-    }
-
     // Query Expression Pattern aka LINQ.
-    public partial class Mayhap
+    public static partial class Mayhap
     {
         [Pure]
         public static Mayhap<TResult> SelectMany<T, TMiddle, TResult>(
@@ -109,35 +98,6 @@ namespace Abc.Fx
 
         //    return Mayhap<TResult>.None;
         //}
-    }
-
-    // Extension methods for functions in the Kleisli category.
-    public partial class Mayhap
-    {
-        [Pure]
-        public static Mayhap<TResult> Invoke<TSource, TResult>(
-            this Func<TSource, Mayhap<TResult>> @this, Mayhap<TSource> value)
-        {
-            return value.Bind(@this);
-        }
-
-        [Pure]
-        public static Func<TSource, Mayhap<TResult>> Compose<TSource, TMiddle, TResult>(
-            this Func<TSource, Mayhap<TMiddle>> @this, Func<TMiddle, Mayhap<TResult>> other)
-        {
-            Require.NotNull(@this, nameof(@this));
-
-            return x => @this(x).Bind(other);
-        }
-
-        [Pure]
-        public static Func<TSource, Mayhap<TResult>> ComposeBack<TSource, TMiddle, TResult>(
-            this Func<TMiddle, Mayhap<TResult>> @this, Func<TSource, Mayhap<TMiddle>> other)
-        {
-            Require.NotNull(other, nameof(other));
-
-            return x => other(x).Bind(@this);
-        }
     }
 
     // Extension methods for Mayhap<T> where T is enumerable.

@@ -22,7 +22,19 @@ namespace Abc
             }
             else
             {
-                return new Failure<string, string>("Boum !!!");
+                return new Failure<string, string>("Boum!!!");
+            }
+        }
+
+        public static (Maybe<string> success, Maybe<string> err) TestMethod2(bool succeeded)
+        {
+            if (succeeded)
+            {
+                return (Maybe.Of("OK"), Maybe<string>.None);
+            }
+            else
+            {
+                return (Maybe<string>.None, Maybe.Of("Boum!!!"));
             }
         }
     }
