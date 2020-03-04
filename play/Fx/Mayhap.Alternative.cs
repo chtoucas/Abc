@@ -111,7 +111,7 @@ namespace Abc.Fx
             //
             // One or none.
 
-#if !STRICT_HASKELL
+#if STRICT_HASKELL
             return Map(Mayhap<T>.Some, @this).Otherwise(Pure(Mayhap<T>.None));
 #else
             return @this.Select(Mayhap<T>.Some).OrElse(Pure(Mayhap<T>.None));
