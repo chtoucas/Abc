@@ -3,7 +3,6 @@
 namespace Abc.Fx
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
@@ -30,12 +29,9 @@ namespace Abc.Fx
     /// Represents the trivial monad/comonad (pretty useless).
     /// <para><see cref="Ident{T}"/> is a read-only struct.</para>
     /// </summary>
-    public readonly partial struct Ident<T> : IEquatable<Ident<T>>, IStructuralEquatable
+    public readonly partial struct Ident<T> : IEquatable<Ident<T>>
         where T : notnull
     {
-        private static readonly IEqualityComparer s_DefaultComparer
-            = EqualityComparer<T>.Default;
-
         private readonly T _value;
 
         private Ident(T value)
@@ -45,20 +41,6 @@ namespace Abc.Fx
 
         public override string ToString()
             => $"({_value})";
-
-        [Pure]
-        public bool Contains(T value)
-            => s_DefaultComparer.Equals(_value, value);
-
-        [Pure]
-        public bool Contains(T value, IEqualityComparer comparer)
-            => (comparer ?? s_DefaultComparer).Equals(_value, value);
-
-        [Pure]
-        public IEnumerator<T> GetEnumerator()
-        {
-            yield return _value;
-        }
     }
 
     // It's a monad.
@@ -107,7 +89,7 @@ namespace Abc.Fx
             => new Ident<Ident<T>>(ident);
     }
 
-    // Interfaces IEquatable<>, IStructuralEquatable.
+    // Interface IEquatable<>.
     public partial struct Ident<T>
     {
         public static bool operator ==(Ident<T> left, Ident<T> right)
@@ -116,44 +98,16 @@ namespace Abc.Fx
         public static bool operator !=(Ident<T> left, Ident<T> right)
             => !left.Equals(right);
 
-        public static bool operator ==(Ident<T> left, T right)
-            => left.Contains(right);
-
-        public static bool operator !=(Ident<T> left, T right)
-            => !left.Contains(right);
-
-        public static bool operator ==(T left, Ident<T> right)
-            => right.Contains(left);
-
-        public static bool operator !=(T left, Ident<T> right)
-            => !right.Contains(left);
-
         [Pure]
         public bool Equals(Ident<T> other)
-            => s_DefaultComparer.Equals(_value, other._value);
-        [Pure]
-
-        public bool Equals(Ident<T> other, IEqualityComparer comparer)
-            => (comparer ?? s_DefaultComparer).Equals(_value, other._value);
+            => EqualityComparer<T>.Default.Equals(_value, other._value);
 
         [Pure]
         public override bool Equals(object? obj)
-            => obj is Ident<T> ident ? Equals(ident)
-                : obj is T value ? Contains(value)
-                : false;
-
-        [Pure]
-        bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer)
-            => other is Ident<T> ident ? Equals(ident, comparer)
-                : other is T value ? Contains(value, comparer)
-                : false;
+            => obj is Ident<T> ident && Equals(ident);
 
         [Pure]
         public override int GetHashCode()
             => _value.GetHashCode();
-
-        [Pure]
-        int IStructuralEquatable.GetHashCode(IEqualityComparer comparer)
-            => (comparer ?? s_DefaultComparer).GetHashCode(_value);
     }
 }
