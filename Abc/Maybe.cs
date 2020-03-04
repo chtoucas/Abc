@@ -8,6 +8,8 @@ namespace Abc
     using System.Diagnostics.Contracts;
     using System.Linq;
 
+    using Anexn = System.ArgumentNullException;
+
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
     /// <para>This class cannot be inherited.</para>
@@ -114,7 +116,7 @@ namespace Abc
         public static IEnumerable<T> CollectAny<T>(IEnumerable<Maybe<T>> source)
         {
             // Check args eagerly.
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
+            if (source is null) { throw new Anexn(nameof(source)); }
 
             return __iterator();
 
@@ -130,7 +132,7 @@ namespace Abc
         [Pure]
         public static Maybe<T> Any<T>(IEnumerable<Maybe<T>> source)
         {
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
+            if (source is null) { throw new Anexn(nameof(source)); }
 
             foreach (var item in source)
             {
@@ -156,7 +158,7 @@ namespace Abc
             this Maybe<TDisposable> @this, Func<TDisposable, Maybe<TResult>> binder)
             where TDisposable : IDisposable
         {
-            if (binder is null) { throw new ArgumentNullException(nameof(binder)); }
+            if (binder is null) { throw new Anexn(nameof(binder)); }
 
             return @this.Bind(x => { using (x) { return binder(x); } });
         }
@@ -167,7 +169,7 @@ namespace Abc
             this Maybe<TDisposable> @this, Func<TDisposable, TResult> selector)
             where TDisposable : IDisposable
         {
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+            if (selector is null) { throw new Anexn(nameof(selector)); }
 
             return @this.Select(x => { using (x) { return selector(x); } });
         }
@@ -190,7 +192,7 @@ namespace Abc
             this Func<TSource, Maybe<TMiddle>> @this,
             Func<TMiddle, Maybe<TResult>> other)
         {
-            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+            if (@this is null) { throw new Anexn(nameof(@this)); }
 
             return x => @this(x).Bind(other);
         }
@@ -200,7 +202,7 @@ namespace Abc
             this Func<TMiddle, Maybe<TResult>> @this,
             Func<TSource, Maybe<TMiddle>> other)
         {
-            if (other is null) { throw new ArgumentNullException(nameof(other)); }
+            if (other is null) { throw new Anexn(nameof(other)); }
 
             return x => other(x).Bind(@this);
         }
@@ -225,7 +227,7 @@ namespace Abc
             Maybe<T1> first,
             Maybe<T2> second)
         {
-            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+            if (@this is null) { throw new Anexn(nameof(@this)); }
 
             return first.IsSome && second.IsSome
                 ? Of(@this(first.Value, second.Value))
@@ -239,7 +241,7 @@ namespace Abc
             Maybe<T2> second,
             Maybe<T3> third)
         {
-            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+            if (@this is null) { throw new Anexn(nameof(@this)); }
 
             return first.IsSome && second.IsSome && third.IsSome
                 ? Of(@this(first.Value, second.Value, third.Value))
@@ -254,7 +256,7 @@ namespace Abc
             Maybe<T3> third,
             Maybe<T4> fourth)
         {
-            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+            if (@this is null) { throw new Anexn(nameof(@this)); }
 
             return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome
                 ? Of(@this(first.Value, second.Value, third.Value, fourth.Value))
@@ -270,7 +272,7 @@ namespace Abc
             Maybe<T4> fourth,
             Maybe<T5> fifth)
         {
-            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+            if (@this is null) { throw new Anexn(nameof(@this)); }
 
             return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome && fifth.IsSome
                 ? Of(@this(first.Value, second.Value, third.Value, fourth.Value, fifth.Value))
