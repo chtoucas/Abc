@@ -35,6 +35,7 @@ Abc.Maybe<T>.ValueOrElse(T other) -> T
 Abc.Maybe<T>.ValueOrThrow() -> T
 Abc.Maybe<T>.ValueOrThrow(System.Func<System.Exception> exceptionFactory) -> T
 Abc.Maybe<T>.Where(System.Func<T, bool> predicate) -> Abc.Maybe<T>
+Abc.Maybe<T>.XorElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.Yield() -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.Yield(int count) -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TOther, TResult> zipper) -> Abc.Maybe<TResult>

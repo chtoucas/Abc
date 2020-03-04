@@ -173,6 +173,66 @@ namespace Abc.Fx
         }
     }
 
+    // Just for fun.
+    public partial struct Mayhap<T>
+    {
+#pragma warning disable CA2225 // Operator overloads have named alternates
+        public static bool operator true(Mayhap<T> value)
+            => value._isSome;
+#pragma warning restore CA2225
+
+        public static bool operator false(Mayhap<T> value)
+            => !value._isSome;
+
+        // Logical AND.
+        // x & y is true if both x and y evaluate to true.
+        // Otherwise, the result is false.
+        //   None    & None    == None
+        //   None    & Some(2) == None
+        //   Some(1) & None    == None
+        //   Some(1) & Some(2) == Some(1)
+        // Identical to PassThru().
+        [Pure]
+        public Mayhap<T> And(Mayhap<T> other)
+            => other._isSome ? this : None;
+
+        // Alternative logical AND.
+        //   None    & None    == None
+        //   None    & Some(2) == None
+        //   Some(1) & None    == None
+        //   Some(1) & Some(2) == Some(2)
+        // Identical to ContinueWith()
+        [Pure]
+        public Mayhap<TResult> And<TResult>(Mayhap<TResult> other)
+            => _isSome ? other : Mayhap<TResult>.None;
+
+        // Logical OR.
+        // x | y is true if either x or y evaluates to true.
+        // Otherwise, the result is false.
+        //   None    | None    == None
+        //   None    | Some(2) == Some(2)
+        //   Some(1) | None    == Some(1)
+        //   Some(1) | Some(2) == Some(1)
+        // Identical to OrElse().
+        [Pure]
+        public Mayhap<T> Or(Mayhap<T> other)
+            => _isSome ? this : other;
+
+        // Logical XOR.
+        // x ^ y is true if x evaluates to true and y evaluates to false,
+        // or x evaluates to false and y evaluates to true.
+        // Otherwise, the result is false.
+        //   None    ^ None    == None
+        //   None    ^ Some(2) == Some(2)
+        //   Some(1) ^ None    == Some(1)
+        //   Some(1) ^ Some(2) == None
+        [Pure]
+        public Mayhap<T> Xor(Mayhap<T> other)
+            => _isSome
+                ? other._isSome ? None : this
+                : other._isSome ? other : None;
+    }
+
     // Interface IEquatable<>.
     public partial struct Mayhap<T>
     {

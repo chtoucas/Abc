@@ -72,15 +72,15 @@ namespace Abc
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
     // IEquatable<T>, IComparable<T> but a bit missleading?
-    // Serializable? More LINQ?
+    // Serializable? More LINQ (Sum w/ num types)?
     // Enhance and improve async methods.
     // Set ops (Union(), IntersectWith(), ...)
     // Struct really? Compare w/ ValueTuple
     // http://mustoverride.com/tuples_structs/
     // https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
-    //
+    // Bool ops? true, false, logical AND (&), OR (|), XOR (^)
+    // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
     // API
-    // - ReplaceWith() -> ContinueWith()
     // - Skip(predicate)
 
     /// <summary>
@@ -188,7 +188,17 @@ namespace Abc
             return _isSome ? binder(_value) : Maybe<TResult>.None;
         }
 
-        // Generalizes the null coalescing operator (??).
+        /// <remarks>
+        /// Generalizes the null-coalescing operator (??).
+        /// <code><![CDATA[
+        /// Some(1) ?? Some(2) == Some(1)
+        /// Some(1) ?? None    == Some(1)
+        /// None    ?? Some(2) == Some(2)
+        /// None    ?? None    == None
+        /// ]]></code>
+        /// This method can be though as an inclusive OR for maybe's, provided
+        /// that an empty maybe is said to be false.
+        /// </remarks>
         [Pure]
         public Maybe<T> OrElse(Maybe<T> other)
             => _isSome ? this : other;
@@ -331,7 +341,7 @@ namespace Abc
     // Query Expression Pattern aka LINQ.
     public partial struct Maybe<T>
     {
-        // LINQ syntax:
+        // Query expression syntax (maybe = this):
         //   from x in maybe
         //   select selector(x)
         [Pure]
@@ -342,7 +352,7 @@ namespace Abc
             return _isSome ? Maybe.Of(selector(_value)) : Maybe<TResult>.None;
         }
 
-        // LINQ syntax:
+        // Query expression syntax (maybe = this):
         //   from x in maybe
         //   where predicate(x)
         //   select x
@@ -354,9 +364,9 @@ namespace Abc
             return _isSome && predicate(_value) ? this : None;
         }
 
-        // Generalizes both Bind() and ZipWith<T, TMiddle, TResult>().
-        // LINQ syntax:
-        //   from x in m1
+        // Generalizes both Bind() and ZipWith().
+        // Query expression syntax (maybe = this):
+        //   from x in maybe
         //   from y in selector(x)
         //   select resultSelector(x, y)
         [Pure]
@@ -375,6 +385,11 @@ namespace Abc
             return Maybe.Of(resultSelector(_value, middle._value));
         }
 
+        // Query expression syntax (outer = this):
+        //   from x in outer
+        //   from y in inner
+        //     on outerKeySelector(x) equals innerKeySelector(y)
+        //   select resultSelector(x, y)
         [Pure]
         public Maybe<TResult> Join<TInner, TKey, TResult>(
             Maybe<TInner> inner,
@@ -387,10 +402,15 @@ namespace Abc
             if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
 
             return JoinImpl(
-                inner, outerKeySelector, innerKeySelector, resultSelector,
+                inner,
+                outerKeySelector,
+                innerKeySelector,
+                resultSelector,
                 EqualityComparer<TKey>.Default);
         }
 
+        // No query expression syntax.
+        // If comparer is null, the default equality comparer is used instead.
         [Pure]
         public Maybe<TResult> Join<TInner, TKey, TResult>(
             Maybe<TInner> inner,
@@ -402,10 +422,13 @@ namespace Abc
             if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
             if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
             if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
-            if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
             return JoinImpl(
-                inner, outerKeySelector, innerKeySelector, resultSelector, comparer);
+                inner,
+                outerKeySelector,
+                innerKeySelector,
+                resultSelector,
+                comparer ?? EqualityComparer<TKey>.Default);
         }
 
         [Pure]
@@ -520,8 +543,14 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        // Compare to the nullable equiv w/ int? where y is an int:
-        //   (x.HasValue ? (int?)y : (int?)null).
+        /// <remarks>
+        /// <code><![CDATA[
+        /// Some(1) & 2L == Some(2L)
+        /// None    & 2L == None
+        /// ]]></code>
+        /// </remarks>
+        // Compare to the nullable equiv w/ x an int? and y a long:
+        //   (x.HasValue ? (long?)y : (long?)null).
         [Pure]
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
             where TResult : notnull
@@ -529,21 +558,52 @@ namespace Abc
             return _isSome ? Maybe.Of(value) : Maybe<TResult>.None;
         }
 
-        // Compare to the nullable equiv w/ int? where y is an int?:
-        //   (x.HasValue ? y : (int?)null).
+        /// <remarks>
+        /// <code><![CDATA[
+        /// Some(1) & Some(2L) == Some(2L)
+        /// Some(1) & None     == None
+        /// None    & Some(2L) == None
+        /// None    & None     == None
+        /// ]]></code>
+        /// </remarks>
+        // Compare to the nullable equiv w/ x an int? and y a long?:
+        //   (x.HasValue ? y : (long?)null).
         [Pure]
         public Maybe<TResult> ContinueWith<TResult>(Maybe<TResult> other)
         {
             return _isSome ? other : Maybe<TResult>.None;
         }
 
-        // Compare to the nullable equiv w/ int? where (y:int?)
+        /// <remarks>
+        /// <code><![CDATA[
+        /// Some(1) & Some(2L) == Some(1)
+        /// Some(1) & None     == None
+        /// None    & Some(2L) == None
+        /// None    & None     == None
+        /// ]]></code>
+        /// </remarks>
+        // Compare to the nullable equiv w/ x an int? and y a long?:
         //   (y.HasValue ? x : (int?)null).
         [Pure]
         public Maybe<T> PassThru<TOther>(Maybe<TOther> other)
         {
             return other._isSome ? this : None;
         }
+
+        /// <remarks>
+        /// This method can be though as an exclusive OR for maybe's, provided
+        /// that an empty maybe is said to be false.
+        /// <code><![CDATA[
+        /// Some(1) ^ Some(2) == None
+        /// Some(1) ^ None    == Some(1)
+        /// None    ^ Some(2) == Some(2)
+        /// None    ^ None    == None
+        /// ]]></code>
+        /// </remarks>
+        [Pure]
+        public Maybe<T> XorElse(Maybe<T> other)
+            => _isSome ? other._isSome ? None : this
+                : other;
 
         [Pure]
         public Maybe<Unit> Skip()
