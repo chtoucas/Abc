@@ -54,6 +54,7 @@ namespace Abc
     // - PassThru()
     // - Skip()
     // - Replicate()
+    // - Duplicate()
     //
     // Async methods.
     // - BindAsync()
@@ -372,7 +373,7 @@ namespace Abc
         }
 
         /// <remarks>
-        /// Generalizes both Bind() and ZipWith().
+        /// Generalizes both <see cref="Bind"/> and <see cref="ZipWith"/>.
         /// </remarks>
         /// <example>
         /// Query expression syntax:
@@ -554,6 +555,18 @@ namespace Abc
     public partial struct Maybe<T>
     {
         [Pure]
+        public Maybe<TResult> ZipWith<TOther, TResult>(
+            Maybe<TOther> other,
+            Func<T, TOther, TResult> zipper)
+        {
+            if (zipper is null) { throw new Anexn(nameof(zipper)); }
+
+            return _isSome && other._isSome
+                ? Maybe.Of(zipper(_value, other._value))
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
         public Maybe<TResult> Apply<TResult>(Maybe<Func<T, TResult>> applicative)
         {
             return _isSome && applicative._isSome ? Maybe.Of(applicative._value(_value))
@@ -626,6 +639,10 @@ namespace Abc
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;
 
+        [Pure]
+        public Maybe<Maybe<T>> Duplicate()
+            => Maybe.Some(this);
+
         /// See also <seealso cref="Yield(int)"/>.
         /// <remarks>
         /// The difference with <see cref="Yield(int)"/> is in the treatment of
@@ -648,22 +665,6 @@ namespace Abc
         [Pure]
         public Maybe<IEnumerable<T>> Replicate()
             => Select(Sequence.Forever);
-
-        [Pure]
-        internal Maybe<Maybe<T>> Optional()
-            => Maybe.Some(_isSome ? this : Maybe<T>.None);
-
-        [Pure]
-        public Maybe<TResult> ZipWith<TOther, TResult>(
-            Maybe<TOther> other,
-            Func<T, TOther, TResult> zipper)
-        {
-            if (zipper is null) { throw new Anexn(nameof(zipper)); }
-
-            return _isSome && other._isSome
-                ? Maybe.Of(zipper(_value, other._value))
-                : Maybe<TResult>.None;
-        }
     }
 
     // Iterable but not IEnumerable<>.

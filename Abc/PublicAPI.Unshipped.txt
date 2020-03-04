@@ -10,6 +10,7 @@ Abc.Maybe<T>.CompareTo(Abc.Maybe<T> other) -> int
 Abc.Maybe<T>.Contains(T value) -> bool
 Abc.Maybe<T>.ContinueWith<TResult>(Abc.Maybe<TResult> other) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Do(System.Action<T> onSome, System.Action onNone) -> void
+Abc.Maybe<T>.Duplicate() -> Abc.Maybe<Abc.Maybe<T>>
 Abc.Maybe<T>.Equals(Abc.Maybe<T> other) -> bool
 Abc.Maybe<T>.GetEnumerator() -> System.Collections.Generic.IEnumerator<T>
 Abc.Maybe<T>.IsNone.get -> bool
