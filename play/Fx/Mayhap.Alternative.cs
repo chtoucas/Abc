@@ -27,7 +27,7 @@ namespace Abc.Fx
     // Standard API:
     // - some       Mayhap.Some()
     // - many       Mayhap.Many()
-    // - optional   ext.Square()
+    // - optional   ext.Optional()
     //
     public partial class Mayhap
     {
@@ -104,17 +104,17 @@ namespace Abc.Fx
             return Some(mayhap).Otherwise(Empty<T>());
         }
 
-        public static Mayhap<Mayhap<T>> Square<T>(this Mayhap<T> @this)
+        public static Mayhap<Mayhap<T>> Optional<T>(this Mayhap<T> @this)
         {
             // optional :: Alternative f => f a -> f (Maybe a)
             // optional v = Just <$> v <|> pure Nothing
             //
             // One or none.
 
-#if STRICT_HASKELL
+#if !STRICT_HASKELL
             return Map(Mayhap<T>.Some, @this).Otherwise(Pure(Mayhap<T>.None));
 #else
-            return Mayhap<Mayhap<T>>.Some(@this);
+            return @this.Select(Mayhap<T>.Some).OrElse(Pure(Mayhap<T>.None));
 #endif
         }
     }

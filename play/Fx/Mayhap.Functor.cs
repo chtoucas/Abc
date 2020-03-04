@@ -3,7 +3,6 @@
 namespace Abc.Fx
 {
     using System;
-    using System.Diagnostics.Contracts;
 
     // Functor
     // =======
@@ -36,7 +35,6 @@ namespace Abc.Fx
         /// <para>Create a new f b from an f a using the results of calling a
         /// function on every value in the f a.</para>
         /// </summary>
-        [Pure]
         public static Mayhap<TResult> Map<TSource, TResult>(
             Func<TSource, TResult> mapper,
             Mayhap<TSource> mayhap)
@@ -55,7 +53,6 @@ namespace Abc.Fx
         }
 
         /// <summary>(&lt;&amp;&gt;)</summary>
-        [Pure]
         public static Mayhap<TResult> Map<TSource, TResult>(
             this Mayhap<TSource> @this,
             Func<TSource, TResult> mapper)
@@ -83,7 +80,6 @@ namespace Abc.Fx
         /// <para>Create a new f a from an f b by replacing all of the values in
         /// the f b by a given value of type a.</para>
         /// </summary>
-        [Pure]
         public static Mayhap<TResult> ReplaceWith<TSource, TResult>(
             TResult value,
             Mayhap<TSource> mayhap)
@@ -118,7 +114,6 @@ namespace Abc.Fx
         /// <para>Create a new f b, from an f a by replacing all of the values
         /// in the f a by a given value of type b.</para>
         /// </summary>
-        [Pure]
         public static Mayhap<TResult> ReplaceWith<TSource, TResult>(
             this Mayhap<TSource> @this,
             TResult value)
@@ -146,7 +141,6 @@ namespace Abc.Fx
         /// <para>Create a new f () from an f a by replacing all of the values
         /// in the f a by ().</para>
         /// </summary>
-        [Pure]
         public static Mayhap<Unit> Skip<TSource>(
             this Mayhap<TSource> @this)
         {
@@ -171,7 +165,6 @@ namespace Abc.Fx
         /// (&lt;$&gt;>
         /// <para>An infix synonym for fmap.</para>
         /// </summary>
-        [Pure]
         public static Mayhap<TResult> Invoke<TSource, TResult>(
             this Func<TSource, TResult> @this,
             Mayhap<TSource> mayhap)

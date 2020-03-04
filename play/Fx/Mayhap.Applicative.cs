@@ -3,8 +3,6 @@
 namespace Abc.Fx
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     // Applicative Functor
     // ===================
@@ -42,8 +40,7 @@ namespace Abc.Fx
         /// pure
         /// <para>Embed pure expressions, ie lift a value.</para>
         /// </summary>
-        [Pure]
-        public static Mayhap<T> Pure<T>([AllowNull]T value)
+        public static Mayhap<T> Pure<T>(T value)
         {
 #if STRICT_HASKELL
             throw new NotImplementedException("Applicative pure");
@@ -57,7 +54,6 @@ namespace Abc.Fx
         /// <para>Sequence actions, discarding the value of the first argument.
         /// </para>
         /// </summary>
-        [Pure]
         public static Mayhap<TResult> ContinueWith<TSource, TResult>(
             this Mayhap<TSource> @this,
             Mayhap<TResult> other)
@@ -86,7 +82,6 @@ namespace Abc.Fx
         /// <para>Sequence actions, discarding the value of the second argument.
         /// </para>
         /// </summary>
-        [Pure]
         public static Mayhap<TSource> PassThru<TSource, TOther>(
             this Mayhap<TSource> @this,
             Mayhap<TOther> other)
@@ -105,7 +100,6 @@ namespace Abc.Fx
         /// (&lt;**&gt;)
         /// <para>A variant of (&lt;*&gt;) with the arguments reversed.</para>
         /// </summary>
-        [Pure]
         public static Mayhap<TResult> Apply<TSource, TResult>(
             this Mayhap<TSource> @this,
             Mayhap<Func<TSource, TResult>> applicative)
@@ -136,7 +130,6 @@ namespace Abc.Fx
         //
         //   In many situations, the liftM operations can be replaced by uses of
         //   ap, which promotes function application.
-        [Pure]
         public static Mayhap<TResult> Invoke<TSource, TResult>(
             this Mayhap<Func<TSource, TResult>> @this,
             Mayhap<TSource> mayhap)
@@ -162,7 +155,6 @@ namespace Abc.Fx
         /// (&lt;*&gt;)
         /// <para>Sequential application.</para>
         /// </summary>
-        [Pure]
         public static Mayhap<TResult> Invoke<T1, T2, TResult>(
             this Mayhap<Func<T1, T2, TResult>> @this,
             Mayhap<T1> m1,
@@ -186,7 +178,6 @@ namespace Abc.Fx
         /// (&lt;*&gt;)
         /// <para>Sequential application.</para>
         /// </summary>
-        [Pure]
         public static Mayhap<TResult> Invoke<T1, T2, T3, TResult>(
             this Mayhap<Func<T1, T2, T3, TResult>> @this,
             Mayhap<T1> m1,
@@ -212,7 +203,6 @@ namespace Abc.Fx
         /// liftA
         /// <para>Lift a function to actions.</para>
         /// </summary>
-        [Pure]
         public static Func<Mayhap<TSource>, Mayhap<TResult>> Lift<TSource, TResult>(
             Func<TSource, TResult> func)
         {
@@ -236,7 +226,6 @@ namespace Abc.Fx
         /// liftA2
         /// <para>Lift a binary function to actions.</para>
         /// </summary>
-        [Pure]
         public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<TResult>> Lift<T1, T2, TResult>(
             Func<T1, T2, TResult> func)
         {
@@ -266,7 +255,6 @@ namespace Abc.Fx
         /// liftA3
         /// <para>Lift a ternary function to actions.</para>
         /// </summary>
-        [Pure]
         public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<T3>, Mayhap<TResult>>
             Lift<T1, T2, T3, TResult>(
             Func<T1, T2, T3, TResult> func)

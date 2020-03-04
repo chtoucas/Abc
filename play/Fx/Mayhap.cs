@@ -4,13 +4,11 @@ namespace Abc.Fx
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     // Query Expression Pattern aka LINQ.
     public static partial class Mayhap
     {
-        [Pure]
         public static Mayhap<TResult> SelectMany<T, TMiddle, TResult>(
             this Mayhap<T> @this,
             Func<T, Mayhap<TMiddle>> selector,
@@ -24,7 +22,6 @@ namespace Abc.Fx
                     middle => resultSelector(x, middle)));
         }
 
-        [Pure]
         public static Mayhap<TResult> Join<T, TInner, TKey, TResult>(
             this Mayhap<T> @this,
             Mayhap<TInner> inner,
@@ -35,7 +32,6 @@ namespace Abc.Fx
             return Join(@this, inner, outerKeySelector, innerKeySelector, resultSelector, null!);
         }
 
-        [Pure]
         public static Mayhap<TResult> Join<T, TInner, TKey, TResult>(
             this Mayhap<T> @this,
             Mayhap<TInner> inner,
@@ -72,7 +68,6 @@ namespace Abc.Fx
         // GroupJoin currently disabled.
         //
 
-        //[Pure]
         //public static Mayhap<TResult> GroupJoin<T, TInner, TKey, TResult>(
         //    this Mayhap<T> @this,
         //    Mayhap<TInner> inner,
@@ -106,11 +101,9 @@ namespace Abc.Fx
     // - Aggregation: Any.
     public partial class Mayhap
     {
-        [Pure]
         public static Mayhap<IEnumerable<T>> Empty<T>()
             => MayhapEnumerable_<T>.Empty;
 
-        [Pure]
         public static Mayhap<IEnumerable<T>> CollectAny<T>(IEnumerable<Mayhap<T>> source)
         {
             var seed = MayhapEnumerable_<T>.Empty;

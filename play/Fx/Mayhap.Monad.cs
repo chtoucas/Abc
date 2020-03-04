@@ -4,7 +4,6 @@ namespace Abc.Fx
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     // Monad
@@ -56,7 +55,6 @@ namespace Abc.Fx
     // - <$!>
     public partial class Mayhap
     {
-        [Pure]
         public static Mayhap<IEnumerable<TResult>> SelectAny<TSource, TResult>(
             this IEnumerable<TSource> source,
             Func<TSource, Mayhap<TResult>> selector)
@@ -79,7 +77,6 @@ namespace Abc.Fx
         }
 
         /// <summary>(=&lt;&lt;)</summary>
-        [Pure]
         public static Mayhap<TResult> Invoke<TSource, TResult>(
             this Func<TSource, Mayhap<TResult>> @this, Mayhap<TSource> value)
         {
@@ -90,7 +87,6 @@ namespace Abc.Fx
         }
 
         /// <summary>(&gt;=&gt;)</summary>
-        [Pure]
         public static Func<TSource, Mayhap<TResult>> Compose<TSource, TMiddle, TResult>(
             this Func<TSource, Mayhap<TMiddle>> @this, Func<TMiddle, Mayhap<TResult>> other)
         {
@@ -103,7 +99,6 @@ namespace Abc.Fx
         }
 
         /// <summary>(&lt;=&lt;)</summary>
-        [Pure]
         public static Func<TSource, Mayhap<TResult>> ComposeBack<TSource, TMiddle, TResult>(
             this Func<TMiddle, Mayhap<TResult>> @this, Func<TSource, Mayhap<TMiddle>> other)
         {
@@ -119,7 +114,6 @@ namespace Abc.Fx
     public partial class Mayhap
     {
         /// <summary>msum</summary>
-        [Pure]
         public static Mayhap<T> Any<T>(this IEnumerable<Mayhap<T>> source)
         {
             // msum :: (Foldable t, MonadPlus m) => t (m a) -> m a
@@ -132,7 +126,6 @@ namespace Abc.Fx
         }
 
         /// <summary>mfilter</summary>
-        [Pure]
         public static Mayhap<T> Where<T>(this Mayhap<T> @this, Func<T, bool> predicate)
         {
             // mfilter :: (MonadPlus m) => (a -> Bool) -> m a -> m a
@@ -149,7 +142,6 @@ namespace Abc.Fx
         }
 
         /// <summary>filterM</summary>
-        [Pure]
         public static Mayhap<IEnumerable<TSource>> WhereAny<TSource>(
             this IEnumerable<TSource> source, Func<TSource, Mayhap<bool>> predicate)
         {
@@ -167,7 +159,6 @@ namespace Abc.Fx
         }
 
         /// <summary>replicateM</summary>
-        [Pure]
         public static Mayhap<IEnumerable<T>> Replicate<T>(this Mayhap<T> @this, int count)
         {
             // replicateM :: Applicative m => Int -> m a -> m [a]
@@ -190,7 +181,6 @@ namespace Abc.Fx
 
         public static readonly Mayhap<Unit> None = Mayhap<Unit>.None;
 
-        [Pure]
         public static Mayhap<Unit> Guard(bool predicate)
             => predicate ? Unit : None;
     }
@@ -207,7 +197,6 @@ namespace Abc.Fx
         //
         //   Promote a function to a monad, scanning the monadic arguments from
         //   left to right.
-        [Pure]
         public static Mayhap<TResult> ZipWith<TSource, TOther, TResult>(
             this Mayhap<TSource> @this,
             Mayhap<TOther> other,
@@ -227,7 +216,6 @@ namespace Abc.Fx
         ////
         ////   Promote a function to a monad, scanning the monadic arguments from
         ////   left to right.
-        //[Pure]
         //public static Mayhap<TResult> ZipWith<TSource, T1, T2, TResult>(
         //    this Mayhap<TSource> @this,
         //    Mayhap<T1> m1,
@@ -244,7 +232,6 @@ namespace Abc.Fx
         // [Monad]
         //   liftM4 :: (Monad m) => (a1 -> a2 -> a3 -> a4 -> r) -> m a1 -> m a2 -> m a3 -> m a4 -> m r
         //   liftM4 f m1 m2 m3 m4 = do { x1 <- m1; x2 <- m2; x3 <- m3; x4 <- m4; return (f x1 x2 x3 x4) }
-        [Pure]
         public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<T3>, Mayhap<T4>, Mayhap<TResult>>
             Lift<T1, T2, T3, T4, TResult>(
             Func<T1, T2, T3, T4, TResult> func)
@@ -257,7 +244,6 @@ namespace Abc.Fx
                                 x4 => Mayhap<TResult>.η(func(x1, x2, x3, x4))))));
         }
 
-        //[Pure]
         //public static Mayhap<TResult> ZipWith<TSource, T1, T2, T3, TResult>(
         //    this Mayhap<TSource> @this,
         //     Mayhap<T1> first,
@@ -278,7 +264,6 @@ namespace Abc.Fx
         // [Monad]
         //   liftM5 :: (Monad m) => (a1 -> a2 -> a3 -> a4 -> a5 -> r) -> m a1 -> m a2 -> m a3 -> m a4 -> m a5 -> m r
         //   liftM5 f m1 m2 m3 m4 m5 = do { x1 <- m1; x2 <- m2; x3 <- m3; x4 <- m4; x5 <- m5; return (f x1 x2 x3 x4 x5) }
-        [Pure]
         public static Func<Mayhap<T1>, Mayhap<T2>, Mayhap<T3>, Mayhap<T4>, Mayhap<T5>, Mayhap<TResult>>
             Lift<T1, T2, T3, T4, T5, TResult>(Func<T1, T2, T3, T4, T5, TResult> func)
         {

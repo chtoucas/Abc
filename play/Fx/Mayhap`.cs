@@ -4,8 +4,6 @@ namespace Abc.Fx
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -23,34 +21,28 @@ namespace Abc.Fx
         private readonly bool _isSome;
         private readonly T _value;
 
-        private Mayhap([DisallowNull]T value)
+        private Mayhap(T value)
         {
             _isSome = true;
             _value = value;
         }
 
-        [Pure]
         public override string ToString()
             => match(
                 some: x => $"Mayhap({x})",
                 none: "Mayhap(None)");
 
-        [Pure]
         public IEnumerable<T> Yield()
             => _isSome ? Enumerable.Repeat(_value, 1) : Enumerable.Empty<T>();
 
-        [Pure]
         public IEnumerator<T> GetEnumerator()
             => Yield().GetEnumerator();
 
-        [Pure]
         public bool Contains(T value)
             => match(
                 some: x => EqualityComparer<T>.Default.Equals(x, value),
                 none: false);
 
-        [Pure]
-        [return: NotNullIfNotNull("none")]
         private TResult match<TResult>(Func<T, TResult> some, TResult none)
             => _isSome ? some(_value) : none;
     }
@@ -64,20 +56,17 @@ namespace Abc.Fx
 #pragma warning restore CA1812
 
         /// <summary>Just</summary>
-        [Pure]
-        public static Mayhap<T> Some([DisallowNull]T value)
+        public static Mayhap<T> Some(T value)
             => new Mayhap<T>(value);
 
         /// <summary>return</summary>
-        [Pure]
-        public static Mayhap<T> η([AllowNull]T value)
+        public static Mayhap<T> η(T value)
             // return :: a -> m a
             //
             // Inject a value into the monadic type.
             => value is null ? Mayhap<T>.None : Mayhap<T>.Some(value);
 
         /// <summary>join</summary>
-        [Pure]
         public static Mayhap<T> μ(Mayhap<Mayhap<T>> square)
             // join :: Monad m => m (m a) -> m a
             //
@@ -87,7 +76,6 @@ namespace Abc.Fx
             => square._value;
 
         /// <summary>fmap / liftM</summary>
-        [Pure]
         public Mayhap<TResult> Select<TResult>(Func<T, TResult> selector)
         {
             //   fmap :: (a -> b) -> f a -> f b
@@ -107,7 +95,6 @@ namespace Abc.Fx
         }
 
         /// <summary>(&gt;&gt;=)</summary>
-        [Pure]
         public Mayhap<TResult> Bind<TResult>(Func<T, Mayhap<TResult>> binder)
         {
             // (>>=) :: forall a b. m a -> (a -> m b) -> m b
@@ -125,7 +112,6 @@ namespace Abc.Fx
         }
 
         /// <summary>mplus</summary>
-        [Pure]
         public Mayhap<T> OrElse(Mayhap<T> other)
             => _isSome ? this : other;
     }
@@ -133,7 +119,6 @@ namespace Abc.Fx
     // Async methods.
     public partial struct Mayhap<T>
     {
-        [Pure]
         public async Task<Mayhap<TResult>> SelectAsync<TResult>(
             Func<T, Task<TResult>> selector)
         {
@@ -150,7 +135,6 @@ namespace Abc.Fx
 #endif
         }
 
-        [Pure]
         public async Task<Mayhap<TResult>> BindAsync<TResult>(
             Func<T, Task<Mayhap<TResult>>> binder)
         {
@@ -164,7 +148,6 @@ namespace Abc.Fx
 #endif
         }
 
-        [Pure]
         public async Task<Mayhap<T>> OrElseAsync(Task<Mayhap<T>> other)
         {
             Require.NotNull(other, nameof(other));
@@ -192,7 +175,6 @@ namespace Abc.Fx
         //   Some(1) & None    == None
         //   Some(1) & Some(2) == Some(1)
         // Identical to PassThru().
-        [Pure]
         public Mayhap<T> And(Mayhap<T> other)
             => other._isSome ? this : None;
 
@@ -202,7 +184,6 @@ namespace Abc.Fx
         //   Some(1) & None    == None
         //   Some(1) & Some(2) == Some(2)
         // Identical to ContinueWith()
-        [Pure]
         public Mayhap<TResult> And<TResult>(Mayhap<TResult> other)
             => _isSome ? other : Mayhap<TResult>.None;
 
@@ -214,7 +195,6 @@ namespace Abc.Fx
         //   Some(1) | None    == Some(1)
         //   Some(1) | Some(2) == Some(1)
         // Identical to OrElse().
-        [Pure]
         public Mayhap<T> Or(Mayhap<T> other)
             => _isSome ? this : other;
 
@@ -226,7 +206,6 @@ namespace Abc.Fx
         //   None    ^ Some(2) == Some(2)
         //   Some(1) ^ None    == Some(1)
         //   Some(1) ^ Some(2) == None
-        [Pure]
         public Mayhap<T> Xor(Mayhap<T> other)
             => _isSome
                 ? other._isSome ? None : this
@@ -242,17 +221,14 @@ namespace Abc.Fx
         public static bool operator !=(Mayhap<T> left, Mayhap<T> right)
             => !left.Equals(right);
 
-        [Pure]
         public bool Equals(Mayhap<T> other)
             => match(
                 some: x => other.Contains(x),
                 none: !other._isSome);
 
-        [Pure]
         public override bool Equals(object? obj)
             => obj is Mayhap<T> maybe && Equals(maybe);
 
-        [Pure]
         public override int GetHashCode()
             => match(
                 some: x => x!.GetHashCode(),

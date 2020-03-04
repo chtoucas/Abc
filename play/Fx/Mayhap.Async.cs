@@ -3,14 +3,12 @@
 namespace Abc.Fx
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
 
     // Configurable core async methods?
     // https://devblogs.microsoft.com/dotnet/configureawait-faq/
     public partial class Mayhap
     {
-        [Pure]
         public static async Task<Mayhap<TResult>> BindAsync<T, TResult>(
             this Mayhap<T> @this,
             Func<T, Task<Mayhap<TResult>>> binder,
@@ -25,7 +23,6 @@ namespace Abc.Fx
                 : Mayhap<TResult>.None;
         }
 
-        [Pure]
         public static async Task<Mayhap<TResult>> SelectAsync<T, TResult>(
             this Mayhap<T> @this,
             Func<T, Task<TResult>> selector,
@@ -44,7 +41,6 @@ namespace Abc.Fx
     // Async extensions.
     public partial class Mayhap
     {
-        [Pure]
         public static async Task<Mayhap<T>> WhereAsync<T>(
             this Mayhap<T> @this,
             Func<T, Task<bool>> predicate)
