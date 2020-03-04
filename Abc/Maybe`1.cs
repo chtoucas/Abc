@@ -39,8 +39,7 @@ namespace Abc
     // - ContinueWith()
     // - PassThru()
     // - Skip()
-    // - Replicate()
-    // - Forever()
+    // - Repeat()
     // - ZipWith()
     //
     // Safe escapes from a maybe.
@@ -493,6 +492,8 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
+        // Compare to the nullable equiv w/ int? where y is an int:
+        //   (x.HasValue ? (int?)y : (int?)null).
         [Pure]
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
             where TResult : notnull
@@ -500,12 +501,16 @@ namespace Abc
             return _isSome ? Maybe.Of(value) : Maybe<TResult>.None;
         }
 
+        // Compare to the nullable equiv w/ int? where y is an int?:
+        //   (x.HasValue ? y : (int?)null).
         [Pure]
         public Maybe<TResult> ContinueWith<TResult>(Maybe<TResult> other)
         {
             return _isSome ? other : Maybe<TResult>.None;
         }
 
+        // Compare to the nullable equiv w/ int? where (y:int?)
+        //   (y.HasValue ? x : (int?)null).
         [Pure]
         public Maybe<T> PassThru<TOther>(Maybe<TOther> other)
         {
@@ -520,13 +525,13 @@ namespace Abc
 
         // See also Yield(count).
         [Pure]
-        public Maybe<IEnumerable<T>> Replicate(int count)
+        public Maybe<IEnumerable<T>> Repeat(int count)
             => _isSome ? new Maybe<IEnumerable<T>>(Enumerable.Repeat(_value, count))
                 : Maybe.Empty<T>();
 
-        // See also Yield().
+        // See also Yield(). Beware, infinite loop!
         [Pure]
-        public Maybe<IEnumerable<T>> Forever()
+        public Maybe<IEnumerable<T>> Repeat()
             => _isSome ? new Maybe<IEnumerable<T>>(Sequence.Forever(_value))
                 : Maybe.Empty<T>();
 

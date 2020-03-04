@@ -11,7 +11,6 @@ Abc.Maybe<T>.Contains(T value) -> bool
 Abc.Maybe<T>.ContinueWith<TResult>(Abc.Maybe<TResult> other) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Do(System.Action<T> onSome, System.Action onNone) -> void
 Abc.Maybe<T>.Equals(Abc.Maybe<T> other) -> bool
-Abc.Maybe<T>.Forever() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 Abc.Maybe<T>.GetEnumerator() -> System.Collections.Generic.IEnumerator<T>
 Abc.Maybe<T>.IsNone.get -> bool
 Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector) -> Abc.Maybe<TResult>
@@ -20,8 +19,9 @@ Abc.Maybe<T>.OnSome(System.Action<T> action) -> void
 Abc.Maybe<T>.OrElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.OrElseAsync(System.Threading.Tasks.Task<Abc.Maybe<T>> other) -> System.Threading.Tasks.Task<Abc.Maybe<T>>
 Abc.Maybe<T>.PassThru<TOther>(Abc.Maybe<TOther> other) -> Abc.Maybe<T>
+Abc.Maybe<T>.Repeat() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
+Abc.Maybe<T>.Repeat(int count) -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 Abc.Maybe<T>.ReplaceWith<TResult>(TResult value) -> Abc.Maybe<TResult>
-Abc.Maybe<T>.Replicate(int count) -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 Abc.Maybe<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.SelectAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<TResult>> selector) -> System.Threading.Tasks.Task<Abc.Maybe<TResult>>
 Abc.Maybe<T>.SelectMany<TMiddle, TResult>(System.Func<T, Abc.Maybe<TMiddle>> selector, System.Func<T, TMiddle, TResult> resultSelector) -> Abc.Maybe<TResult>
