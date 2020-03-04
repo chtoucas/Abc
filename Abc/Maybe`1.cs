@@ -46,6 +46,7 @@ namespace Abc
     // - Join()             LINQ join
     // - GroupJoin()        LINQ group join
     // - OrElse()           coalescing
+    // - XorElse()
     // - ZipWith()
     // - Apply()
     // - ReplaceWith()
@@ -80,8 +81,6 @@ namespace Abc
     // https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
     // Bool ops? true, false, logical AND (&), OR (|), XOR (^)
     // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
-    // API
-    // - Skip(predicate)
 
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
@@ -191,10 +190,10 @@ namespace Abc
         /// <remarks>
         /// Generalizes the null-coalescing operator (??).
         /// <code><![CDATA[
-        /// Some(1) ?? Some(2) == Some(1)
-        /// Some(1) ?? None    == Some(1)
-        /// None    ?? Some(2) == Some(2)
-        /// None    ?? None    == None
+        ///   Some(1) ?? Some(2) == Some(1)
+        ///   Some(1) ?? None    == Some(1)
+        ///   None    ?? Some(2) == Some(2)
+        ///   None    ?? None    == None
         /// ]]></code>
         /// This method can be though as an inclusive OR for maybe's, provided
         /// that an empty maybe is said to be false.
@@ -341,9 +340,13 @@ namespace Abc
     // Query Expression Pattern aka LINQ.
     public partial struct Maybe<T>
     {
-        // Query expression syntax (maybe = this):
-        //   from x in maybe
-        //   select selector(x)
+        /// <example>
+        /// Query expression syntax:
+        /// <code><![CDATA[
+        ///   from x in maybe
+        ///   select selector(x)
+        /// ]]></code>
+        /// </example>
         [Pure]
         public Maybe<TResult> Select<TResult>(Func<T, TResult> selector)
         {
@@ -352,10 +355,14 @@ namespace Abc
             return _isSome ? Maybe.Of(selector(_value)) : Maybe<TResult>.None;
         }
 
-        // Query expression syntax (maybe = this):
-        //   from x in maybe
-        //   where predicate(x)
-        //   select x
+        /// <example>
+        /// Query expression syntax:
+        /// <code><![CDATA[
+        ///   from x in maybe
+        ///   where predicate(x)
+        ///   select x
+        /// ]]></code>
+        /// </example>
         [Pure]
         public Maybe<T> Where(Func<T, bool> predicate)
         {
@@ -364,11 +371,17 @@ namespace Abc
             return _isSome && predicate(_value) ? this : None;
         }
 
-        // Generalizes both Bind() and ZipWith().
-        // Query expression syntax (maybe = this):
-        //   from x in maybe
-        //   from y in selector(x)
-        //   select resultSelector(x, y)
+        /// <remarks>
+        /// Generalizes both Bind() and ZipWith().
+        /// </remarks>
+        /// <example>
+        /// Query expression syntax:
+        /// <code><![CDATA[
+        ///   from x in maybe
+        ///   from y in selector(x)
+        ///   select resultSelector(x, y)
+        /// ]]></code>
+        /// </example>
         [Pure]
         public Maybe<TResult> SelectMany<TMiddle, TResult>(
             Func<T, Maybe<TMiddle>> selector,
@@ -385,11 +398,15 @@ namespace Abc
             return Maybe.Of(resultSelector(_value, middle._value));
         }
 
-        // Query expression syntax (outer = this):
-        //   from x in outer
-        //   from y in inner
-        //     on outerKeySelector(x) equals innerKeySelector(y)
-        //   select resultSelector(x, y)
+        /// <example>
+        /// Query expression syntax:
+        /// <code><![CDATA[
+        ///   from x in outer
+        ///   from y in inner
+        ///     on outerKeySelector(x) equals innerKeySelector(y)
+        ///   select resultSelector(x, y)
+        /// ]]></code>
+        /// </example>
         [Pure]
         public Maybe<TResult> Join<TInner, TKey, TResult>(
             Maybe<TInner> inner,
@@ -545,8 +562,8 @@ namespace Abc
 
         /// <remarks>
         /// <code><![CDATA[
-        /// Some(1) & 2L == Some(2L)
-        /// None    & 2L == None
+        ///   Some(1) & 2L == Some(2L)
+        ///   None    & 2L == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long:
@@ -560,10 +577,10 @@ namespace Abc
 
         /// <remarks>
         /// <code><![CDATA[
-        /// Some(1) & Some(2L) == Some(2L)
-        /// Some(1) & None     == None
-        /// None    & Some(2L) == None
-        /// None    & None     == None
+        ///   Some(1) & Some(2L) == Some(2L)
+        ///   Some(1) & None     == None
+        ///   None    & Some(2L) == None
+        ///   None    & None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
@@ -576,10 +593,10 @@ namespace Abc
 
         /// <remarks>
         /// <code><![CDATA[
-        /// Some(1) & Some(2L) == Some(1)
-        /// Some(1) & None     == None
-        /// None    & Some(2L) == None
-        /// None    & None     == None
+        ///   Some(1) & Some(2L) == Some(1)
+        ///   Some(1) & None     == None
+        ///   None    & Some(2L) == None
+        ///   None    & None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
@@ -594,10 +611,10 @@ namespace Abc
         /// This method can be though as an exclusive OR for maybe's, provided
         /// that an empty maybe is said to be false.
         /// <code><![CDATA[
-        /// Some(1) ^ Some(2) == None
-        /// Some(1) ^ None    == Some(1)
-        /// None    ^ Some(2) == Some(2)
-        /// None    ^ None    == None
+        ///   Some(1) ^ Some(2) == None
+        ///   Some(1) ^ None    == Some(1)
+        ///   None    ^ Some(2) == Some(2)
+        ///   None    ^ None    == None
         /// ]]></code>
         /// </remarks>
         [Pure]
@@ -609,21 +626,32 @@ namespace Abc
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;
 
-        // See also Yield(count).
-        // The difference is in the treatment of an empty maybe. Yield() with
-        // an empty maybe returns an empty seq, whereas Replicate() returns an
-        // empty maybe (no seq at all).
+        /// See also <seealso cref="Yield(int)"/>.
+        /// <remarks>
+        /// The difference with <see cref="Yield(int)"/> is in the treatment of
+        /// an empty maybe. <see cref="Yield(int)"/> with an empty maybe returns
+        /// an empty sequence, whereas this method returns an empty maybe (no
+        /// sequence at all).
+        /// </remarks>
         [Pure]
         public Maybe<IEnumerable<T>> Replicate(int count)
             => Select(x => Enumerable.Repeat(x, count));
 
-        // See also Yield(). Beware, infinite loop!
-        // The difference is in the treatment of an empty maybe. Yield() with
-        // an empty maybe returns an empty seq, whereas Replicate() returns an
-        // empty maybe (no seq at all).
+        // Beware, infinite loop!
+        /// See also <seealso cref="Yield()"/>.
+        /// <remarks>
+        /// The difference with <see cref="Yield()"/> is in the treatment of
+        /// an empty maybe. <see cref="Yield()"/> with an empty maybe returns
+        /// an empty sequence, whereas this method returns an empty maybe (no
+        /// sequence at all).
+        /// </remarks>
         [Pure]
         public Maybe<IEnumerable<T>> Replicate()
             => Select(Sequence.Forever);
+
+        [Pure]
+        internal Maybe<Maybe<T>> Optional()
+            => Maybe.Some(_isSome ? this : Maybe<T>.None);
 
         [Pure]
         public Maybe<TResult> ZipWith<TOther, TResult>(
@@ -648,12 +676,13 @@ namespace Abc
         public IEnumerator<T> GetEnumerator()
             => Yield(1).GetEnumerator();
 
+        /// See also <seealso cref="Replicate(int)"/> and the comments there.
         [Pure]
         public IEnumerable<T> Yield(int count)
             => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
-        // See also Replicate(count) and the comments there.
         // Beware, infinite loop!
+        /// See also <seealso cref="Replicate()"/> and the comments there.
         [Pure]
         public IEnumerable<T> Yield()
             => _isSome ? Sequence.Forever(_value) : Enumerable.Empty<T>();
