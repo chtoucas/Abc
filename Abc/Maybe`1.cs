@@ -17,7 +17,12 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
-    // API overview.
+    // Overview.
+    //
+    // An option type for C#.
+    // The intended usage for Maybe<T> is when T is a value type, a string,
+    // a read-only record, or a function. For other reference types, I guess
+    // it should be fine as long as T is an **immutable** reference type.
     //
     // Properties (no property Value).
     // - None
@@ -39,7 +44,7 @@ namespace Abc
     // - ContinueWith()
     // - PassThru()
     // - Skip()
-    // - Repeat()
+    // - Replicate()
     // - ZipWith()
     //
     // Safe escapes from a maybe.
@@ -69,8 +74,7 @@ namespace Abc
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
     /// value at all.
-    /// <para><see cref="Maybe{T}"/> is a read-only struct. Beware, if T is a
-    /// mutable reference type, it "infects" this struct too.</para>
+    /// <para><see cref="Maybe{T}"/> is a read-only struct.</para>
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
@@ -525,13 +529,13 @@ namespace Abc
 
         // See also Yield(count).
         [Pure]
-        public Maybe<IEnumerable<T>> Repeat(int count)
+        public Maybe<IEnumerable<T>> Replicate(int count)
             => _isSome ? new Maybe<IEnumerable<T>>(Enumerable.Repeat(_value, count))
                 : Maybe.Empty<T>();
 
         // See also Yield(). Beware, infinite loop!
         [Pure]
-        public Maybe<IEnumerable<T>> Repeat()
+        public Maybe<IEnumerable<T>> Replicate()
             => _isSome ? new Maybe<IEnumerable<T>>(Sequence.Forever(_value))
                 : Maybe.Empty<T>();
 
