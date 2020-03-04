@@ -7,10 +7,6 @@ namespace Abc.Extensions
     using System.Collections.Specialized;
     using System.Diagnostics.Contracts;
 
-#if MONADS_PURE
-    using Abc.Linq;
-#endif
-
     // REVIEW: MayGetValues, Maybe<IEnumerable>?
 
     /// <summary>
@@ -41,10 +37,9 @@ namespace Abc.Extensions
             this NameValueCollection @this, string name, Func<string, Maybe<T>> parser)
         {
 
-#if MONADS_PURE
-            var q = from values in @this.MayGetValues(name) select values.SelectAny(parser);
-            return q.ValueOrEmpty();
-#else
+            //var q = from values in @this.MayGetValues(name) select values.SelectAny(parser);
+            //return q.ValueOrEmpty();
+
             // Check args eagerly.
             if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
 
@@ -59,7 +54,6 @@ namespace Abc.Extensions
                     if (result.IsSome) { yield return result.Value; }
                 }
             }
-#endif
         }
     }
 }

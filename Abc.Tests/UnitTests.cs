@@ -3,11 +3,19 @@
 namespace Abc.Tests
 {
     using System;
+    using System.Runtime.InteropServices;
 
     using Xunit;
 
     public static class UnitTests
     {
+        [Fact]
+        public static void RuntimeSize()
+        {
+            // 1 byte.
+            Assert.Equal(1, Marshal.SizeOf(typeof(Unit)));
+        }
+
         [Fact]
         public static void Singleton()
         {

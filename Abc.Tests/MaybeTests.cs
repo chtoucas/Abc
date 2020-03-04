@@ -35,9 +35,9 @@ namespace Abc
         }
 
         [Fact]
-        public static void None()
+        public static void Zero()
         {
-            Assert.None(Maybe.None);
+            Assert.None(Maybe.Zero);
         }
 
         [Fact]

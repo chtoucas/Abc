@@ -50,9 +50,4 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
-  <!-- Optional symbols -->
-  <PropertyGroup>
-    <!--<DefineConstants>$(DefineConstants);MONADS_PURE</DefineConstants>-->
-  </PropertyGroup>
-
 </Project>

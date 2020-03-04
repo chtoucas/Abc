@@ -56,6 +56,28 @@ namespace Abc.Fx
     // - <$!>
     public partial class Mayhap
     {
+        [Pure]
+        public static Mayhap<IEnumerable<TResult>> SelectAny<TSource, TResult>(
+            this IEnumerable<TSource> source,
+            Func<TSource, Mayhap<TResult>> selector)
+        {
+            // mapM :: (Traversable t, Monad m) => (a -> m b) -> t a -> m (t b)
+            // mapM = traverse
+            //
+            // See Data.Traversable
+            // traverse :: Applicative f => (a -> f b) -> t a -> f (t b)
+            // traverse f = sequenceA . fmap f
+            //
+            // sequenceA :: Applicative f => t (f a) -> f (t a)
+            // sequenceA = traverse id
+            //
+            // Map each element of a structure to a monadic action, evaluate
+            // these actions from left to right, and collect the results. For a
+            // version that ignores the results see mapM_.
+
+            return CollectAny(source.Select(selector));
+        }
+
         /// <summary>(=&lt;&lt;)</summary>
         [Pure]
         public static Mayhap<TResult> Invoke<TSource, TResult>(
@@ -143,7 +165,8 @@ namespace Abc.Fx
             Func<bool, IEnumerable<TSource>, IEnumerable<TSource>> __zipper(TSource item)
                 => (b, seq) => b ? seq.Append(item) : seq;
         }
-            /// <summary>replicateM</summary>
+
+        /// <summary>replicateM</summary>
         [Pure]
         public static Mayhap<IEnumerable<T>> Replicate<T>(this Mayhap<T> @this, int count)
         {

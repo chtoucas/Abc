@@ -5,9 +5,6 @@ namespace Abc.Linq
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-#if MONADS_PURE
-    using System.Linq;
-#endif
 
     // Projection: SelectAny (deferred).
     public static partial class Qperators
@@ -17,9 +14,6 @@ namespace Abc.Linq
             this IEnumerable<TSource> source,
             Func<TSource, Maybe<TResult>> selector)
         {
-#if MONADS_PURE
-            return Maybe.CollectAny(source.Select(selector));
-#else
             // Check args eagerly.
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
             if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
@@ -35,7 +29,6 @@ namespace Abc.Linq
                     if (result.IsSome) { yield return result.Value; }
                 }
             }
-#endif
         }
     }
 }

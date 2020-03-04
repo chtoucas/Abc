@@ -50,13 +50,11 @@ namespace Abc
         // TODO: à améliorer.
         public static void Some<T>(T exp, Maybe<T> maybe)
         {
-#if MONADS_PURE
-            False(maybe.IsNone);
-            True(maybe.Contains(exp));
-#else
+            //False(maybe.IsNone);
+            //True(maybe.Contains(exp));
+
             True(maybe.IsSome);
             Equal(exp, maybe.Value);
-#endif
         }
     }
 }
