@@ -12,6 +12,8 @@ namespace Abc
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Abc.Utilities;
+
     using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
@@ -37,6 +39,8 @@ namespace Abc
     // - ContinueWith()
     // - PassThru()
     // - Skip()
+    // - Replicate()
+    // - Forever()
     // - ZipWith()
     //
     // Safe escapes from a maybe.
@@ -514,6 +518,18 @@ namespace Abc
             return _isSome ? Maybe.Unit : Maybe.None;
         }
 
+        // See also Yield(count).
+        [Pure]
+        public Maybe<IEnumerable<T>> Replicate(int count)
+            => _isSome ? new Maybe<IEnumerable<T>>(Enumerable.Repeat(_value, count))
+                : Maybe.Empty<T>();
+
+        // See also Yield().
+        [Pure]
+        public Maybe<IEnumerable<T>> Forever()
+            => _isSome ? new Maybe<IEnumerable<T>>(Sequence.Forever(_value))
+                : Maybe.Empty<T>();
+
         [Pure]
         public Maybe<TResult> ZipWith<TOther, TResult>(
             Maybe<TOther> other,
@@ -541,19 +557,10 @@ namespace Abc
         public IEnumerable<T> Yield(int count)
             => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
-        // REVIEW: Optimize Yield().
         // Beware, infinite loop!
         [Pure]
         public IEnumerable<T> Yield()
-        {
-            if (_isSome)
-            {
-                while (true)
-                {
-                    yield return _value;
-                }
-            }
-        }
+            => _isSome ? Sequence.Forever(_value) : Enumerable.Empty<T>();
 
         // Maybe<T> being a struct it is never equal to null, therefore
         // Contains(null) always returns false.
