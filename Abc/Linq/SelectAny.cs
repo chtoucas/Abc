@@ -14,7 +14,8 @@ namespace Abc.Linq
     {
         [Pure]
         public static IEnumerable<TResult> SelectAny<TSource, TResult>(
-            this IEnumerable<TSource> source, Func<TSource, Maybe<TResult>> selector)
+            this IEnumerable<TSource> source,
+            Func<TSource, Maybe<TResult>> selector)
         {
 #if MONADS_PURE
             return Maybe.CollectAny(source.Select(selector));
