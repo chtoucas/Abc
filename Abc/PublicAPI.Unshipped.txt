@@ -19,9 +19,9 @@ Abc.Maybe<T>.OnSome(System.Action<T> action) -> void
 Abc.Maybe<T>.OrElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.OrElseAsync(System.Threading.Tasks.Task<Abc.Maybe<T>> other) -> System.Threading.Tasks.Task<Abc.Maybe<T>>
 Abc.Maybe<T>.PassThru<TOther>(Abc.Maybe<TOther> other) -> Abc.Maybe<T>
-Abc.Maybe<T>.Repeat() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
-Abc.Maybe<T>.Repeat(int count) -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 Abc.Maybe<T>.ReplaceWith<TResult>(TResult value) -> Abc.Maybe<TResult>
+Abc.Maybe<T>.Replicate() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
+Abc.Maybe<T>.Replicate(int count) -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 Abc.Maybe<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.SelectAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<TResult>> selector) -> System.Threading.Tasks.Task<Abc.Maybe<TResult>>
 Abc.Maybe<T>.SelectMany<TMiddle, TResult>(System.Func<T, Abc.Maybe<TMiddle>> selector, System.Func<T, TMiddle, TResult> resultSelector) -> Abc.Maybe<TResult>
@@ -107,6 +107,6 @@ static Abc.Unit.operator !=(System.ValueTuple left, Abc.Unit right) -> bool
 static Abc.Unit.operator ==(Abc.Unit left, Abc.Unit right) -> bool
 static Abc.Unit.operator ==(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator ==(System.ValueTuple left, Abc.Unit right) -> bool
-static readonly Abc.Maybe.None -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Maybe.Unit -> Abc.Maybe<Abc.Unit>
+static readonly Abc.Maybe.Zero -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Unit.Default -> Abc.Unit

@@ -29,7 +29,7 @@ namespace Abc
         /// Represents the zero for <see cref="Maybe{T}.Bind"/>.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Maybe<Unit> None = Maybe<Unit>.None;
+        public static readonly Maybe<Unit> Zero = Maybe<Unit>.None;
 
         /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
@@ -66,7 +66,7 @@ namespace Abc
 
         [Pure]
         public static Maybe<Unit> Guard(bool predicate)
-            => predicate ? Unit : None;
+            => predicate ? Unit : Zero;
     }
 
     // Extension methods for Maybe<T> where T is a struct.

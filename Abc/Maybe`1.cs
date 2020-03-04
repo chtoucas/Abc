@@ -29,7 +29,8 @@ namespace Abc
     // - Maybe.None
     // - Maybe.Unit
     //
-    // Instance properties (no public access to the enclosed value, ie no property Value).
+    // Instance properties (no public access to the enclosed value if any,
+    // ie no property Value).
     // - IsNone
     //
     // Static factories (no public ctor).
@@ -43,6 +44,7 @@ namespace Abc
     // - SelectMany()       LINQ select many
     // - Where()            LINQ filter
     // - Join()             LINQ join
+    // - GroupJoin()        LINQ group join
     // - OrElse()           coalescing
     // - ZipWith()
     // - Apply()
@@ -51,6 +53,11 @@ namespace Abc
     // - PassThru()
     // - Skip()
     // - Replicate()
+    //
+    // Async methods.
+    // - BindAsync()
+    // - SelectAsync()
+    // - OrElseAsync()
     //
     // Safe escapes from a maybe.
     // - Switch()           pattern matching
@@ -61,12 +68,11 @@ namespace Abc
     // - Yield()            enumerable (explicit)
     // - Contains()         singleton or empty set
 
-    // REVIEW: disposable exts, lazy exts, async exts, nullable attrs, notnull constraints.
+    // REVIEW: lazy exts, nullable attrs, notnull constraint.
     // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
     // IEquatable<T>, IComparable<T> but a bit missleading?
-    // Serializable?
-    // More LINQ?
+    // Serializable? More LINQ?
     // Enhance and improve async methods.
     // Set ops (Union(), IntersectWith(), ...)
     // Struct really? Compare w/ ValueTuple
@@ -529,21 +535,23 @@ namespace Abc
 
         [Pure]
         public Maybe<Unit> Skip()
-        {
-            return _isSome ? Maybe.Unit : Maybe.None;
-        }
+            => _isSome ? Maybe.Unit : Maybe.Zero;
 
         // See also Yield(count).
+        // The difference is in the treatment of an empty maybe. Yield() with
+        // an empty maybe returns an empty seq, whereas Replicate() returns an
+        // empty maybe (no seq at all).
         [Pure]
         public Maybe<IEnumerable<T>> Replicate(int count)
-            => _isSome ? new Maybe<IEnumerable<T>>(Enumerable.Repeat(_value, count))
-                : Maybe.Empty<T>();
+            => Select(x => Enumerable.Repeat(x, count));
 
         // See also Yield(). Beware, infinite loop!
+        // The difference is in the treatment of an empty maybe. Yield() with
+        // an empty maybe returns an empty seq, whereas Replicate() returns an
+        // empty maybe (no seq at all).
         [Pure]
         public Maybe<IEnumerable<T>> Replicate()
-            => _isSome ? new Maybe<IEnumerable<T>>(Sequence.Forever(_value))
-                : Maybe.Empty<T>();
+            => Select(Sequence.Forever);
 
         [Pure]
         public Maybe<TResult> ZipWith<TOther, TResult>(
@@ -572,11 +580,13 @@ namespace Abc
         public IEnumerable<T> Yield(int count)
             => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
+        // See also Replicate(count) and the comments there.
         // Beware, infinite loop!
         [Pure]
         public IEnumerable<T> Yield()
             => _isSome ? Sequence.Forever(_value) : Enumerable.Empty<T>();
 
+        // See also Replicate() and the comments there.
         // Maybe<T> being a struct it is never equal to null, therefore
         // Contains(null) always returns false.
         [Pure]
