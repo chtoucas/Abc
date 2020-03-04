@@ -184,7 +184,7 @@ namespace Abc
     // Extension methods for functions in the Kleisli category.
     public partial class Maybe
     {
-        /// <seealso cref="Maybe{T}.Bind{TResult}(Func{T, Maybe{TResult}})"/>
+        /// See also <seealso cref="Maybe{T}.Bind"/>.
         [Pure]
         public static Maybe<TResult> Invoke<TSource, TResult>(
             this Func<TSource, Maybe<TResult>> @this,
@@ -217,7 +217,7 @@ namespace Abc
     // Lift, promote functions to Maybe's.
     public partial class Maybe
     {
-        /// <seealso cref="Maybe{T}.Select{TResult}(Func{T, TResult})"/>
+        /// See also <seealso cref="Maybe{T}.Select"/>.
         [Pure]
         public static Maybe<TResult> Lift<TSource, TResult>(
             this Func<TSource, TResult> @this,
@@ -226,7 +226,7 @@ namespace Abc
             return maybe.Select(@this);
         }
 
-        /// <seealso cref="Maybe{T}.ZipWith{TOther, TResult}(Maybe{TOther}, Func{T, TOther, TResult})"/>
+        /// See also <seealso cref="Maybe{T}.ZipWith"/>.
         [Pure]
         public static Maybe<TResult> Lift<T1, T2, TResult>(
             this Func<T1, T2, TResult> @this,
@@ -289,7 +289,7 @@ namespace Abc
     // Extension methods for Maybe<T> where T is a function.
     public partial class Maybe
     {
-        /// <seealso cref="Maybe{T}.Apply{TResult}(Maybe{Func{T, TResult}})"/>
+        /// See also <seealso cref="Maybe{T}.Apply"/>.
         [Pure]
         public static Maybe<TResult> Invoke<TSource, TResult>(
             this Maybe<Func<TSource, TResult>> @this,
