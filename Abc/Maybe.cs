@@ -10,6 +10,8 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
+    // REVIEW: playing with "in".
+
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
     /// <para>This class cannot be inherited.</para>
@@ -43,6 +45,7 @@ namespace Abc
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
         /// </summary>
+        // F# Workflow: return.
         [Pure]
         public static Maybe<T> Of<T>([AllowNull]T value)
             => value is null ? Maybe<T>.None : new Maybe<T>(value);
@@ -61,7 +64,7 @@ namespace Abc
         /// outer level.
         /// </summary>
         [Pure]
-        public static Maybe<T> Flatten<T>(this Maybe<Maybe<T>> @this)
+        public static Maybe<T> Flatten<T>(this in Maybe<Maybe<T>> @this)
             => @this.IsSome ? @this.Value : Maybe<T>.None;
 
         [Pure]
@@ -74,14 +77,14 @@ namespace Abc
     {
         // Conversion from Maybe<T?> to  Maybe<T>.
         [Pure]
-        public static Maybe<T> Squash<T>(this Maybe<T?> @this) where T : struct
+        public static Maybe<T> Squash<T>(this in Maybe<T?> @this) where T : struct
             // NB: When IsSome is true, Value.HasValue is also true, therefore
             // we can safely access Value.Value.
             => @this.IsSome ? Some(@this.Value!.Value) : Maybe<T>.None;
 
         // Conversion from Maybe<T?> to T?.
         [Pure]
-        public static T? ToNullable<T>(this Maybe<T?> @this) where T : struct
+        public static T? ToNullable<T>(this in Maybe<T?> @this) where T : struct
 #if DEBUG
             // We have to be careful in Debug mode since the access to Value is
             // protected by a Debug.Assert.
@@ -93,7 +96,7 @@ namespace Abc
 
         // Conversion from Maybe<T> to T?.
         [Pure]
-        public static T? ToNullable<T>(this Maybe<T> @this) where T : struct
+        public static T? ToNullable<T>(this in Maybe<T> @this) where T : struct
             => @this.IsSome ? @this.Value : (T?)null;
     }
 
@@ -152,10 +155,12 @@ namespace Abc
     // Extension methods for Maybe<T> where T is disposable.
     public partial class Maybe
     {
-        // Bind() with automatic resource management.
+        // Bind() with automatic resource cleanup.
+        // F# Workflow: use.
         [Pure]
         public static Maybe<TResult> Use<TDisposable, TResult>(
-            this Maybe<TDisposable> @this, Func<TDisposable, Maybe<TResult>> binder)
+            this Maybe<TDisposable> @this,
+            Func<TDisposable, Maybe<TResult>> binder)
             where TDisposable : IDisposable
         {
             if (binder is null) { throw new Anexn(nameof(binder)); }
@@ -163,10 +168,11 @@ namespace Abc
             return @this.Bind(x => { using (x) { return binder(x); } });
         }
 
-        // Select() with automatic resource management.
+        // Select() with automatic resource cleanup.
         [Pure]
         public static Maybe<TResult> Use<TDisposable, TResult>(
-            this Maybe<TDisposable> @this, Func<TDisposable, TResult> selector)
+            this Maybe<TDisposable> @this,
+            Func<TDisposable, TResult> selector)
             where TDisposable : IDisposable
         {
             if (selector is null) { throw new Anexn(nameof(selector)); }

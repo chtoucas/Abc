@@ -179,6 +179,7 @@ namespace Abc
         [SuppressMessage("Microsoft.Design", "CA1000:Do not declare static members on generic types", Justification = "There is no such thing as a generic static property on a non-generic type.")]
         public static Maybe<T> None { get; } = default;
 
+        // F# Workflow: let!.
         [Pure]
         public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
         {
@@ -330,6 +331,9 @@ namespace Abc
     // Query Expression Pattern aka LINQ.
     public partial struct Maybe<T>
     {
+        // LINQ syntax:
+        //   from x in maybe
+        //   select selector(x)
         [Pure]
         public Maybe<TResult> Select<TResult>(Func<T, TResult> selector)
         {
@@ -338,6 +342,10 @@ namespace Abc
             return _isSome ? Maybe.Of(selector(_value)) : Maybe<TResult>.None;
         }
 
+        // LINQ syntax:
+        //   from x in maybe
+        //   where predicate(x)
+        //   select x
         [Pure]
         public Maybe<T> Where(Func<T, bool> predicate)
         {
@@ -347,6 +355,10 @@ namespace Abc
         }
 
         // Generalizes both Bind() and ZipWith<T, TMiddle, TResult>().
+        // LINQ syntax:
+        //   from x in m1
+        //   from y in selector(x)
+        //   select resultSelector(x, y)
         [Pure]
         public Maybe<TResult> SelectMany<TMiddle, TResult>(
             Func<T, Maybe<TMiddle>> selector,

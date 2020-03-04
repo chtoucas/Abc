@@ -71,7 +71,7 @@ static Abc.Maybe.CollectAny<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<
 static Abc.Maybe.Compose<TSource, TMiddle, TResult>(this System.Func<TSource, Abc.Maybe<TMiddle>> this, System.Func<TMiddle, Abc.Maybe<TResult>> other) -> System.Func<TSource, Abc.Maybe<TResult>>
 static Abc.Maybe.ComposeBack<TSource, TMiddle, TResult>(this System.Func<TMiddle, Abc.Maybe<TResult>> this, System.Func<TSource, Abc.Maybe<TMiddle>> other) -> System.Func<TSource, Abc.Maybe<TResult>>
 static Abc.Maybe.Empty<T>() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
-static Abc.Maybe.Flatten<T>(this Abc.Maybe<Abc.Maybe<T>> this) -> Abc.Maybe<T>
+static Abc.Maybe.Flatten<T>(this in Abc.Maybe<Abc.Maybe<T>> this) -> Abc.Maybe<T>
 static Abc.Maybe.Guard(bool predicate) -> Abc.Maybe<Abc.Unit>
 static Abc.Maybe.Invoke<T1, T2, T3, T4, T5, TResult>(this Abc.Maybe<System.Func<T1, T2, T3, T4, T5, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third, Abc.Maybe<T4> fourth, Abc.Maybe<T5> fifth) -> Abc.Maybe<TResult>
 static Abc.Maybe.Invoke<T1, T2, T3, T4, TResult>(this Abc.Maybe<System.Func<T1, T2, T3, T4, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third, Abc.Maybe<T4> fourth) -> Abc.Maybe<TResult>
@@ -87,9 +87,9 @@ static Abc.Maybe.Lift<TSource, TResult>(this System.Func<TSource, TResult> this,
 static Abc.Maybe.Of<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.Of<T>(T? value) -> Abc.Maybe<T>
 static Abc.Maybe.Some<T>(T value) -> Abc.Maybe<T>
-static Abc.Maybe.Squash<T>(this Abc.Maybe<T?> this) -> Abc.Maybe<T>
-static Abc.Maybe.ToNullable<T>(this Abc.Maybe<T> this) -> T?
-static Abc.Maybe.ToNullable<T>(this Abc.Maybe<T?> this) -> T?
+static Abc.Maybe.Squash<T>(this in Abc.Maybe<T?> this) -> Abc.Maybe<T>
+static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T> this) -> T?
+static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T?> this) -> T?
 static Abc.Maybe.Use<TDisposable, TResult>(this Abc.Maybe<TDisposable> this, System.Func<TDisposable, Abc.Maybe<TResult>> binder) -> Abc.Maybe<TResult>
 static Abc.Maybe.Use<TDisposable, TResult>(this Abc.Maybe<TDisposable> this, System.Func<TDisposable, TResult> selector) -> Abc.Maybe<TResult>
 static Abc.Maybe.ValueOrEmpty<T>(this Abc.Maybe<System.Collections.Generic.IEnumerable<T>> this) -> System.Collections.Generic.IEnumerable<T>
