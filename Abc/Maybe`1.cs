@@ -12,8 +12,8 @@ namespace Abc
     using System.Linq;
     using System.Threading.Tasks;
 
-    using EF = Utilities.ExceptionFactory;
     using Anexn = System.ArgumentNullException;
+    using EF = Abc.Utilities.ExceptionFactory;
 
     // API overview.
     //
@@ -527,7 +527,7 @@ namespace Abc
         }
     }
 
-    // Iterable but not enumerable.
+    // Iterable but not IEnumerable<>.
     // 1) A maybe is a indeed collection but a rather trivial one.
     // 2) Maybe<T> being a struct, I worry about hidden casts.
     // 3) Source of confusion (conflicts?) if we import the System.Linq namespace.
