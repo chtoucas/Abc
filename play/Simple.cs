@@ -4,32 +4,44 @@ namespace Abc
 {
     using System;
 
+    // With classes instead of structs, we can use pattern matching.
+    // Of course, if we had sum types like in F# it would be simpler and clearer.
+
     public static class Simple
     {
         public static string ShowOption(bool ok)
             => GetOption(ok) switch
             {
-                Some<string> some => some.Value,
-                None<string> _ => "No value",
+                Some<int> some => $"{some.Value}",
+                None<int> _ => "No value",
+                _ => throw new InvalidOperationException()
+            };
+
+        public static string ShowEither(bool ok)
+            => GetEither(ok) switch
+            {
+                (Some<int> success, _) => $"{success.Value}",
+                (None<int> _, string err) => err,
                 _ => throw new InvalidOperationException()
             };
 
         public static string ShowOutcome(bool ok)
             => GetOutcome(ok) switch
             {
-                Success<string> success => success.Value,
-                Failure<string, string> err => err.Error,
+                Success<int> success => $"{success.Value}",
+                Failure<int, string> err => err.Error,
                 _ => throw new InvalidOperationException()
             };
 
-        public static Option<string> GetOption(bool ok)
-            => ok ? Option.Of("OK") : Option<string>.None;
+        public static Option<int> GetOption(bool ok)
+            => ok ? Option.Of(1) : Option<int>.None;
 
-        public static Outcome<string> GetOutcome(bool ok)
-            => ok ? Outcome.Success("OK") : Outcome.Failure<string, string>("Boum!!!");
+        // Hand-made Either using a ValueTuple.
+        public static (Option<int> success, string err) GetEither(bool ok)
+            => ok ? (Option.Of(1), String.Empty) : (Option<int>.None, "Boum!!!");
 
-        public static (Maybe<string> success, Maybe<string> err) GetMaybes(bool ok)
-            => ok ? (Maybe.Of("OK"), Maybe<string>.None)
-                : (Maybe<string>.None, Maybe.Of("Boum!!!"));
+        // Simulating a sum type with inheritance.
+        public static Outcome<int> GetOutcome(bool ok)
+            => ok ? Outcome.Success(1) : Outcome.Failure<int, string>("Boum!!!");
     }
 }
