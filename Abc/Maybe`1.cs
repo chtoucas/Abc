@@ -20,9 +20,9 @@ namespace Abc
     // Overview.
     //
     // The structure Maybe<T> is an option type for C#.
-    // The intended usage for it is when T is a value type, a string,
-    // a (read-only?) record, or a function. For other reference types,
-    // it should be fine as long as T is an **immutable** reference type.
+    // The intended usage is when T is a value type, a string, a (read-only?)
+    // record, or a function. For other reference types, it should be fine as
+    // long as T is an **immutable** reference type.
     //
     // Static properties.
     // - Maybe<T>.None
@@ -74,6 +74,7 @@ namespace Abc
     // - nullable attrs, notnull constraint.
     //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
+    // - delayed throw in escape methods.
     // - IEquatable<T>, IComparable<T> but a bit missleading?
     // - Serializable?
     // - Enhance and improve async methods.
@@ -202,8 +203,6 @@ namespace Abc
     // Safe escapes.
     public partial struct Maybe<T>
     {
-        // REVIEW: delayed throw?
-
         /// <summary>
         /// If the current instance encloses a value, it unwraps it using
         /// <paramref name="caseSome"/>, otherwise it executes
@@ -508,7 +507,7 @@ namespace Abc
             if (binder is null) { throw new Anexn(nameof(binder)); }
 
             return _isSome ? await binder(_value).ConfigureAwait(false)
-                : Maybe<TResult>.None; ;
+                : Maybe<TResult>.None;
         }
 
         [Pure]

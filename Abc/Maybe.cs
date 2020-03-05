@@ -11,9 +11,9 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
 
     // REVIEW: extensions & helpers.
-    // - playing with "in".
-    // - I don't like the name Empty<T>().
-    // - EmptyIfNone<T>()
+    // - playing with modifier "in". Currently only added to ext methods for
+    //   Maybe<T> where T is a struct.
+    // - I don't like the name Empty<T>(). Add EmptyIfNone<T>()?
     // - Maybe<IEnumerable>
     // - MaySum, Sum w/ num types
     // - lazy extensions.
