@@ -10,7 +10,7 @@ namespace Abc
     public static class Result<T, TError> where T : notnull
     {
         public static (Result<T> success, TError error) Ok(T value)
-            => (Result<T>.Ok(value), default);
+            => (Result.Of(value), default);
 
         public static (Result<T> success, TError error) Error(TError error)
             => (Result<T>.None, error);
@@ -21,37 +21,38 @@ namespace Abc
 
     public static class Simple
     {
-        public static string ShowOption(bool ok)
-            => GetOption(ok) switch
+        public static string ShowSomeOrNone(bool ok)
+            => SomeOrNone(ok) switch
             {
-                Just<int> some => $"{some.Value}",
-                None<int> _ => "No value",
+                Result<int>.Any some => $"{some.Value}",
+                Result<int>.Zero _ => "No value",
                 _ => throw new InvalidOperationException()
             };
 
-        public static string ShowOutcome(bool ok)
-            => GetOutcome(ok) switch
+        public static string ShowSomeOrError(bool ok)
+            => SomeOrError(ok) switch
             {
-                Just<int> some => $"{some.Value}",
-                Failure<int, string> err => err.Error,
+                Result<int>.Any some => $"{some.Value}",
+                Result<int>.Fault<string> err => err.Error,
+                Result<int>.Panic exn => exn.Rethrow<string>(),
                 _ => throw new InvalidOperationException()
             };
 
         public static string ShowEither(bool ok)
-            => GetEither(ok) switch
+            => Either(ok) switch
             {
-                (Just<int> some, _) => $"{some.Value}",
-                (None<int> _, string err) => err,
+                (Result<int>.Any some, _) => $"{some.Value}",
+                (Result<int>.Zero _, string err) => err,
                 _ => throw new InvalidOperationException()
             };
 
-        public static Result<int> GetOption(bool ok)
+        public static Result<int> SomeOrNone(bool ok)
             => ok ? Result.Some(1) : Result<int>.None;
 
-        public static Result<int> GetOutcome(bool ok)
+        public static Result<int> SomeOrError(bool ok)
             => ok ? Result.Some(1) : Result<int>.Error("Boum!!!");
 
-        public static (Result<int> success, string err) GetEither(bool ok)
+        public static (Result<int> success, string err) Either(bool ok)
             => ok ? Result<int, string>.Ok(1) : Result<int, string>.Error("Boum!!!");
     }
 }
