@@ -6,6 +6,8 @@ namespace Abc.Linq
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using Anexn = System.ArgumentNullException;
+
     // Aggregation: MayFold.
     public partial class Qperators
     {
@@ -15,8 +17,8 @@ namespace Abc.Linq
             TAccumulate seed,
             Func<TAccumulate, TSource, Maybe<TAccumulate>> accumulator)
         {
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
-            if (accumulator is null) { throw new ArgumentNullException(nameof(accumulator)); }
+            if (source is null) { throw new Anexn(nameof(source)); }
+            if (accumulator is null) { throw new Anexn(nameof(accumulator)); }
 
             // TODO: optimiser (break the loop early).
             using var iter = source.GetEnumerator();
@@ -36,9 +38,9 @@ namespace Abc.Linq
             Func<TAccumulate, TSource, Maybe<TAccumulate>> accumulator,
             Func<Maybe<TAccumulate>, bool> predicate)
         {
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
-            if (accumulator is null) { throw new ArgumentNullException(nameof(accumulator)); }
-            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
+            if (source is null) { throw new Anexn(nameof(source)); }
+            if (accumulator is null) { throw new Anexn(nameof(accumulator)); }
+            if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
             using var iter = source.GetEnumerator();
 

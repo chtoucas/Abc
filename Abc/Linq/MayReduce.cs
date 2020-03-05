@@ -6,6 +6,7 @@ namespace Abc.Linq
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
     // Aggregation: MayReduce.
@@ -16,8 +17,8 @@ namespace Abc.Linq
             this IEnumerable<TSource> source,
             Func<TSource, TSource, Maybe<TSource>> accumulator)
         {
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
-            if (accumulator is null) { throw new ArgumentNullException(nameof(accumulator)); }
+            if (source is null) { throw new Anexn(nameof(source)); }
+            if (accumulator is null) { throw new Anexn(nameof(accumulator)); }
 
             using var iter = source.GetEnumerator();
 
@@ -37,9 +38,9 @@ namespace Abc.Linq
             Func<TSource, TSource, Maybe<TSource>> accumulator,
             Func<Maybe<TSource>, bool> predicate)
         {
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
-            if (accumulator is null) { throw new ArgumentNullException(nameof(accumulator)); }
-            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
+            if (source is null) { throw new Anexn(nameof(source)); }
+            if (accumulator is null) { throw new Anexn(nameof(accumulator)); }
+            if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
             using var iter = source.GetEnumerator();
 

@@ -4,8 +4,6 @@ namespace Abc.Linq
 {
     using System.Collections.Generic;
 
-    // REVIEW: Maybe<IEnumerable>, MaySum.
-
     /// <summary>
     /// Provides a set of extension methods for querying objects that implement
     /// <see cref="IEnumerable{T}"/>.

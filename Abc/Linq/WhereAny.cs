@@ -6,6 +6,8 @@ namespace Abc.Linq
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using Anexn = System.ArgumentNullException;
+
     // Filtering: WhereAny (deferred).
     public static partial class Qperators
     {
@@ -16,8 +18,8 @@ namespace Abc.Linq
             Func<TSource, Maybe<bool>> predicate)
         {
             // Check args eagerly.
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
-            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
+            if (source is null) { throw new Anexn(nameof(source)); }
+            if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
             return __iterator();
 

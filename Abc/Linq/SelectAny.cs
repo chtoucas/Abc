@@ -6,6 +6,8 @@ namespace Abc.Linq
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using Anexn = System.ArgumentNullException;
+
     // Projection: SelectAny (deferred).
     public static partial class Qperators
     {
@@ -15,8 +17,8 @@ namespace Abc.Linq
             Func<TSource, Maybe<TResult>> selector)
         {
             // Check args eagerly.
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
-            if (selector is null) { throw new ArgumentNullException(nameof(selector)); }
+            if (source is null) { throw new Anexn(nameof(source)); }
+            if (selector is null) { throw new Anexn(nameof(selector)); }
 
             return __iterator();
 

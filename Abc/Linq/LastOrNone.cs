@@ -6,6 +6,8 @@ namespace Abc.Linq
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using Anexn = System.ArgumentNullException;
+
     // For IEnumerable<T?>, prefer LastOrDefault() over LastOrNone().
     public static partial class Qperators
     {
@@ -14,9 +16,10 @@ namespace Abc.Linq
         /// <see cref="Maybe{TSource}.None"/> if the sequence contains no elements.
         /// </summary>
         [Pure]
-        public static Maybe<TSource> LastOrNone<TSource>(this IEnumerable<TSource> source)
+        public static Maybe<TSource> LastOrNone<TSource>(
+            this IEnumerable<TSource> source)
         {
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
+            if (source is null) { throw new Anexn(nameof(source)); }
 
             // Fast track.
             if (source is IList<TSource> list)
@@ -49,8 +52,8 @@ namespace Abc.Linq
             this IEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
-            if (source is null) { throw new ArgumentNullException(nameof(source)); }
-            if (predicate is null) { throw new ArgumentNullException(nameof(predicate)); }
+            if (source is null) { throw new Anexn(nameof(source)); }
+            if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
             // Fast track.
             if (source is IList<TSource> list)
