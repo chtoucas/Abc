@@ -46,10 +46,10 @@ namespace Abc
             };
 
         public static Result<int> GetOption(bool ok)
-            => ok ? Result<int>.Ok(1) : Result<int>.None;
+            => ok ? Result.Some(1) : Result<int>.None;
 
         public static Result<int> GetOutcome(bool ok)
-            => ok ? Result<int>.Ok(1) : Result<int>.Error("Boum!!!");
+            => ok ? Result.Some(1) : Result<int>.Error("Boum!!!");
 
         public static (Result<int> success, string err) GetEither(bool ok)
             => ok ? Result<int, string>.Ok(1) : Result<int, string>.Error("Boum!!!");

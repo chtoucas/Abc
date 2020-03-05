@@ -45,6 +45,10 @@ Abc.Maybe<T>.Yield() -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.Yield(int count) -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TOther, TResult> zipper) -> Abc.Maybe<TResult>
 Abc.None<T>
+Abc.Panic<T>
+Abc.Panic<T>.Edi.get -> System.Runtime.ExceptionServices.ExceptionDispatchInfo
+Abc.Panic<T>.Rethrow() -> void
+Abc.Result
 Abc.Result<T>
 Abc.Unit
 Abc.Unit.Equals(Abc.Unit other) -> bool
@@ -108,9 +112,16 @@ static Abc.Maybe<T>.operator <=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
+static Abc.Result.Of<T>(T value) -> Abc.Result<T>
+static Abc.Result.Some<T>(T value) -> Abc.Result<T>
+static Abc.Result.TryFinally(System.Action action, System.Action finallyAction) -> Abc.Result<Abc.Unit>
+static Abc.Result.TryFinally<TResult>(System.Func<TResult> func, System.Action finallyAction) -> Abc.Result<TResult>
+static Abc.Result.TryWith(System.Action action) -> Abc.Result<Abc.Unit>
+static Abc.Result.TryWith<TResult>(System.Func<TResult> func) -> Abc.Result<TResult>
 static Abc.Result<T>.Error<TError>(TError error) -> Abc.Result<T>
 static Abc.Result<T>.None.get -> Abc.Result<T>
 static Abc.Result<T>.Ok(T value) -> Abc.Result<T>
+static Abc.Result<T>.Panic(System.Runtime.ExceptionServices.ExceptionDispatchInfo edi) -> Abc.Result<T>
 static Abc.Unit.operator !=(Abc.Unit left, Abc.Unit right) -> bool
 static Abc.Unit.operator !=(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator !=(System.ValueTuple left, Abc.Unit right) -> bool
@@ -119,4 +130,5 @@ static Abc.Unit.operator ==(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator ==(System.ValueTuple left, Abc.Unit right) -> bool
 static readonly Abc.Maybe.Unit -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Maybe.Zero -> Abc.Maybe<Abc.Unit>
+static readonly Abc.Result.Ok -> Abc.Result<Abc.Unit>
 static readonly Abc.Unit.Default -> Abc.Unit
