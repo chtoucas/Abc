@@ -12,7 +12,6 @@ namespace Abc.Fx
 
     /// <summary>
     /// Represents the Maybe monad.
-    /// <para><see cref="Mayhap{T}"/> is a read-only struct.</para>
     /// </summary>
     public readonly partial struct Mayhap<T> : IEquatable<Mayhap<T>>
     {

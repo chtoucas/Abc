@@ -1,20 +1,13 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc
+namespace Abc.Fx
 {
     using System;
-
-    internal static class Stubs
-    {
-        public static readonly Action Noop = () => { };
-    }
 
     internal static class Stubs<T>
     {
         /// <summary>id</summary>
         public static readonly Func<T, T> Ident = x => x;
-
-        public static readonly Action<T> Noop = _ => { };
     }
 
     internal static class Stubs<T1, T2>

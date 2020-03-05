@@ -22,7 +22,6 @@ namespace Abc.Fx
 
     /// <summary>
     /// Represents the trivial monad/comonad (pretty useless).
-    /// <para><see cref="Ident{T}"/> is a read-only struct.</para>
     /// </summary>
     public readonly partial struct Ident<T> : IEquatable<Ident<T>>
         where T : notnull
