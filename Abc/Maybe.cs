@@ -10,7 +10,13 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // REVIEW: playing with "in".
+    // REVIEW: extensions & helpers.
+    // - playing with "in".
+    // - I don't like the name Empty<T>().
+    // - EmptyIfNone<T>()
+    // - Maybe<IEnumerable>
+    // - MaySum, Sum w/ num types
+    // - lazy extensions.
 
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
@@ -63,6 +69,7 @@ namespace Abc
         /// Removes one level of structure, projecting the bound value into the
         /// outer level.
         /// </summary>
+        /// See also <seealso cref="Maybe{T}.Duplicate"/>.
         [Pure]
         public static Maybe<T> Flatten<T>(this in Maybe<Maybe<T>> @this)
             => @this.IsSome ? @this.Value : Maybe<T>.None;

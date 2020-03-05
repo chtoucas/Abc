@@ -70,18 +70,17 @@ namespace Abc
     // - Yield()            enumerable (explicit)
     // - Contains()         singleton or empty set
 
-    // REVIEW: lazy exts, nullable attrs, notnull constraint.
-    // https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
-    // https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
-    // IEquatable<T>, IComparable<T> but a bit missleading?
-    // Serializable? More LINQ (Sum w/ num types)?
-    // Enhance and improve async methods.
-    // Set ops (Union(), IntersectWith(), ...)
-    // Struct really? Compare w/ ValueTuple
-    // http://mustoverride.com/tuples_structs/
-    // https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
-    // Bool ops? true, false, logical AND (&), OR (|), XOR (^)
-    // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
+    // REVIEW: maybe type
+    // - nullable attrs, notnull constraint.
+    //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
+    //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
+    // - IEquatable<T>, IComparable<T> but a bit missleading?
+    // - Serializable?
+    // - Enhance and improve async methods.
+    // - set ops.
+    // - Struct really? Compare w/ ValueTuple
+    //   http://mustoverride.com/tuples_structs/
+    //   https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
 
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
@@ -146,14 +145,6 @@ namespace Abc
         [Pure]
         public override string ToString()
             => _isSome ? $"Maybe({_value})" : "Maybe(None)";
-
-        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Maybe.Flatten()")]
-        public static explicit operator Maybe<T>(Maybe<Maybe<T>> maybe)
-            => maybe.Flatten();
-
-        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Maybe<T>.Duplicate()")]
-        public static explicit operator Maybe<Maybe<T>>(Maybe<T> maybe)
-            => maybe.Duplicate();
 
         /// <summary>
         /// Represents a debugger type proxy for <see cref="Maybe{T}"/>.
@@ -643,6 +634,7 @@ namespace Abc
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;
 
+        /// See also <seealso cref="Maybe.Flatten"/>.
         [Pure]
         public Maybe<Maybe<T>> Duplicate()
             => Maybe.Some(this);
