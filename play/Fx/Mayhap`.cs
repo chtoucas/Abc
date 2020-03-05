@@ -10,8 +10,6 @@ namespace Abc.Fx
     // WARNING: This code does NOT reflect best practice.
     // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).
 
-    // FIXME: nullable attrs.
-
     /// <summary>
     /// Represents the Maybe monad.
     /// <para><see cref="Mayhap{T}"/> is a read-only struct.</para>
@@ -156,60 +154,62 @@ namespace Abc.Fx
         }
     }
 
-    // Just for fun.
+    // Boolean operations, just for fun.
+    // https://blog.codinghorror.com/a-visual-explanation-of-sql-joins/
     public partial struct Mayhap<T>
     {
-#pragma warning disable CA2225 // Operator overloads have named alternates
-        public static bool operator true(Mayhap<T> value)
-            => value._isSome;
-#pragma warning restore CA2225
-
-        public static bool operator false(Mayhap<T> value)
-            => !value._isSome;
-
-        // Logical AND.
-        // x & y is true if both x and y evaluate to true.
-        // Otherwise, the result is false.
-        //   None    & None    == None
-        //   None    & Some(2) == None
-        //   Some(1) & None    == None
+        // AND.
         //   Some(1) & Some(2) == Some(1)
-        // Identical to PassThru().
+        //   Some(1) & None    == None
+        //   None    & Some(2) == None
+        //   None    & None    == None
+        // Identical to Applicative.PassThru().
         public Mayhap<T> And(Mayhap<T> other)
             => other._isSome ? this : None;
 
-        // Alternative logical AND.
-        //   None    & None    == None
-        //   None    & Some(2) == None
-        //   Some(1) & None    == None
+        // Sort of AND.
         //   Some(1) & Some(2) == Some(2)
-        // Identical to ContinueWith()
-        public Mayhap<TResult> And<TResult>(Mayhap<TResult> other)
+        //   Some(1) & None    == None
+        //   None    & Some(2) == None
+        //   None    & None    == None
+        // Identical to Applicative.ContinueWith()
+        public Mayhap<TResult> AndThen<TResult>(Mayhap<TResult> other)
             => _isSome ? other : Mayhap<TResult>.None;
 
-        // Logical OR.
-        // x | y is true if either x or y evaluates to true.
-        // Otherwise, the result is false.
-        //   None    | None    == None
-        //   None    | Some(2) == Some(2)
-        //   Some(1) | None    == Some(1)
+        // OR.
         //   Some(1) | Some(2) == Some(1)
-        // Identical to OrElse().
+        //   Some(1) | None    == Some(1)
+        //   None    | Some(2) == Some(2)
+        //   None    | None    == None
+        // Identical to Alternative.Otherwise().
         public Mayhap<T> Or(Mayhap<T> other)
             => _isSome ? this : other;
 
-        // Logical XOR.
-        // x ^ y is true if x evaluates to true and y evaluates to false,
-        // or x evaluates to false and y evaluates to true.
-        // Otherwise, the result is false.
-        //   None    ^ None    == None
-        //   None    ^ Some(2) == Some(2)
-        //   Some(1) ^ None    == Some(1)
+        // XOR.
         //   Some(1) ^ Some(2) == None
+        //   Some(1) ^ None    == Some(1)
+        //   None    ^ Some(2) == Some(2)
+        //   None    ^ None    == None
         public Mayhap<T> Xor(Mayhap<T> other)
             => _isSome
                 ? other._isSome ? None : this
                 : other._isSome ? other : None;
+
+        // NOT (->).
+        //   Some(1) : Some(2) == None
+        //   Some(1) : None    == Some(1)
+        //   None    : Some(2) == None
+        //   None    : None    == None
+        public Mayhap<T> Nimply(Mayhap<T> other)
+            => _isSome && !other._isSome ? this : None;
+
+        // NOT (<-).
+        //   Some(1) : Some(2) == None
+        //   Some(1) : None    == None
+        //   None    : Some(2) == Some(2)
+        //   None    : None    == None
+        public Mayhap<TResult> NYlpmi<TResult>(Mayhap<TResult> other)
+            => !_isSome && other._isSome ? other : Mayhap<TResult>.None;
     }
 
     // Interface IEquatable<>.
