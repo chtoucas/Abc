@@ -17,31 +17,29 @@ namespace Abc
                 _ => throw new InvalidOperationException()
             };
 
+        public static string ShowOutcome(bool ok)
+            => GetOutcome(ok) switch
+            {
+                Result<int>.Success success => $"{success.Value}",
+                Result<int>.Failure<string> err => err.Error,
+                _ => throw new InvalidOperationException()
+            };
+
         public static string ShowEither(bool ok)
             => GetEither(ok) switch
             {
-                (Some<int> success, _) => $"{success.Value}",
+                (Some<int> some, _) => $"{some.Value}",
                 (None<int> _, string err) => err,
                 _ => throw new InvalidOperationException()
             };
 
-        public static string ShowOutcome(bool ok)
-            => GetOutcome(ok) switch
-            {
-                Success<int> success => $"{success.Value}",
-                Failure<int, string> err => err.Error,
-                _ => throw new InvalidOperationException()
-            };
+        public static Result<int> GetOption(bool ok)
+            => ok ? Result<int>.Some(1) : Result<int>.None;
 
-        public static Option<int> GetOption(bool ok)
-            => ok ? Option.Of(1) : Option<int>.None;
+        public static Result<int> GetOutcome(bool ok)
+            => ok ? Result<int>.Ok(1) : Result<int>.Error("Boum!!!");
 
-        // Hand-made Either using a ValueTuple.
-        public static (Option<int> success, string err) GetEither(bool ok)
-            => ok ? (Option.Of(1), String.Empty) : (Option<int>.None, "Boum!!!");
-
-        // Simulating a sum type with inheritance.
-        public static Outcome<int> GetOutcome(bool ok)
-            => ok ? Outcome.Success(1) : Outcome.Failure<int, string>("Boum!!!");
+        public static (Result<int> success, string err) GetEither(bool ok)
+            => ok ? Result<int, string>.Ok(1) : Result<int, string>.Error("Boum!!!");
     }
 }
