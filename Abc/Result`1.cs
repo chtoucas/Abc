@@ -55,7 +55,17 @@ namespace Abc
                 => this;
         }
 
-        public class None : Result<T>
+        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+        public abstract class Error : Result<T>
+        {
+            private protected Error() { }
+
+            [Pure]
+            public sealed override Result<T> OrElse(Result<T> other)
+                => other;
+        }
+
+        public class None : Error
         {
             internal None() { }
 
@@ -66,33 +76,28 @@ namespace Abc
             [Pure]
             public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
                 => ResultFactory<TResult>.None_;
-
-            [Pure]
-            public sealed override Result<T> OrElse(Result<T> other)
-                => other;
         }
 
-        // REVIEW: Error<TErr> extends None to simplify pattern matching.
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
-        public sealed class Error<TErr> : None
+        public sealed class Error<TErr> : Error
         {
-            internal Error(TErr message)
+            internal Error(TErr err)
             {
-                Message = message ?? throw new Anexn(nameof(message));
+                InnerErr = err ?? throw new Anexn(nameof(err));
             }
 
-            public TErr Message { get; }
+            public TErr InnerErr { get; }
 
             [Pure]
             public override Result<TResult> Bind<TResult>(Func<T, Result<TResult>> binder)
-                => new Result<TResult>.Error<TErr>(Message);
+                => new Result<TResult>.Error<TErr>(InnerErr);
 
             [Pure]
             public override Result<TResult> Select<TResult>(Func<T, TResult> binder)
-                => new Result<TResult>.Error<TErr>(Message);
+                => new Result<TResult>.Error<TErr>(InnerErr);
         }
 
-        public sealed class Threw : Result<T>
+        public sealed class Threw : Error
         {
             internal Threw(ExceptionDispatchInfo edi)
             {
@@ -108,10 +113,6 @@ namespace Abc
             [Pure]
             public override Result<TResult> Select<TResult>(Func<T, TResult> binder)
                 => new Result<TResult>.Threw(Edi);
-
-            [Pure]
-            public override Result<T> OrElse(Result<T> other)
-                => other;
 
             public void Rethrow()
                 => Edi.Throw();

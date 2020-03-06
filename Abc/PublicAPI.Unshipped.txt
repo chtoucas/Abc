@@ -42,8 +42,9 @@ Abc.Maybe<T>.Yield(int count) -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TOther, TResult> zipper) -> Abc.Maybe<TResult>
 Abc.Result
 Abc.Result<T>
+Abc.Result<T>.Error
 Abc.Result<T>.Error<TErr>
-Abc.Result<T>.Error<TErr>.Message.get -> TErr
+Abc.Result<T>.Error<TErr>.InnerErr.get -> TErr
 Abc.Result<T>.None
 Abc.Result<T>.Some
 Abc.Result<T>.Some.Value.get -> T
@@ -53,7 +54,7 @@ Abc.Result<T>.Threw.Rethrow() -> void
 Abc.Result<T>.Threw.Rethrow<TResult>() -> TResult
 Abc.ResultFactory
 Abc.ResultFactory<T>
-Abc.ResultFactory<T>.Error<TErr>(TErr message) -> Abc.Result<T>
+Abc.ResultFactory<T>.Error<TErr>(TErr err) -> Abc.Result<T>
 Abc.ResultFactory<T>.None.get -> Abc.Result<T>
 Abc.ResultFactory<T>.Threw(System.Runtime.ExceptionServices.ExceptionDispatchInfo edi) -> Abc.Result<T>
 Abc.Unit
@@ -74,12 +75,11 @@ override Abc.Result<T>.Some.Bind<TResult>(System.Func<T, Abc.Result<TResult>> bi
 override Abc.Result<T>.Some.OrElse(Abc.Result<T> other) -> Abc.Result<T>
 override Abc.Result<T>.Some.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
 override Abc.Result<T>.Threw.Bind<TResult>(System.Func<T, Abc.Result<TResult>> binder) -> Abc.Result<TResult>
-override Abc.Result<T>.Threw.OrElse(Abc.Result<T> other) -> Abc.Result<T>
 override Abc.Result<T>.Threw.Select<TResult>(System.Func<T, TResult> binder) -> Abc.Result<TResult>
 override Abc.Unit.Equals(object obj) -> bool
 override Abc.Unit.GetHashCode() -> int
 override Abc.Unit.ToString() -> string
-override sealed Abc.Result<T>.None.OrElse(Abc.Result<T> other) -> Abc.Result<T>
+override sealed Abc.Result<T>.Error.OrElse(Abc.Result<T> other) -> Abc.Result<T>
 static Abc.Extensions.DictionaryX.MayGetValue<TKey, TValue>(this System.Collections.Generic.IDictionary<TKey, TValue> this, TKey key) -> Abc.Maybe<TValue>
 static Abc.Extensions.NameValueCollectionX.MayGetSingle(this System.Collections.Specialized.NameValueCollection this, string name) -> Abc.Maybe<string>
 static Abc.Extensions.NameValueCollectionX.MayGetValues(this System.Collections.Specialized.NameValueCollection this, string name) -> Abc.Maybe<string[]>

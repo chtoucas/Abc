@@ -14,6 +14,11 @@ namespace Abc.Utilities
     /// </summary>
     internal static class ExceptionFactory
     {
+        public static InvalidOperationException ControlFlow
+            => new InvalidOperationException(
+                "The flow of execution just reached a section of the code that should have been unreachable."
+                + $"{Environment.NewLine}Most certainly signals a coding error. Please report.");
+
         [Pure]
         public static InvalidOperationException EmptySequence
             => new InvalidOperationException("The sequence was empty.");

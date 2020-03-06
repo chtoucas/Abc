@@ -38,8 +38,8 @@ namespace Abc
         public Result<T> None => None_;
 
         [Pure]
-        public Result<T> Error<TErr>([DisallowNull]TErr message)
-            => new Result<T>.Error<TErr>(message);
+        public Result<T> Error<TErr>([DisallowNull]TErr err)
+            => new Result<T>.Error<TErr>(err);
 
         [Pure]
         public Result<T> Threw(ExceptionDispatchInfo edi)
