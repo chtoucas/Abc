@@ -5,7 +5,8 @@ namespace Abc
     using System;
     using System.Globalization;
 
-    // REVIEW: Nullable or Maybe?
+    // Warning, most of the time a Nullable is better choice for value types.
+
     public static partial class MayParse { }
 
     // Parsers for simple value types.
@@ -184,15 +185,14 @@ namespace Abc
     public partial class MayParse
     {
         public static Maybe<TEnum> ToEnum<TEnum>(string? value)
-            where TEnum : struct
+            where TEnum : struct, Enum
             => ToEnum<TEnum>(value, ignoreCase: true);
 
-        // TODO: Explain that this method exhibits the same behaviour as Enum.TryParse,
-        // in the sense that parsing any literal integer value will succeed even if
+        // This method exhibits the same behaviour as Enum.TryParse, in the
+        // sense that parsing any literal integer value will succeed even if
         // it is not a valid enumeration value.
-        // See http://stackoverflow.com/questions/2191037/why-can-i-parse-invalid-values-to-an-enum-in-net
         public static Maybe<TEnum> ToEnum<TEnum>(string? value, bool ignoreCase)
-            where TEnum : struct
+            where TEnum : struct, Enum
             => Enum.TryParse(value, ignoreCase, out TEnum result)
                 ? Maybe.Some(result) : Maybe<TEnum>.None;
 
@@ -217,8 +217,11 @@ namespace Abc
     public partial class MayParse
     {
         public static Maybe<Uri> ToUri(string? value, UriKind uriKind)
+        {
             // REVIEW: Uri.TryCreate accepts empty strings.
-            => Uri.TryCreate(value, uriKind, out Uri? uri)
-                ? Maybe.Of(uri) : Maybe<Uri>.None;
+            Uri.TryCreate(value, uriKind, out Uri? uri);
+            // NULL_FORGIVING
+            return Maybe.Of(uri!);
+        }
     }
 }
