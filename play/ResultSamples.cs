@@ -5,6 +5,10 @@
 namespace Abc
 {
     using System;
+    using System.Diagnostics.Contracts;
+    using System.Runtime.ExceptionServices;
+
+    using Anexn = System.ArgumentNullException;
 
     // Simulating Either<T, TError> with a ValueTuple.
     public static class Result<T, TError> where T : struct
@@ -16,10 +20,11 @@ namespace Abc
             => (Result.None<T>(), error);
     }
 
+    public static partial class ResultSamples { }
+
     // With classes instead of structs, we can use pattern matching.
     // Of course, if we had sum types like in F# it would be simpler and clearer.
-
-    public static class ResultSamples
+    public partial class ResultSamples
     {
         public static string SomeOrNone(bool ok)
         {
@@ -53,5 +58,108 @@ namespace Abc
                 _ => throw new InvalidOperationException()
             };
         }
+    }
+
+    // When the error is in fact an exception.
+    // Just for demo, it is most certainly not a very good idea to replace
+    // the exception system.
+    public partial class ResultSamples
+    {
+        public static void Rethrow<T, TException>(
+            this Result<T>.Error<TException> @this)
+            where TException : Exception
+        {
+            Require.NotNull(@this, nameof(@this));
+
+            ExceptionDispatchInfo.Capture(@this.InnerErr).Throw();
+        }
+
+        public static TResult Rethrow<T, TException, TResult>(
+            this Result<T>.Error<TException> @this, TResult fake)
+            where TException : Exception
+        {
+            Require.NotNull(@this, nameof(@this));
+
+            ExceptionDispatchInfo.Capture(@this.InnerErr).Throw();
+
+            return fake;
+        }
+
+#pragma warning disable CA1031 // Do not catch general exception types
+
+        [Pure]
+        public static Result<Unit> TryWith(Action action)
+        {
+            if (action is null) { throw new Anexn(nameof(action)); }
+
+            try
+            {
+                action();
+                return Result.Ok;
+            }
+            catch (Exception ex)
+            {
+                return Result.OfType<Unit>().Error(ex);
+            }
+        }
+
+        [Pure]
+        public static Result<TResult> TryWith<TResult>(Func<TResult> func)
+        {
+            if (func is null) { throw new Anexn(nameof(func)); }
+
+            try
+            {
+                return Result.Of(func());
+            }
+            catch (Exception ex)
+            {
+                return Result.OfType<TResult>().Error(ex);
+            }
+        }
+
+        [Pure]
+        public static Result<Unit> TryFinally(Action action, Action finallyAction)
+        {
+            if (action is null) { throw new Anexn(nameof(action)); }
+            if (finallyAction is null) { throw new Anexn(nameof(finallyAction)); }
+
+            try
+            {
+                action();
+                return Result.Ok;
+            }
+            catch (Exception ex)
+            {
+                return Result.OfType<Unit>().Error(ex);
+            }
+            finally
+            {
+                finallyAction();
+            }
+        }
+
+        [Pure]
+        public static Result<TResult> TryFinally<TResult>(
+            Func<TResult> func, Action finallyAction)
+        {
+            if (func is null) { throw new Anexn(nameof(func)); }
+            if (finallyAction is null) { throw new Anexn(nameof(finallyAction)); }
+
+            try
+            {
+                return Result.Of(func());
+            }
+            catch (Exception ex)
+            {
+                return Result.OfType<TResult>().Error(ex);
+            }
+            finally
+            {
+                finallyAction();
+            }
+        }
+
+#pragma warning restore CA1031
     }
 }

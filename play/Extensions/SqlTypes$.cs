@@ -7,6 +7,8 @@ namespace Abc.Extensions
 
     using static MaybeFactory;
 
+    using MaybeT = Maybe;
+
     /// <summary>
     /// Provides extension methods to convert native SQL server data types to
     /// CLR types.
@@ -53,31 +55,40 @@ namespace Abc.Extensions
     // CLR reference types.
     public partial class SqlTypesX
     {
-        // REVIEW: code, which version? Add converse of Maybe.Guard()?
-
         public static Maybe<byte[]> Maybe(this SqlBinary @this)
-            //=> @this.IsNull ? Maybe<byte[]>.None : SomeOrNone(@this.Value);
-            // NULL_FORGIVING
-            => Abc.Maybe.Guard(!@this.IsNull).ReplaceWith(@this.Value);
+            => MaybeT.Guard(!@this.IsNull).ReplaceWith(@this.Value);
 
         public static Maybe<byte[]> Maybe(this SqlBytes @this)
-            //=> @this is null || @this.IsNull ? Maybe<byte[]>.None : SomeOrNone(@this.Value);
-            // NULL_FORGIVING
-            => Abc.Maybe.Guard(!(@this is null || @this.IsNull)).ReplaceWith(@this?.Value!);
+        {
+            var guard = MaybeT.Guard(!(@this is null || @this.IsNull));
+#if NULL_FORGIVING
+            return guard.ReplaceWith(@this?.Value!);
+#else
+            return guard.ReplaceWith(@this?.Value);
+#endif
+        }
 
         public static Maybe<char[]> Maybe(this SqlChars @this)
-            //=> @this is null || @this.IsNull ? Maybe<char[]>.None : SomeOrNone(@this.Value);
-            // NULL_FORGIVING
-            => Abc.Maybe.Guard(!(@this is null || @this.IsNull)).ReplaceWith(@this?.Value!);
+        {
+            var guard = MaybeT.Guard(!(@this is null || @this.IsNull));
+#if NULL_FORGIVING
+            return guard.ReplaceWith(@this?.Value!);
+#else
+            return guard.ReplaceWith(@this?.Value);
+#endif
+        }
 
         public static Maybe<string> Maybe(this SqlString @this)
-            //=> @this.IsNull ? Maybe<string>.None : SomeOrNone(@this.Value);
-            // NULL_FORGIVING
-            => Abc.Maybe.Guard(!@this.IsNull).ReplaceWith(@this.Value);
+            => MaybeT.Guard(!@this.IsNull).ReplaceWith(@this.Value);
 
         public static Maybe<string> Maybe(this SqlXml @this)
-            //=> @this is null || @this.IsNull ? Maybe<string>.None : SomeOrNone(@this.Value);
-            // NULL_FORGIVING
-            => Abc.Maybe.Guard(!(@this is null || @this.IsNull)).ReplaceWith(@this?.Value!);
+        {
+            var guard = MaybeT.Guard(!(@this is null || @this.IsNull));
+#if NULL_FORGIVING
+            return guard.ReplaceWith(@this?.Value!);
+#else
+            return guard.ReplaceWith(@this?.Value);
+#endif
+        }
     }
 }
