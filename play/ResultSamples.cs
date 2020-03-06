@@ -6,14 +6,14 @@ namespace Abc
 {
     using System;
 
-    // Hand-made Either using a ValueTuple.
+    // Simulating Either<T, TError> with a ValueTuple.
     public static class Result<T, TError> where T : struct
     {
         public static (Result<T> success, TError error) Ok(T value)
             => (Result.Some(value), default);
 
         public static (Result<T> success, TError error) Error(TError error)
-            => (Result.OfType<T>.None, error);
+            => (Result.None<T>(), error);
     }
 
     // With classes instead of structs, we can use pattern matching.
@@ -23,7 +23,7 @@ namespace Abc
     {
         public static string SomeOrNone(bool ok)
         {
-            var r = ok ? Result.Some(1) : Result.OfType<int>.None;
+            var r = ok ? Result.Some(1) : Result.None<int>();
 
             return r switch
             {
@@ -35,7 +35,8 @@ namespace Abc
 
         public static string SomeOrError(bool ok)
         {
-            var r = ok ? Result.Some(1) : Result.OfType<int>.Error("Boum!!!");
+            var result = Result.OfType<int>();
+            var r = ok ? result.Some(1) : result.Error("Boum!!!");
 
             return r switch
             {
