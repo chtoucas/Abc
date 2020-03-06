@@ -37,7 +37,7 @@ namespace Abc
             {
                 Result<int>.Some some => $"{some.Value}",
                 Result<int>.Error<string> err => err.InnerErr,
-                Result<int>.Threw exn => exn.Rethrow<string>(),
+                Result<int>.Error<Exception> exn => exn.Rethrow(default(string)!),
                 _ => throw new InvalidOperationException()
             };
         }

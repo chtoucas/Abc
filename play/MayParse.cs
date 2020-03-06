@@ -218,7 +218,6 @@ namespace Abc
     {
         public static Maybe<Uri> ToUri(string? value, UriKind uriKind)
         {
-            // REVIEW: Uri.TryCreate accepts empty strings.
             Uri.TryCreate(value, uriKind, out Uri? uri);
             // NULL_FORGIVING
             return Maybe.Of(uri!);
