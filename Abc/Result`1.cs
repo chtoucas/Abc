@@ -5,7 +5,6 @@ namespace Abc
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Runtime.ExceptionServices;
 
     using Anexn = System.ArgumentNullException;
 
@@ -55,17 +54,7 @@ namespace Abc
                 => this;
         }
 
-        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
-        public abstract class Error : Result<T>
-        {
-            private protected Error() { }
-
-            [Pure]
-            public sealed override Result<T> OrElse(Result<T> other)
-                => other;
-        }
-
-        public class None : Error
+        public class None : Result<T>
         {
             internal None() { }
 
@@ -76,6 +65,20 @@ namespace Abc
             [Pure]
             public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
                 => ResultFactory<TResult>.None_;
+
+            [Pure]
+            public override Result<T> OrElse(Result<T> other)
+                => other;
+        }
+
+        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+        public abstract class Error : Result<T>
+        {
+            private protected Error() { }
+
+            [Pure]
+            public sealed override Result<T> OrElse(Result<T> other)
+                => other;
         }
 
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
@@ -95,34 +98,6 @@ namespace Abc
             [Pure]
             public override Result<TResult> Select<TResult>(Func<T, TResult> binder)
                 => new Result<TResult>.Error<TErr>(InnerErr);
-        }
-
-        public sealed class Threw : Error
-        {
-            internal Threw(ExceptionDispatchInfo edi)
-            {
-                Edi = edi ?? throw new Anexn(nameof(edi));
-            }
-
-            public ExceptionDispatchInfo Edi { get; }
-
-            [Pure]
-            public override Result<TResult> Bind<TResult>(Func<T, Result<TResult>> binder)
-                => new Result<TResult>.Threw(Edi);
-
-            [Pure]
-            public override Result<TResult> Select<TResult>(Func<T, TResult> binder)
-                => new Result<TResult>.Threw(Edi);
-
-            public void Rethrow()
-                => Edi.Throw();
-
-            public TResult Rethrow<TResult>()
-            {
-                Edi.Throw();
-                // NULL_FORGIVING
-                return default!;
-            }
         }
 #pragma warning restore CA1034
     }

@@ -47,6 +47,8 @@ namespace Abc
         public static Maybe<T> Some<T>(T value) where T : struct
             => new Maybe<T>(value);
 
+        // FIXME: API Of<T>() where T : class
+
         /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.

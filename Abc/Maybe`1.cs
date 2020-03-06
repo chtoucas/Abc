@@ -250,7 +250,7 @@ namespace Abc
         /// <paramref name="onSome"/>, otherwise it executes
         /// <paramref name="onNone"/>.
         /// </summary>
-        public Maybe<T> Do(Action<T> onSome, Action onNone)
+        public void Do(Action<T> onSome, Action onNone)
         {
             if (_isSome)
             {
@@ -262,36 +262,22 @@ namespace Abc
                 if (onNone is null) { throw new Anexn(nameof(onNone)); }
                 onNone();
             }
-            // Fluent API.
-            return this;
         }
+
+        // No method OnNone(action), it is much simpler to write:
+        //   if (maybe.IsNone) { action(); }
 
         /// <summary>
         /// If the current instance encloses a value, it executes
         /// <paramref name="action"/>.
         /// </summary>
-        public Maybe<T> OnSome(Action<T> action)
+        public void OnSome(Action<T> action)
         {
             if (_isSome)
             {
                 if (action is null) { throw new Anexn(nameof(action)); }
                 action(_value);
             }
-            // Fluent API.
-            return this;
-        }
-
-        // It is often much simpler to write:
-        //   if (maybe.IsNone) { action(); }
-        public Maybe<T> OnNone(Action action)
-        {
-            if (!_isSome)
-            {
-                if (action is null) { throw new Anexn(nameof(action)); }
-                action();
-            }
-            // Fluent API.
-            return this;
         }
 
         #region Specialized versions

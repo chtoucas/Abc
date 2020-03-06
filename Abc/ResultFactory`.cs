@@ -4,7 +4,6 @@ namespace Abc
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Runtime.ExceptionServices;
 
     /// <summary>
     /// Provides extension methods for <see cref="ResultFactory{T}"/>.
@@ -40,10 +39,6 @@ namespace Abc
         [Pure]
         public Result<T> Error<TErr>([DisallowNull]TErr err)
             => new Result<T>.Error<TErr>(err);
-
-        [Pure]
-        public Result<T> Threw(ExceptionDispatchInfo edi)
-            => new Result<T>.Threw(edi);
     }
 
 }
