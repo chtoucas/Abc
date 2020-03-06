@@ -579,8 +579,8 @@ namespace Abc
         //   (x.HasValue ? (long?)y : (long?)null).
         [Pure]
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
-            where TResult : notnull
         {
+            // REVIEW: two versions? one for structs, one for classes?
             return _isSome ? Maybe.Of(value) : Maybe<TResult>.None;
         }
 
@@ -638,7 +638,7 @@ namespace Abc
         /// See also <seealso cref="Maybe.Flatten"/>.
         [Pure]
         public Maybe<Maybe<T>> Duplicate()
-            => Maybe.Some(this);
+            => new Maybe<Maybe<T>>(this);
 
         /// See also <seealso cref="Yield(int)"/>.
         /// <remarks>

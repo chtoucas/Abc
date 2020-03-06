@@ -31,7 +31,7 @@ namespace Abc
         /// Represents the unit for the type <see cref="Maybe{T}"/>.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Maybe<Unit> Unit = Some(Abc.Unit.Default);
+        public static readonly Maybe<Unit> Unit = new Maybe<Unit>(Abc.Unit.Default);
 
         /// <summary>
         /// Represents the zero for <see cref="Maybe{T}.Bind"/>.
@@ -41,31 +41,26 @@ namespace Abc
 
         /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
-        /// specified value.
+        /// specified nullable value.
+        /// <para>DO NOT USE, only here to prevent the creation of maybe's for
+        /// a nullable value type; see <seealso cref="MaybeFactory"/>.</para>
         /// </summary>
         [Pure]
-        public static Maybe<T> Some<T>(T value) where T : struct
-            => new Maybe<T>(value);
-
-        // FIXME: API Of<T>() where T : class
+        public static Maybe<T> Of<T>(T? value) where T : struct
+            // DO NOT REMOVE THIS METHOD.
+            // Prevents the creation of a Maybe<T?> **directly**.
+            => value.HasValue ? new Maybe<T>(value.Value) : Maybe<T>.None;
 
         /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
+        /// <para>For concrete types, <seealso cref="MaybeFactory"/> should be
+        /// preferred.</para>
         /// </summary>
         // F# Workflow: return.
         [Pure]
         public static Maybe<T> Of<T>([AllowNull]T value)
             => value is null ? Maybe<T>.None : new Maybe<T>(value);
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
-        /// specified nullable value.
-        /// </summary>
-        [Pure]
-        public static Maybe<T> Of<T>(T? value) where T : struct
-            // This method makes it impossible to create a Maybe<T?> **directly**.
-            => value.HasValue ? Some(value.Value) : Maybe<T>.None;
 
         /// <summary>
         /// Removes one level of structure, projecting the bound value into the
@@ -90,7 +85,7 @@ namespace Abc
             // NB: When IsSome is true, Value.HasValue is also true, therefore
             // we can safely access Value.Value.
             // NULL_FORGIVING
-            => @this.IsSome ? Some(@this.Value!.Value) : Maybe<T>.None;
+            => @this.IsSome ? new Maybe<T>(@this.Value!.Value) : Maybe<T>.None;
 
         // Conversion from Maybe<T?> to T?.
         [Pure]

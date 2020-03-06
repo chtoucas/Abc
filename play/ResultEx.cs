@@ -87,7 +87,7 @@ namespace Abc
 
             try
             {
-                return Result.SomeOrNone(func());
+                return Result.Of(func());
             }
             catch (Exception ex)
             {
@@ -125,7 +125,7 @@ namespace Abc
 
             try
             {
-                return Result.SomeOrNone(func());
+                return Result.Of(func());
             }
             catch (Exception ex)
             {

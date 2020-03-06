@@ -40,6 +40,7 @@ Abc.Maybe<T>.XorElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.Yield() -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.Yield(int count) -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TOther, TResult> zipper) -> Abc.Maybe<TResult>
+Abc.MaybeFactory
 Abc.Result
 Abc.Result<T>
 Abc.Result<T>.Error
@@ -112,7 +113,6 @@ static Abc.Maybe.Lift<T1, T2, TResult>(this System.Func<T1, T2, TResult> this, A
 static Abc.Maybe.Lift<TSource, TResult>(this System.Func<TSource, TResult> this, Abc.Maybe<TSource> maybe) -> Abc.Maybe<TResult>
 static Abc.Maybe.Of<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.Of<T>(T? value) -> Abc.Maybe<T>
-static Abc.Maybe.Some<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.Squash<T>(this in Abc.Maybe<T?> this) -> Abc.Maybe<T>
 static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T> this) -> T?
 static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T?> this) -> T?
@@ -126,7 +126,11 @@ static Abc.Maybe<T>.operator <=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
+static Abc.MaybeFactory.Some<T>(T value) -> Abc.Maybe<T>
+static Abc.MaybeFactory.SomeOrNone<T>(T value) -> Abc.Maybe<T>
+static Abc.MaybeFactory.SomeOrNone<T>(T? value) -> Abc.Maybe<T>
 static Abc.Result.None<T>() -> Abc.Result<T>
+static Abc.Result.Of<T>(T value) -> Abc.Result<T>
 static Abc.Result.OfType<T>() -> Abc.ResultFactory<T>
 static Abc.Result.Some<T>(T value) -> Abc.Result<T>
 static Abc.Result.SomeOrNone<T>(T value) -> Abc.Result<T>
