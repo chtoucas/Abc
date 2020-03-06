@@ -29,6 +29,7 @@ namespace Abc.Fx
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector)
         {
+            // NULL_FORGIVING
             return Join(@this, inner, outerKeySelector, innerKeySelector, resultSelector, null!);
         }
 

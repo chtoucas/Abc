@@ -230,6 +230,7 @@ namespace Abc.Fx
 
         public override int GetHashCode()
             => match(
+                // NULL_FORGIVING
                 some: x => x!.GetHashCode(),
                 none: 0);
     }
