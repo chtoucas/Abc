@@ -13,9 +13,9 @@ namespace Abc.Utilities
         /// <summary>
         /// Generates an infinite sequence of one repeated value.
         /// </summary>
-        public static IEnumerable<T> Forever<T>(T value)
+        public static IEnumerable<T> Repeat<T>(T value)
         {
-            // REVIEW: Optimize Forever().
+            // REVIEW: Optimize Repeat().
             while (true)
             {
                 yield return value;

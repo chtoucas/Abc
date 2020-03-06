@@ -17,59 +17,6 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
-    // Overview.
-    //
-    // The structure Maybe<T> is an option type for C#.
-    // The intended usage is when T is a value type, a string, a (read-only?)
-    // record, or a function. For other reference types, it should be fine as
-    // long as T is an **immutable** reference type.
-    //
-    // Static properties.
-    // - Maybe<T>.None
-    // - Maybe.None
-    // - Maybe.Unit
-    //
-    // Instance properties (no public access to the enclosed value if any,
-    // ie no property Value).
-    // - IsNone
-    //
-    // Static factories (no public ctor).
-    // - Maybe.Of()
-    // - Maybe.Some()       specialized form of Of() but for value types
-    // - Maybe.Guard()
-    //
-    // Instance methods where the result is another maybe.
-    // - Bind()
-    // - Select()           LINQ select
-    // - SelectMany()       LINQ select many
-    // - Where()            LINQ filter
-    // - Join()             LINQ join
-    // - GroupJoin()        LINQ group join
-    // - OrElse()           coalescing
-    // - XorElse()
-    // - ZipWith()
-    // - Apply()
-    // - ReplaceWith()
-    // - ContinueWith()
-    // - PassThru()
-    // - Skip()
-    // - Replicate()
-    // - Duplicate()
-    //
-    // Async methods.
-    // - BindAsync()
-    // - SelectAsync()
-    // - OrElseAsync()
-    //
-    // Safe escapes from a maybe.
-    // - Switch()           pattern matching
-    // - ValueOrXXX()       unwrap
-    // - Do()               side-effects actions
-    // - OnSome()           side-effects actions
-    // - GetEnumerator()    iterable (implicit)
-    // - Yield()            enumerable (explicit)
-    // - Contains()         singleton or empty set
-
     // REVIEW: maybe type
     // - nullable attrs, notnull constraint.
     //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
@@ -88,6 +35,61 @@ namespace Abc
     /// value at all.
     /// <para><see cref="Maybe{T}"/> is a read-only struct.</para>
     /// </summary>
+    ///
+    /// <remarks><![CDATA[
+    /// Overview.
+    ///
+    /// The structure Maybe<T> is an option type for C#.
+    /// The intended usage is when T is a value type, a string, a (read-only?)
+    /// record, or a function. For other reference types, it should be fine as
+    /// long as T is an **immutable** reference type.
+    ///
+    /// Static properties.
+    /// - Maybe<T>.None
+    /// - Maybe.None
+    /// - Maybe.Unit
+    ///
+    /// Instance properties (no public access to the enclosed value if any,
+    /// ie no property Value).
+    /// - IsNone
+    ///
+    /// Static factories (no public ctor).
+    /// - Maybe.Of()
+    /// - Maybe.Some()       specialized form of Of() but for value types
+    /// - Maybe.Guard()
+    ///
+    /// Instance methods where the result is another maybe.
+    /// - Bind()
+    /// - Select()           LINQ select
+    /// - SelectMany()       LINQ select many
+    /// - Where()            LINQ filter
+    /// - Join()             LINQ join
+    /// - GroupJoin()        LINQ group join
+    /// - OrElse()           coalescing
+    /// - XorElse()
+    /// - ZipWith()
+    /// - Apply()
+    /// - ReplaceWith()
+    /// - ContinueWith()
+    /// - PassThru()
+    /// - Skip()
+    /// - Replicate()
+    /// - Duplicate()
+    ///
+    /// Async methods.
+    /// - BindAsync()
+    /// - SelectAsync()
+    /// - OrElseAsync()
+    ///
+    /// Safe escapes from a maybe.
+    /// - Switch()           pattern matching
+    /// - ValueOrXXX()       unwrap
+    /// - Do()               side-effects actions
+    /// - OnSome()           side-effects actions
+    /// - GetEnumerator()    iterable (implicit)
+    /// - Yield()            enumerable (explicit)
+    /// - Contains()         singleton or empty set
+    /// ]]></remarks>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
     public readonly partial struct Maybe<T>
@@ -659,7 +661,7 @@ namespace Abc
         /// </remarks>
         [Pure]
         public Maybe<IEnumerable<T>> Replicate()
-            => Select(Sequence.Forever);
+            => Select(Sequence.Repeat);
     }
 
     // Iterable but not IEnumerable<>.
@@ -681,7 +683,7 @@ namespace Abc
         /// See also <seealso cref="Replicate()"/> and the comments there.
         [Pure]
         public IEnumerable<T> Yield()
-            => _isSome ? Sequence.Forever(_value) : Enumerable.Empty<T>();
+            => _isSome ? Sequence.Repeat(_value) : Enumerable.Empty<T>();
 
         // See also Replicate() and the comments there.
         // Maybe<T> being a struct it is never equal to null, therefore
