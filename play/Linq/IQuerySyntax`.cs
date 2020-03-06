@@ -4,6 +4,11 @@ namespace Abc.Linq
 {
     using System;
 
+    public interface IQuerySyntax
+    {
+        IQuerySyntax<T> Cast<T>();
+    }
+
     public interface IQuerySyntax<T> : IQuerySyntax
     {
         IQuerySyntax<T> Where(Func<T, bool> predicate);

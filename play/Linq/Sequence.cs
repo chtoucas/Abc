@@ -4,6 +4,7 @@ namespace Abc.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Provides static helpers to produce new sequences.
@@ -15,10 +16,7 @@ namespace Abc.Linq
         /// Generates a sequence that contains exactly one value.
         /// </summary>
         public static IEnumerable<T> Return<T>(T value)
-        {
-            // Enumerable.Repeat(value, 1) works too.
-            yield return value;
-        }
+            => Enumerable.Repeat(value, 1);
 
         /// <summary>
         /// Generates an infinite sequence of one repeated value.
