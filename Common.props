@@ -15,6 +15,9 @@
     <!--<LangVersion>8.0</LangVersion>-->
     <Nullable>enable</Nullable>
 
+    <!-- Enable the null-forgiving operator -->
+    <DefineConstants>$(DefineConstants);NULL_FORGIVING</DefineConstants>
+
     <WarningsAsErrors>NU1605</WarningsAsErrors>
 
     <!--
@@ -39,14 +42,14 @@
   <!-- DEBUG -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DefineConstants>TRACE;DEBUG;CONTRACTS_FULL</DefineConstants>
+    <DefineConstants>$(DefineConstants);TRACE;DEBUG;CONTRACTS_FULL</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
   <!-- RELEASE -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DefineConstants>TRACE;CONTRACTS_FULL</DefineConstants>
+    <DefineConstants>$(DefineConstants);TRACE;CONTRACTS_FULL</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
