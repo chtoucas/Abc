@@ -25,12 +25,7 @@ namespace Abc
         {
             var r = ok ? Result.Some(1) : Result.None<int>();
 
-            return r switch
-            {
-                Result<int>.Some some => $"{some.Value}",
-                Result<int>.None _ => "No value",
-                _ => throw new InvalidOperationException()
-            };
+            return r is Result<int>.Some some ? $"{some.Value}" : "No value";
         }
 
         public static string SomeOrError(bool ok)
@@ -41,7 +36,7 @@ namespace Abc
             return r switch
             {
                 Result<int>.Some some => $"{some.Value}",
-                Result<int>.Error<string> err => err.Message,
+                Result<int>.Error<string> err => err.InnerErr,
                 Result<int>.Threw exn => exn.Rethrow<string>(),
                 _ => throw new InvalidOperationException()
             };
