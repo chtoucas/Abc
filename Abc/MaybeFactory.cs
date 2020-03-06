@@ -7,6 +7,13 @@ namespace Abc
     public static class MaybeFactory
     {
         /// <summary>
+        /// Obtains an instance of <see cref="Maybe{T}" /> that does not enclose
+        /// any value.
+        /// <para>This static property is thread-safe.</para>
+        /// </summary>
+        public static Maybe<T> None<T>() => Maybe<T>.None;
+
+        /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified value.
         /// </summary>
