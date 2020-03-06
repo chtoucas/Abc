@@ -29,6 +29,7 @@ namespace Abc
     // - Struct really? Compare w/ ValueTuple
     //   http://mustoverride.com/tuples_structs/
     //   https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
+    // - ReplaceWith() two versions? one for structs, one for classes?
 
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
@@ -170,12 +171,12 @@ namespace Abc
     public partial struct Maybe<T>
     {
         /// <summary>
-        /// Obtains an instance of <see cref="Maybe{T}" /> that does not enclose
-        /// any value.
-        /// <para>This static property is thread-safe.</para>
+        /// Represents the unique instance of <see cref="Maybe{T}" /> that does
+        /// not enclose any value.
+        /// <para>This field is read-only.</para>
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1000:Do not declare static members on generic types", Justification = "There is no such thing as a generic static property on a non-generic type.")]
-        public static Maybe<T> None { get; } = default;
+        /// <seealso cref="MaybeFactory.None{T}"/>
+        public static readonly Maybe<T> None = default;
 
         // F# Workflow: let!.
         [Pure]
@@ -580,7 +581,6 @@ namespace Abc
         [Pure]
         public Maybe<TResult> ReplaceWith<TResult>(TResult value)
         {
-            // REVIEW: two versions? one for structs, one for classes?
             return _isSome ? Maybe.Of(value) : Maybe<TResult>.None;
         }
 
@@ -635,12 +635,12 @@ namespace Abc
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;
 
-        /// See also <seealso cref="Maybe.Flatten"/>.
+        /// <seealso cref="Maybe.Flatten"/>
         [Pure]
         public Maybe<Maybe<T>> Duplicate()
             => new Maybe<Maybe<T>>(this);
 
-        /// See also <seealso cref="Yield(int)"/>.
+        /// <seealso cref="Yield(int)"/>
         /// <remarks>
         /// The difference with <see cref="Yield(int)"/> is in the treatment of
         /// an empty maybe. <see cref="Yield(int)"/> with an empty maybe returns
@@ -652,7 +652,7 @@ namespace Abc
             => Select(x => Enumerable.Repeat(x, count));
 
         // Beware, infinite loop!
-        /// See also <seealso cref="Yield()"/>.
+        /// <seealso cref="Yield()"/>
         /// <remarks>
         /// The difference with <see cref="Yield()"/> is in the treatment of
         /// an empty maybe. <see cref="Yield()"/> with an empty maybe returns

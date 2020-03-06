@@ -17,6 +17,7 @@ namespace Abc
     // - Maybe<IEnumerable>
     // - MaySum, Sum w/ num types
     // - lazy extensions.
+    // - add converse of Maybe.Guard()?
 
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
@@ -43,19 +44,18 @@ namespace Abc
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
         /// <para>DO NOT USE, only here to prevent the creation of maybe's for
-        /// a nullable value type; see <seealso cref="MaybeFactory"/>.</para>
+        /// a nullable value type; see <seealso cref="MaybeFactory"/> for a
+        /// better alternative.</para>
         /// </summary>
         [Pure]
         public static Maybe<T> Of<T>(T? value) where T : struct
-            // DO NOT REMOVE THIS METHOD.
-            // Prevents the creation of a Maybe<T?> **directly**.
             => value.HasValue ? new Maybe<T>(value.Value) : Maybe<T>.None;
 
         /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
-        /// <para>For concrete types, <seealso cref="MaybeFactory"/> should be
-        /// preferred.</para>
+        /// <para>For concrete types, methods in <seealso cref="MaybeFactory"/>
+        /// should be used instead.</para>
         /// </summary>
         // F# Workflow: return.
         [Pure]
@@ -66,7 +66,7 @@ namespace Abc
         /// Removes one level of structure, projecting the bound value into the
         /// outer level.
         /// </summary>
-        /// See also <seealso cref="Maybe{T}.Duplicate"/>.
+        /// <seealso cref="Maybe{T}.Duplicate"/>
         [Pure]
         public static Maybe<T> Flatten<T>(this in Maybe<Maybe<T>> @this)
             => @this.IsSome ? @this.Value : Maybe<T>.None;
@@ -189,7 +189,7 @@ namespace Abc
     // Extension methods for functions in the Kleisli category.
     public partial class Maybe
     {
-        /// See also <seealso cref="Maybe{T}.Bind"/>.
+        /// <seealso cref="Maybe{T}.Bind"/>
         [Pure]
         public static Maybe<TResult> Invoke<TSource, TResult>(
             this Func<TSource, Maybe<TResult>> @this,
@@ -222,7 +222,7 @@ namespace Abc
     // Lift, promote functions to Maybe's.
     public partial class Maybe
     {
-        /// See also <seealso cref="Maybe{T}.Select"/>.
+        /// <seealso cref="Maybe{T}.Select"/>
         [Pure]
         public static Maybe<TResult> Lift<TSource, TResult>(
             this Func<TSource, TResult> @this,
@@ -231,7 +231,7 @@ namespace Abc
             return maybe.Select(@this);
         }
 
-        /// See also <seealso cref="Maybe{T}.ZipWith"/>.
+        /// <seealso cref="Maybe{T}.ZipWith"/>
         [Pure]
         public static Maybe<TResult> Lift<T1, T2, TResult>(
             this Func<T1, T2, TResult> @this,
@@ -294,7 +294,7 @@ namespace Abc
     // Extension methods for Maybe<T> where T is a function.
     public partial class Maybe
     {
-        /// See also <seealso cref="Maybe{T}.Apply"/>.
+        /// <seealso cref="Maybe{T}.Apply"/>
         [Pure]
         public static Maybe<TResult> Invoke<TSource, TResult>(
             this Maybe<Func<TSource, TResult>> @this,

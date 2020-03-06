@@ -119,13 +119,13 @@ static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T?> this) -> T?
 static Abc.Maybe.Use<TDisposable, TResult>(this Abc.Maybe<TDisposable> this, System.Func<TDisposable, Abc.Maybe<TResult>> binder) -> Abc.Maybe<TResult>
 static Abc.Maybe.Use<TDisposable, TResult>(this Abc.Maybe<TDisposable> this, System.Func<TDisposable, TResult> selector) -> Abc.Maybe<TResult>
 static Abc.Maybe.ValueOrEmpty<T>(this Abc.Maybe<System.Collections.Generic.IEnumerable<T>> this) -> System.Collections.Generic.IEnumerable<T>
-static Abc.Maybe<T>.None.get -> Abc.Maybe<T>
 static Abc.Maybe<T>.operator !=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator <(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator <=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
+static Abc.MaybeFactory.None<T>() -> Abc.Maybe<T>
 static Abc.MaybeFactory.Some<T>(T value) -> Abc.Maybe<T>
 static Abc.MaybeFactory.SomeOrNone<T>(T value) -> Abc.Maybe<T>
 static Abc.MaybeFactory.SomeOrNone<T>(T? value) -> Abc.Maybe<T>
@@ -146,5 +146,6 @@ static Abc.Unit.operator ==(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator ==(System.ValueTuple left, Abc.Unit right) -> bool
 static readonly Abc.Maybe.Unit -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Maybe.Zero -> Abc.Maybe<Abc.Unit>
+static readonly Abc.Maybe<T>.None -> Abc.Maybe<T>
 static readonly Abc.Result.Ok -> Abc.Result<Abc.Unit>
 static readonly Abc.Unit.Default -> Abc.Unit

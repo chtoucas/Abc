@@ -99,6 +99,7 @@ namespace Abc
             public override Result<TResult> Select<TResult>(Func<T, TResult> binder)
                 => new Result<TResult>.Error<TErr>(InnerErr);
         }
+
 #pragma warning restore CA1034
     }
 }
