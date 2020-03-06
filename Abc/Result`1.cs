@@ -120,6 +120,7 @@ namespace Abc
             public TResult Rethrow<TResult>()
             {
                 Edi.Throw();
+                // NULL_FORGIVING
                 return default!;
             }
         }
