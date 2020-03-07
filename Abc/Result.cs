@@ -39,6 +39,5 @@ namespace Abc
         [Pure]
         public static Result<T> SomeOrNone<T>(T? value) where T : class
             => value is null ? Result<T>.None.Uniq : new Result<T>.Some(value);
-
     }
 }

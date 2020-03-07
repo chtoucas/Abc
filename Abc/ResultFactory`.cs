@@ -43,5 +43,4 @@ namespace Abc
         public Result<T> Error<TErr>([DisallowNull]TErr err)
             => new Result<T>.Error<TErr>(err);
     }
-
 }

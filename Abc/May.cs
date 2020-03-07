@@ -6,7 +6,7 @@ namespace Abc
     using System.Globalization;
 
     /// <summary>
-    /// Provides static methods implementing the May-Parse pattern.
+    /// Provides static methods in the style of the May-Parse pattern.
     /// </summary>
     /// <remarks>
     /// Beware, for value types a nullable is often a better choice.
