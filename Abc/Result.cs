@@ -10,10 +10,12 @@ namespace Abc
         public static readonly Result<Unit> Ok = Some(default(Unit));
 
         [Pure]
-        public static Result<T> None<T>() => ResultFactory<T>.None_;
+        public static Result<T> None<T>() where T : notnull
+            => ResultFactory<T>.None_;
 
         [Pure]
-        public static ResultFactory<T> OfType<T>() => ResultFactory<T>.Uniq;
+        public static ResultFactory<T> OfType<T>()
+            => ResultFactory<T>.Uniq;
 
         [Pure]
         public static Result<T> Some<T>(T value) where T : struct
