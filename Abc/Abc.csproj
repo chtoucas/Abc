@@ -3,6 +3,9 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Common.props" />
 
   <PropertyGroup>
+    <!-- NB: the first listed framework is the one used by the VS editor.
+      To enable full analysis of NRT we need .NET Core 3.1 not .NET Standard 2.1.
+      -->
     <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
 
     <VersionPrefix>0.1.0</VersionPrefix>
@@ -15,6 +18,10 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
     <!-- Purpose: define the nullable attributes -->
     <DefineConstants>$(DefineConstants);NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+    <DefineConstants>$(DefineConstants);NETSTANDARD2_1</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
