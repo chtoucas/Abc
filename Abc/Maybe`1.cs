@@ -439,7 +439,7 @@ namespace Abc
             Func<T, TKey> outerKeySelector,
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector,
-            IEqualityComparer<TKey> comparer)
+            IEqualityComparer<TKey>? comparer)
         {
             if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
             if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
@@ -485,12 +485,11 @@ namespace Abc
         //    Func<T, TKey> outerKeySelector,
         //    Func<TInner, TKey> innerKeySelector,
         //    Func<T, Maybe<TInner>, TResult> resultSelector,
-        //    IEqualityComparer<TKey> comparer)
+        //    IEqualityComparer<TKey>? comparer)
         //{
         //    if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
         //    if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
         //    if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
-        //    if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
         //    if (_isSome && inner._isSome)
         //    {
