@@ -1,6 +1,8 @@
 Abc.Extensions.DictionaryX
 Abc.Extensions.NameValueCollectionX
 Abc.Linq.Qperators
+Abc.May
+Abc.May.May() -> void
 Abc.Maybe
 Abc.Maybe<T>
 Abc.Maybe<T>.Apply<TResult>(Abc.Maybe<System.Func<T, TResult>> applicative) -> Abc.Maybe<TResult>
@@ -93,6 +95,34 @@ static Abc.Linq.Qperators.SingleOrNone<TSource>(this System.Collections.Generic.
 static Abc.Linq.Qperators.SingleOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.WhereAny<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Maybe<bool>> predicate) -> System.Collections.Generic.IEnumerable<TSource>
 static Abc.Linq.Qperators.ZipAny<T1, T2, TResult>(this System.Collections.Generic.IEnumerable<T1> first, System.Collections.Generic.IEnumerable<T2> second, System.Func<T1, T2, Abc.Maybe<TResult>> resultSelector) -> System.Collections.Generic.IEnumerable<TResult>
+static Abc.May.ParseByte(string value) -> Abc.Maybe<byte>
+static Abc.May.ParseByte(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<byte>
+static Abc.May.ParseDateTime(string value) -> Abc.Maybe<System.DateTime>
+static Abc.May.ParseDateTime(string value, string format) -> Abc.Maybe<System.DateTime>
+static Abc.May.ParseDateTime(string value, string format, System.Globalization.DateTimeStyles style, System.IFormatProvider provider) -> Abc.Maybe<System.DateTime>
+static Abc.May.ParseDecimal(string value) -> Abc.Maybe<decimal>
+static Abc.May.ParseDecimal(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<decimal>
+static Abc.May.ParseDouble(string value) -> Abc.Maybe<double>
+static Abc.May.ParseDouble(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<double>
+static Abc.May.ParseEnum<TEnum>(string value) -> Abc.Maybe<TEnum>
+static Abc.May.ParseEnum<TEnum>(string value, bool ignoreCase) -> Abc.Maybe<TEnum>
+static Abc.May.ParseInt16(string value) -> Abc.Maybe<short>
+static Abc.May.ParseInt16(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<short>
+static Abc.May.ParseInt32(string value) -> Abc.Maybe<int>
+static Abc.May.ParseInt32(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<int>
+static Abc.May.ParseInt64(string value) -> Abc.Maybe<long>
+static Abc.May.ParseInt64(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<long>
+static Abc.May.ParseSByte(string value) -> Abc.Maybe<sbyte>
+static Abc.May.ParseSByte(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<sbyte>
+static Abc.May.ParseSingle(string value) -> Abc.Maybe<float>
+static Abc.May.ParseSingle(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<float>
+static Abc.May.ParseUInt16(string value) -> Abc.Maybe<ushort>
+static Abc.May.ParseUInt16(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<ushort>
+static Abc.May.ParseUInt32(string value) -> Abc.Maybe<uint>
+static Abc.May.ParseUInt32(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<uint>
+static Abc.May.ParseUInt64(string value) -> Abc.Maybe<ulong>
+static Abc.May.ParseUInt64(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<ulong>
+static Abc.May.ParseUri(string value, System.UriKind uriKind) -> Abc.Maybe<System.Uri>
 static Abc.Maybe.Any<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> Abc.Maybe<T>
 static Abc.Maybe.CollectAny<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> System.Collections.Generic.IEnumerable<T>
 static Abc.Maybe.Compose<TSource, TMiddle, TResult>(this System.Func<TSource, Abc.Maybe<TMiddle>> this, System.Func<TMiddle, Abc.Maybe<TResult>> other) -> System.Func<TSource, Abc.Maybe<TResult>>
