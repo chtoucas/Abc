@@ -58,18 +58,14 @@ Abc.Unit
 Abc.Unit.Equals(Abc.Unit other) -> bool
 Abc.Unit.Equals(System.ValueTuple other) -> bool
 Abc.Unit.Unit() -> void
-abstract Abc.Result<T>.Bind<TResult>(System.Func<T, Abc.Result<TResult>> binder) -> Abc.Result<TResult>
 abstract Abc.Result<T>.OrElse(Abc.Result<T> other) -> Abc.Result<T>
 abstract Abc.Result<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
 override Abc.Maybe<T>.Equals(object obj) -> bool
 override Abc.Maybe<T>.GetHashCode() -> int
 override Abc.Maybe<T>.ToString() -> string
-override Abc.Result<T>.Error<TErr>.Bind<TResult>(System.Func<T, Abc.Result<TResult>> binder) -> Abc.Result<TResult>
 override Abc.Result<T>.Error<TErr>.Select<TResult>(System.Func<T, TResult> binder) -> Abc.Result<TResult>
-override Abc.Result<T>.None.Bind<TResult>(System.Func<T, Abc.Result<TResult>> binder) -> Abc.Result<TResult>
 override Abc.Result<T>.None.OrElse(Abc.Result<T> other) -> Abc.Result<T>
 override Abc.Result<T>.None.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
-override Abc.Result<T>.Some.Bind<TResult>(System.Func<T, Abc.Result<TResult>> binder) -> Abc.Result<TResult>
 override Abc.Result<T>.Some.OrElse(Abc.Result<T> other) -> Abc.Result<T>
 override Abc.Result<T>.Some.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
 override Abc.Unit.Equals(object obj) -> bool

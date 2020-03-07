@@ -1,5 +1,11 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
+// REVIEW: remove Bind()?
+#if DEBUG
+// Only in DEBUG mode, otherwise we would have to update PublicAPI.
+//#define ENABLE_BIND
+#endif
+
 namespace Abc
 {
     using System;
@@ -8,15 +14,15 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // REVIEW: remove Bind()?
-
     // Both an Option type and a Result type.
     public abstract class Result<T>
     {
         private protected Result() { }
 
+#if ENABLE_BIND
         [Pure]
         public abstract Result<TResult> Bind<TResult>(Func<T, Result<TResult>> binder);
+#endif
 
         [Pure]
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Query Expression Pattern")]
@@ -37,12 +43,14 @@ namespace Abc
 
             public T Value { get; }
 
+#if ENABLE_BIND
             [Pure]
             public override Result<TResult> Bind<TResult>(Func<T, Result<TResult>> binder)
             {
                 if (binder is null) { throw new Anexn(nameof(binder)); }
                 return binder(Value);
             }
+#endif
 
             [Pure]
             public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
@@ -60,9 +68,11 @@ namespace Abc
         {
             internal None() { }
 
+#if ENABLE_BIND
             [Pure]
             public override Result<TResult> Bind<TResult>(Func<T, Result<TResult>> binder)
                 => ResultFactory<TResult>.None_;
+#endif
 
             [Pure]
             public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
@@ -93,9 +103,11 @@ namespace Abc
 
             public TErr InnerErr { get; }
 
+#if ENABLE_BIND
             [Pure]
             public override Result<TResult> Bind<TResult>(Func<T, Result<TResult>> binder)
                 => new Result<TResult>.Error<TErr>(InnerErr);
+#endif
 
             [Pure]
             public override Result<TResult> Select<TResult>(Func<T, TResult> binder)
