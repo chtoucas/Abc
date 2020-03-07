@@ -11,30 +11,33 @@ namespace Abc
     /// </summary>
     public static class ResultFactory
     {
+#pragma warning disable CA1707 // Identifiers should not contain underscores
+
         [Pure]
-        public static Result<T> Some<T>(this ResultFactory<T> @this, T value)
+        public static Result<T> Some<T>(this ResultFactory<T> _, T value)
             where T : struct
             => new Result<T>.Some(value);
 
         [Pure]
-        public static Result<T> SomeOrNone<T>(this ResultFactory<T> @this, [AllowNull]T value)
-            => value is null ? ResultFactory<T>.None_ : new Result<T>.Some(value);
+        public static Result<T> SomeOrNone<T>(this ResultFactory<T> _, T? value)
+            where T : struct
+            => value.HasValue ? new Result<T>.Some(value.Value) : Result<T>.None.Uniq;
 
         [Pure]
-        public static Result<T> SomeOrNone<T>(this ResultFactory<T> @this, T? value)
-            where T : struct
-            => value.HasValue ? new Result<T>.Some(value.Value) : ResultFactory<T>.None_;
+        public static Result<T> SomeOrNone<T>(this ResultFactory<T> _, T? value)
+            where T : class
+            => value is null ? Result<T>.None.Uniq : new Result<T>.Some(value);
+
+#pragma warning restore CA1707
     }
 
     public sealed class ResultFactory<T>
     {
-        internal static readonly Result<T> None_ = Result<T>.None.Uniq;
-
         private ResultFactory() { }
 
         internal static readonly ResultFactory<T> Uniq = new ResultFactory<T>();
 
-        public Result<T> None => None_;
+        public Result<T> None => Result<T>.None.Uniq;
 
         [Pure]
         public Result<T> Error<TErr>([DisallowNull]TErr err)

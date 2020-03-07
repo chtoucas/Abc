@@ -2,10 +2,9 @@
 
 namespace Abc
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-
-    // FIXME: Of() vs SomeOrNone().
 
     public static class Result
     {
@@ -16,12 +15,18 @@ namespace Abc
             => ResultFactory<T>.Uniq;
 
         [Pure]
+        // Not actually obsolete, but clearly states that we shouldn't use it.
+        [Obsolete("Use SomeOrNone() instead.")]
+        public static Result<T> Of<T>(T? value) where T : struct
+            => value.HasValue ? new Result<T>.Some(value.Value) : Result<T>.None.Uniq;
+
+        [Pure]
         public static Result<T> Of<T>([AllowNull]T value)
-            => value is null ? ResultFactory<T>.None_ : new Result<T>.Some(value);
+            => value is null ? Result<T>.None.Uniq : new Result<T>.Some(value);
 
         [Pure]
         public static Result<T> None<T>() where T : notnull
-            => ResultFactory<T>.None_;
+            => Result<T>.None.Uniq;
 
         [Pure]
         public static Result<T> Some<T>(T value) where T : struct
@@ -29,10 +34,11 @@ namespace Abc
 
         [Pure]
         public static Result<T> SomeOrNone<T>(T? value) where T : struct
-            => value.HasValue ? new Result<T>.Some(value.Value) : ResultFactory<T>.None_;
+            => value.HasValue ? new Result<T>.Some(value.Value) : Result<T>.None.Uniq;
 
         [Pure]
         public static Result<T> SomeOrNone<T>(T? value) where T : class
-            => value is null ? ResultFactory<T>.None_ : new Result<T>.Some(value);
+            => value is null ? Result<T>.None.Uniq : new Result<T>.Some(value);
+
     }
 }

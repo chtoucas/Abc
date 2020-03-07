@@ -7,8 +7,13 @@ namespace Abc
     using System.Diagnostics.Contracts;
 
     using Anexn = System.ArgumentNullException;
+    using EF = Abc.Utilities.ExceptionFactory;
 
-    // REVIEW: add SelectMany & Join.
+    // TODO: Result type.
+    // - Of() vs SomeOrNone(). Constraints.
+    // - add SelectMany & Join?
+    // - nested types make things a bit obscure.
+    // - fast-track for simple Some/None.
 
     // Since Value is public, Bind() is not really useful, furthermore
     // it would complicate the API.
@@ -17,6 +22,10 @@ namespace Abc
     public abstract class Result<T>
     {
         private protected Result() { }
+
+        private protected abstract bool IsSome { get; }
+
+        [NotNull] private protected abstract T ValueIntern { get; }
 
         [Pure]
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
@@ -40,6 +49,10 @@ namespace Abc
 
             [NotNull] public T Value { get; }
 
+            private protected override bool IsSome => true;
+
+            [NotNull] private protected override T ValueIntern => Value;
+
             [Pure]
             public override Result<T> OrElse(Result<T> other)
                 => this;
@@ -55,15 +68,33 @@ namespace Abc
             public override Result<T> Where(Func<T, bool> predicate)
             {
                 if (predicate is null) { throw new Anexn(nameof(predicate)); }
-                return predicate(Value) ? this : ResultFactory<T>.None_;
+                return predicate(Value) ? this : None.Uniq;
             }
+
+            //[Pure]
+            //public Result<TResult> SelectMany<TMiddle, TResult>(
+            //    Func<T, Result<TMiddle>> selector,
+            //    Func<T, TMiddle, TResult> resultSelector)
+            //{
+            //    if (selector is null) { throw new Anexn(nameof(selector)); }
+            //    if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+            //    var middle = selector(Value);
+            //    if (!middle.IsSome) { return Result<TResult>.None.Uniq; }
+
+            //    return Result.Of(resultSelector(Value, middle.ValueIntern));
+            //}
         }
 
         public sealed class None : Result<T>
         {
-            internal static readonly None Uniq = new None();
+            internal static readonly Result<T> Uniq = new None();
 
             private None() { }
+
+            private protected override bool IsSome => false;
+
+            [NotNull] private protected override T ValueIntern => throw EF.ControlFlow;
 
             [Pure]
             public override Result<T> OrElse(Result<T> other)
@@ -71,7 +102,7 @@ namespace Abc
 
             [Pure]
             public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
-                => ResultFactory<TResult>.None_;
+                => Result<TResult>.None.Uniq;
 
             [Pure]
             public override Result<T> Where(Func<T, bool> predicate)
@@ -82,6 +113,10 @@ namespace Abc
         public abstract class Error : Result<T>
         {
             private protected Error() { }
+
+            private protected override bool IsSome => false;
+
+            [NotNull] private protected override T ValueIntern => throw EF.ControlFlow;
 
             [Pure]
             public sealed override Result<T> OrElse(Result<T> other)
