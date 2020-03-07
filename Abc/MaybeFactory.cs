@@ -19,9 +19,13 @@ namespace Abc
     {
         /// <summary>
         /// Obtains an instance of the empty <see cref="Maybe{T}" />.
-        /// <para>This static property is thread-safe.</para>
         /// </summary>
-        public static Maybe<T> None<T>() => Maybe<T>.None;
+        /// <remarks>
+        /// To obtain the empty maybe for an unconstrained type, please see
+        /// <see cref="Maybe{T}.None"/>.
+        /// </remarks>
+        public static Maybe<T> None<T>() where T : notnull
+            => Maybe<T>.None;
 
         /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
