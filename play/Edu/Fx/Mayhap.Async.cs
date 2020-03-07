@@ -1,9 +1,11 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Fx
+namespace Abc.Edu.Fx
 {
     using System;
     using System.Threading.Tasks;
+
+    using Abc.Utilities;
 
     // Configurable core async methods?
     // https://devblogs.microsoft.com/dotnet/configureawait-faq/

@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc
+namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;

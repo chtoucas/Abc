@@ -1,10 +1,12 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Linq
+namespace Abc.Edu.Linq
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
+    using Abc.Utilities;
 
     /// <summary>
     /// Provides static helpers to produce new sequences.

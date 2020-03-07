@@ -1,10 +1,12 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Fx
+namespace Abc.Edu.Fx
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
+    using Abc.Utilities;
 
     // Query Expression Pattern aka LINQ.
     public static partial class Mayhap

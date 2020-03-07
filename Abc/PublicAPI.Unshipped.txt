@@ -1,5 +1,3 @@
-Abc.Extensions.DictionaryX
-Abc.Extensions.NameValueCollectionX
 Abc.Linq.Qperators
 Abc.May
 Abc.May.May() -> void
@@ -77,10 +75,6 @@ override Abc.Unit.Equals(object obj) -> bool
 override Abc.Unit.GetHashCode() -> int
 override Abc.Unit.ToString() -> string
 override sealed Abc.Result<T>.Error.OrElse(Abc.Result<T> other) -> Abc.Result<T>
-static Abc.Extensions.DictionaryX.MayGetValue<TKey, TValue>(this System.Collections.Generic.IDictionary<TKey, TValue> this, TKey key) -> Abc.Maybe<TValue>
-static Abc.Extensions.NameValueCollectionX.MayGetSingle(this System.Collections.Specialized.NameValueCollection this, string name) -> Abc.Maybe<string>
-static Abc.Extensions.NameValueCollectionX.MayGetValues(this System.Collections.Specialized.NameValueCollection this, string name) -> Abc.Maybe<string[]>
-static Abc.Extensions.NameValueCollectionX.ParseValues<T>(this System.Collections.Specialized.NameValueCollection this, string name, System.Func<string, Abc.Maybe<T>> parser) -> System.Collections.Generic.IEnumerable<T>
 static Abc.Linq.Qperators.ElementAtOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, int index) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.FirstOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.FirstOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>

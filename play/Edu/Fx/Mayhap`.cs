@@ -1,11 +1,13 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Fx
+namespace Abc.Edu.Fx
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using Abc.Utilities;
 
     // WARNING: This code does NOT reflect best practice.
     // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).

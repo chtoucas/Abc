@@ -15,6 +15,7 @@ namespace Abc.Extensions
         [Pure]
         public static Maybe<TValue> MayGetValue<TKey, TValue>(
             this IDictionary<TKey, TValue> @this, TKey key)
+            where TKey : notnull
         {
             if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
 

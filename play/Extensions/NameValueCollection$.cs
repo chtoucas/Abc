@@ -7,6 +7,8 @@ namespace Abc.Extensions
     using System.Collections.Specialized;
     using System.Diagnostics.Contracts;
 
+    using Abc.Linq;
+
     // REVIEW: MayGetValues, Maybe<IEnumerable>?
 
     /// <summary>
@@ -36,24 +38,23 @@ namespace Abc.Extensions
         public static IEnumerable<T> ParseValues<T>(
             this NameValueCollection @this, string name, Func<string, Maybe<T>> parser)
         {
+            var q = from values in @this.MayGetValues(name) select values.SelectAny(parser);
+            return q.ValueOrEmpty();
 
-            //var q = from values in @this.MayGetValues(name) select values.SelectAny(parser);
-            //return q.ValueOrEmpty();
+            //// Check args eagerly.
+            //if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
 
-            // Check args eagerly.
-            if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
+            //return __iterator();
 
-            return __iterator();
+            //IEnumerable<T> __iterator()
+            //{
+            //    foreach (string item in @this.GetValues(name))
+            //    {
+            //        var result = parser(item);
 
-            IEnumerable<T> __iterator()
-            {
-                foreach (string item in @this.GetValues(name))
-                {
-                    var result = parser(item);
-
-                    if (result.IsSome) { yield return result.Value; }
-                }
-            }
+            //        if (result.IsSome) { yield return result.Value; }
+            //    }
+            //}
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Fx
+namespace Abc.Edu.Fx
 {
     using System;
     using System.Collections.Generic;
+
+    using Abc.Utilities;
 
     public static class Ident
     {

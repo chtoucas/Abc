@@ -1,2 +1,2 @@
-﻿This project contains samples, experimental code and educational stuff 
-(namespaces `Abc.Fx` and `Abc.Linq`).
+﻿This project contains samples (`Abc.Samples`), experimental code and 
+educational stuff (`Abc.Edu`).

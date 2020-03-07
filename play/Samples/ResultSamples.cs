@@ -2,11 +2,13 @@
 
 #pragma warning disable CA1000 // Do not declare static members on generic types
 
-namespace Abc
+namespace Abc.Samples
 {
     using System;
     using System.Diagnostics.Contracts;
     using System.Runtime.ExceptionServices;
+
+    using Abc.Utilities;
 
     using Anexn = System.ArgumentNullException;
 
