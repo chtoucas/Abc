@@ -8,6 +8,8 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
+    // REVIEW: remove Bind()?
+
     // Both an Option type and a Result type.
     public abstract class Result<T>
     {

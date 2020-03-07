@@ -4,6 +4,11 @@ namespace Abc
 {
     using System.Diagnostics.Contracts;
 
+    /// <summary>
+    /// Provides static methods to create new instances of the
+    /// <see cref="Maybe{T}"/> struct.
+    /// <para>This class cannot be inherited.</para>
+    /// </summary>
     /// <example>
     /// Usage recommendation:
     /// <code><![CDATA[
