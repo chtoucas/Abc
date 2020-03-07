@@ -23,12 +23,12 @@ namespace Abc
     {
         private protected Result() { }
 
-        private protected abstract bool IsSome { get; }
+        public abstract bool IsSome { get; }
 
-        [NotNull] private protected abstract T ValueIntern { get; }
+        [NotNull] public abstract T Value { get; }
 
         [Pure]
-        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
         public abstract Result<T> OrElse(Result<T> other);
 
         [Pure]
@@ -47,11 +47,9 @@ namespace Abc
                 Value = value ?? throw new Anexn(nameof(value));
             }
 
-            [NotNull] public T Value { get; }
+            public override bool IsSome => true;
 
-            private protected override bool IsSome => true;
-
-            [NotNull] private protected override T ValueIntern => Value;
+            [NotNull] public override T Value { get; }
 
             [Pure]
             public override Result<T> OrElse(Result<T> other)
@@ -82,7 +80,7 @@ namespace Abc
             //    var middle = selector(Value);
             //    if (!middle.IsSome) { return Result<TResult>.None.Uniq; }
 
-            //    return Result.Of(resultSelector(Value, middle.ValueIntern));
+            //    return Result.Of(resultSelector(Value, middle.Value));
             //}
         }
 
@@ -92,9 +90,9 @@ namespace Abc
 
             private None() { }
 
-            private protected override bool IsSome => false;
+            public override bool IsSome => false;
 
-            [NotNull] private protected override T ValueIntern => throw EF.ControlFlow;
+            public override T Value { [DoesNotReturn] get => throw EF.NoValue; }
 
             [Pure]
             public override Result<T> OrElse(Result<T> other)
@@ -109,21 +107,21 @@ namespace Abc
                 => this;
         }
 
-        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
         public abstract class Error : Result<T>
         {
             private protected Error() { }
 
-            private protected override bool IsSome => false;
+            public sealed override bool IsSome => false;
 
-            [NotNull] private protected override T ValueIntern => throw EF.ControlFlow;
+            public sealed override T Value { [DoesNotReturn] get => throw EF.NoValue; }
 
             [Pure]
             public sealed override Result<T> OrElse(Result<T> other)
                 => other;
         }
 
-        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
         public sealed class Error<TErr> : Error
         {
             internal Error(TErr err)

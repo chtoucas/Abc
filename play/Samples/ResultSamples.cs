@@ -32,7 +32,7 @@ namespace Abc.Samples
         {
             var r = ok ? Result.Some(1) : Result.None<int>();
 
-            return r is Result<int>.Some some ? $"{some.Value}" : "No value";
+            return r.IsSome ? $"{r.Value}" : "No value";
         }
 
         public static string SomeOrError(bool ok)
