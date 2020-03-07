@@ -61,8 +61,8 @@ namespace Abc
     }
 
     // When the error is in fact an exception.
-    // Just for demo, it is most certainly not a very good idea to replace
-    // the exception system.
+    // Just for demo, in most cases, it is not a good idea to replace the
+    // standard exception system.
     public partial class ResultSamples
     {
         public static void Rethrow<T, TException>(

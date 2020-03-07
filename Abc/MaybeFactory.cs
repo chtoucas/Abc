@@ -4,11 +4,16 @@ namespace Abc
 {
     using System.Diagnostics.Contracts;
 
+    /// <example>
+    /// Usage recommendation:
+    /// <code><![CDATA[
+    /// using static MaybeFactory;
+    /// ]]></code>
+    /// </example>
     public static class MaybeFactory
     {
         /// <summary>
-        /// Obtains an instance of <see cref="Maybe{T}" /> that does not enclose
-        /// any value.
+        /// Obtains an instance of the empty <see cref="Maybe{T}" />.
         /// <para>This static property is thread-safe.</para>
         /// </summary>
         public static Maybe<T> None<T>() => Maybe<T>.None;

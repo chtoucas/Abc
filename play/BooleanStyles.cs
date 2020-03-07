@@ -20,7 +20,11 @@ namespace Abc
         Any = Literal | ZeroOrOne | EmptyOrWhiteSpaceIsFalse | HtmlInput,
     }
 
-    public static class BooleanStylesExtensions
+    /// <summary>
+    /// Provides extension methods for <see cref="BooleanStyles"/>.
+    /// <para>This class cannot be inherited.</para>
+    /// </summary>
+    internal static class BooleanStylesX
     {
         public static bool Contains(this BooleanStyles @this, BooleanStyles styles)
             => (@this & styles) != 0;

@@ -10,7 +10,7 @@ namespace Abc.Extensions
     /// <summary>
     /// Provides extension methods for <see cref="XAttribute"/> and
     /// <see cref="XElement"/>.
-    /// <para>WARNING: these extension methods do NOT throw when the object is
+    /// <para>Warning, these extension methods do NOT throw when the object is
     /// null but rather return an empty maybe.</para>
     /// </summary>
     public static partial class XObjectX { }

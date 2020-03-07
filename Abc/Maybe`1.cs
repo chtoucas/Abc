@@ -55,8 +55,10 @@ namespace Abc
     /// - IsNone
     ///
     /// Static factories (no public ctor).
+    /// - MabeFactory.None<T>()     the empty maybe
+    /// - MabeFactory.Some()        factory method for value types
+    /// - MabeFactory.SomeOrNone()
     /// - Maybe.Of()
-    /// - Maybe.Some()       specialized form of Of() but for value types
     /// - Maybe.Guard()
     ///
     /// Instance methods where the result is another maybe.
@@ -171,8 +173,8 @@ namespace Abc
     public partial struct Maybe<T>
     {
         /// <summary>
-        /// Represents the unique instance of <see cref="Maybe{T}" /> that does
-        /// not enclose any value.
+        /// Represents the empty <see cref="Maybe{T}" />, it does not enclose
+        /// any value.
         /// <para>This field is read-only.</para>
         /// </summary>
         /// <seealso cref="MaybeFactory.None{T}"/>
