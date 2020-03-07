@@ -44,7 +44,20 @@ namespace Abc.Samples
             {
                 Result<int>.Some some => $"{some.Value}",
                 Result<int>.Error<string> err => err.InnerError,
-                Result<int>.Error<Exception> exn => exn.Rethrow(default(string)!),
+                _ => throw new InvalidOperationException()
+            };
+        }
+
+        public static string SomeOrThrew(bool ok)
+        {
+            var result = Result.OfType<int>();
+            var r = ok ? result.Some(1) : result.Error("Boum!!!");
+
+            return r switch
+            {
+                Result<int>.Some some => $"{some.Value}",
+                Result<int>.Error<string> err => err.InnerError,
+                Result<int>.Error<NotSupportedException> exn => exn.Rethrow(default(string)!),
                 _ => throw new InvalidOperationException()
             };
         }
