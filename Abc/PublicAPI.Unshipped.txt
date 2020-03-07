@@ -46,7 +46,7 @@ Abc.Result
 Abc.Result<T>
 Abc.Result<T>.Error
 Abc.Result<T>.Error<TErr>
-Abc.Result<T>.Error<TErr>.InnerErr.get -> TErr
+Abc.Result<T>.Error<TErr>.InnerError.get -> TErr
 Abc.Result<T>.None
 Abc.Result<T>.Some
 Abc.Result<T>.Some.Value.get -> T
@@ -60,14 +60,18 @@ Abc.Unit.Equals(System.ValueTuple other) -> bool
 Abc.Unit.Unit() -> void
 abstract Abc.Result<T>.OrElse(Abc.Result<T> other) -> Abc.Result<T>
 abstract Abc.Result<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
+abstract Abc.Result<T>.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
 override Abc.Maybe<T>.Equals(object obj) -> bool
 override Abc.Maybe<T>.GetHashCode() -> int
 override Abc.Maybe<T>.ToString() -> string
-override Abc.Result<T>.Error<TErr>.Select<TResult>(System.Func<T, TResult> binder) -> Abc.Result<TResult>
+override Abc.Result<T>.Error<TErr>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
+override Abc.Result<T>.Error<TErr>.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
 override Abc.Result<T>.None.OrElse(Abc.Result<T> other) -> Abc.Result<T>
 override Abc.Result<T>.None.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
+override Abc.Result<T>.None.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
 override Abc.Result<T>.Some.OrElse(Abc.Result<T> other) -> Abc.Result<T>
 override Abc.Result<T>.Some.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
+override Abc.Result<T>.Some.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
 override Abc.Unit.Equals(object obj) -> bool
 override Abc.Unit.GetHashCode() -> int
 override Abc.Unit.ToString() -> string

@@ -43,7 +43,7 @@ namespace Abc.Samples
             return r switch
             {
                 Result<int>.Some some => $"{some.Value}",
-                Result<int>.Error<string> err => err.InnerErr,
+                Result<int>.Error<string> err => err.InnerError,
                 Result<int>.Error<Exception> exn => exn.Rethrow(default(string)!),
                 _ => throw new InvalidOperationException()
             };
@@ -73,7 +73,7 @@ namespace Abc.Samples
         {
             Require.NotNull(@this, nameof(@this));
 
-            ExceptionDispatchInfo.Capture(@this.InnerErr).Throw();
+            ExceptionDispatchInfo.Capture(@this.InnerError).Throw();
         }
 
         public static TResult Rethrow<T, TException, TResult>(
@@ -82,7 +82,7 @@ namespace Abc.Samples
         {
             Require.NotNull(@this, nameof(@this));
 
-            ExceptionDispatchInfo.Capture(@this.InnerErr).Throw();
+            ExceptionDispatchInfo.Capture(@this.InnerError).Throw();
 
             return fake;
         }
