@@ -156,7 +156,6 @@ namespace Abc
         /// Represents a debugger type proxy for <see cref="Maybe{T}"/>.
         /// </summary>
         [ExcludeFromCodeCoverage]
-        [SuppressMessage("Microsoft.Design", "CA1812:Avoid uninstantiated internal classes", Justification = "DebuggerTypeProxy")]
         private sealed class DebugView_
         {
             private readonly Maybe<T> _inner;
@@ -323,7 +322,7 @@ namespace Abc
 
         [Pure]
         public T ValueOrThrow()
-            => _isSome ? _value : throw new InvalidOperationException();
+            => _isSome ? _value : throw EF.NoValue;
 
         [Pure]
         public T ValueOrThrow(Func<Exception> exceptionFactory)
