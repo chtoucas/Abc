@@ -10,17 +10,23 @@ namespace Abc.Extensions
     /// <summary>
     /// Provides extension methods for <see cref="XAttribute"/> and
     /// <see cref="XElement"/>.
-    /// <para>Warning, these extension methods do NOT throw when the object is
-    /// null but rather return an empty maybe.</para>
     /// </summary>
     public static partial class XObjectX { }
 
     // Extension methods for XAttribute.
     public partial class XObjectX
     {
+        /// <remarks>
+        /// Beware, this extension method does NOT throw when the object is null
+        /// but rather returns an empty maybe.
+        /// </remarks>
         public static Maybe<XAttribute> NextAttributeOrNone(this XAttribute? @this)
             => SomeOrNone(@this?.NextAttribute);
 
+        /// <remarks>
+        /// Beware, this extension method does NOT throw when the object is null
+        /// but rather returns an empty maybe.
+        /// </remarks>
         public static Maybe<XAttribute> PreviousAttributeOrNone(this XAttribute? @this)
             => SomeOrNone(@this?.PreviousAttribute);
     }
@@ -28,12 +34,24 @@ namespace Abc.Extensions
     // Extension methods for XElement.
     public partial class XObjectX
     {
+        /// <remarks>
+        /// Beware, this extension method does NOT throw when the object is null
+        /// but rather returns an empty maybe.
+        /// </remarks>
         public static Maybe<XAttribute> AttributeOrNone(this XElement? @this, XName name)
             => SomeOrNone(@this?.Attribute(name));
 
+        /// <remarks>
+        /// Beware, this extension method does NOT throw when the object is null
+        /// but rather returns an empty maybe.
+        /// </remarks>
         public static Maybe<XElement> ElementOrNone(this XElement? @this, XName name)
             => SomeOrNone(@this?.Element(name));
 
+        /// <remarks>
+        /// Beware, this extension method does NOT throw when the object is null
+        /// but rather returns an empty maybe.
+        /// </remarks>
         public static Maybe<XElement> NextElementOrNone(this XElement? @this)
         {
             XNode? nextElement = @this?.NextNode;

@@ -11,7 +11,7 @@ namespace Abc
     /// Provides static methods implementing the May-Parse pattern.
     /// </summary>
     /// <remarks>
-    /// Warning, for value types a nullable is often a better choice.
+    /// Beware, for value types a nullable is often a better choice.
     /// Furthermore, internally this class merely wraps Try-Parse methods.
     /// </remarks>
     /// <example>

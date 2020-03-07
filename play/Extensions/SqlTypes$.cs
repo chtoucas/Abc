@@ -58,7 +58,11 @@ namespace Abc.Extensions
         public static Maybe<byte[]> Maybe(this SqlBinary @this)
             => MaybeT.Guard(!@this.IsNull).ReplaceWith(@this.Value);
 
-        public static Maybe<byte[]> Maybe(this SqlBytes @this)
+        /// <remarks>
+        /// Beware, this extension method does NOT throw when the object is null
+        /// but rather returns an empty maybe.
+        /// </remarks>
+        public static Maybe<byte[]> Maybe(this SqlBytes? @this)
         {
             var guard = MaybeT.Guard(!(@this is null || @this.IsNull));
 #if NULL_FORGIVING
@@ -68,7 +72,11 @@ namespace Abc.Extensions
 #endif
         }
 
-        public static Maybe<char[]> Maybe(this SqlChars @this)
+        /// <remarks>
+        /// Beware, this extension method does NOT throw when the object is null
+        /// but rather returns an empty maybe.
+        /// </remarks>
+        public static Maybe<char[]> Maybe(this SqlChars? @this)
         {
             var guard = MaybeT.Guard(!(@this is null || @this.IsNull));
 #if NULL_FORGIVING
@@ -81,7 +89,11 @@ namespace Abc.Extensions
         public static Maybe<string> Maybe(this SqlString @this)
             => MaybeT.Guard(!@this.IsNull).ReplaceWith(@this.Value);
 
-        public static Maybe<string> Maybe(this SqlXml @this)
+        /// <remarks>
+        /// Beware, this extension method does NOT throw when the object is null
+        /// but rather returns an empty maybe.
+        /// </remarks>
+        public static Maybe<string> Maybe(this SqlXml? @this)
         {
             var guard = MaybeT.Guard(!(@this is null || @this.IsNull));
 #if NULL_FORGIVING
