@@ -39,6 +39,10 @@ namespace Abc
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
         /// </summary>
+        /// <remarks>
+        /// To create a maybe for an unconstrained type, please see
+        /// <see cref="Maybe.Of{T}(T)"/>.
+        /// </remarks>
         [Pure]
         public static Maybe<T> SomeOrNone<T>(T? value) where T : struct
             // DO NOT REMOVE THIS METHOD.
@@ -49,6 +53,10 @@ namespace Abc
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
         /// </summary>
+        /// <remarks>
+        /// To create a maybe for an unconstrained type, please see
+        /// <see cref="Maybe.Of{T}(T)"/>.
+        /// </remarks>
         [Pure]
         public static Maybe<T> SomeOrNone<T>(T? value) where T : class
             => value is null ? Maybe<T>.None : new Maybe<T>(value);

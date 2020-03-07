@@ -48,6 +48,8 @@ namespace Abc
         /// better alternative.</para>
         /// </summary>
         [Pure]
+        // Not actually obsolete, but clearly states that we shouldn't use it.
+        [Obsolete("Use MaybeFactory.SomeOrNone() instead.")]
         public static Maybe<T> Of<T>(T? value) where T : struct
             => value.HasValue ? new Maybe<T>(value.Value) : Maybe<T>.None;
 
