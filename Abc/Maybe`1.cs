@@ -816,7 +816,11 @@ namespace Abc
         {
             if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
+#if NULL_FORGIVING
+            return _isSome ? comparer.GetHashCode(_value!) : 0;
+#else
             return _isSome ? comparer.GetHashCode(_value) : 0;
+#endif
         }
     }
 }

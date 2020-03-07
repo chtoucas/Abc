@@ -13,8 +13,11 @@
 
     <LangVersion>latest</LangVersion>
     <!--<LangVersion>8.0</LangVersion>-->
-    <Nullable>enable</Nullable>
 
+    <!-- Checked arithmetic -->
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+
+    <Nullable>enable</Nullable>
     <!-- Enable the null-forgiving operator -->
     <DefineConstants>$(DefineConstants);NULL_FORGIVING</DefineConstants>
 
@@ -43,14 +46,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <DefineConstants>$(DefineConstants);TRACE;DEBUG;CONTRACTS_FULL</DefineConstants>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
   <!-- RELEASE -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DefineConstants>$(DefineConstants);TRACE;CONTRACTS_FULL</DefineConstants>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
 </Project>
