@@ -232,7 +232,7 @@ namespace Abc.Edu.Fx
 
         public override int GetHashCode()
             => match(
-                // NULL_FORGIVING
+                // NULL_FORGIVING: when "some", x is NOT null.
                 some: x => x!.GetHashCode(),
                 none: 0);
     }

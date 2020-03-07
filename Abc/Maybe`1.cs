@@ -26,10 +26,9 @@ namespace Abc
     // - Serializable?
     // - Enhance and improve async methods.
     // - set ops.
-    // - Struct really? Compare w/ ValueTuple
+    // - Struct really? Compare to ValueTuple
     //   http://mustoverride.com/tuples_structs/
     //   https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
-    // - ReplaceWith() two versions? one for structs, one for classes?
 
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
@@ -134,7 +133,10 @@ namespace Abc
 
         /// <summary>
         /// Gets the enclosed value.
+        /// <para>You MUST check IsSome before calling this property.</para>
         /// </summary>
+        // REVIEW: not null Value.
+        [NotNull]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal T Value { get { Debug.Assert(_isSome); return _value; } }
 
@@ -212,6 +214,7 @@ namespace Abc
         /// <paramref name="caseNone"/>.
         /// </summary>
         [Pure]
+        [return: MaybeNull]
         public TResult Switch<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
         {
             if (_isSome)
@@ -232,8 +235,9 @@ namespace Abc
         /// <paramref name="caseNone"/>.
         /// </summary>
         [Pure]
-        [return: NotNullIfNotNull("caseNone")]
-        public TResult Switch<TResult>(Func<T, TResult> caseSome, TResult caseNone)
+        [return: MaybeNull]
+        public TResult Switch<TResult>(
+            Func<T, TResult> caseSome, [DisallowNull]TResult caseNone)
         {
             if (_isSome)
             {
@@ -582,11 +586,24 @@ namespace Abc
         // Compare to the nullable equiv w/ x an int? and y a long:
         //   (x.HasValue ? (long?)y : (long?)null).
         [Pure]
-        // It does work with null but then one should really use
-        // ContinueWith(Maybe<TResult>.None).
-        public Maybe<TResult> ReplaceWith<TResult>([DisallowNull]TResult value)
+        public Maybe<TResult> ReplaceWith<TResult>(TResult? value)
+            where TResult : class
         {
-            return _isSome ? Maybe.Of(value) : Maybe<TResult>.None;
+            return _isSome && !(value is null) ? new Maybe<TResult>(value)
+                : Maybe<TResult>.None;
+        }
+
+        // FIXME: ReplaceWith() works with null but then one should really use
+        // ContinueWith(Maybe<TResult>.None).
+        // We offer two versions to be able to inform the caller that the method
+        // return a Maybe<TResult> not a Maybe<TResult?>.
+
+        [Pure]
+        public Maybe<TResult> ReplaceWith<TResult>(TResult? value)
+            where TResult : struct
+        {
+            return _isSome && value.HasValue ? new Maybe<TResult>(value.Value)
+                : Maybe<TResult>.None;
         }
 
         /// <remarks>
@@ -819,11 +836,8 @@ namespace Abc
         {
             if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
-#if NULL_FORGIVING
-            return _isSome ? comparer.GetHashCode(_value!) : 0;
-#else
-            return _isSome ? comparer.GetHashCode(_value) : 0;
-#endif
+            // When _isSome is true, Value is NOT null.
+            return _isSome ? comparer.GetHashCode(Value) : 0;
         }
     }
 }

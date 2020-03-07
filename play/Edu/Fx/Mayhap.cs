@@ -31,8 +31,7 @@ namespace Abc.Edu.Fx
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector)
         {
-            // NULL_FORGIVING
-            return Join(@this, inner, outerKeySelector, innerKeySelector, resultSelector, null!);
+            return Join(@this, inner, outerKeySelector, innerKeySelector, resultSelector, null);
         }
 
         public static Mayhap<TResult> Join<T, TInner, TKey, TResult>(
@@ -41,7 +40,7 @@ namespace Abc.Edu.Fx
             Func<T, TKey> outerKeySelector,
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector,
-            IEqualityComparer<TKey> comparer)
+            IEqualityComparer<TKey>? comparer)
         {
             Require.NotNull(outerKeySelector, nameof(outerKeySelector));
             Require.NotNull(innerKeySelector, nameof(innerKeySelector));

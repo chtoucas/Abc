@@ -82,10 +82,9 @@ namespace Abc
         // Conversion from Maybe<T?> to  Maybe<T>.
         [Pure]
         public static Maybe<T> Squash<T>(this in Maybe<T?> @this) where T : struct
-            // NB: When IsSome is true, Value.HasValue is also true, therefore
-            // we can safely access Value.Value.
-            // NULL_FORGIVING
-            => @this.IsSome ? new Maybe<T>(@this.Value!.Value) : Maybe<T>.None;
+            // When IsSome is true, Value.HasValue is also true, therefore we
+            // can safely access Value.Value.
+            => @this.IsSome ? new Maybe<T>(@this.Value.Value) : Maybe<T>.None;
 
         // Conversion from Maybe<T?> to T?.
         [Pure]
