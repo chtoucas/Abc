@@ -28,7 +28,7 @@ namespace Abc
 
     public sealed class ResultFactory<T>
     {
-        internal static readonly Result<T> None_ = new Result<T>.None();
+        internal static readonly Result<T> None_ = Result<T>.None.Uniq;
 
         private ResultFactory() { }
 

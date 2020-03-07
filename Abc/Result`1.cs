@@ -1,12 +1,5 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-// REVIEW: since Value is public, Bind() is not really necessary, furthermore
-// it would complicate the API. Add LINQ ops SelectMany & Join.
-#if DEBUG
-// Only in DEBUG mode, otherwise we would have to update PublicAPI.
-//#define ENABLE_BIND
-#endif
-
 namespace Abc
 {
     using System;
@@ -15,15 +8,15 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
+    // REVIEW: add SelectMany & Join.
+
+    // Since Value is public, Bind() is not really useful, furthermore
+    // it would complicate the API.
+
     // Both an Option type and a Result type.
     public abstract class Result<T>
     {
         private protected Result() { }
-
-#if ENABLE_BIND
-        [Pure]
-        public abstract Result<TResult> Bind<TResult>(Func<T, Result<TResult>> binder);
-#endif
 
         [Pure]
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
@@ -47,15 +40,6 @@ namespace Abc
 
             [NotNull] public T Value { get; }
 
-#if ENABLE_BIND
-            [Pure]
-            public override Result<TResult> Bind<TResult>(Func<T, Result<TResult>> binder)
-            {
-                if (binder is null) { throw new Anexn(nameof(binder)); }
-                return binder(Value);
-            }
-#endif
-
             [Pure]
             public override Result<T> OrElse(Result<T> other)
                 => this;
@@ -75,15 +59,11 @@ namespace Abc
             }
         }
 
-        public class None : Result<T>
+        public sealed class None : Result<T>
         {
-            internal None() { }
+            internal static readonly None Uniq = new None();
 
-#if ENABLE_BIND
-            [Pure]
-            public override Result<TResult> Bind<TResult>(Func<T, Result<TResult>> binder)
-                => ResultFactory<TResult>.None_;
-#endif
+            private None() { }
 
             [Pure]
             public override Result<T> OrElse(Result<T> other)
@@ -116,13 +96,7 @@ namespace Abc
                 InnerError = err ?? throw new Anexn(nameof(err));
             }
 
-            public TErr InnerError { get; }
-
-#if ENABLE_BIND
-            [Pure]
-            public override Result<TResult> Bind<TResult>(Func<T, Result<TResult>> binder)
-                => new Result<TResult>.Error<TErr>(InnerError);
-#endif
+            [NotNull] public TErr InnerError { get; }
 
             [Pure]
             public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
