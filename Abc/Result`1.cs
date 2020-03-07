@@ -12,8 +12,8 @@ namespace Abc
     // TODO: Result type.
     // - Of() vs SomeOrNone(). Constraints.
     // - add SelectMany & Join?
-    // - nested types make things a bit obscure.
-    // - fast-track for simple Some/None.
+    // - nested types make things a bit obscure. Construction is fine, pattern
+    //   matching is not.
 
     // Since Value is public, Bind() is not really useful, furthermore
     // it would complicate the API.
@@ -26,6 +26,8 @@ namespace Abc
         public abstract bool IsSome { get; }
 
         [NotNull] public abstract T Value { get; }
+
+        public abstract Maybe<T> ToMaybe();
 
         [Pure]
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
@@ -50,6 +52,11 @@ namespace Abc
             public override bool IsSome => true;
 
             [NotNull] public override T Value { get; }
+
+            public static explicit operator Maybe<T>(Some some)
+                => some is null ? Maybe<T>.None : new Maybe<T>(some.Value);
+
+            public override Maybe<T> ToMaybe() => new Maybe<T>(Value);
 
             [Pure]
             public override Result<T> OrElse(Result<T> other)
@@ -94,6 +101,12 @@ namespace Abc
 
             public override T Value { [DoesNotReturn] get => throw EF.NoValue; }
 
+            [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Unary op_Implicit")]
+            public static implicit operator Maybe<T>(None none)
+                => Maybe<T>.None;
+
+            public override Maybe<T> ToMaybe() => Maybe<T>.None;
+
             [Pure]
             public override Result<T> OrElse(Result<T> other)
                 => other;
@@ -116,6 +129,8 @@ namespace Abc
 
             public sealed override T Value { [DoesNotReturn] get => throw EF.NoValue; }
 
+            public sealed override Maybe<T> ToMaybe() => Maybe<T>.None;
+
             [Pure]
             public sealed override Result<T> OrElse(Result<T> other)
                 => other;
@@ -124,7 +139,7 @@ namespace Abc
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
         public sealed class Error<TErr> : Error
         {
-            internal Error(TErr err)
+            internal Error([DisallowNull] TErr err)
             {
                 InnerError = err ?? throw new Anexn(nameof(err));
             }
