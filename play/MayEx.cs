@@ -4,12 +4,10 @@ namespace Abc
 {
     using System;
 
-    using static MaybeFactory;
-
     public abstract class MayEx : May
     {
-        private static readonly Maybe<bool> s_True = Some(true);
-        private static readonly Maybe<bool> s_False = Some(false);
+        private static readonly Maybe<bool> s_True = Maybe.Some(true);
+        private static readonly Maybe<bool> s_False = Maybe.Some(false);
 
         protected MayEx() { }
 

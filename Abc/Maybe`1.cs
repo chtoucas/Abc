@@ -17,7 +17,7 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
-    // REVIEW: maybe type
+    // REVIEW: Maybe type
     // - nullable attrs, notnull constraint.
     //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
@@ -177,7 +177,7 @@ namespace Abc
         /// any value.
         /// <para>This field is read-only.</para>
         /// </summary>
-        /// <seealso cref="MaybeFactory.None{T}"/>
+        /// <seealso cref="Maybe.None{T}"/>
         public static readonly Maybe<T> None = default;
 
         // F# Workflow: let!.

@@ -5,8 +5,6 @@ namespace Abc
     using System;
     using System.Globalization;
 
-    using static MaybeFactory;
-
     /// <summary>
     /// Provides static methods implementing the May-Parse pattern.
     /// </summary>
@@ -54,7 +52,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return Decimal.TryParse(value, style, provider, out decimal result)
-                ? Some(result) : Maybe<decimal>.None;
+                ? Maybe.Some(result) : Maybe<decimal>.None;
         }
 
         /// <summary>
@@ -83,7 +81,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return Double.TryParse(value, style, provider, out double result)
-                ? Some(result) : Maybe<double>.None;
+                ? Maybe.Some(result) : Maybe<double>.None;
         }
 
         /// <summary>
@@ -102,7 +100,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return Int16.TryParse(value, style, provider, out short result)
-                ? Some(result) : Maybe<short>.None;
+                ? Maybe.Some(result) : Maybe<short>.None;
         }
 
         /// <summary>
@@ -121,7 +119,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return Int32.TryParse(value, style, provider, out int result)
-                ? Some(result) : Maybe<int>.None;
+                ? Maybe.Some(result) : Maybe<int>.None;
         }
 
         /// <summary>
@@ -140,7 +138,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return Int64.TryParse(value, style, provider, out long result)
-                ? Some(result) : Maybe<long>.None;
+                ? Maybe.Some(result) : Maybe<long>.None;
         }
 
         /// <summary>
@@ -159,7 +157,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return Single.TryParse(value, style, provider, out float result)
-                ? Some(result) : Maybe<float>.None;
+                ? Maybe.Some(result) : Maybe<float>.None;
         }
 
         /// <summary>
@@ -180,7 +178,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return SByte.TryParse(value, style, provider, out sbyte result)
-                ? Some(result) : Maybe<sbyte>.None;
+                ? Maybe.Some(result) : Maybe<sbyte>.None;
         }
 
         /// <summary>
@@ -201,7 +199,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return Byte.TryParse(value, style, provider, out byte result)
-                ? Some(result) : Maybe<byte>.None;
+                ? Maybe.Some(result) : Maybe<byte>.None;
         }
 
         /// <summary>
@@ -222,7 +220,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return UInt16.TryParse(value, style, provider, out ushort result)
-                ? Some(result) : Maybe<ushort>.None;
+                ? Maybe.Some(result) : Maybe<ushort>.None;
         }
 
         /// <summary>
@@ -243,7 +241,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return UInt32.TryParse(value, style, provider, out uint result)
-                ? Some(result) : Maybe<uint>.None;
+                ? Maybe.Some(result) : Maybe<uint>.None;
         }
 
         /// <summary>
@@ -264,7 +262,7 @@ namespace Abc
             string? value, NumberStyles style, IFormatProvider? provider)
         {
             return UInt64.TryParse(value, style, provider, out ulong result)
-                ? Some(result) : Maybe<ulong>.None;
+                ? Maybe.Some(result) : Maybe<ulong>.None;
         }
     }
 
@@ -281,7 +279,7 @@ namespace Abc
         public static Maybe<TEnum> ParseEnum<TEnum>(string? value, bool ignoreCase)
             where TEnum : struct, Enum
             => Enum.TryParse(value, ignoreCase, out TEnum result)
-                ? Some(result) : Maybe<TEnum>.None;
+                ? Maybe.Some(result) : Maybe<TEnum>.None;
 
         // REVIEW: default format, format provider, Parse/ParseExact.
 
@@ -298,7 +296,7 @@ namespace Abc
             IFormatProvider? provider)
         {
             return DateTime.TryParseExact(value, format, provider, style, out DateTime result)
-                ? Some(result) : Maybe<DateTime>.None;
+                ? Maybe.Some(result) : Maybe<DateTime>.None;
         }
     }
 
@@ -312,7 +310,7 @@ namespace Abc
         public static Maybe<Uri> ParseUri(string? value, UriKind uriKind)
         {
             Uri.TryCreate(value, uriKind, out Uri? uri);
-            return SomeOrNone(uri);
+            return Maybe.SomeOrNone(uri);
         }
     }
 }

@@ -7,15 +7,14 @@ namespace Abc
     using Xunit;
 
     using static global::My;
-    using static MaybeFactory;
 
     using Assert = AssertEx;
 
     public static partial class MaybeTests
     {
         private static readonly Maybe<int> Ø = Maybe<int>.None;
-        private static readonly Maybe<int> One = Some(1);
-        private static readonly Maybe<int> Two = Some(2);
+        private static readonly Maybe<int> One = Maybe.Some(1);
+        private static readonly Maybe<int> Two = Maybe.Some(2);
     }
 
     // Construction, properties.
@@ -69,6 +68,12 @@ namespace Abc
             Assert.None(Maybe.Of((int?)null));
             Assert.Some(Maybe.Of((int?)1));
 #pragma warning restore CS0618
+        }
+
+        [Fact]
+        public static void Some()
+        {
+            Assert.Some(Maybe.Some(1));
         }
     }
 
@@ -134,15 +139,15 @@ namespace Abc
             Assert.None(Ø.SelectMany(_ => Ø, (i, j) => i + j));
             Assert.None(from i in Ø from j in Ø select i + j);
             // None.SelectMany(Some) -> None
-            Assert.None(Ø.SelectMany(i => Some(2 * i), (i, j) => i + j));
-            Assert.None(from i in Ø from j in Some(2 * i) select i + j);
+            Assert.None(Ø.SelectMany(i => Maybe.Some(2 * i), (i, j) => i + j));
+            Assert.None(from i in Ø from j in Maybe.Some(2 * i) select i + j);
 
             // Some.SelectMany(None) -> None
             Assert.None(One.SelectMany(_ => Ø, (i, j) => i + j));
             Assert.None(from i in One from j in Ø select i + j);
             // None.SelectMany(Some) -> Some
-            Assert.Some(3, One.SelectMany(i => Some(2 * i), (i, j) => i + j));
-            Assert.Some(3, from i in One from j in Some(2 * i) select i + j);
+            Assert.Some(3, One.SelectMany(i => Maybe.Some(2 * i), (i, j) => i + j));
+            Assert.Some(3, from i in One from j in Maybe.Some(2 * i) select i + j);
         }
 
         [Fact]

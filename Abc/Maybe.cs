@@ -10,7 +10,7 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // REVIEW: extensions & helpers.
+    // REVIEW: Maybe extensions & helpers.
     // - playing with modifier "in". Currently only added to ext methods for
     //   Maybe<T> where T is a struct.
     // - I don't like the name Empty<T>(). Add EmptyIfNone<T>()?
@@ -44,19 +44,20 @@ namespace Abc
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
         /// <para>DO NOT USE, only here to prevent the creation of maybe's for
-        /// a nullable value type; see <seealso cref="MaybeFactory"/> for a
+        /// a nullable value type; see <see cref="SomeOrNone{T}(T?)"/> for a
         /// better alternative.</para>
         /// </summary>
         [Pure]
         // Not actually obsolete, but clearly states that we shouldn't use it.
-        [Obsolete("Use MaybeFactory.SomeOrNone() instead.")]
+        [Obsolete("Use SomeOrNone() instead.")]
         public static Maybe<T> Of<T>(T? value) where T : struct
             => value.HasValue ? new Maybe<T>(value.Value) : Maybe<T>.None;
 
         /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
-        /// <para>For concrete types, methods in <seealso cref="MaybeFactory"/>
+        /// <para>For concrete types, <see cref="Some"/>,
+        /// <see cref="SomeOrNone{T}(T?)"/> or <see cref="SomeOrNone{T}(T)"/>
         /// should be used instead.</para>
         /// </summary>
         // F# Workflow: return.
@@ -76,6 +77,54 @@ namespace Abc
         [Pure]
         public static Maybe<Unit> Guard(bool predicate)
             => predicate ? Unit : Zero;
+    }
+
+    // Factory methods.
+    public partial class Maybe
+    {
+        /// <summary>
+        /// Obtains an instance of the empty <see cref="Maybe{T}" />.
+        /// </summary>
+        /// <remarks>
+        /// To obtain the empty maybe for an unconstrained type, please see
+        /// <see cref="Maybe{T}.None"/>.
+        /// </remarks>
+        public static Maybe<T> None<T>() where T : notnull
+            => Maybe<T>.None;
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
+        /// specified value.
+        /// </summary>
+        [Pure]
+        public static Maybe<T> Some<T>(T value) where T : struct
+            => new Maybe<T>(value);
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
+        /// specified nullable value.
+        /// </summary>
+        /// <remarks>
+        /// To create a maybe for an unconstrained type, please see
+        /// <see cref="Maybe.Of{T}(T)"/>.
+        /// </remarks>
+        [Pure]
+        public static Maybe<T> SomeOrNone<T>(T? value) where T : struct
+            // DO NOT REMOVE THIS METHOD.
+            // Prevents the creation of a Maybe<T?> **directly**.
+            => value.HasValue ? new Maybe<T>(value.Value) : Maybe<T>.None;
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
+        /// specified nullable value.
+        /// </summary>
+        /// <remarks>
+        /// To create a maybe for an unconstrained type, please see
+        /// <see cref="Maybe.Of{T}(T)"/>.
+        /// </remarks>
+        [Pure]
+        public static Maybe<T> SomeOrNone<T>(T? value) where T : class
+            => value is null ? Maybe<T>.None : new Maybe<T>(value);
     }
 
     // Extension methods for Maybe<T> where T is a struct.
@@ -220,7 +269,7 @@ namespace Abc
         }
     }
 
-    // Lift, promote functions to Maybe's.
+    // Lift, promote functions to maybe's.
     public partial class Maybe
     {
         /// <seealso cref="Maybe{T}.Select"/>

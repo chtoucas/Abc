@@ -5,8 +5,6 @@ namespace Abc.Extensions
     using System.Xml;
     using System.Xml.Linq;
 
-    using static MaybeFactory;
-
     /// <summary>
     /// Provides extension methods for <see cref="XAttribute"/> and
     /// <see cref="XElement"/>.
@@ -21,14 +19,14 @@ namespace Abc.Extensions
         /// but rather returns an empty maybe.
         /// </remarks>
         public static Maybe<XAttribute> NextAttributeOrNone(this XAttribute? @this)
-            => SomeOrNone(@this?.NextAttribute);
+            => Maybe.SomeOrNone(@this?.NextAttribute);
 
         /// <remarks>
         /// Beware, this extension method does NOT throw when the object is null
         /// but rather returns an empty maybe.
         /// </remarks>
         public static Maybe<XAttribute> PreviousAttributeOrNone(this XAttribute? @this)
-            => SomeOrNone(@this?.PreviousAttribute);
+            => Maybe.SomeOrNone(@this?.PreviousAttribute);
     }
 
     // Extension methods for XElement.
@@ -39,14 +37,14 @@ namespace Abc.Extensions
         /// but rather returns an empty maybe.
         /// </remarks>
         public static Maybe<XAttribute> AttributeOrNone(this XElement? @this, XName name)
-            => SomeOrNone(@this?.Attribute(name));
+            => Maybe.SomeOrNone(@this?.Attribute(name));
 
         /// <remarks>
         /// Beware, this extension method does NOT throw when the object is null
         /// but rather returns an empty maybe.
         /// </remarks>
         public static Maybe<XElement> ElementOrNone(this XElement? @this, XName name)
-            => SomeOrNone(@this?.Element(name));
+            => Maybe.SomeOrNone(@this?.Element(name));
 
         /// <remarks>
         /// Beware, this extension method does NOT throw when the object is null
@@ -60,7 +58,7 @@ namespace Abc.Extensions
                 nextElement = nextElement.NextNode;
             }
 
-            return SomeOrNone((nextElement as XElement));
+            return Maybe.SomeOrNone((nextElement as XElement));
         }
     }
 }
