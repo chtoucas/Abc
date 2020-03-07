@@ -113,8 +113,6 @@ namespace Abc
         /// </summary>
         internal Maybe([DisallowNull]T value)
         {
-            Debug.Assert(value != null);
-
             _isSome = true;
             _value = value;
         }
@@ -299,10 +297,13 @@ namespace Abc
         /// <paramref name="other"/>.
         /// </summary>
         [Pure]
+        [return: NotNullIfNotNull("other")]
+        // It does work with null but then one should really use ValueOrDefault().
         public T ValueOrElse([DisallowNull]T other)
             => _isSome ? _value : other;
 
         [Pure]
+        [return: MaybeNull]
         public T ValueOrElse(Func<T> valueFactory)
         {
             if (_isSome)
@@ -581,7 +582,9 @@ namespace Abc
         // Compare to the nullable equiv w/ x an int? and y a long:
         //   (x.HasValue ? (long?)y : (long?)null).
         [Pure]
-        public Maybe<TResult> ReplaceWith<TResult>(TResult value)
+        // It does work with null but then one should really use
+        // ContinueWith(Maybe<TResult>.None).
+        public Maybe<TResult> ReplaceWith<TResult>([DisallowNull]TResult value)
         {
             return _isSome ? Maybe.Of(value) : Maybe<TResult>.None;
         }
