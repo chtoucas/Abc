@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc
+namespace Abc.Rop
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -14,9 +14,9 @@ namespace Abc
     /// </summary>
     public sealed class Ok<T> : Result<T>
     {
-        public Ok([DisallowNull]T value)
+        internal Ok([DisallowNull]T value)
         {
-            Value = value ?? throw new Anexn(nameof(value));
+            Value = value;
         }
 
         public override bool IsError => false;
@@ -51,7 +51,7 @@ namespace Abc
         //    if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
 
         //    var middle = selector(Value);
-        //    if (!middle.IsSome) { return Result<TResult>.None.Uniq; }
+        //    if (!middle.IsSome) { return Result.None<TResult>(); }
 
         //    return Result.Of(resultSelector(Value, middle.Value));
         //}

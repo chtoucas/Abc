@@ -1,0 +1,1 @@
+﻿A Result type. Too many problems with the current design.

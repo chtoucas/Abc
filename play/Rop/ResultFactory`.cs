@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc
+namespace Abc.Rop
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -43,7 +43,7 @@ namespace Abc
         internal static readonly ResultFactory<T> Uniq = new ResultFactory<T>();
 
         [Pure]
-        public Error<T> EmptyError => Abc.Error<T>.Instance;
+        public Error<T> EmptyError => Abc.Rop.Error<T>.Instance;
 
         [Pure]
         public Error<T, TErr> Error<TErr>([DisallowNull]TErr err)
