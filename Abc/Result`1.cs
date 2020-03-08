@@ -92,7 +92,7 @@ namespace Abc
 
             public override bool IsSome => false;
 
-            public override T Value { [DoesNotReturn] get => throw EF.NoValue; }
+            public override T Value { [DoesNotReturn] get => throw EF.Result_NoValue; }
 
             [Pure]
             public override Result<T> OrElse(Result<T> other)
@@ -114,7 +114,7 @@ namespace Abc
 
             public sealed override bool IsSome => false;
 
-            public sealed override T Value { [DoesNotReturn] get => throw EF.NoValue; }
+            public sealed override T Value { [DoesNotReturn] get => throw EF.Result_NoValue; }
 
             [Pure]
             public sealed override Result<T> OrElse(Result<T> other)
