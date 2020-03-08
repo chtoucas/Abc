@@ -9,7 +9,7 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
-    // TODO: Result type.
+    // TODO: Result type. Not happy with the design.
     // - Of() vs SomeOrNone(). Constraints.
     // - add SelectMany & Join?
     // - nested types make things a bit obscure. Construction is fine, pattern
@@ -54,7 +54,8 @@ namespace Abc
             [NotNull] public override T Value { get; }
 
             public static explicit operator Maybe<T>(Some some)
-                => some is null ? Maybe<T>.None : new Maybe<T>(some.Value);
+                => some is null ? throw new Anexn(nameof(some))
+                    : new Maybe<T>(some.Value);
 
             public override Maybe<T> ToMaybe() => new Maybe<T>(Value);
 
