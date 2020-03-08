@@ -9,7 +9,7 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
-    // TODO: Result type. Not happy with the design.
+    // FIXME: Result type. Too many problems with the current design.
     // - Of() vs SomeOrNone(). Constraints.
     // - add SelectMany & Join?
     // - nested types make things a bit obscure. Construction is fine, pattern

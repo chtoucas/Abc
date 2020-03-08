@@ -16,18 +16,24 @@ namespace Abc
         {
             Require.NotNull(@this, nameof(@this));
 
-            // Converts an error to an empty maybe.
+            // This method converts an error to an empty maybe.
             return @this.IsSome ? Maybe.Of(@this.Value) : Maybe<T>.None;
+        }
 
-            //return @this switch
-            //{
-            //    Result<T>.Some some => Maybe.Of(some.Value),
-            //    Result<T>.None _ => Maybe<T>.None,
-            //    // Catch all Error's.
-            //    Result<T>.Error _ => Maybe<T>.None,
-            //    null => throw new Anexn(nameof(@this)),
-            //    _ => throw new InvalidOperationException()
-            //};
+        public static Result<T> Squash<T, TErr>(this Result<T?> @this)
+            where T : struct
+        {
+            var result = Result.OfType<T>();
+
+            return @this switch
+            {
+                Result<T?>.Some some => result.Some(some.Value.Value),
+                Result<T?>.None _ => result.None,
+                Result<T?>.Error<TErr> err => result.Error(err.InnerError),
+                Result<T?>.Error _ => throw new NotImplementedException(),
+                null => throw new Anexn(nameof(@this)),
+                _ => throw new InvalidOperationException()
+            };
         }
 
         public static Result<T> Flatten<T>(this Result<Result<T>> @this)
@@ -54,6 +60,7 @@ namespace Abc
                 Result<Result<T>>.Some some => some.Value,
                 Result<Result<T>>.None _ => result.None,
                 Result<Result<T>>.Error<TErr> err => result.Error(err),
+                Result<Result<T>>.Error _ => throw new NotImplementedException(),
                 null => throw new Anexn(nameof(@this)),
                 _ => throw new InvalidOperationException()
             };

@@ -50,8 +50,7 @@ namespace Abc.Samples
 
         public static string SomeOrThrew(bool ok)
         {
-            var result = Result.OfType<int>();
-            var r = ok ? result.Some(1) : throw new DivideByZeroException();
+            var r = TryWith(__divide);
 
             return r switch
             {
@@ -59,6 +58,8 @@ namespace Abc.Samples
                 Result<int>.Error<DivideByZeroException> exn => exn.Rethrow(default(string)!),
                 _ => throw new InvalidOperationException()
             };
+
+            int __divide() => ok ? 1 : throw new DivideByZeroException();
         }
 
         public static string OkOrError(bool ok)
