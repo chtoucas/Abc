@@ -8,32 +8,7 @@
     <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
 
     <VersionPrefix>0.1.0</VersionPrefix>
-    <PackageLicenseFile></PackageLicenseFile>
     <PackageTags>ROP</PackageTags>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
-    <!-- Purpose: define the nullable attributes -->
-    <DefineConstants>$(DefineConstants);NETSTANDARD2_0</DefineConstants>
-  </PropertyGroup>
-
-  <!-- Not currently used -->
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD2_1</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <!-- UNCHECKED arithmetic -->
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
-    <!--
-      CS1591      Missing XML comment for publicly visible type or member 'Type_or_Member'
-    -->
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,5 +17,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\CustomAfter.props" />
 
 </Project>
