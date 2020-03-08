@@ -51,13 +51,12 @@ namespace Abc.Samples
         public static string SomeOrThrew(bool ok)
         {
             var result = Result.OfType<int>();
-            var r = ok ? result.Some(1) : result.Error("Boum!!!");
+            var r = ok ? result.Some(1) : throw new DivideByZeroException();
 
             return r switch
             {
                 Result<int>.Some some => $"{some.Value}",
-                Result<int>.Error<string> err => err.InnerError,
-                Result<int>.Error<NotSupportedException> exn => exn.Rethrow(default(string)!),
+                Result<int>.Error<DivideByZeroException> exn => exn.Rethrow(default(string)!),
                 _ => throw new InvalidOperationException()
             };
         }
@@ -76,8 +75,8 @@ namespace Abc.Samples
     }
 
     // When the error is in fact an exception.
-    // Just for demo, in most cases, it is not a good idea to replace the
-    // standard exception system.
+    // Just for demo, in most cases (if not all), it is a bad idea to replace
+    // the standard exception system.
     public partial class ResultSamples
     {
         public static void Rethrow<T, TException>(

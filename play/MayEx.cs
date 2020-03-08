@@ -6,9 +6,6 @@ namespace Abc
 
     public abstract class MayEx : May
     {
-        private static readonly Maybe<bool> s_True = Maybe.Some(true);
-        private static readonly Maybe<bool> s_False = Maybe.Some(false);
-
         protected MayEx() { }
 
         public static Maybe<bool> ParseBoolean(string? value)
@@ -18,27 +15,27 @@ namespace Abc
         {
             if (value is null) { return Maybe<bool>.None; }
 
-            string val = value.Trim();
+            string trimmed = value.Trim();
 
-            if (val.Length == 0)
+            if (trimmed.Length == 0)
             {
                 return style.Contains(BooleanStyles.EmptyOrWhiteSpaceIsFalse)
-                    ? s_False : Maybe<bool>.None;
+                    ? Maybe.Some(false) : Maybe<bool>.None;
             }
             else if (style.Contains(BooleanStyles.Literal))
             {
-                // NB: Cette méthode n'est pas sensible à la casse de "value".
-                return Boolean.TryParse(val, out bool retval)
-                    ? retval ? s_True : s_False
-                    : Maybe<bool>.None;
+                // NB: this method is case-insensitive.
+                return Boolean.TryParse(trimmed, out bool retval)
+                    ? Maybe.Some(retval) : Maybe<bool>.None;
             }
-            else if (style.Contains(BooleanStyles.ZeroOrOne) && (val == "0" || val == "1"))
+            else if (style.Contains(BooleanStyles.ZeroOrOne)
+                && (trimmed == "0" || trimmed == "1"))
             {
-                return val == "1" ? s_True : s_False;
+                return Maybe.Some(trimmed == "1");
             }
             else if (style.Contains(BooleanStyles.HtmlInput) && value == "on")
             {
-                return s_True;
+                return Maybe.Some(true);
             }
             else
             {
