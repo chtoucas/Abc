@@ -18,48 +18,57 @@ namespace Abc.Samples
 
     public static partial class ResultSamples { }
 
-    // With classes instead of structs, we can use pattern matching.
-    // Of course, if we had sum types like in F# it would be simpler and clearer.
     public partial class ResultSamples
     {
         // Option POV.
         public static string SomeOrNone(bool ok)
         {
-            Result<int> r;
-            if (ok) { r = Result.Some(1); }
-            else { r = Result.None<int>(); }
+            var r = __fun();
 
             return r.IsError ? "No value" : $"{r.Value}";
+
+            Result<int> __fun()
+            {
+                if (ok) { return Result.Some(1); }
+                else { return Result.None<int>(); }
+            }
         }
 
         // Result POV.
         public static string OkOrError(bool ok)
         {
-            var result = Result.OfType<int>();
-            var r = ok ? result.OkIfNotNull(1) : result.Error("Boum!!!");
+            var r = __fun();
 
+            // With classes instead of structs, we can use pattern matching.
+            // Of course, if C# had sum types it would be simpler and clearer.
             return r switch
             {
-                Ok<int> some => $"{some.Value}",
+                Ok<int> _ => $"{r.Value}",
                 Error<int> _ => "No value",
                 Error<int, string> err => err.InnerError,
                 _ => throw new InvalidOperationException()
             };
+
+            Result<int> __fun()
+            {
+                var result = Result.OfType<int>();
+                return ok ? result.OkIfNotNull(1) : result.Error("Boum!!!");
+            }
         }
 
         public static string OkOrThrew(bool ok)
         {
-            var r = Exceptional.TryWith(__divide);
+            var r = Exceptional.TryWith(__fun);
 
             return r switch
             {
-                Ok<int> some => $"{some.Value}",
+                Ok<int> _ => $"{r.Value}",
                 Error<int, DivideByZeroException> err
                     => Exceptional.Rethrow<string>(err.InnerError),
                 _ => throw new InvalidOperationException()
             };
 
-            int __divide() => ok ? 1 : throw new DivideByZeroException();
+            int __fun() => ok ? 1 : throw new DivideByZeroException();
         }
 
         public static string OkOrError1(bool ok)

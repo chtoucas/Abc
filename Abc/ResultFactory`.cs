@@ -42,6 +42,7 @@ namespace Abc
 
         internal static readonly ResultFactory<T> Uniq = new ResultFactory<T>();
 
+        [Pure]
         public Error<T> EmptyError => Abc.Error<T>.Instance;
 
         [Pure]
