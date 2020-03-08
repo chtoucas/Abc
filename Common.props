@@ -18,40 +18,44 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 
     <Nullable>enable</Nullable>
-    <!-- Enable the null-forgiving operator -->
-    <DefineConstants>$(DefineConstants);NULL_FORGIVING</DefineConstants>
-
-    <WarningsAsErrors>NU1605</WarningsAsErrors>
-
-    <!--
-      IDE0060     Remove unused parameter (covered by CA1801)
-      IDE1006     Naming Styles
-    -->
-    <NoWarn>$(NoWarn);IDE0060;IDE1006</NoWarn>
-    <!--
-      RS0016      Symbol XXX is not part of the declared API
-      RS0017      Symbol XXX is part of the declared API, but is either not public
-                  or could not be found
-    -->
-    <NoWarn Condition="'$(Configuration)' == 'Debug'">$(NoWarn);RS0016;RS0017</NoWarn>
+    <!-- Enable the null-forgiving operator (!)? -->
+    <_EnableNullForgiving>true</_EnableNullForgiving>
 
     <!-- Analyzers by Microsoft -->
     <Features>$(Features);flow-analysis</Features>
 
     <!-- Disable warnings when using a preview version of .NET Core -->
-    <SuppressNETCoreSdkPreviewMessage Condition="'$(_NETCoreSdkIsPreview)' == 'true'">true</SuppressNETCoreSdkPreviewMessage>
+    <SuppressNETCoreSdkPreviewMessage Condition="'$(_NETCoreSdkIsPreview)'=='true'">true</SuppressNETCoreSdkPreviewMessage>
+  </PropertyGroup>
+
+  <!-- All configurations -->
+  <PropertyGroup>
+    <!--
+      IDE0060     Remove unused parameter (covered by CA1801)
+      IDE1006     Naming Styles
+
+      RS0016      Symbol XXX is not part of the declared API
+      RS0017      Symbol XXX is part of the declared API, but is either not public
+                  or could not be found
+    -->
+    <NoWarn>$(NoWarn);IDE0060;IDE1006</NoWarn>
+
+    <WarningsAsErrors>NU1605</WarningsAsErrors>
+
+    <!-- CONTRACTS_FULL for the attr Pure -->
+    <DefineConstants>$(DefineConstants);TRACE;CONTRACTS_FULL</DefineConstants>
+    <DefineConstants Condition="'$(_EnableNullForgiving)'=='true'">$(DefineConstants);NULL_FORGIVING</DefineConstants>
   </PropertyGroup>
 
   <!-- DEBUG -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DefineConstants>$(DefineConstants);TRACE;DEBUG;CONTRACTS_FULL</DefineConstants>
+    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+    <NoWarn>$(NoWarn);RS0016;RS0017</NoWarn>
   </PropertyGroup>
-
   <!-- RELEASE -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DefineConstants>$(DefineConstants);TRACE;CONTRACTS_FULL</DefineConstants>
   </PropertyGroup>
 
 </Project>
