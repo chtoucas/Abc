@@ -1,4 +1,4 @@
-:: Quickly run the tests.
+:: Quickly run the test suite.
 :: Will crash if the packages were not restored before.
 ::
 :: Examples:

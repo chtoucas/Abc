@@ -15,7 +15,7 @@ namespace Abc.Utilities
         /// </summary>
         public static IEnumerable<T> Repeat<T>(T value)
         {
-            // REVIEW: Optimize Repeat().
+            // REVIEW: optimize Repeat().
             while (true)
             {
                 yield return value;
