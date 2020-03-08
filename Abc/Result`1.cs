@@ -27,8 +27,6 @@ namespace Abc
 
         [NotNull] public abstract T Value { get; }
 
-        public abstract Maybe<T> ToMaybe();
-
         [Pure]
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
         public abstract Result<T> OrElse(Result<T> other);
@@ -52,12 +50,6 @@ namespace Abc
             public override bool IsSome => true;
 
             [NotNull] public override T Value { get; }
-
-            public static explicit operator Maybe<T>(Some some)
-                => some is null ? throw new Anexn(nameof(some))
-                    : new Maybe<T>(some.Value);
-
-            public override Maybe<T> ToMaybe() => new Maybe<T>(Value);
 
             [Pure]
             public override Result<T> OrElse(Result<T> other)
@@ -102,12 +94,6 @@ namespace Abc
 
             public override T Value { [DoesNotReturn] get => throw EF.NoValue; }
 
-            [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Unary op_Implicit")]
-            public static implicit operator Maybe<T>(None none)
-                => Maybe<T>.None;
-
-            public override Maybe<T> ToMaybe() => Maybe<T>.None;
-
             [Pure]
             public override Result<T> OrElse(Result<T> other)
                 => other;
@@ -129,8 +115,6 @@ namespace Abc
             public sealed override bool IsSome => false;
 
             public sealed override T Value { [DoesNotReturn] get => throw EF.NoValue; }
-
-            public sealed override Maybe<T> ToMaybe() => Maybe<T>.None;
 
             [Pure]
             public sealed override Result<T> OrElse(Result<T> other)

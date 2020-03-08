@@ -106,7 +106,7 @@ namespace Abc
         /// </summary>
         /// <remarks>
         /// To create a maybe for an unconstrained type, please see
-        /// <see cref="Maybe.Of{T}(T)"/>.
+        /// <see cref="Of{T}(T)"/>.
         /// </remarks>
         [Pure]
         public static Maybe<T> SomeOrNone<T>(T? value) where T : struct
@@ -120,7 +120,7 @@ namespace Abc
         /// </summary>
         /// <remarks>
         /// To create a maybe for an unconstrained type, please see
-        /// <see cref="Maybe.Of{T}(T)"/>.
+        /// <see cref="Of{T}(T)"/>.
         /// </remarks>
         [Pure]
         public static Maybe<T> SomeOrNone<T>(T? value) where T : class

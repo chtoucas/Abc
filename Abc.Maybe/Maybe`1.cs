@@ -33,7 +33,8 @@ namespace Abc
     /// <summary>
     /// Represents an object that is either a single value of type T, or no
     /// value at all.
-    /// <para><see cref="Maybe{T}"/> is a read-only struct.</para>
+    /// <para><see cref="Maybe{T}"/> is an immutable struct (but see caveats
+    /// in the section remarks).</para>
     /// </summary>
     ///
     /// <remarks><![CDATA[

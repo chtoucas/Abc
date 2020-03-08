@@ -9,7 +9,7 @@
 
     <VersionPrefix>0.1.0</VersionPrefix>
     <PackageLicenseFile></PackageLicenseFile>
-    <PackageTags>ROP</PackageTags>
+    <PackageTags>option;maybe;LINQ</PackageTags>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
   </PropertyGroup>
@@ -37,7 +37,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AdditionalFiles Include="PublicAPI.Shipped.txt" />
+    <AdditionalFiles Include="PublicAPI.Unshipped.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="2.9.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

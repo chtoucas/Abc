@@ -8,8 +8,6 @@ namespace Abc
 
     public static class Result
     {
-        public static readonly Result<Unit> Ok = Some(default(Unit));
-
         [Pure]
         public static ResultFactory<T> OfType<T>()
             => ResultFactory<T>.Uniq;

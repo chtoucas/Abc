@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Abc.Maybe\Abc.Maybe.csproj" />
     <ProjectReference Include="..\Abc.Testing\Abc.Testing.csproj" />
     <ProjectReference Include="..\Abc\Abc.csproj" />
   </ItemGroup>

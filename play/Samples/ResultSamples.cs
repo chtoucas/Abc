@@ -109,7 +109,7 @@ namespace Abc.Samples
             try
             {
                 action();
-                return Result.Ok;
+                return ResultEx.Ok;
             }
             catch (Exception ex)
             {
@@ -141,7 +141,7 @@ namespace Abc.Samples
             try
             {
                 action();
-                return Result.Ok;
+                return ResultEx.Ok;
             }
             catch (Exception ex)
             {

@@ -41,51 +41,16 @@ Abc.Maybe<T>.XorElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.Yield() -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.Yield(int count) -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TOther, TResult> zipper) -> Abc.Maybe<TResult>
-Abc.Result
-Abc.Result<T>
-Abc.Result<T>.Error
-Abc.Result<T>.Error<TErr>
-Abc.Result<T>.Error<TErr>.InnerError.get -> TErr
-Abc.Result<T>.None
-Abc.Result<T>.Some
-Abc.ResultFactory
-Abc.ResultFactory<T>
-Abc.ResultFactory<T>.Error<TErr>(TErr err) -> Abc.Result<T>
-Abc.ResultFactory<T>.None.get -> Abc.Result<T>
 Abc.Unit
 Abc.Unit.Equals(Abc.Unit other) -> bool
 Abc.Unit.Equals(System.ValueTuple other) -> bool
 Abc.Unit.Unit() -> void
-abstract Abc.Result<T>.IsSome.get -> bool
-abstract Abc.Result<T>.OrElse(Abc.Result<T> other) -> Abc.Result<T>
-abstract Abc.Result<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
-abstract Abc.Result<T>.ToMaybe() -> Abc.Maybe<T>
-abstract Abc.Result<T>.Value.get -> T
-abstract Abc.Result<T>.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
 override Abc.Maybe<T>.Equals(object obj) -> bool
 override Abc.Maybe<T>.GetHashCode() -> int
 override Abc.Maybe<T>.ToString() -> string
-override Abc.Result<T>.Error<TErr>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
-override Abc.Result<T>.Error<TErr>.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
-override Abc.Result<T>.None.IsSome.get -> bool
-override Abc.Result<T>.None.OrElse(Abc.Result<T> other) -> Abc.Result<T>
-override Abc.Result<T>.None.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
-override Abc.Result<T>.None.ToMaybe() -> Abc.Maybe<T>
-override Abc.Result<T>.None.Value.get -> T
-override Abc.Result<T>.None.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
-override Abc.Result<T>.Some.IsSome.get -> bool
-override Abc.Result<T>.Some.OrElse(Abc.Result<T> other) -> Abc.Result<T>
-override Abc.Result<T>.Some.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
-override Abc.Result<T>.Some.ToMaybe() -> Abc.Maybe<T>
-override Abc.Result<T>.Some.Value.get -> T
-override Abc.Result<T>.Some.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
 override Abc.Unit.Equals(object obj) -> bool
 override Abc.Unit.GetHashCode() -> int
 override Abc.Unit.ToString() -> string
-override sealed Abc.Result<T>.Error.IsSome.get -> bool
-override sealed Abc.Result<T>.Error.OrElse(Abc.Result<T> other) -> Abc.Result<T>
-override sealed Abc.Result<T>.Error.ToMaybe() -> Abc.Maybe<T>
-override sealed Abc.Result<T>.Error.Value.get -> T
 static Abc.Linq.Qperators.ElementAtOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, int index) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.FirstOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.FirstOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>
@@ -164,18 +129,6 @@ static Abc.Maybe<T>.operator <=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
-static Abc.Result.None<T>() -> Abc.Result<T>
-static Abc.Result.Of<T>(T value) -> Abc.Result<T>
-static Abc.Result.Of<T>(T? value) -> Abc.Result<T>
-static Abc.Result.OfType<T>() -> Abc.ResultFactory<T>
-static Abc.Result.Some<T>(T value) -> Abc.Result<T>
-static Abc.Result.SomeOrNone<T>(T value) -> Abc.Result<T>
-static Abc.Result.SomeOrNone<T>(T? value) -> Abc.Result<T>
-static Abc.Result<T>.None.implicit operator Abc.Maybe<T>(Abc.Result<T>.None none) -> Abc.Maybe<T>
-static Abc.Result<T>.Some.explicit operator Abc.Maybe<T>(Abc.Result<T>.Some some) -> Abc.Maybe<T>
-static Abc.ResultFactory.Some<T>(this Abc.ResultFactory<T> _, T value) -> Abc.Result<T>
-static Abc.ResultFactory.SomeOrNone<T>(this Abc.ResultFactory<T> _, T value) -> Abc.Result<T>
-static Abc.ResultFactory.SomeOrNone<T>(this Abc.ResultFactory<T> _, T? value) -> Abc.Result<T>
 static Abc.Unit.operator !=(Abc.Unit left, Abc.Unit right) -> bool
 static Abc.Unit.operator !=(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator !=(System.ValueTuple left, Abc.Unit right) -> bool
@@ -185,5 +138,4 @@ static Abc.Unit.operator ==(System.ValueTuple left, Abc.Unit right) -> bool
 static readonly Abc.Maybe.Unit -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Maybe.Zero -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Maybe<T>.None -> Abc.Maybe<T>
-static readonly Abc.Result.Ok -> Abc.Result<Abc.Unit>
 static readonly Abc.Unit.Default -> Abc.Unit
