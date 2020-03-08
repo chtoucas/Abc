@@ -17,6 +17,6 @@ namespace Abc.Utilities
         public static InvalidOperationException Result_NoValue
             => new InvalidOperationException(
                 "The object does not contain any value."
-                + $"{Environment.NewLine}You should have checked that the property IsSome is true.");
+                + $"{Environment.NewLine}You should have checked that the property IsError is not true.");
     }
 }

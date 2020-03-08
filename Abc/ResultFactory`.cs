@@ -13,21 +13,27 @@ namespace Abc
     {
         [Pure]
         [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "The param is a discard")]
-        public static Result<T> Some<T>(this ResultFactory<T> _, T value)
+        public static Ok<T> Ok<T>(this ResultFactory<T> _, T value)
             where T : struct
-            => new Result<T>.Some(value);
+            => new Ok<T>(value);
 
         [Pure]
         [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "The param is a discard")]
-        public static Result<T> SomeOrNone<T>(this ResultFactory<T> _, T? value)
+        public static Result<T> OkIfNotNull<T>(this ResultFactory<T> _, T? value)
             where T : struct
-            => value.HasValue ? new Result<T>.Some(value.Value) : Result<T>.None.Uniq;
+        {
+            if (value.HasValue) { return new Ok<T>(value.Value); }
+            else { return Error<T>.Instance; }
+        }
 
         [Pure]
         [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "The param is a discard")]
-        public static Result<T> SomeOrNone<T>(this ResultFactory<T> _, T? value)
+        public static Result<T> OkIfNotNull<T>(this ResultFactory<T> _, T? value)
             where T : class
-            => value is null ? Result<T>.None.Uniq : new Result<T>.Some(value);
+        {
+            if (value is null) { return Error<T>.Instance; }
+            else { return new Ok<T>(value); }
+        }
     }
 
     public sealed class ResultFactory<T>
@@ -36,10 +42,10 @@ namespace Abc
 
         internal static readonly ResultFactory<T> Uniq = new ResultFactory<T>();
 
-        public Result<T> None => Result<T>.None.Uniq;
+        public Error<T> EmptyError => Abc.Error<T>.Instance;
 
         [Pure]
-        public Result<T> Error<TErr>([DisallowNull]TErr err)
-            => new Result<T>.Error<TErr>(err);
+        public Error<T, TErr> Error<TErr>([DisallowNull]TErr err)
+            => new Error<T, TErr>(err);
     }
 }

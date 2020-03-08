@@ -5,12 +5,6 @@
 namespace Abc.Samples
 {
     using System;
-    using System.Diagnostics.Contracts;
-    using System.Runtime.ExceptionServices;
-
-    using Abc.Utilities;
-
-    using Anexn = System.ArgumentNullException;
 
     // Simulating Either<T, TError> with a ValueTuple.
     public static class Result<T, TError> where T : struct
@@ -28,153 +22,56 @@ namespace Abc.Samples
     // Of course, if we had sum types like in F# it would be simpler and clearer.
     public partial class ResultSamples
     {
+        // Option POV.
         public static string SomeOrNone(bool ok)
         {
-            var r = ok ? Result.Some(1) : Result.None<int>();
+            Result<int> r;
+            if (ok) { r = Result.Some(1); }
+            else { r = Result.None<int>(); }
 
-            return r.IsSome ? $"{r.Value}" : "No value";
+            return r.IsError ? "No value" : $"{r.Value}";
         }
 
-        public static string SomeOrError(bool ok)
+        // Result POV.
+        public static string OkOrError(bool ok)
         {
             var result = Result.OfType<int>();
-            var r = ok ? result.Some(1) : result.Error("Boum!!!");
+            var r = ok ? result.OkIfNotNull(1) : result.Error("Boum!!!");
 
             return r switch
             {
-                Result<int>.Some some => $"{some.Value}",
-                Result<int>.Error<string> err => err.InnerError,
+                Ok<int> some => $"{some.Value}",
+                Error<int> _ => "No value",
+                Error<int, string> err => err.InnerError,
                 _ => throw new InvalidOperationException()
             };
         }
 
-        public static string SomeOrThrew(bool ok)
+        public static string OkOrThrew(bool ok)
         {
-            var r = TryWith(__divide);
+            var r = Exceptional.TryWith(__divide);
 
             return r switch
             {
-                Result<int>.Some some => $"{some.Value}",
-                Result<int>.Error<DivideByZeroException> exn => exn.Rethrow(default(string)!),
+                Ok<int> some => $"{some.Value}",
+                Error<int, DivideByZeroException> err
+                    => Exceptional.Rethrow<string>(err.InnerError),
                 _ => throw new InvalidOperationException()
             };
 
             int __divide() => ok ? 1 : throw new DivideByZeroException();
         }
 
-        public static string OkOrError(bool ok)
+        public static string OkOrError1(bool ok)
         {
             var r = ok ? Result<int, string>.Ok(1) : Result<int, string>.Error("Boum!!!");
 
             return r switch
             {
-                (Result<int>.Some some, _) => $"{some.Value}",
-                (Result<int>.None _, string err) => err,
+                (Ok<int> some, _) => $"{some.Value}",
+                (Error<int> _, string err) => err,
                 _ => throw new InvalidOperationException()
             };
         }
-    }
-
-    // When the error is in fact an exception.
-    // Just for demo, in most cases (if not all), it is a bad idea to replace
-    // the standard exception system.
-    public partial class ResultSamples
-    {
-        public static void Rethrow<T, TException>(
-            this Result<T>.Error<TException> @this)
-            where TException : Exception
-        {
-            Require.NotNull(@this, nameof(@this));
-
-            ExceptionDispatchInfo.Capture(@this.InnerError).Throw();
-        }
-
-        public static TResult Rethrow<T, TException, TResult>(
-            this Result<T>.Error<TException> @this, TResult fake)
-            where TException : Exception
-        {
-            Require.NotNull(@this, nameof(@this));
-
-            ExceptionDispatchInfo.Capture(@this.InnerError).Throw();
-
-            return fake;
-        }
-
-#pragma warning disable CA1031 // Do not catch general exception types
-
-        [Pure]
-        public static Result<Unit> TryWith(Action action)
-        {
-            if (action is null) { throw new Anexn(nameof(action)); }
-
-            try
-            {
-                action();
-                return ResultEx.Ok;
-            }
-            catch (Exception ex)
-            {
-                return Result.OfType<Unit>().Error(ex);
-            }
-        }
-
-        [Pure]
-        public static Result<TResult> TryWith<TResult>(Func<TResult> func)
-        {
-            if (func is null) { throw new Anexn(nameof(func)); }
-
-            try
-            {
-                return Result.Of(func());
-            }
-            catch (Exception ex)
-            {
-                return Result.OfType<TResult>().Error(ex);
-            }
-        }
-
-        [Pure]
-        public static Result<Unit> TryFinally(Action action, Action finallyAction)
-        {
-            if (action is null) { throw new Anexn(nameof(action)); }
-            if (finallyAction is null) { throw new Anexn(nameof(finallyAction)); }
-
-            try
-            {
-                action();
-                return ResultEx.Ok;
-            }
-            catch (Exception ex)
-            {
-                return Result.OfType<Unit>().Error(ex);
-            }
-            finally
-            {
-                finallyAction();
-            }
-        }
-
-        [Pure]
-        public static Result<TResult> TryFinally<TResult>(
-            Func<TResult> func, Action finallyAction)
-        {
-            if (func is null) { throw new Anexn(nameof(func)); }
-            if (finallyAction is null) { throw new Anexn(nameof(finallyAction)); }
-
-            try
-            {
-                return Result.Of(func());
-            }
-            catch (Exception ex)
-            {
-                return Result.OfType<TResult>().Error(ex);
-            }
-            finally
-            {
-                finallyAction();
-            }
-        }
-
-#pragma warning restore CA1031
     }
 }
