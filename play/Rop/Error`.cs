@@ -10,11 +10,11 @@ namespace Abc.Rop
     using EF = Abc.Utilities.ExceptionFactory;
 
     [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
-    public sealed class Error<T> : Result<T>
+    public sealed class NullResult<T> : Result<T>
     {
-        public static readonly Error<T> Instance = new Error<T>();
+        public static readonly NullResult<T> Instance = new NullResult<T>();
 
-        private Error() { }
+        private NullResult() { }
 
         public override bool IsError => true;
 
@@ -26,7 +26,7 @@ namespace Abc.Rop
 
         [Pure]
         public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
-            => Error<TResult>.Instance;
+            => NullResult<TResult>.Instance;
 
         [Pure]
         public override Result<T> Where(Func<T, bool> predicate)

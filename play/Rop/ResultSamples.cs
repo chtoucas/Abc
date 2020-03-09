@@ -44,7 +44,7 @@ namespace Abc.Rop
             return r switch
             {
                 Ok<int> _ => $"{r.Value}",
-                Error<int> _ => "No value",
+                NullResult<int> _ => "No value",
                 Error<int, string> err => err.InnerError,
                 _ => throw new InvalidOperationException()
             };
@@ -58,13 +58,14 @@ namespace Abc.Rop
 
         public static string OkOrThrew(bool ok)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var r = Exceptional.TryWith(__fun);
+#pragma warning restore CS0618
 
             return r switch
             {
-                Ok<int> _ => $"{r.Value}",
-                Error<int, DivideByZeroException> err
-                    => Exceptional.Rethrow<string>(err.InnerError),
+                Ok1<int> _ => $"{r.Value}",
+                Threw<int> exn => Exceptional.Rethrow<string>(exn.InnerException),
                 _ => throw new InvalidOperationException()
             };
 
@@ -78,7 +79,7 @@ namespace Abc.Rop
             return r switch
             {
                 (Ok<int> some, _) => $"{some.Value}",
-                (Error<int> _, string err) => err,
+                (NullResult<int> _, string err) => err,
                 _ => throw new InvalidOperationException()
             };
         }

@@ -24,19 +24,19 @@ namespace Abc.Rop
         public static Result<T> Of<T>(T? value) where T : struct
         {
             if (value.HasValue) { return new Ok<T>(value.Value); }
-            else { return Error<T>.Instance; }
+            else { return NullResult<T>.Instance; }
         }
 
         [Pure]
         public static Result<T> Of<T>([AllowNull]T value)
         {
-            if (value is null) { return Error<T>.Instance; }
+            if (value is null) { return NullResult<T>.Instance; }
             else { return new Ok<T>(value); }
         }
 
         [Pure]
-        public static Error<T> None<T>() where T : notnull
-            => Error<T>.Instance;
+        public static NullResult<T> None<T>() where T : notnull
+            => NullResult<T>.Instance;
 
         [Pure]
         public static Ok<T> Some<T>(T value) where T : struct
@@ -46,13 +46,13 @@ namespace Abc.Rop
         public static Result<T> SomeOrNone<T>(T? value) where T : struct
         {
             if (value.HasValue) { return new Ok<T>(value.Value); }
-            else { return Error<T>.Instance; }
+            else { return NullResult<T>.Instance; }
         }
 
         [Pure]
         public static Result<T> SomeOrNone<T>(T? value) where T : class
         {
-            if (value is null) { return Error<T>.Instance; }
+            if (value is null) { return NullResult<T>.Instance; }
             else { return new Ok<T>(value); }
         }
     }

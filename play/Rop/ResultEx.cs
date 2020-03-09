@@ -26,6 +26,19 @@ namespace Abc.Rop
             return Result.OfType<T>().Ok(@this.Value.Value);
         }
 
+        public static NullResult<T> Squash<T>(this NullResult<T?> @this)
+            where T : struct
+        {
+            return Result.OfType<T>().EmptyError;
+        }
+
+        public static Error<T, TErr> Squash<T, TErr>(this Error<T?, TErr> @this)
+            where T : struct
+        {
+            Require.NotNull(@this, nameof(@this));
+            return Result.OfType<T>().Error(@this.InnerError);
+        }
+
         public static Result<T> Squash<T, TErr>(this Result<T?> @this)
             where T : struct
         {
@@ -34,7 +47,7 @@ namespace Abc.Rop
             return @this switch
             {
                 Ok<T?> some => result.Ok(some.Value.Value),
-                Error<T?> _ => result.EmptyError,
+                NullResult<T?> _ => result.EmptyError,
                 Error<T?, TErr> err => result.Error(err.InnerError),
                 null => throw new Anexn(nameof(@this)),
                 _ => throw new InvalidOperationException()

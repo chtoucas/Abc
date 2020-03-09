@@ -39,7 +39,7 @@ namespace Abc.Rop
         {
             if (predicate is null) { throw new Anexn(nameof(predicate)); }
             if (predicate(Value)) { return this; }
-            else { return Error<T>.Instance; }
+            else { return NullResult<T>.Instance; }
         }
 
         //[Pure]

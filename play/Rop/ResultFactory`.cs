@@ -23,7 +23,7 @@ namespace Abc.Rop
             where T : struct
         {
             if (value.HasValue) { return new Ok<T>(value.Value); }
-            else { return Error<T>.Instance; }
+            else { return NullResult<T>.Instance; }
         }
 
         [Pure]
@@ -31,7 +31,7 @@ namespace Abc.Rop
         public static Result<T> OkIfNotNull<T>(this ResultFactory<T> _, T? value)
             where T : class
         {
-            if (value is null) { return Error<T>.Instance; }
+            if (value is null) { return NullResult<T>.Instance; }
             else { return new Ok<T>(value); }
         }
     }
@@ -43,7 +43,7 @@ namespace Abc.Rop
         internal static readonly ResultFactory<T> Uniq = new ResultFactory<T>();
 
         [Pure]
-        public Error<T> EmptyError => Abc.Rop.Error<T>.Instance;
+        public NullResult<T> EmptyError => Abc.Rop.NullResult<T>.Instance;
 
         [Pure]
         public Error<T, TErr> Error<TErr>([DisallowNull]TErr err)
