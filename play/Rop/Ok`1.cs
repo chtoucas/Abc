@@ -1,6 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-namespace Abc.Rop
+namespace Abc
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -39,7 +39,7 @@ namespace Abc.Rop
         {
             if (predicate is null) { throw new Anexn(nameof(predicate)); }
             if (predicate(Value)) { return this; }
-            else { return NullResult<T>.Instance; }
+            else { return Error<T>.None; }
         }
 
         //[Pure]

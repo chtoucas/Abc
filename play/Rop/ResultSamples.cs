@@ -2,7 +2,7 @@
 
 #pragma warning disable CA1000 // Do not declare static members on generic types
 
-namespace Abc.Rop
+namespace Abc
 {
     using System;
 
@@ -23,7 +23,7 @@ namespace Abc.Rop
         // Option POV.
         public static string SomeOrNone(bool ok)
         {
-            var r = __fun();
+            Result<int> r = __fun();
 
             return r.IsError ? "No value" : $"{r.Value}";
 
@@ -37,29 +37,26 @@ namespace Abc.Rop
         // Result POV.
         public static string OkOrError(bool ok)
         {
-            var r = __fun();
+            Result<int> r = __fun();
 
-            // With classes instead of structs, we can use pattern matching.
-            // Of course, if C# had sum types it would be simpler and clearer.
             return r switch
             {
                 Ok<int> _ => $"{r.Value}",
-                NullResult<int> _ => "No value",
-                Error<int, string> err => err.InnerError,
+                Error<int> err => err.Message,
+                //Error<int> (string message, bool wasNull) => wasNull ? "BAD" : message,
                 _ => throw new InvalidOperationException()
             };
 
             Result<int> __fun()
             {
-                var result = Result.OfType<int>();
-                return ok ? result.OkIfNotNull(1) : result.Error("Boum!!!");
+                return ok ? Result.Of(1) : Result.OfType<int>.Error("Boum!!!");
             }
         }
 
         public static string OkOrThrew(bool ok)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            var r = Exceptional.TryWith(__fun);
+            Exceptional<int> r = Exceptional.TryWith(__fun);
 #pragma warning restore CS0618
 
             return r switch
@@ -79,7 +76,7 @@ namespace Abc.Rop
             return r switch
             {
                 (Ok<int> some, _) => $"{some.Value}",
-                (NullResult<int> _, string err) => err,
+                (Error<int> _, string err) => err,
                 _ => throw new InvalidOperationException()
             };
         }
