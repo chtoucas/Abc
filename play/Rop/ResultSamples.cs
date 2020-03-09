@@ -6,19 +6,7 @@ namespace Abc
 {
     using System;
 
-    // Simulating Either<T, TError> with a ValueTuple.
-    public static class Result<T, TError> where T : struct
-    {
-        public static (Result<T> success, TError error) Ok(T value)
-            => (Result.Some(value), default);
-
-        public static (Result<T> success, TError error) Error(TError error)
-            => (Result.None<T>(), error);
-    }
-
-    public static partial class ResultSamples { }
-
-    public partial class ResultSamples
+    public static class ResultSamples
     {
         // Option POV.
         public static string SomeOrNone(bool ok)
@@ -43,7 +31,6 @@ namespace Abc
             {
                 Ok<int> _ => $"{r.Value}",
                 Error<int> err => err.Message,
-                //Error<int> (string message, bool wasNull) => wasNull ? "BAD" : message,
                 _ => throw new InvalidOperationException()
             };
 
@@ -67,18 +54,6 @@ namespace Abc
             };
 
             int __fun() => ok ? 1 : throw new DivideByZeroException();
-        }
-
-        public static string OkOrError1(bool ok)
-        {
-            var r = ok ? Result<int, string>.Ok(1) : Result<int, string>.Error("Boum!!!");
-
-            return r switch
-            {
-                (Ok<int> some, _) => $"{some.Value}",
-                (Error<int> _, string err) => err,
-                _ => throw new InvalidOperationException()
-            };
         }
     }
 }

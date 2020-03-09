@@ -22,19 +22,20 @@ namespace Abc
         public static Result<T> Of<T>(T? value) where T : struct
         {
             if (value.HasValue) { return new Ok<T>(value.Value); }
-            else { return Abc.Error<T>.None; }
+            else { return Error<T>.None; }
         }
 
         [Pure]
         public static Result<T> Of<T>([AllowNull]T value)
         {
-            if (value is null) { return Abc.Error<T>.None; }
+            if (value is null) { return Error<T>.None; }
             else { return new Ok<T>(value); }
         }
 
+        // Unconstrained version: Error<T>.None.
         [Pure]
         public static Error<T> None<T>() where T : notnull
-            => Abc.Error<T>.None;
+            => Error<T>.None;
 
         [Pure]
         public static Ok<T> Some<T>(T value) where T : struct
@@ -44,19 +45,20 @@ namespace Abc
         public static Result<T> SomeOrNone<T>(T? value) where T : struct
         {
             if (value.HasValue) { return new Ok<T>(value.Value); }
-            else { return Abc.Error<T>.None; }
+            else { return Error<T>.None; }
         }
 
         [Pure]
         public static Result<T> SomeOrNone<T>(T? value) where T : class
         {
-            if (value is null) { return Abc.Error<T>.None; }
+            if (value is null) { return Error<T>.None; }
             else { return new Ok<T>(value); }
         }
 
         [SuppressMessage("Design", "CA1034:Nested types should not be visible")]
-        public static class OfType<T>
+        public static class OfType<T> where T : notnull
         {
+            // Unconstrained version: new Error<T>(message).
             [Pure]
             [SuppressMessage("Design", "CA1000:Do not declare static members on generic types")]
             public static Error<T> Error([DisallowNull]string message)
@@ -66,13 +68,7 @@ namespace Abc
 
     public partial class Result
     {
-        public static Maybe<T> ToMaybe<T>(this Result<T> @this)
-        {
-            Require.NotNull(@this, nameof(@this));
-            // This method converts all errors to an empty maybe.
-            return @this.IsError ? Maybe<T>.None : Maybe.Of(@this.Value);
-        }
-
+        [Pure]
         public static Ok<T> Squash<T>(this Ok<T?> @this)
             where T : struct
         {
@@ -80,36 +76,36 @@ namespace Abc
             return Some(@this.Value.Value);
         }
 
+        [Pure]
         public static Error<T> Squash<T>(this Error<T?> @this)
             where T : struct
         {
             Require.NotNull(@this, nameof(@this));
-            return @this.IsNone ? Abc.Error<T>.None : new Error<T>(@this.Message);
+            return @this.WithReturnType<T>();
         }
 
+        [Pure]
         public static Result<T> Squash<T>(this Result<T?> @this)
             where T : struct
         {
             return @this switch
             {
                 Ok<T?> ok => Some(ok.Value.Value),
-                Error<T?> err when err.IsNone => Abc.Error<T>.None,
-                Error<T?> err when !err.IsNone => new Error<T>(err.Message),
+                Error<T?> err => err.WithReturnType<T>(),
                 null => throw new Anexn(nameof(@this)),
                 _ => throw new InvalidOperationException()
             };
         }
 
+        [Pure]
         public static Result<T> Flatten<T>(this Result<Result<T>> @this)
         {
             return @this switch
             {
                 Ok<Ok<T>> ok => ok.Value,
                 Ok<Error<T>> ok => ok.Value,
-                Error<Ok<T>> err when err.IsNone => Abc.Error<T>.None,
-                Error<Ok<T>> err when !err.IsNone => new Error<T>(err.Message),
-                Error<Error<T>> err when err.IsNone => Abc.Error<T>.None,
-                Error<Error<T>> err when !err.IsNone => new Error<T>(err.Message),
+                Error<Ok<T>> err => err.WithReturnType<T>(),
+                Error<Error<T>> err => err.WithReturnType<T>(),
                 null => throw new Anexn(nameof(@this)),
                 _ => throw new InvalidOperationException()
             };

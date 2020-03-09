@@ -3,6 +3,7 @@
 namespace Abc
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
@@ -24,6 +25,11 @@ namespace Abc
         [NotNull] public override T Value { get; }
 
         [Pure]
+        public override Maybe<T> ToMaybe()
+            // TODO: if moved to the main assembly, use the ctor.
+            => Maybe.Of(Value);
+
+        [Pure]
         public override Result<T> OrElse(Result<T> other)
             => this;
 
@@ -31,6 +37,7 @@ namespace Abc
         public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
         {
             if (selector is null) { throw new Anexn(nameof(selector)); }
+
             return new Ok<TResult>(selector(Value));
         }
 
@@ -38,22 +45,86 @@ namespace Abc
         public override Result<T> Where(Func<T, bool> predicate)
         {
             if (predicate is null) { throw new Anexn(nameof(predicate)); }
+
             if (predicate(Value)) { return this; }
             else { return Error<T>.None; }
         }
 
-        //[Pure]
-        //public Result<TResult> SelectMany<TMiddle, TResult>(
-        //    Func<T, Result<TMiddle>> selector,
-        //    Func<T, TMiddle, TResult> resultSelector)
-        //{
-        //    if (selector is null) { throw new Anexn(nameof(selector)); }
-        //    if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+        [Pure]
+        public override Result<TResult> SelectMany<TMiddle, TResult>(
+            Func<T, Result<TMiddle>> selector,
+            Func<T, TMiddle, TResult> resultSelector)
+        {
+            if (selector is null) { throw new Anexn(nameof(selector)); }
+            if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
 
-        //    var middle = selector(Value);
-        //    if (!middle.IsSome) { return Result.None<TResult>(); }
+            Result<TMiddle> middle = selector(Value);
+            if (middle is Error<TMiddle> err) { return err.WithReturnType<TResult>(); }
 
-        //    return Result.Of(resultSelector(Value, middle.Value));
-        //}
+            return Result.Of(resultSelector(Value, middle.Value));
+        }
+
+        [Pure]
+        public override Result<TResult> Join<TInner, TKey, TResult>(
+            Result<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector)
+        {
+            if (inner is null) { throw new Anexn(nameof(inner)); }
+            if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+            return JoinImpl(
+                inner,
+                outerKeySelector,
+                innerKeySelector,
+                resultSelector,
+                EqualityComparer<TKey>.Default);
+        }
+
+        [Pure]
+        public override Result<TResult> Join<TInner, TKey, TResult>(
+            Result<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector,
+            IEqualityComparer<TKey>? comparer)
+        {
+            if (inner is null) { throw new Anexn(nameof(inner)); }
+            if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+            return JoinImpl(
+                inner,
+                outerKeySelector,
+                innerKeySelector,
+                resultSelector,
+                comparer ?? EqualityComparer<TKey>.Default);
+        }
+
+        [Pure]
+        private Result<TResult> JoinImpl<TInner, TKey, TResult>(
+            Result<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector,
+            IEqualityComparer<TKey> comparer)
+        {
+            if (!inner.IsError)
+            {
+                var outerKey = outerKeySelector(Value);
+                var innerKey = innerKeySelector(inner.Value);
+
+                if (comparer.Equals(outerKey, innerKey))
+                {
+                    return Result.Of(resultSelector(Value, inner.Value));
+                }
+            }
+
+            return Error<TResult>.None;
+        }
     }
 }
