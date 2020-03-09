@@ -33,6 +33,9 @@ namespace Abc
         internal static Exceptional<T> Threw(Exception exception)
             => new Exceptional<T>.Threw_(exception);
 
+        [return: NotNull]
+        public abstract T ValueOrRethrow();
+
         public abstract Maybe<T> ToMaybe();
 
         [Pure]
@@ -46,16 +49,19 @@ namespace Abc
         [Pure]
         public abstract Exceptional<T> Where(Func<T, bool> predicate);
 
+        [Pure]
         public abstract Exceptional<TResult> SelectMany<TMiddle, TResult>(
             Func<T, Exceptional<TMiddle>> selector,
             Func<T, TMiddle, TResult> resultSelector);
 
+        [Pure]
         public abstract Exceptional<TResult> Join<TInner, TKey, TResult>(
             Exceptional<TInner> inner,
             Func<T, TKey> outerKeySelector,
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector);
 
+        [Pure]
         public abstract Exceptional<TResult> Join<TInner, TKey, TResult>(
             Exceptional<TInner> inner,
             Func<T, TKey> outerKeySelector,
@@ -71,7 +77,7 @@ namespace Abc
                 Value = default!;
             }
 
-            public Ok_([DisallowNull]T value)
+            public Ok_(T value)
             {
                 Value = value ?? throw new Anexn(nameof(value));
             }
@@ -80,18 +86,19 @@ namespace Abc
 
             public override T Value { get; }
 
-            public override Exception InnerException => throw new InvalidOperationException();
+            public override Exception InnerException
+            { [DoesNotReturn] get => throw new InvalidOperationException(); }
 
-            [Pure]
+            public override T ValueOrRethrow()
+                => Value;
+
             public override Maybe<T> ToMaybe()
                 // TODO: if moved to the main assembly, use the ctor.
                 => Maybe.Of(Value);
 
-            [Pure]
             public override Exceptional<T> OrElse(Exceptional<T> other)
                 => this;
 
-            [Pure]
             public override Exceptional<TResult> Select<TResult>(Func<T, TResult> selector)
             {
                 if (selector is null) { throw new Anexn(nameof(selector)); }
@@ -99,16 +106,13 @@ namespace Abc
                 return new Exceptional<TResult>.Ok_(selector(Value));
             }
 
-            [Pure]
             public override Exceptional<T> Where(Func<T, bool> predicate)
             {
                 if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
-                if (predicate(Value)) { return this; }
-                else { return None; }
+                return predicate(Value) ? this : None;
             }
 
-            [Pure]
             public override Exceptional<TResult> SelectMany<TMiddle, TResult>(
                 Func<T, Exceptional<TMiddle>> selector,
                 Func<T, TMiddle, TResult> resultSelector)
@@ -117,12 +121,14 @@ namespace Abc
                 if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
 
                 Exceptional<TMiddle> middle = selector(Value);
-                if (middle is Exceptional<TMiddle>.Threw_ err) { return err.WithReturnType<TResult>(); }
+                if (middle is Exceptional<TMiddle>.Threw_ err)
+                {
+                    return err.WithReturnType<TResult>();
+                }
 
                 return Exceptional.Ok(resultSelector(Value, middle.Value));
             }
 
-            [Pure]
             public override Exceptional<TResult> Join<TInner, TKey, TResult>(
                 Exceptional<TInner> inner,
                 Func<T, TKey> outerKeySelector,
@@ -142,7 +148,6 @@ namespace Abc
                     EqualityComparer<TKey>.Default);
             }
 
-            [Pure]
             public override Exceptional<TResult> Join<TInner, TKey, TResult>(
                 Exceptional<TInner> inner,
                 Func<T, TKey> outerKeySelector,
@@ -163,7 +168,6 @@ namespace Abc
                     comparer ?? EqualityComparer<TKey>.Default);
             }
 
-            [Pure]
             private Exceptional<TResult> JoinImpl<TInner, TKey, TResult>(
                 Exceptional<TInner> inner,
                 Func<T, TKey> outerKeySelector,
@@ -188,21 +192,27 @@ namespace Abc
 
         private sealed class Threw_ : Exceptional<T>
         {
-            public Threw_([DisallowNull]Exception exception)
+            public Threw_(Exception exception)
             {
                 InnerException = exception ?? throw new Anexn(nameof(exception));
             }
 
             public override bool IsError => true;
 
-            public override T Value { get => throw EF.Exceptional_NoValue; }
+            public override T Value
+            { [DoesNotReturn] get => throw EF.Exceptional_NoValue; }
 
             public override Exception InnerException { get; }
 
-            [Pure]
             public Exceptional<TOther> WithReturnType<TOther>()
-                => Value is null ? Exceptional<TOther>.None
-                    : new Exceptional<TOther>.Threw_(InnerException);
+                => new Exceptional<TOther>.Threw_(InnerException);
+
+            [DoesNotReturn]
+            public override T ValueOrRethrow()
+            {
+                ExceptionDispatchInfo.Capture(InnerException).Throw();
+                return default;
+            }
 
             public override Maybe<T> ToMaybe()
                 => Maybe<T>.None;
@@ -210,11 +220,9 @@ namespace Abc
             public override Exceptional<T> OrElse(Exceptional<T> other)
                 => other;
 
-            [Pure]
             public override Exceptional<TResult> Select<TResult>(Func<T, TResult> selector)
                 => new Exceptional<TResult>.Threw_(InnerException);
 
-            [Pure]
             public override Exceptional<T> Where(Func<T, bool> predicate)
                 => this;
 
@@ -252,15 +260,11 @@ namespace Abc
 
         [Pure]
         public static Exceptional<T> Ok<T>([AllowNull]T value)
-        {
-            return value is null ? Exceptional<T>.None : Exceptional<T>.Ok(value);
-        }
+            => value is null ? Exceptional<T>.None : Exceptional<T>.Ok(value);
 
         [Pure]
-        public static Exceptional<T> Threw<T>([DisallowNull]Exception exception)
-        {
-            return Exceptional<T>.Threw(exception);
-        }
+        public static Exceptional<T> Threw<T>(Exception exception)
+            => Exceptional<T>.Threw(exception);
 
         public static void Rethrow(Exception ex)
         {

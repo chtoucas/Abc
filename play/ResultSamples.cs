@@ -47,10 +47,8 @@ namespace Abc
             Exceptional<int> exn = Exceptional.TryWith(__fun);
 #pragma warning restore CS0618
 
-            return exn.IsError
-                // FIXME: NULL_FORGIVING
-                ? Exceptional.Rethrow<string>(exn.InnerException!)
-                : $"{exn.Value}";
+            int value = exn.ValueOrRethrow();
+            return $"{value}";
 
             int __fun() => ok ? 1 : throw new DivideByZeroException();
         }
