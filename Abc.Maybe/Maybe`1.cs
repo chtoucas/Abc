@@ -555,6 +555,8 @@ namespace Abc
     }
 
     // Misc methods.
+    // They can all be built from Select() or Bind(), but we prefer not to
+    // since they require the creation of temporary functions.
     public partial struct Maybe<T>
     {
         [Pure]
