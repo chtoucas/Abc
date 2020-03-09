@@ -44,16 +44,13 @@ namespace Abc
         public static string OkOrThrew(bool ok)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            Result<int> r = Exceptional.TryWith(__fun);
+            Exceptional<int> exn = Exceptional.TryWith(__fun);
 #pragma warning restore CS0618
 
-            return r switch
-            {
-                Ok<int> _ => $"{r.Value}",
-                Err<int> err => err.Message,
-                Exceptional<int> exn => Exceptional.Rethrow<string>(exn.InnerException),
-                _ => throw new InvalidOperationException()
-            };
+            return exn.IsError
+                // FIXME: NULL_FORGIVING
+                ? Exceptional.Rethrow<string>(exn.InnerException!)
+                : $"{exn.Value}";
 
             int __fun() => ok ? 1 : throw new DivideByZeroException();
         }

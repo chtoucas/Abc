@@ -13,67 +13,255 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
-    // TODO: include in main proj or remove.
     // When the error is in fact an exception.
     // Warning, it is a really bad idea to try to replace the standard
     // exception system...
 
-    public sealed class Exceptional<T> : Result<T>
+    public abstract class Exceptional<T>
     {
-        public Exceptional([DisallowNull]Exception exception)
-        {
-            InnerException = exception ?? throw new Anexn(nameof(exception));
-        }
+        public static readonly Exceptional<T> None = new Ok_();
 
-        public override bool IsError => true;
+        public abstract bool IsError { get; }
 
-        public override T Value { [DoesNotReturn] get => throw EF.Result_NoValue; }
+        [MaybeNull] public abstract T Value { get; }
 
-        [NotNull] public Exception InnerException { get; }
+        [MaybeNull] public abstract Exception InnerException { get; }
 
-        public override Maybe<T> ToMaybe()
-            => Maybe<T>.None;
+        internal static Exceptional<T> Ok(T value)
+            => new Exceptional<T>.Ok_(value);
 
-        public override Result<T> OrElse(Result<T> other)
-            => other;
+        internal static Exceptional<T> Threw(Exception exception)
+            => new Exceptional<T>.Threw_(exception);
 
-        [Pure]
-        public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
-            => new Exceptional<TResult>(InnerException);
+        public abstract Maybe<T> ToMaybe();
 
         [Pure]
-        public override Result<T> Where(Func<T, bool> predicate)
-            => this;
+        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
+        public abstract Exceptional<T> OrElse(Exceptional<T> other);
 
-        public override Result<TResult> SelectMany<TMiddle, TResult>(
-            Func<T, Result<TMiddle>> selector,
-            Func<T, TMiddle, TResult> resultSelector)
-        {
-            return new Exceptional<TResult>(InnerException);
-        }
+        [Pure]
+        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Query Expression Pattern")]
+        public abstract Exceptional<TResult> Select<TResult>(Func<T, TResult> selector);
 
-        public override Result<TResult> Join<TInner, TKey, TResult>(
-            Result<TInner> inner,
+        [Pure]
+        public abstract Exceptional<T> Where(Func<T, bool> predicate);
+
+        public abstract Exceptional<TResult> SelectMany<TMiddle, TResult>(
+            Func<T, Exceptional<TMiddle>> selector,
+            Func<T, TMiddle, TResult> resultSelector);
+
+        public abstract Exceptional<TResult> Join<TInner, TKey, TResult>(
+            Exceptional<TInner> inner,
             Func<T, TKey> outerKeySelector,
             Func<TInner, TKey> innerKeySelector,
-            Func<T, TInner, TResult> resultSelector)
-        {
-            return new Exceptional<TResult>(InnerException);
-        }
+            Func<T, TInner, TResult> resultSelector);
 
-        public override Result<TResult> Join<TInner, TKey, TResult>(
-            Result<TInner> inner,
+        public abstract Exceptional<TResult> Join<TInner, TKey, TResult>(
+            Exceptional<TInner> inner,
             Func<T, TKey> outerKeySelector,
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector,
-            IEqualityComparer<TKey>? comparer)
+            IEqualityComparer<TKey>? comparer);
+
+        private sealed class Ok_ : Exceptional<T>
         {
-            return new Exceptional<TResult>(InnerException);
+            public Ok_()
+            {
+                // FIXME: NULL_FORGIVING
+                Value = default!;
+            }
+
+            public Ok_([DisallowNull]T value)
+            {
+                Value = value ?? throw new Anexn(nameof(value));
+            }
+
+            public override bool IsError => false;
+
+            public override T Value { get; }
+
+            public override Exception InnerException => throw new InvalidOperationException();
+
+            [Pure]
+            public override Maybe<T> ToMaybe()
+                // TODO: if moved to the main assembly, use the ctor.
+                => Maybe.Of(Value);
+
+            [Pure]
+            public override Exceptional<T> OrElse(Exceptional<T> other)
+                => this;
+
+            [Pure]
+            public override Exceptional<TResult> Select<TResult>(Func<T, TResult> selector)
+            {
+                if (selector is null) { throw new Anexn(nameof(selector)); }
+
+                return new Exceptional<TResult>.Ok_(selector(Value));
+            }
+
+            [Pure]
+            public override Exceptional<T> Where(Func<T, bool> predicate)
+            {
+                if (predicate is null) { throw new Anexn(nameof(predicate)); }
+
+                if (predicate(Value)) { return this; }
+                else { return None; }
+            }
+
+            [Pure]
+            public override Exceptional<TResult> SelectMany<TMiddle, TResult>(
+                Func<T, Exceptional<TMiddle>> selector,
+                Func<T, TMiddle, TResult> resultSelector)
+            {
+                if (selector is null) { throw new Anexn(nameof(selector)); }
+                if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+                Exceptional<TMiddle> middle = selector(Value);
+                if (middle is Exceptional<TMiddle>.Threw_ err) { return err.WithReturnType<TResult>(); }
+
+                return Exceptional.Ok(resultSelector(Value, middle.Value));
+            }
+
+            [Pure]
+            public override Exceptional<TResult> Join<TInner, TKey, TResult>(
+                Exceptional<TInner> inner,
+                Func<T, TKey> outerKeySelector,
+                Func<TInner, TKey> innerKeySelector,
+                Func<T, TInner, TResult> resultSelector)
+            {
+                if (inner is null) { throw new Anexn(nameof(inner)); }
+                if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+                if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+                if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+                return JoinImpl(
+                    inner,
+                    outerKeySelector,
+                    innerKeySelector,
+                    resultSelector,
+                    EqualityComparer<TKey>.Default);
+            }
+
+            [Pure]
+            public override Exceptional<TResult> Join<TInner, TKey, TResult>(
+                Exceptional<TInner> inner,
+                Func<T, TKey> outerKeySelector,
+                Func<TInner, TKey> innerKeySelector,
+                Func<T, TInner, TResult> resultSelector,
+                IEqualityComparer<TKey>? comparer)
+            {
+                if (inner is null) { throw new Anexn(nameof(inner)); }
+                if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+                if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+                if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+                return JoinImpl(
+                    inner,
+                    outerKeySelector,
+                    innerKeySelector,
+                    resultSelector,
+                    comparer ?? EqualityComparer<TKey>.Default);
+            }
+
+            [Pure]
+            private Exceptional<TResult> JoinImpl<TInner, TKey, TResult>(
+                Exceptional<TInner> inner,
+                Func<T, TKey> outerKeySelector,
+                Func<TInner, TKey> innerKeySelector,
+                Func<T, TInner, TResult> resultSelector,
+                IEqualityComparer<TKey> comparer)
+            {
+                if (!inner.IsError)
+                {
+                    var outerKey = outerKeySelector(Value);
+                    var innerKey = innerKeySelector(inner.Value);
+
+                    if (comparer.Equals(outerKey, innerKey))
+                    {
+                        return Exceptional.Ok(resultSelector(Value, inner.Value));
+                    }
+                }
+
+                return Exceptional<TResult>.None;
+            }
+        }
+
+        private sealed class Threw_ : Exceptional<T>
+        {
+            public Threw_([DisallowNull]Exception exception)
+            {
+                InnerException = exception ?? throw new Anexn(nameof(exception));
+            }
+
+            public override bool IsError => true;
+
+            public override T Value { get => throw EF.Exceptional_NoValue; }
+
+            public override Exception InnerException { get; }
+
+            [Pure]
+            public Exceptional<TOther> WithReturnType<TOther>()
+                => Value is null ? Exceptional<TOther>.None
+                    : new Exceptional<TOther>.Threw_(InnerException);
+
+            public override Maybe<T> ToMaybe()
+                => Maybe<T>.None;
+
+            public override Exceptional<T> OrElse(Exceptional<T> other)
+                => other;
+
+            [Pure]
+            public override Exceptional<TResult> Select<TResult>(Func<T, TResult> selector)
+                => new Exceptional<TResult>.Threw_(InnerException);
+
+            [Pure]
+            public override Exceptional<T> Where(Func<T, bool> predicate)
+                => this;
+
+            public override Exceptional<TResult> SelectMany<TMiddle, TResult>(
+                Func<T, Exceptional<TMiddle>> selector,
+                Func<T, TMiddle, TResult> resultSelector)
+            {
+                return new Exceptional<TResult>.Threw_(InnerException);
+            }
+
+            public override Exceptional<TResult> Join<TInner, TKey, TResult>(
+                Exceptional<TInner> inner,
+                Func<T, TKey> outerKeySelector,
+                Func<TInner, TKey> innerKeySelector,
+                Func<T, TInner, TResult> resultSelector)
+            {
+                return new Exceptional<TResult>.Threw_(InnerException);
+            }
+
+            public override Exceptional<TResult> Join<TInner, TKey, TResult>(
+                Exceptional<TInner> inner,
+                Func<T, TKey> outerKeySelector,
+                Func<TInner, TKey> innerKeySelector,
+                Func<T, TInner, TResult> resultSelector,
+                IEqualityComparer<TKey>? comparer)
+            {
+                return new Exceptional<TResult>.Threw_(InnerException);
+            }
         }
     }
 
     public static class Exceptional
     {
+        public static readonly Exceptional<Unit> Unit = Ok(default(Unit));
+
+        [Pure]
+        public static Exceptional<T> Ok<T>([AllowNull]T value)
+        {
+            return value is null ? Exceptional<T>.None : Exceptional<T>.Ok(value);
+        }
+
+        [Pure]
+        public static Exceptional<T> Threw<T>([DisallowNull]Exception exception)
+        {
+            return Exceptional<T>.Threw(exception);
+        }
+
         public static void Rethrow(Exception ex)
         {
             Require.NotNull(ex, nameof(ex));
@@ -91,40 +279,40 @@ namespace Abc
 
         [Pure]
         [Obsolete("Do not use as it, catching general exception types is an antipattern.")]
-        public static Result<Unit> TryWith(Action action)
+        public static Exceptional<Unit> TryWith(Action action)
         {
             if (action is null) { throw new Anexn(nameof(action)); }
 
             try
             {
                 action();
-                return Result.Unit;
+                return Unit;
             }
             catch (Exception ex)
             {
-                return new Exceptional<Unit>(ex);
+                return Threw<Unit>(ex);
             }
         }
 
         [Pure]
         [Obsolete("Do not use as it, catching general exception types is an antipattern.")]
-        public static Result<TResult> TryWith<TResult>(Func<TResult> func)
+        public static Exceptional<TResult> TryWith<TResult>(Func<TResult> func)
         {
             if (func is null) { throw new Anexn(nameof(func)); }
 
             try
             {
-                return Result.Of(func());
+                return Ok(func());
             }
             catch (Exception ex)
             {
-                return new Exceptional<TResult>(ex);
+                return Threw<TResult>(ex);
             }
         }
 
         [Pure]
         [Obsolete("Do not use as it, catching general exception types is an antipattern.")]
-        public static Result<Unit> TryFinally(Action action, Action finallyAction)
+        public static Exceptional<Unit> TryFinally(Action action, Action finallyAction)
         {
             if (action is null) { throw new Anexn(nameof(action)); }
             if (finallyAction is null) { throw new Anexn(nameof(finallyAction)); }
@@ -132,11 +320,11 @@ namespace Abc
             try
             {
                 action();
-                return Result.Unit;
+                return Unit;
             }
             catch (Exception ex)
             {
-                return new Exceptional<Unit>(ex);
+                return Threw<Unit>(ex);
             }
             finally
             {
@@ -146,7 +334,7 @@ namespace Abc
 
         [Pure]
         [Obsolete("Do not use as it, catching general exception types is an antipattern.")]
-        public static Result<TResult> TryFinally<TResult>(
+        public static Exceptional<TResult> TryFinally<TResult>(
             Func<TResult> func, Action finallyAction)
         {
             if (func is null) { throw new Anexn(nameof(func)); }
@@ -154,11 +342,11 @@ namespace Abc
 
             try
             {
-                return Result.Of(func());
+                return Ok(func());
             }
             catch (Exception ex)
             {
-                return new Exceptional<TResult>(ex);
+                return Threw<TResult>(ex);
             }
             finally
             {
