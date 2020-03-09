@@ -1,13 +1,14 @@
-Future plans?
--------------
+# Future plans?
 
 Utilities to write code in the ROP style (Railway Oriented Programming).
 
 [Narvalo.NET](https://github.com/chtoucas/Narvalo.NET)
 - country codes
-- simple money and currency types
+- currency codes
+- simple money type
 - BIC and IBAN
-- roman numerals, string builder extensions, math extensions
+- roman numerals
+- string builder & math extensions
 
 Numerics:
 - port of hypercalc to .NET
