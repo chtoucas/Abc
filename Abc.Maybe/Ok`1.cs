@@ -26,8 +26,7 @@ namespace Abc
 
         [Pure]
         public override Maybe<T> ToMaybe()
-            // TODO: if moved to the main assembly, use the ctor.
-            => Maybe.Of(Value);
+            => new Maybe<T>(Value);
 
         [Pure]
         public override Result<T> OrElse(Result<T> other)
