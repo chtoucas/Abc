@@ -23,33 +23,35 @@ namespace Abc
         }
 
         // Result POV.
-        public static string OkOrError(bool ok)
+        public static string SomeOrError(bool ok)
         {
             Result<int> r = __fun();
 
             return r switch
             {
                 Ok<int> _ => $"{r.Value}",
-                Error<int> err => err.Message,
+                Err<int> err => err.Message,
                 _ => throw new InvalidOperationException()
             };
 
             Result<int> __fun()
             {
-                return ok ? Result.Of(1) : Result.OfType<int>.Error("Boum!!!");
+                if (ok) { return Result.Some(1); }
+                else { return Result.Err<int>("Boum!!!"); }
             }
         }
 
         public static string OkOrThrew(bool ok)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            Exceptional<int> r = Exceptional.TryWith(__fun);
+            Result<int> r = Exceptional.TryWith(__fun);
 #pragma warning restore CS0618
 
             return r switch
             {
-                Ok1<int> _ => $"{r.Value}",
-                Threw<int> exn => Exceptional.Rethrow<string>(exn.InnerException),
+                Ok<int> _ => $"{r.Value}",
+                Err<int> err => err.Message,
+                Exceptional<int> exn => Exceptional.Rethrow<string>(exn.InnerException),
                 _ => throw new InvalidOperationException()
             };
 

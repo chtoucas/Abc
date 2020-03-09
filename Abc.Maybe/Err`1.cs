@@ -10,16 +10,13 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
-    // TODO: improvements? inner error, aggregate errors?
+    // TODO: improvements (?) inner error, aggregate errors?
 
-    [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
-    public sealed class Error<T> : Result<T>
+    public sealed class Err<T> : Result<T>
     {
-        public static readonly Error<T> None = new Error<T>("No value", true);
+        public Err([DisallowNull]string message) : this(message, false) { }
 
-        public Error([DisallowNull] string message) : this(message, false) { }
-
-        private Error([DisallowNull] string message, bool isNone)
+        internal Err([DisallowNull]string message, bool isNone)
         {
             Message = message ?? throw new Anexn(nameof(message));
             IsNone = isNone;
@@ -37,8 +34,8 @@ namespace Abc
             => Message;
 
         [Pure]
-        public Error<TOther> WithReturnType<TOther>()
-            => IsNone ? Error<TOther>.None : new Error<TOther>(Message);
+        public Err<TOther> WithReturnType<TOther>()
+            => IsNone ? Err<TOther>.None : new Err<TOther>(Message);
 
         [Pure]
         public override Maybe<T> ToMaybe()

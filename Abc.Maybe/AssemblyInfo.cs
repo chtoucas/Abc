@@ -8,3 +8,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly: InternalsVisibleTo("Abc.Testing")]
+// FIXME: temporary.
+[assembly: InternalsVisibleTo("play")]

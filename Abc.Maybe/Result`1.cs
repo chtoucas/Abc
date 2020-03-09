@@ -1,5 +1,22 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
+// A Result type.
+//
+// It should
+// 1. Be both a Result type and an Option type.
+// 2. Be a reference type.
+// 3. Work fine with pattern matching.
+// 4. Offer basic support for the Query Expression Syntax.
+//
+// Solutions?
+// - Generic `Result<T, TErr>` type using Either.
+//   Usability is questionnable and it is only a Result type (not an Option type).
+// - Base `Result<T>` and generic error type `Error<T, TErr>`.
+//   Usability is questionnable.
+//
+// Here we choose to only cover the simplest situation, the one where the error
+// is just a string.
+
 namespace Abc
 {
     using System;
@@ -10,6 +27,8 @@ namespace Abc
     // Both an Option type and a Result type.
     public abstract class Result<T>
     {
+        public static readonly Err<T> None = new Err<T>("No value.", true);
+
         private protected Result() { }
 
         public abstract bool IsError { get; }

@@ -47,7 +47,7 @@ namespace Abc
             if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
             if (predicate(Value)) { return this; }
-            else { return Error<T>.None; }
+            else { return None; }
         }
 
         [Pure]
@@ -59,7 +59,7 @@ namespace Abc
             if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
 
             Result<TMiddle> middle = selector(Value);
-            if (middle is Error<TMiddle> err) { return err.WithReturnType<TResult>(); }
+            if (middle is Err<TMiddle> err) { return err.WithReturnType<TResult>(); }
 
             return Result.Of(resultSelector(Value, middle.Value));
         }
@@ -124,7 +124,7 @@ namespace Abc
                 }
             }
 
-            return Error<TResult>.None;
+            return Result<TResult>.None;
         }
     }
 }
