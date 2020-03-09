@@ -1,8 +1,9 @@
 Future plans?
 -------------
 
+Utilities to write code in the ROP style (Railway Oriented Programming).
+
 [Narvalo.NET](https://github.com/chtoucas/Narvalo.NET)
-- a fast gregorian date type (cf Hopey)
 - country codes
 - simple money and currency types
 - BIC and IBAN

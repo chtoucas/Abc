@@ -43,28 +43,42 @@ namespace Abc
     using EF = Utilities.ExceptionFactory;
 
     /// <summary>
-    /// Represents a date within the non-proleptic (but retropolated) Gregorian
-    /// calendar.
+    /// Represents a date within the Gregorian calendar.
     /// <para><see cref="GregorianDate"/> is an immutable struct.</para>
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public readonly partial struct GregorianDate
         : IEquatable<GregorianDate>, IComparable<GregorianDate>, IComparable
-    // FIXME: IDateObject<GregorianDate>, IDayOfWeekAdjuster<GregorianDate>
     {
+        /// <summary>
+        /// Represents the number of days in a 400-year cycle.
+        /// <para>This field is a constant equal to 146_097‬.</para>
+        /// </summary>
+        /// <remarks>
+        /// On average, a year is 365.2425 days long.
+        /// </remarks>
+        private const int DaysPer400Years = 400 * 365 + 97;
+
+        /// <summary>
+        /// Represents the number of days from march to december, both
+        /// included.
+        /// <para>This field is constant.</para>
+        /// </summary>
+        private const int DaysFromMarchToDecember = 306;
+
         /// <summary>
         /// Represents the smallest possible value of the number of consecutive
         /// days since the epoch of the Gregorian calendar.
         /// <para>This field is a constant equal to 0.</para>
         /// </summary>
-        internal const int MinDaysSinceEpoch = 0;
+        public const int MinDaysSinceEpoch = 0;
 
         /// <summary>
         /// Represents the largest possible value of the number of consecutive
         /// days since the epoch of the Gregorian calendar.
         /// <para>This field is a constant equal to 3_652_058.</para>
         /// </summary>
-        internal const int MaxDaysSinceEpoch = 3_652_058;
+        public const int MaxDaysSinceEpoch = 3_652_058;
 
         /// <summary>
         /// Represents the earliest supported year.
@@ -158,7 +172,6 @@ namespace Abc
             }
         }
 
-        /// <inheritdoc />
         public int Century
         {
             get
@@ -168,7 +181,6 @@ namespace Abc
             }
         }
 
-        /// <inheritdoc />
         public int YearOfCentury
         {
             get
@@ -180,15 +192,12 @@ namespace Abc
             }
         }
 
-        /// <inheritdoc />
         /// <para>The result is in the range from 1 to 9999.</para>
         public int Year => _bin >> 9;
 
-        /// <inheritdoc />
         /// <para>The result is in the range from 1 to 12.</para>
         public int Month => (_bin >> 5) & MonthMask;
 
-        /// <inheritdoc />
         /// <para>The result is in the range from 1 to 366.</para>
         public int DayOfYear
         {
@@ -199,11 +208,9 @@ namespace Abc
             }
         }
 
-        /// <inheritdoc />
         /// <para>The result is in the range from 1 to 31.</para>
         public int Day => _bin & DayMask;
 
-        /// <inheritdoc />
         public DayOfWeek DayOfWeek
         {
             get
@@ -213,7 +220,7 @@ namespace Abc
                 return (DayOfWeek)(((int)DayOfWeek.Monday + DaysSinceEpoch) % 7);
 #else
                 Unpack(out int y, out int m, out int d);
-                int doomsday = GetGregorianDoomsday(y, m);
+                int doomsday = GetDoomsday(y, m);
                 return (DayOfWeek)((doomsday + d) % 7);
 #endif
             }
@@ -232,7 +239,7 @@ namespace Abc
                 return AdjustedModulo((int)DayOfWeek.Monday + DaysSinceEpoch, 7);
 #else
                 Unpack(out int y, out int m, out int d);
-                int doomsday = GetGregorianDoomsday(y, m);
+                int doomsday = GetDoomsday(y, m);
                 return AdjustedModulo(doomsday + d, 7);
 #endif
             }
@@ -260,7 +267,6 @@ namespace Abc
             }
         }
 
-        /// <inheritdoc />
         public bool IsIntercalary => ObMonthDay == __IntercalaryDay;
 
         /// <summary>
@@ -279,7 +285,7 @@ namespace Abc
         /// <para>The result is in the range from <see cref="MinDaysSinceEpoch"/>
         /// to <see cref="MaxDaysSinceEpoch"/>.</para>
         /// </summary>
-        internal int DaysSinceEpoch
+        public int DaysSinceEpoch
         {
             get
             {
@@ -363,7 +369,7 @@ namespace Abc
         /// <para>This method does NOT validate its parameter.</para>
         /// </summary>
         [Pure]
-        internal static GregorianDate FromDaysSinceEpoch(int daysSinceEpoch)
+        public static GregorianDate FromDaysSinceEpoch(int daysSinceEpoch)
         {
             daysSinceEpoch += DaysFromMarchToDecember;
 
@@ -423,7 +429,7 @@ namespace Abc
         /// Obtains the ISO weekday of the first day of the specified year.
         /// </summary>
         [Pure]
-        internal static int GetIsoWeekdayAtStartOfYear(int y)
+        private static int GetIsoWeekdayAtStartOfYear(int y)
         {
 #if PLAIN_DAYOFWEEK
             var startOfYear = new GregorianDate((y << 9) | __StartOfYear);
@@ -440,22 +446,6 @@ namespace Abc
     // Helpers.
     public partial struct GregorianDate
     {
-        /// <summary>
-        /// Represents the number of days in a 400-year cycle.
-        /// <para>This field is a constant equal to 146_097‬.</para>
-        /// </summary>
-        /// <remarks>
-        /// On average, a year is 365.2425 days long.
-        /// </remarks>
-        private const int DaysPer400Years = 400 * 365 + 97;
-
-        /// <summary>
-        /// Represents the number of days from march to december, both
-        /// included.
-        /// <para>This field is constant.</para>
-        /// </summary>
-        private const int DaysFromMarchToDecember = 306;
-
         /// <summary>
         /// Checks whether the specified year is leap or not.
         /// <para>This method does NOT check whether the year is in a specific
@@ -514,7 +504,7 @@ namespace Abc
                 : 28;
 
         [Pure]
-        private static int GetGregorianDoomsday(int y, int m)
+        private static int GetDoomsday(int y, int m)
         {
             // Doomsday rule, adapted by Keith & Craver.
             //
@@ -668,7 +658,6 @@ namespace Abc
             return new DateTime(y, m, d);
         }
 
-        /// <inheritdoc />
         [Pure]
         public int CountRemainingDaysInYear()
         {
@@ -676,7 +665,6 @@ namespace Abc
             return CountDaysInYear(y) - CountDaysInYearBeforeMonth(y, m) - d;
         }
 
-        /// <inheritdoc />
         [Pure]
         public int CountRemainingDaysInMonth()
         {
@@ -686,17 +674,14 @@ namespace Abc
 
         #region Year and month boundaries.
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate GetStartOfYear()
             => new GregorianDate((Year << 9) | __StartOfYear);
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate GetEndOfYear()
             => new GregorianDate((Year << 9) | __EndOfYear);
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate GetStartOfMonth()
         {
@@ -704,7 +689,6 @@ namespace Abc
             return CreateLenient(y, m, 1);
         }
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate GetEndOfMonth()
         {
@@ -817,7 +801,6 @@ namespace Abc
         //   PreviousOrSame(dayOWeek) = PreviousOrSame(dayOfWeek, 7)
         //     NextOrSame(dayOfWeek, 1) fails near MaxValue
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate Previous(DayOfWeek dayOfWeek)
 #if PLAIN_DAYOFWEEK
@@ -834,7 +817,6 @@ namespace Abc
         }
 #endif
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate PreviousOrSame(DayOfWeek dayOfWeek)
 #if PLAIN_DAYOFWEEK
@@ -851,7 +833,6 @@ namespace Abc
         }
 #endif
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate NextOrSame(DayOfWeek dayOfWeek)
 #if PLAIN_DAYOFWEEK
@@ -868,7 +849,6 @@ namespace Abc
         }
 #endif
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate Next(DayOfWeek dayOfWeek)
 #if PLAIN_DAYOFWEEK
@@ -886,7 +866,6 @@ namespace Abc
 #endif
 
 #if PLAIN_DAYOFWEEK
-        /// <inheritdoc />
         [Pure]
         private GregorianDate PreviousOrSame(DayOfWeek dayOfWeek, int dayShift)
         {
@@ -1160,13 +1139,11 @@ namespace Abc
 
 #pragma warning restore CA2225
 
-        /// <inheritdoc />
         [Pure]
         public int CountDaysSince(GregorianDate other)
             => ObYearMonth == other.ObYearMonth ? Day - other.Day
                 : DaysSinceEpoch - other.DaysSinceEpoch;
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate PlusDays(int days)
         {
@@ -1190,7 +1167,6 @@ namespace Abc
             }
         }
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate NextDay()
         {
@@ -1204,7 +1180,6 @@ namespace Abc
                 : new GregorianDate(((y + 1) << 9) | __StartOfYear);
         }
 
-        /// <inheritdoc />
         [Pure]
         public GregorianDate PreviousDay()
         {
