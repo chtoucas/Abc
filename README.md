@@ -34,29 +34,30 @@ Map, filter the enclosed value.
 var some = Maybe.Some(4);
 var none = Maybe<int>.None;
 
-Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
 Maybe<int> q = some.Where(x >= 0).Select(x => Math.Sqrt(x));    
+// Or using the Query Expression Pattern.
+Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
 ```
 In both cases, the result is Maybe(2).
 If we started from `none` or `Maybe.Some(-4)` instead of `some`, the result
 would be `Maybe<int>.None`.
 
-"Safely" extract the enclosed value. `Maybe<T>` is a strict option type, we don't 
+Safely extract the enclosed value. `Maybe<T>` is a strict option type, we don't 
 get a direct access to the enclosed value.
+A word of caution, the methods can only be considered safe when targetting 
+.NET Core 3.0 or above. For instance, the C# 8.0 will complain if one tries to 
+write maybe.ValueOrElse(null).
 ```csharp
 Maybe<string> maybe = ...
 
 // First the truely unsafe way of doing things, not recommended but at least
-// it is clear from the method's name.
+// it is clear from the method's name that the result might be null.
 // WARNING: value may be null here!
 string value = maybe.ValueOrDefault();     
 
 string value = maybe.ValueOrElse("Replacement string");
-
-// We may delay the creation of the replacement value (unsafe).
+// We may delay the creation of the replacement value.
 string value = maybe.ValueOrElse(() => "Replacement string");
-// Of course, this method has been tagged such that C# will complain if one 
-// tries to write maybe.ValueOrElse(null).
 
 // If maybe is empty, throw InvalidOperationException.
 string value = maybe.ValueOrThrow();
