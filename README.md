@@ -3,12 +3,12 @@
 Features
 --------
 
-- A strict Option type; see project Abc.Maybe.
+- A strict Option type.
 - Utilities to write code in the ROP style (Railway Oriented Programming).
 - A fast Gregorian date type?
 
-Quick start with the `Maybe<T>` type
-------------------------------------
+Quick start with `Maybe<T>`
+---------------------------
 
 An Option type can help to avoid null reference exceptions, but that's not the
 point, it forces us to think about the outcome of a computation. We shall see
@@ -28,26 +28,25 @@ Maybe<string> q = Maybe.SomeOrNone("value");
 Maybe<string> q = Maybe.SomeOrNone((string?)null);  // == Maybe<string>.None
 ```
 
-Map, filter the enclosed value.
+Map and filter the enclosed value.
 ```csharp
 var some = Maybe.Some(4);
-var none = Maybe<int>.None;
 
 Maybe<int> q = some.Where(x >= 0).Select(x => Math.Sqrt(x));
 // Or using the Query Expression Pattern.
 Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
 ```
 In both cases, the result is Maybe(2).
-If we started from `none` or `Maybe.Some(-4)` instead of `some`, the result
+If we started from an empty maybe or `Maybe.Some(-4)` instead, the result
 would be `Maybe<int>.None`.
 
 Safely extract the enclosed value. `Maybe<T>` is a strict option type, we don't
 get a direct access to the enclosed value.
 A word of caution, the methods may only be considered safe when targetting
 .NET Core 3.0 or above. For instance, C# 8.0 will complain if one tries to
-write maybe.ValueOrElse(null).
+write `maybe.ValueOrElse(null)`.
 ```csharp
-Maybe<string> maybe = ...
+Maybe<string> maybe = Maybe.SomeOrNone("...");
 
 // First the truely unsafe way of doing things, not recommended but at least
 // it is clear from the method's name that the result might be null.
@@ -69,6 +68,7 @@ string value = maybe.ValueOrThrow(() => new Exception());
 Pattern matching.
 ```csharp
 Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
+
 string value = q.Switch(
     caseSome: x  => $"Square root = {x}."),
     caseNone: () => "The input was strictly negative.");
@@ -80,6 +80,8 @@ string value = q.Switch(
 
 Do something with the enclosed value, side-effects.
 ```csharp
+Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
+
 q.Do(
     onSome: x  => Console.WriteLine($"Square root = {x}."),
     onNone: () => Console.WriteLine("The input was strictly negative."));
@@ -93,8 +95,10 @@ if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 ```csharp
 Maybe<string> maybe = Maybe.Some("12345");
 
+// May.ParseInt32 parses a string and returns a Maybe<int>.
+// Do write.
 maybe.Bind(May.ParseInt32);     // <-- Maybe<int>
-
+// Do NOT write.
 maybe.Select(May.ParseInt32)    // <-- Maybe<Maybe<int>>
     .Flatten();                 // <-- Maybe<int>
 ```
