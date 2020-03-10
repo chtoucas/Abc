@@ -1,22 +1,5 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-// A Result type.
-//
-// It should
-// 1. Be both a Result type and an Option type.
-// 2. Be a reference type.
-// 3. Work fine with pattern matching.
-// 4. Offer basic support for the Query Expression Syntax.
-//
-// Solutions?
-// - Generic `Result<T, TErr>` type using Either.
-//   Usability is questionnable and it is only a Result type (not an Option type).
-// - Base `Result<T>` and generic error type `Error<T, TErr>`.
-//   Usability is questionnable.
-//
-// Here we choose to only cover the simplest situation, the one where the error
-// is just a string.
-
 namespace Abc
 {
     using System;
@@ -24,8 +7,14 @@ namespace Abc
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
-    // Both an Option type and a Result type.
-    public abstract class Result<T>
+    // Both an Option type and a Result type, but only a simple one where the
+    // error part is just a string. The main difference with a Maybe<T> is that
+    // we get the opportunity to describe the error.
+    // It is possible to construct a general Result type, an `Either<T, TError>`,
+    // but I find it to be difficult to use due to the extra generic parameter
+    // (no sum type in C#). I tried it too with both a `Result<T>` and a generic
+    // error type `Error<T, TErr>`, but its usability was equally questionnable.
+    public abstract partial class Result<T>
     {
         public static readonly Err<T> None = new Err<T>();
 
@@ -40,7 +29,11 @@ namespace Abc
         [Pure]
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
         public abstract Result<T> OrElse(Result<T> other);
+    }
 
+    // Query Expression Pattern aka LINQ.
+    public partial class Result<T>
+    {
         [Pure]
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Query Expression Pattern")]
         public abstract Result<TResult> Select<TResult>(Func<T, TResult> selector);

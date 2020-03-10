@@ -12,7 +12,7 @@ namespace Abc
 
     // TODO: improvements (?) inner error, aggregate errors?
 
-    public sealed class Err<T> : Result<T>
+    public sealed partial class Err<T> : Result<T>
     {
         internal Err()
         {
@@ -48,7 +48,11 @@ namespace Abc
         [Pure]
         public override Result<T> OrElse(Result<T> other)
             => other;
+    }
 
+    // Query Expression Pattern aka LINQ.
+    public partial class Err<T>
+    {
         [Pure]
         public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
         {

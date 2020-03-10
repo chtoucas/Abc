@@ -13,7 +13,7 @@ namespace Abc
     /// Represents the successful outcome of a computation.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    public sealed class Ok<T> : Result<T>
+    public sealed partial class Ok<T> : Result<T>
     {
         internal Ok([DisallowNull]T value)
         {
@@ -31,7 +31,11 @@ namespace Abc
         [Pure]
         public override Result<T> OrElse(Result<T> other)
             => this;
+    }
 
+    // Query Expression Pattern aka LINQ.
+    public partial class Ok<T>
+    {
         [Pure]
         public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
         {
