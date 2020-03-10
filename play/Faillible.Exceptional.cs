@@ -24,7 +24,7 @@ namespace Abc
             public override T Value
             {
                 [DoesNotReturn]
-                get => throw EF.Exceptional_NoValue;
+                get => throw EF.Faillible_NoValue;
             }
 
             public override Exception InnerException { get; }
@@ -46,7 +46,7 @@ namespace Abc
                 => other;
         }
 
-        // Query Expression Pattern.
+        // Query Expression Pattern aka LINQ.
         internal partial class Exceptional
         {
             public override Faillible<TResult> Select<TResult>(Func<T, TResult> selector)

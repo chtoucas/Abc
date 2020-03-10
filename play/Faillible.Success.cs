@@ -7,6 +7,7 @@ namespace Abc
     using System.Diagnostics.CodeAnalysis;
 
     using Anexn = System.ArgumentNullException;
+    using EF = Abc.Utilities.ExceptionFactory;
 
     public abstract partial class Faillible<T>
     {
@@ -25,12 +26,12 @@ namespace Abc
 
             public override bool IsError => false;
 
-            public override T Value { get; }
+            [MaybeNull] public override T Value { get; }
 
             public override Exception InnerException
             {
                 [DoesNotReturn]
-                get => throw new InvalidOperationException();
+                get => throw EF.Faillible_NoInnerException;
             }
 
             public override T ValueOrRethrow()
@@ -44,7 +45,7 @@ namespace Abc
                 => this;
         }
 
-        // Query Expression Pattern.
+        // Query Expression Pattern aka LINQ.
         internal partial class Success
         {
             public override Faillible<TResult> Select<TResult>(Func<T, TResult> selector)

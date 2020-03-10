@@ -16,12 +16,27 @@ namespace Abc.Samples
 
     public partial class FaillibleSamples
     {
-        public static string OkOrThrew(bool ok)
+        public static int OkOrThrew1(bool ok)
+        {
+            Faillible<int> exn = GetOkOrThrew(ok);
+            return exn.ValueOrRethrow();
+        }
+
+        public static string OkOrThrew2(bool ok)
         {
             Faillible<int> exn = GetOkOrThrew(ok);
 
-            int value = exn.ValueOrRethrow();
-            return $"{value}";
+            if (exn.IsError)
+            {
+                // Do something with the exception (eg logging)
+                Exception ex = exn.InnerException;
+                // then rethrow or swallow it?
+                return Rethrow<string>(ex);
+            }
+            else
+            {
+                return $"{exn.Value}";
+            }
         }
 
         public static Faillible<int> GetOkOrThrew(bool ok)

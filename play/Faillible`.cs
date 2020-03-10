@@ -36,7 +36,8 @@ namespace Abc
 
         [MaybeNull] public abstract T Value { get; }
 
-        public abstract Exception? InnerException { get; }
+        // REVIEW: NRT?
+        public abstract Exception InnerException { get; }
 
         [return: NotNull]
         public abstract T ValueOrRethrow();
@@ -48,7 +49,7 @@ namespace Abc
         public abstract Faillible<T> OrElse(Faillible<T> other);
     }
 
-    // Query Expression Pattern.
+    // Query Expression Pattern aka LINQ.
     public partial class Faillible<T>
     {
         [Pure]

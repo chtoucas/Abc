@@ -5,7 +5,6 @@
 namespace Abc.Utilities
 {
     using System;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -15,9 +14,15 @@ namespace Abc.Utilities
     internal static class ExceptionFactory
     {
         [Pure]
-        public static InvalidOperationException Exceptional_NoValue
+        public static InvalidOperationException Faillible_NoValue
             => new InvalidOperationException(
                 "The object does not contain any value."
                 + $"{Environment.NewLine}You should have checked that the property IsError is not true.");
+
+        [Pure]
+        public static InvalidOperationException Faillible_NoInnerException
+            => new InvalidOperationException(
+                "The object does not contain any exception."
+                + $"{Environment.NewLine}You should have checked that the property IsError is true.");
     }
 }
