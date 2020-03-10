@@ -44,6 +44,7 @@ namespace Abc
     /// The intended usage is when T is a value type, a string, a (read-only?)
     /// record, or a function. For other reference types, it should be fine as
     /// long as T is an **immutable** reference type.
+    /// It don't recommend to use this type in a public API.
     ///
     /// Static properties.
     /// - Maybe<T>.None
@@ -397,7 +398,7 @@ namespace Abc
 
             if (!_isSome) { return Maybe<TResult>.None; }
 
-            var middle = selector(_value);
+            Maybe<TMiddle> middle = selector(_value);
             if (!middle._isSome) { return Maybe<TResult>.None; }
 
             return Maybe.Of(resultSelector(_value, middle._value));
@@ -463,8 +464,8 @@ namespace Abc
         {
             if (_isSome && inner._isSome)
             {
-                var outerKey = outerKeySelector(_value);
-                var innerKey = innerKeySelector(inner._value);
+                TKey outerKey = outerKeySelector(_value);
+                TKey innerKey = innerKeySelector(inner._value);
 
                 if (comparer.Equals(outerKey, innerKey))
                 {
@@ -476,7 +477,7 @@ namespace Abc
         }
 
         //
-        // GroupJoin currently disabled.
+        // TODO: GroupJoin currently disabled.
         //
 
         //[Pure]
@@ -493,8 +494,8 @@ namespace Abc
 
         //    if (_isSome && inner._isSome)
         //    {
-        //        var outerKey = outerKeySelector(_value);
-        //        var innerKey = innerKeySelector(inner._value);
+        //        TKey outerKey = outerKeySelector(_value);
+        //        TKey innerKey = innerKeySelector(inner._value);
 
         //        if (comparer.Equals(outerKey, innerKey))
         //        {

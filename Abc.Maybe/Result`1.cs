@@ -15,15 +15,23 @@ namespace Abc
     // (no sum type in C#). I tried too with both a `Result<T>` and a generic
     // error type `Error<T, TErr>`, but its usability was equally questionnable.
     //
-    // No method Bind(), here we prefer pattern matching.
+    // I wish to keep this class simple: no method Bind(), public access to
+    // Value and a property IsError, very much like Value and HasValue (or rather
+    // its opposite) are offered by Nullable<T>.
+    //
+    // It don't recommend to use this type in a public API.
     public abstract partial class Result<T>
     {
         public static readonly Err<T> None = new Err<T>();
 
+        // Only two classes can extend this one (Err<T> and Ok<T>),
+        // pattern matching is therefore unambiguous.
         private protected Result() { }
 
         public abstract bool IsError { get; }
 
+        // Even w/ Err<T> this property never returns null, indeed in case of
+        // error the property getter throws.
         [NotNull] public abstract T Value { get; }
 
         [Pure] public abstract Maybe<T> ToMaybe();

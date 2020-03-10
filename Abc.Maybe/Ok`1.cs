@@ -122,8 +122,8 @@ namespace Abc
         {
             if (!inner.IsError)
             {
-                var outerKey = outerKeySelector(Value);
-                var innerKey = innerKeySelector(inner.Value);
+                TKey outerKey = outerKeySelector(Value);
+                TKey innerKey = innerKeySelector(inner.Value);
 
                 if (comparer.Equals(outerKey, innerKey))
                 {

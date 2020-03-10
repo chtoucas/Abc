@@ -10,7 +10,7 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
-    // TODO: improvements (?) inner error, aggregate errors?
+    // TODO: inner error (?) but more importantly aggregate errors.
 
     public sealed partial class Err<T> : Result<T>
     {

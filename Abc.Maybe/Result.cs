@@ -152,7 +152,7 @@ namespace Abc
         {
             if (source is null) { throw new Anexn(nameof(source)); }
 
-            foreach (var item in source)
+            foreach (Result<T> item in source)
             {
                 if (!item.IsError) { return item; }
             }
