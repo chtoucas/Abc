@@ -29,7 +29,7 @@ namespace Abc
 
             public override Exception InnerException { get; }
 
-            public Faillible<TOther> WithReturnType<TOther>()
+            public Faillible<TOther> WithGenericType<TOther>()
                 => new Faillible<TOther>.Exceptional(InnerException);
 
             [DoesNotReturn]

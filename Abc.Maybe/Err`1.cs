@@ -38,7 +38,7 @@ namespace Abc
             => Message;
 
         [Pure]
-        public Err<TOther> WithReturnType<TOther>()
+        public Err<TOther> WithGenericType<TOther>()
             => IsNone ? Err<TOther>.None : new Err<TOther>(Message);
 
         [Pure]
@@ -56,7 +56,7 @@ namespace Abc
         [Pure]
         public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
         {
-            return WithReturnType<TResult>();
+            return WithGenericType<TResult>();
         }
 
         [Pure]
@@ -68,7 +68,7 @@ namespace Abc
             Func<T, Result<TMiddle>> selector,
             Func<T, TMiddle, TResult> resultSelector)
         {
-            return WithReturnType<TResult>();
+            return WithGenericType<TResult>();
         }
 
         [Pure]
@@ -78,7 +78,7 @@ namespace Abc
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector)
         {
-            return WithReturnType<TResult>();
+            return WithGenericType<TResult>();
         }
 
         [Pure]
@@ -89,7 +89,7 @@ namespace Abc
             Func<T, TInner, TResult> resultSelector,
             IEqualityComparer<TKey>? comparer)
         {
-            return WithReturnType<TResult>();
+            return WithGenericType<TResult>();
         }
     }
 }

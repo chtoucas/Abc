@@ -2,7 +2,7 @@ Abc.Err<T>
 Abc.Err<T>.Err(string message) -> void
 Abc.Err<T>.IsNone.get -> bool
 Abc.Err<T>.Message.get -> string
-Abc.Err<T>.WithReturnType<TOther>() -> Abc.Err<TOther>
+Abc.Err<T>.WithGenericType<TOther>() -> Abc.Err<TOther>
 Abc.Linq.Qperators
 Abc.May
 Abc.May.May() -> void

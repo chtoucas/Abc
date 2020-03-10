@@ -72,7 +72,7 @@ namespace Abc
                 Faillible<TMiddle> middle = selector(Value);
                 if (middle is Faillible<TMiddle>.Exceptional err)
                 {
-                    return err.WithReturnType<TResult>();
+                    return err.WithGenericType<TResult>();
                 }
 
                 return Faillible.Succeed(resultSelector(Value, middle.Value));

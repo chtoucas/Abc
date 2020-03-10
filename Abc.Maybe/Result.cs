@@ -65,6 +65,7 @@ namespace Abc
             => new Err<T>(message);
     }
 
+    // Extension methods.
     public partial class Result
     {
         [Pure]
@@ -80,7 +81,7 @@ namespace Abc
             where T : struct
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
-            return @this.WithReturnType<T>();
+            return @this.WithGenericType<T>();
         }
 
         [Pure]
@@ -90,7 +91,7 @@ namespace Abc
             return @this switch
             {
                 Ok<T?> ok => Some(ok.Value.Value),
-                Err<T?> err => err.WithReturnType<T>(),
+                Err<T?> err => err.WithGenericType<T>(),
                 null => throw new Anexn(nameof(@this)),
                 _ => throw new InvalidOperationException()
             };
@@ -101,10 +102,13 @@ namespace Abc
         {
             return @this switch
             {
+                // Return an Ok<T>.
                 Ok<Ok<T>> ok => ok.Value,
+                // Return an Err<T>.
                 Ok<Err<T>> ok => ok.Value,
-                Err<Ok<T>> err => err.WithReturnType<T>(),
-                Err<Err<T>> err => err.WithReturnType<T>(),
+                Err<Ok<T>> err => err.WithGenericType<T>(),
+                Err<Err<T>> err => err.WithGenericType<T>(),
+                // Throw.
                 null => throw new Anexn(nameof(@this)),
                 _ => throw new InvalidOperationException()
             };

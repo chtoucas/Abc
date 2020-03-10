@@ -62,7 +62,7 @@ namespace Abc
             if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
 
             Result<TMiddle> middle = selector(Value);
-            if (middle is Err<TMiddle> err) { return err.WithReturnType<TResult>(); }
+            if (middle is Err<TMiddle> err) { return err.WithGenericType<TResult>(); }
 
             return Result.Of(resultSelector(Value, middle.Value));
         }
