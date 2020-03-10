@@ -15,35 +15,35 @@ point, it forces us to think about the outcome of a computation. We shall see
 a few concrete examples below (web, UI, logging, to be written...).
 
 Quick start with the `Maybe<T>` type.
-```
-// Value type.
+```csharp
+// Maybe of a value type.
 Maybe<int> q = Maybe.Some(1);
 Maybe<int> q = Maybe<int>.None;
 
-// Nullable value type.
+// Maybe of a nullable value type.
 Maybe<int> q = Maybe.SomeOrNone((int?)1);
 Maybe<int> q = Maybe.SomeOrNone((int?)null);        // == Maybe<int>.None
 
-// Reference type (NRT if available).
+// Maybe of a reference type (NRT if available).
 Maybe<string> q = Maybe.SomeOrNone("value");
 Maybe<string> q = Maybe.SomeOrNone((string?)null);  // == Maybe<string>.None
 ```
 
 Map, filter the enclosed value.
-```
+```csharp
 var some = Maybe.Some(4);
 var none = Maybe<int>.None;
 
-// In both cases, the result is Maybe(2).
 Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
 Maybe<int> q = some.Where(x >= 0).Select(x => Math.Sqrt(x));    
 ```
-If we used `none` instead of `some`, the result would be `Maybe<int>.None`.
-If we started from `Maybe.Some(-4)`, the result would be `Maybe<int>.None`.
+In both cases, the result is Maybe(2).
+If we started from `none` or `Maybe.Some(-4)` instead of `some`, the result
+would be `Maybe<int>.None`.
 
-Safely extract the enclosed value. We don't get a direct access to the enclosed 
-value.
-```
+"Safely" extract the enclosed value. `Maybe<T>` is a strict option type, we don't 
+get a direct access to the enclosed value.
+```csharp
 Maybe<string> maybe = ...
 
 // First the truely unsafe way of doing things, not recommended but at least
@@ -52,6 +52,7 @@ Maybe<string> maybe = ...
 string value = maybe.ValueOrDefault();     
 
 string value = maybe.ValueOrElse("Replacement string");
+
 // We may delay the creation of the replacement value (unsafe).
 string value = maybe.ValueOrElse(() => "Replacement string");
 // Of course, this method has been tagged such that C# will complain if one 
@@ -61,7 +62,11 @@ string value = maybe.ValueOrElse(() => "Replacement string");
 string value = maybe.ValueOrThrow();
 // Throw a custom exception.
 string value = maybe.ValueOrThrow(() => new Exception());    
+```
 
+Pattern matching.
+```csharp
+Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
 string value = q.Switch(
     caseSome: x  => $"Square root = {x}."), 
     caseNone: () => "The input was strictly negative.");   
@@ -72,7 +77,7 @@ string value = q.Switch(
 ```
 
 Side-effects.
-```
+```csharp
 q.Do(
     onSome: x  => Console.WriteLine($"Square root = {x}."), 
     onNone: () => Console.WriteLine("The input was strictly negative."));
@@ -83,7 +88,7 @@ if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 ```
 
 Join.
-```
+```csharp
 var q = from i in maybe1
         from j in maybe2
         select i + j
