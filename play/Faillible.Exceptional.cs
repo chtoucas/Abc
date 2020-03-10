@@ -19,7 +19,7 @@ namespace Abc
                 InnerException = exception ?? throw new Anexn(nameof(exception));
             }
 
-            public override bool IsError => true;
+            public override bool Threw => true;
 
             public override T Value
             {

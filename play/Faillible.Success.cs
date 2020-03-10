@@ -15,7 +15,7 @@ namespace Abc
         {
             public Success()
             {
-                // FIXME: NULL_FORGIVING
+                // NULL_FORGIVING
                 Value = default!;
             }
 
@@ -24,7 +24,7 @@ namespace Abc
                 Value = value ?? throw new Anexn(nameof(value));
             }
 
-            public override bool IsError => false;
+            public override bool Threw => false;
 
             [MaybeNull] public override T Value { get; }
 
@@ -124,7 +124,7 @@ namespace Abc
                 Func<T, TInner, TResult> resultSelector,
                 IEqualityComparer<TKey> comparer)
             {
-                if (!inner.IsError)
+                if (!inner.Threw)
                 {
                     var outerKey = outerKeySelector(Value);
                     var innerKey = innerKeySelector(inner.Value);

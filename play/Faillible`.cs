@@ -10,6 +10,9 @@ namespace Abc
     // When the error is in fact an exception.
     // Warning, it is a really bad idea to try to replace the standard
     // exception system...
+    // Not only is it antipattern but also I don't have practical use cases for
+    // it; maybe when we have a collection of results and when we wish to filter
+    // out the bad ones?
 
     public static class Faillible
     {
@@ -32,7 +35,7 @@ namespace Abc
     {
         public static readonly Faillible<T> None = new Success();
 
-        public abstract bool IsError { get; }
+        public abstract bool Threw { get; }
 
         [MaybeNull] public abstract T Value { get; }
 

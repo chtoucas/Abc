@@ -26,11 +26,12 @@ namespace Abc.Samples
         {
             Faillible<int> exn = GetOkOrThrew(ok);
 
-            if (exn.IsError)
+            if (exn.Threw)
             {
-                // Do something with the exception (eg logging)
+                // Do something with the exception (eg logging),
                 Exception ex = exn.InnerException;
-                // then rethrow or swallow it?
+                // then rethrow, or swallow it (if within an application) and
+                // fail gracefully?
                 return Rethrow<string>(ex);
             }
             else
