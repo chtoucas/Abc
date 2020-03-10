@@ -10,14 +10,18 @@ namespace Abc
     // Both an Option type and a Result type, but only a simple one where the
     // error part is just a string. The main difference with a Maybe<T> is that
     // we get the opportunity to describe the error.
+    //
     // It is possible to construct a general Result type, an `Either<T, TError>`,
     // but I find it to be difficult to use due to the extra generic parameter
     // (no sum type in C#). I tried too with both a `Result<T>` and a generic
     // error type `Error<T, TErr>`, but its usability was equally questionnable.
     //
-    // I wish to keep this class simple: no method Bind(), public access to
-    // Value and a property IsError, very much like Value and HasValue (or rather
-    // its opposite) are offered by Nullable<T>.
+    // I wish to keep this class simple: no method Bind(), public access to the
+    // value if any, and a property IsError, very much like Nullable<T> offers
+    // Value and HasValue (or rather its opposite).
+    //
+    // In situations where a Maybe<T> is not suitable, for instance when T is a
+    // mutable reference type, one can use a Result<T> instead.
     //
     // It don't recommend to use this type in a public API.
     public abstract partial class Result<T>
