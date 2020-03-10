@@ -251,6 +251,12 @@ namespace Abc
             }
         }
 
+        // Do() and OnSome() do not return anything. They could return "this"
+        // but I prefer not to, this way it's clear that they are meant for
+        // actions with side-effects.
+        // No method OnNone(action), it is much simpler to write:
+        //   if (maybe.IsNone) { action(); }
+
         /// <summary>
         /// If the current instance encloses a value, it executes
         /// <paramref name="onSome"/>, otherwise it executes
@@ -269,9 +275,6 @@ namespace Abc
                 onNone();
             }
         }
-
-        // No method OnNone(action), it is much simpler to write:
-        //   if (maybe.IsNone) { action(); }
 
         /// <summary>
         /// If the current instance encloses a value, it executes

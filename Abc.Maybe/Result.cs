@@ -138,6 +138,7 @@ namespace Abc
         public static IEnumerable<T> ValueOrEmpty<T>(this Result<IEnumerable<T>> @this)
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
+
             return @this.IsError ? Enumerable.Empty<T>() : @this.Value;
         }
 
