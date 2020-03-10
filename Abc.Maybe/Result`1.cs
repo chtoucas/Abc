@@ -12,7 +12,7 @@ namespace Abc
     // we get the opportunity to describe the error.
     // It is possible to construct a general Result type, an `Either<T, TError>`,
     // but I find it to be difficult to use due to the extra generic parameter
-    // (no sum type in C#). I tried it too with both a `Result<T>` and a generic
+    // (no sum type in C#). I tried too with both a `Result<T>` and a generic
     // error type `Error<T, TErr>`, but its usability was equally questionnable.
     //
     // No method Bind(), here we prefer pattern matching.

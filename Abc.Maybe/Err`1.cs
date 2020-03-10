@@ -35,7 +35,7 @@ namespace Abc
         [NotNull] public string Message { get; }
 
         public override string ToString()
-            => Message;
+            => $"Err({Message})";
 
         [Pure]
         public Err<TOther> WithGenericType<TOther>()

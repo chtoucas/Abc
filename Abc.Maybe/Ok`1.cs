@@ -25,6 +25,10 @@ namespace Abc
         [NotNull] public override T Value { get; }
 
         [Pure]
+        public override string ToString()
+            => $"Ok({Value})";
+
+        [Pure]
         public override Maybe<T> ToMaybe()
             => new Maybe<T>(Value);
 
