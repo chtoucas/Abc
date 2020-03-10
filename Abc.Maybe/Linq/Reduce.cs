@@ -9,11 +9,11 @@ namespace Abc.Linq
     using Anexn = System.ArgumentNullException;
     using EF = Abc.Utilities.ExceptionFactory;
 
-    // Aggregation: MayReduce.
+    // Aggregation: Reduce.
     public partial class Qperators
     {
         [Pure]
-        public static Maybe<TSource> MayReduce<TSource>(
+        public static Maybe<TSource> Reduce<TSource>(
             this IEnumerable<TSource> source,
             Func<TSource, TSource, Maybe<TSource>> accumulator)
         {
@@ -33,7 +33,7 @@ namespace Abc.Linq
         }
 
         [Pure]
-        public static Maybe<TSource> MayReduce<TSource>(
+        public static Maybe<TSource> Reduce<TSource>(
             this IEnumerable<TSource> source,
             Func<TSource, TSource, Maybe<TSource>> accumulator,
             Func<Maybe<TSource>, bool> predicate)

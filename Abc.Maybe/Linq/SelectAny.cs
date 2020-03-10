@@ -5,8 +5,7 @@ namespace Abc.Linq
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-
-    using Anexn = System.ArgumentNullException;
+    using System.Linq;
 
     // Projection: SelectAny (deferred).
     public static partial class Qperators
@@ -16,21 +15,21 @@ namespace Abc.Linq
             this IEnumerable<TSource> source,
             Func<TSource, Maybe<TResult>> selector)
         {
-            // Check args eagerly.
-            if (source is null) { throw new Anexn(nameof(source)); }
-            if (selector is null) { throw new Anexn(nameof(selector)); }
+            return from x in source
+                   let result = selector(x)
+                   where result.IsSome
+                   select result.Value;
+        }
 
-            return __iterator();
-
-            IEnumerable<TResult> __iterator()
-            {
-                foreach (var item in source)
-                {
-                    var result = selector(item);
-
-                    if (result.IsSome) { yield return result.Value; }
-                }
-            }
+        [Pure]
+        public static IEnumerable<TResult> SelectAny<TSource, TResult>(
+            this IEnumerable<TSource> source,
+            Func<TSource, Result<TResult>> selector)
+        {
+            return from x in source
+                   let result = selector(x)
+                   where !result.IsError
+                   select result.Value;
         }
     }
 }

@@ -5,10 +5,6 @@ namespace Abc
     using System;
     using System.Xml.Linq;
 
-    /// <summary>
-    /// Provides extension methods for <see cref="Maybe{XElement}"/> and
-    /// <see cref="Maybe{XAttribute}"/>.
-    /// </summary>
     public static partial class MaybeEx { }
 
     // Extensions methods for Maybe<T> where T is an XElement.

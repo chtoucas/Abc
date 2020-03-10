@@ -156,7 +156,7 @@ namespace Abc
     }
 
     // Extension methods for Maybe<T> where T is enumerable.
-    // Operations on IEnumerable<Maybe<T>>.
+    // LINQ extensions but for IEnumerable<Maybe<T>>:
     // - Filtering: CollectAny (deferred).
     // - Aggregation: Any.
     public partial class Maybe
@@ -169,22 +169,10 @@ namespace Abc
         public static IEnumerable<T> ValueOrEmpty<T>(this Maybe<IEnumerable<T>> @this)
             => @this.IsSome ? @this.Value : Enumerable.Empty<T>();
 
-        // Maybe<IEnumerable<T>>?
         [Pure]
         public static IEnumerable<T> CollectAny<T>(IEnumerable<Maybe<T>> source)
         {
-            // Check args eagerly.
-            if (source is null) { throw new Anexn(nameof(source)); }
-
-            return __iterator();
-
-            IEnumerable<T> __iterator()
-            {
-                foreach (var item in source)
-                {
-                    if (item.IsSome) { yield return item.Value; }
-                }
-            }
+            return from x in source where x.IsSome select x.Value;
         }
 
         [Pure]

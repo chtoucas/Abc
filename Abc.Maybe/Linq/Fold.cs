@@ -8,11 +8,11 @@ namespace Abc.Linq
 
     using Anexn = System.ArgumentNullException;
 
-    // Aggregation: MayFold.
+    // Aggregation: Fold.
     public partial class Qperators
     {
         [Pure]
-        public static Maybe<TAccumulate> MayFold<TSource, TAccumulate>(
+        public static Maybe<TAccumulate> Fold<TSource, TAccumulate>(
             this IEnumerable<TSource> source,
             TAccumulate seed,
             Func<TAccumulate, TSource, Maybe<TAccumulate>> accumulator)
@@ -32,7 +32,7 @@ namespace Abc.Linq
         }
 
         [Pure]
-        public static Maybe<TAccumulate> MayFold<TSource, TAccumulate>(
+        public static Maybe<TAccumulate> Fold<TSource, TAccumulate>(
             this IEnumerable<TSource> source,
             TAccumulate seed,
             Func<TAccumulate, TSource, Maybe<TAccumulate>> accumulator,

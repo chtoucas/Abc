@@ -91,17 +91,20 @@ override Abc.Unit.ToString() -> string
 static Abc.Linq.Qperators.ElementAtOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, int index) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.FirstOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.FirstOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>
+static Abc.Linq.Qperators.Fold<TSource, TAccumulate>(this System.Collections.Generic.IEnumerable<TSource> source, TAccumulate seed, System.Func<TAccumulate, TSource, Abc.Maybe<TAccumulate>> accumulator) -> Abc.Maybe<TAccumulate>
+static Abc.Linq.Qperators.Fold<TSource, TAccumulate>(this System.Collections.Generic.IEnumerable<TSource> source, TAccumulate seed, System.Func<TAccumulate, TSource, Abc.Maybe<TAccumulate>> accumulator, System.Func<Abc.Maybe<TAccumulate>, bool> predicate) -> Abc.Maybe<TAccumulate>
 static Abc.Linq.Qperators.LastOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.LastOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>
-static Abc.Linq.Qperators.MayFold<TSource, TAccumulate>(this System.Collections.Generic.IEnumerable<TSource> source, TAccumulate seed, System.Func<TAccumulate, TSource, Abc.Maybe<TAccumulate>> accumulator) -> Abc.Maybe<TAccumulate>
-static Abc.Linq.Qperators.MayFold<TSource, TAccumulate>(this System.Collections.Generic.IEnumerable<TSource> source, TAccumulate seed, System.Func<TAccumulate, TSource, Abc.Maybe<TAccumulate>> accumulator, System.Func<Abc.Maybe<TAccumulate>, bool> predicate) -> Abc.Maybe<TAccumulate>
-static Abc.Linq.Qperators.MayReduce<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, Abc.Maybe<TSource>> accumulator) -> Abc.Maybe<TSource>
-static Abc.Linq.Qperators.MayReduce<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, Abc.Maybe<TSource>> accumulator, System.Func<Abc.Maybe<TSource>, bool> predicate) -> Abc.Maybe<TSource>
+static Abc.Linq.Qperators.Reduce<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, Abc.Maybe<TSource>> accumulator) -> Abc.Maybe<TSource>
+static Abc.Linq.Qperators.Reduce<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, Abc.Maybe<TSource>> accumulator, System.Func<Abc.Maybe<TSource>, bool> predicate) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.SelectAny<TSource, TResult>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Maybe<TResult>> selector) -> System.Collections.Generic.IEnumerable<TResult>
+static Abc.Linq.Qperators.SelectAny<TSource, TResult>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Result<TResult>> selector) -> System.Collections.Generic.IEnumerable<TResult>
 static Abc.Linq.Qperators.SingleOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.SingleOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.WhereAny<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Maybe<bool>> predicate) -> System.Collections.Generic.IEnumerable<TSource>
+static Abc.Linq.Qperators.WhereAny<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Result<bool>> predicate) -> System.Collections.Generic.IEnumerable<TSource>
 static Abc.Linq.Qperators.ZipAny<T1, T2, TResult>(this System.Collections.Generic.IEnumerable<T1> first, System.Collections.Generic.IEnumerable<T2> second, System.Func<T1, T2, Abc.Maybe<TResult>> resultSelector) -> System.Collections.Generic.IEnumerable<TResult>
+static Abc.Linq.Qperators.ZipAny<T1, T2, TResult>(this System.Collections.Generic.IEnumerable<T1> first, System.Collections.Generic.IEnumerable<T2> second, System.Func<T1, T2, Abc.Result<TResult>> resultSelector) -> System.Collections.Generic.IEnumerable<TResult>
 static Abc.May.ParseByte(string value) -> Abc.Maybe<byte>
 static Abc.May.ParseByte(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<byte>
 static Abc.May.ParseDateTime(string value) -> Abc.Maybe<System.DateTime>
@@ -166,6 +169,9 @@ static Abc.Maybe<T>.operator <=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
+static Abc.Result.Any<T>(System.Collections.Generic.IEnumerable<Abc.Result<T>> source) -> Abc.Result<T>
+static Abc.Result.CollectAny<T>(System.Collections.Generic.IEnumerable<Abc.Result<T>> source) -> System.Collections.Generic.IEnumerable<T>
+static Abc.Result.Empty<T>() -> Abc.Result<System.Collections.Generic.IEnumerable<T>>
 static Abc.Result.Err(string message) -> Abc.Err<Abc.Unit>
 static Abc.Result.Err<T>(string message) -> Abc.Err<T>
 static Abc.Result.Flatten<T>(this Abc.Result<Abc.Result<T>> this) -> Abc.Result<T>
@@ -178,6 +184,7 @@ static Abc.Result.SomeOrNone<T>(T? value) -> Abc.Result<T>
 static Abc.Result.Squash<T>(this Abc.Err<T?> this) -> Abc.Err<T>
 static Abc.Result.Squash<T>(this Abc.Ok<T?> this) -> Abc.Ok<T>
 static Abc.Result.Squash<T>(this Abc.Result<T?> this) -> Abc.Result<T>
+static Abc.Result.ValueOrEmpty<T>(this Abc.Result<System.Collections.Generic.IEnumerable<T>> this) -> System.Collections.Generic.IEnumerable<T>
 static Abc.Unit.operator !=(Abc.Unit left, Abc.Unit right) -> bool
 static Abc.Unit.operator !=(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator !=(System.ValueTuple left, Abc.Unit right) -> bool

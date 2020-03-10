@@ -3,13 +3,21 @@
 namespace Abc
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
+    using System.Linq;
 
     using Anexn = System.ArgumentNullException;
 
+    // To simplify things, we mirror the API of Maybe<T>.
+    // This explains why, sometimes, a method might seem superfluous (it's
+    // especially the case with methods related to IEnumerable<>). These methods
+    // appear to be very simple since we can access the property Value from an
+    // outside assembly, this is not the case with Maybe<T>,
     public static partial class Result { }
 
+    // Factory methods.
     public partial class Result
     {
         public static readonly Result<Unit> Unit = Some(default(Unit));
@@ -65,7 +73,27 @@ namespace Abc
             => new Err<T>(message);
     }
 
-    // Extension methods.
+    public partial class Result
+    {
+        [Pure]
+        public static Result<T> Flatten<T>(this Result<Result<T>> @this)
+        {
+            return @this switch
+            {
+                // Return an Ok<T>.
+                Ok<Ok<T>> ok => ok.Value,
+                // Return an Err<T>.
+                Ok<Err<T>> ok => ok.Value,
+                Err<Ok<T>> err => err.WithGenericType<T>(),
+                Err<Err<T>> err => err.WithGenericType<T>(),
+                // Throw.
+                null => throw new Anexn(nameof(@this)),
+                _ => throw new InvalidOperationException()
+            };
+        }
+    }
+
+    // Extension methods for Result<T> where T is a struct.
     public partial class Result
     {
         [Pure]
@@ -96,22 +124,46 @@ namespace Abc
                 _ => throw new InvalidOperationException()
             };
         }
+    }
+
+    // Extension methods for Result<T> where T is enumerable.
+    // LINQ extensions for IEnumerable<Result<T>>.
+    public partial class Result
+    {
+        [Pure]
+        public static Result<IEnumerable<T>> Empty<T>()
+            => ResultEnumerable_<T>.Empty;
 
         [Pure]
-        public static Result<T> Flatten<T>(this Result<Result<T>> @this)
+        public static IEnumerable<T> ValueOrEmpty<T>(this Result<IEnumerable<T>> @this)
         {
-            return @this switch
+            if (@this is null) { throw new Anexn(nameof(@this)); }
+            return @this.IsError ? Enumerable.Empty<T>() : @this.Value;
+        }
+
+        [Pure]
+        public static IEnumerable<T> CollectAny<T>(IEnumerable<Result<T>> source)
+        {
+            return from x in source where !x.IsError select x.Value;
+        }
+
+        [Pure]
+        public static Result<T> Any<T>(IEnumerable<Result<T>> source)
+        {
+            if (source is null) { throw new Anexn(nameof(source)); }
+
+            foreach (var item in source)
             {
-                // Return an Ok<T>.
-                Ok<Ok<T>> ok => ok.Value,
-                // Return an Err<T>.
-                Ok<Err<T>> ok => ok.Value,
-                Err<Ok<T>> err => err.WithGenericType<T>(),
-                Err<Err<T>> err => err.WithGenericType<T>(),
-                // Throw.
-                null => throw new Anexn(nameof(@this)),
-                _ => throw new InvalidOperationException()
-            };
+                if (!item.IsError) { return item; }
+            }
+
+            return Result<T>.None;
+        }
+
+        private static class ResultEnumerable_<T>
+        {
+            internal static readonly Result<IEnumerable<T>> Empty
+                = Of(Enumerable.Empty<T>());
         }
     }
 }
