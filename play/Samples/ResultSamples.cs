@@ -2,7 +2,7 @@
 
 #pragma warning disable CA1000 // Do not declare static members on generic types
 
-namespace Abc
+namespace Abc.Samples
 {
     using System;
 
@@ -39,18 +39,6 @@ namespace Abc
                 if (ok) { return Result.Some(1); }
                 else { return Result.Err<int>("Boum!!!"); }
             }
-        }
-
-        public static string OkOrThrew(bool ok)
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            Exceptional<int> exn = Exceptional.TryWith(__fun);
-#pragma warning restore CS0618
-
-            int value = exn.ValueOrRethrow();
-            return $"{value}";
-
-            int __fun() => ok ? 1 : throw new DivideByZeroException();
         }
     }
 }
