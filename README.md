@@ -37,8 +37,8 @@ Maybe<int> q = some.Where(x >= 0).Select(x => Math.Sqrt(x));
 Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
 ```
 In both cases, the result is Maybe(2).
-If we started from an empty maybe or `Maybe.Some(-4)` instead, the result
-would be `Maybe<int>.None`.
+If we start with an empty maybe or `Maybe.Some(-4)` instead, the result is
+`Maybe<int>.None`.
 
 Safely extract the enclosed value. `Maybe<T>` is a strict option type, we don't
 get a direct access to the enclosed value.
@@ -65,9 +65,9 @@ string value = maybe.ValueOrThrow();
 string value = maybe.ValueOrThrow(() => new Exception());
 ```
 
-Pattern matching.
+Pattern matching. Extract and map the enclosed value if any.
 ```csharp
-Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
+Maybe<int> q = from x in maybe where x >= 0 select Math.Sqrt(x);
 
 string value = q.Switch(
     caseSome: x  => $"Square root = {x}."),
@@ -78,9 +78,9 @@ string value = q.Switch(
     caseNone: "The input was strictly negative.");
 ```
 
-Do something with the enclosed value, side-effects.
+Side-effects. Do something with the enclosed value if any.
 ```csharp
-Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
+Maybe<int> q = from x in maybe where x >= 0 select Math.Sqrt(x);
 
 q.Do(
     onSome: x  => Console.WriteLine($"Square root = {x}."),
@@ -96,10 +96,11 @@ if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 Maybe<string> maybe = Maybe.Some("12345");
 
 // May.ParseInt32 parses a string and returns a Maybe<int>.
-// Do write.
-maybe.Bind(May.ParseInt32);     // <-- Maybe<int>
-// Do NOT write.
-maybe.Select(May.ParseInt32)    // <-- Maybe<Maybe<int>>
+// DO write.
+var q = maybe.Bind(May.ParseInt32);     // <-- Maybe<int>
+// DO NOT write.
+var q = maybe.Select(May.ParseInt32)    // <-- Maybe<Maybe<int>>
+    // We MUST then flatten the "double" maybe.
     .Flatten();                 // <-- Maybe<int>
 ```
 
