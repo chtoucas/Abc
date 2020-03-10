@@ -14,6 +14,8 @@ namespace Abc
     // but I find it to be difficult to use due to the extra generic parameter
     // (no sum type in C#). I tried it too with both a `Result<T>` and a generic
     // error type `Error<T, TErr>`, but its usability was equally questionnable.
+    //
+    // No method Bind(), here we prefer pattern matching.
     public abstract partial class Result<T>
     {
         public static readonly Err<T> None = new Err<T>();
