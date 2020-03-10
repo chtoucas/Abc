@@ -14,12 +14,16 @@ namespace Abc
 
     public sealed class Err<T> : Result<T>
     {
-        public Err([DisallowNull]string message) : this(message, false) { }
+        internal Err()
+        {
+            Message = "No value";
+            IsNone = true;
+        }
 
-        internal Err([DisallowNull]string message, bool isNone)
+        public Err(string message)
         {
             Message = message ?? throw new Anexn(nameof(message));
-            IsNone = isNone;
+            IsNone = false;
         }
 
         public override bool IsError => true;

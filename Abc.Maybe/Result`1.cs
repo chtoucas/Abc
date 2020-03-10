@@ -27,7 +27,7 @@ namespace Abc
     // Both an Option type and a Result type.
     public abstract class Result<T>
     {
-        public static readonly Err<T> None = new Err<T>("No value.", true);
+        public static readonly Err<T> None = new Err<T>();
 
         private protected Result() { }
 
