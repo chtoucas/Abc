@@ -56,12 +56,12 @@ namespace Abc
         }
 
         [Pure]
-        public static Err<Unit> Err([DisallowNull]string message)
+        public static Err<Unit> Err(string message)
             => new Err<Unit>(message);
 
         // Unconstrained version: new Err<T>(message).
         [Pure]
-        public static Err<T> Err<T>([DisallowNull]string message) where T : notnull
+        public static Err<T> Err<T>(string message) where T : notnull
             => new Err<T>(message);
     }
 
