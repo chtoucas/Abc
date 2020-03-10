@@ -11,11 +11,11 @@ namespace Abc.Samples
         // Option POV.
         public static string SomeOrNone(bool ok)
         {
-            Result<int> r = __fun();
+            Result<int> r = __fun(ok);
 
-            return r.IsError ? "No value" : $"{r.Value}";
+            return r.IsError ? "Failure." : $"{r.Value}";
 
-            Result<int> __fun()
+            static Result<int> __fun(bool ok)
             {
                 if (ok) { return Result.Some(1); }
                 else { return Result.None<int>(); }
@@ -25,16 +25,17 @@ namespace Abc.Samples
         // Result POV.
         public static string SomeOrError(bool ok)
         {
-            Result<int> r = __fun();
+            Result<int> r = __fun(ok);
 
             return r switch
             {
                 Ok<int> _ => $"{r.Value}",
+                Err<int> err when err.IsNone => "The method returned a null.",
                 Err<int> err => err.Message,
                 _ => throw new InvalidOperationException()
             };
 
-            Result<int> __fun()
+            static Result<int> __fun(bool ok)
             {
                 if (ok) { return Result.Some(1); }
                 else { return Result.Err<int>("Boum!!!"); }
