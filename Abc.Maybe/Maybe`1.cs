@@ -215,8 +215,8 @@ namespace Abc
         /// <paramref name="caseNone"/>.
         /// </summary>
         [Pure]
-        [return: MaybeNull]
         public TResult Switch<TResult>(Func<T, TResult> caseSome, Func<TResult> caseNone)
+            where TResult : notnull
         {
             if (_isSome)
             {
@@ -236,9 +236,8 @@ namespace Abc
         /// <paramref name="caseNone"/>.
         /// </summary>
         [Pure]
-        [return: MaybeNull]
-        public TResult Switch<TResult>(
-            Func<T, TResult> caseSome, [DisallowNull]TResult caseNone)
+        public TResult Switch<TResult>(Func<T, TResult> caseSome, TResult caseNone)
+            where TResult : notnull
         {
             if (_isSome)
             {
@@ -305,13 +304,11 @@ namespace Abc
         /// <paramref name="other"/>.
         /// </summary>
         [Pure]
-        [return: NotNullIfNotNull("other")]
         // It does work with null but then one should really use ValueOrDefault().
         public T ValueOrElse([DisallowNull]T other)
             => _isSome ? _value : other;
 
         [Pure]
-        [return: MaybeNull]
         public T ValueOrElse(Func<T> valueFactory)
         {
             if (_isSome)
