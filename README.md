@@ -74,8 +74,9 @@ string value = maybe.ValueOrDefault();
 
 string value = maybe.ValueOrElse("other");
 // We may delay the creation of the replacement value. Here the example is a bit
-// contrive, we should imagine a situation where the replacement value is
-// retrieved from an external source.
+// contrive, we should imagine a situation where the creation of the replacement
+// value is an expensive operation, for instance when retrieved from a remote
+// source.
 string value = maybe.ValueOrElse(() => "other");
 
 // If maybe is empty, throw InvalidOperationException.
@@ -152,25 +153,27 @@ var q = from x in maybe1
         select (x, y, z)
 ```
 
-And much more, see the XML comments for samples:
+### More features
+
+See the XML comments for samples.
 - LINQ and collection extensions; see `Abc.Linq` and `Abc.Extensions`.
 - Parsing helpers; see `May`.
 - XML & SQL data type helpers; see `Abc.Extensions`.
 
 ### Guidelines
 
-Usage:
+Usage.
 - CONSIDER using this type when `T` is a value type or an _immutable_ reference
   type.
 - AVOID using this type when `T` is a _mutable_ reference type.
 - DO NOT use a _maybe_ with nullable types, eg `Maybe<int?>`.
 
-General recommendations:
+General recommendations.
 - DO NOT use `Maybe<T>` in public APIs.
 - DO use _maybe_'s when processing multiple nullable objects.
 - CONSIDER using _maybe_'s to validate then transform data you don't control.
 
-May-Parse pattern:
+May-Parse pattern.
 - DO use this pattern instead of the Try-Parse pattern for reference types.
 - DO use the prefix _May_ for methods implementing this pattern.
 
