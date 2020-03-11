@@ -13,7 +13,7 @@ An Option type can help preventing null reference exceptions, but that's not the
 point, it really forces us to think about the outcome of a computation. We shall
 see a few real-world use cases below (web, UI, logging, to be written...).
 
-#### Construct a _maybe_ and basic properties
+#### Construct a _maybe_
 ```csharp
 // Maybe of a value type.
 Maybe<int> q = Maybe.Some(1);
@@ -35,7 +35,7 @@ a `Maybe<string>`. When working with unconstrained generic type, you cannot use
 this kind of situation; otherwise there is no reason to use `Maybe.Of()` ---
 for `Maybe<T>.None` it is more a matter of taste.
 
-Check whether a _maybe_ is empty or not.
+#### Check whether a _maybe_ is empty or not
 ```csharp
 var some = Maybe.SomeOrNone("value");
 var none = Maybe.None<string>()
@@ -47,6 +47,7 @@ bool isNone = none.IsNone             // == true
 bool b = some.Contains("value")       // == true
 bool b = some.Contains("other")       // == false
 
+// Contains() always returns false for an empty maybe.
 bool b = none.Contains("value")       // == false
 bool b = none.Contains("other")       // == false
 ```
@@ -125,8 +126,8 @@ if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 the "selector" maps a value to a _maybe_ not to another value; the selector is
 then said to be a binder.
 Let's say that we wish to map a _maybe_ using the method `May.ParseInt32` which
-parses a string and returns a `Maybe<int>`; it's a binding operation not a
-mapping one.
+parses a string and returns a `Maybe<int>`, it's not a mapping operation but
+rather a binding operation.
 ```csharp
 Maybe<string> maybe = Maybe.Some("12345");
 
