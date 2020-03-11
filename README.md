@@ -119,9 +119,12 @@ q.OnSome(x => Console.WriteLine($"Square root = {x}.");
 if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 ```
 
-`Bind()` vs `Select()`.
+`Bind()` vs `Select()`. `Bind()` and `Select()` look very similar, but `Bind()`
+is for situations where the "selector" maps a value to a _maybe_ not to another
+value; the selector is then said to be a binder.
 Let's say that we wish to map a _maybe_ using the method `May.ParseInt32` which
-parses a string and returns a `Maybe<int>`.
+parses a string and returns a `Maybe<int>`; it's a binding operation not a 
+mapping one.
 ```csharp
 Maybe<string> maybe = Maybe.Some("12345");
 
@@ -130,7 +133,7 @@ var q = maybe.Bind(May.ParseInt32);     // <-- Maybe<int>
 
 // DO NOT write.
 var q = maybe.Select(May.ParseInt32)    // <-- Maybe<Maybe<int>>
-    // To get a Maybe<int>, we MUST then flatten the "double" maybe.
+    // To get back a Maybe<int>, we MUST then flatten the "double" maybe.
     .Flatten();                         // <-- Maybe<int>
 ```
 
@@ -187,6 +190,8 @@ Developer Notes
 
 ### TODOs
 
+- Target .NET Standard 2.1 too to be able to distribute a version with nullable
+  annotations?
 - Tests & code coverage.
 - XML comments with complete examples.
 - NuGet package.
