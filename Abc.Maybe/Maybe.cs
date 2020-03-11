@@ -10,14 +10,11 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // REVIEW: Maybe extensions & helpers.
+    // REVIEW: Maybe extensions & helpers; see also MaybeEx in "play".
     // - playing with modifier "in". Currently only added to ext methods for
     //   Maybe<T> where T is a struct.
-    // - I don't like the name Empty<T>(). Add EmptyIfNone<T>()?
-    // - Maybe<IEnumerable>
-    // - MaySum, Sum w/ num types
-    // - lazy extensions.
-    // - add converse of Maybe.Guard()?
+    // - I don't like the name Empty<T>().
+    // - Maybe<IEnumerable>; see CollectAny().
 
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.

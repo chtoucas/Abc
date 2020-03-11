@@ -40,6 +40,7 @@ Abc.Maybe<T>.ValueOrDefault() -> T
 Abc.Maybe<T>.ValueOrElse(System.Func<T> valueFactory) -> T
 Abc.Maybe<T>.ValueOrElse(T other) -> T
 Abc.Maybe<T>.ValueOrThrow() -> T
+Abc.Maybe<T>.ValueOrThrow(System.Exception exception) -> T
 Abc.Maybe<T>.ValueOrThrow(System.Func<System.Exception> exceptionFactory) -> T
 Abc.Maybe<T>.Where(System.Func<T, bool> predicate) -> Abc.Maybe<T>
 Abc.Maybe<T>.XorElse(Abc.Maybe<T> other) -> Abc.Maybe<T>

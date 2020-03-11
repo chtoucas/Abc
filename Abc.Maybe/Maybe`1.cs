@@ -21,7 +21,6 @@ namespace Abc
     // - nullable attrs, notnull constraint.
     //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
-    // - delayed throw in escape methods.
     // - IEquatable<T>, IComparable<T> but a bit missleading?
     // - Serializable?
     // - Enhance and improve async methods.
@@ -207,6 +206,8 @@ namespace Abc
     }
 
     // Safe escapes.
+    // We do not throw ArgumentNullException right away, we delay the exception
+    // until it is strictly necessary.
     public partial struct Maybe<T>
     {
         /// <summary>
@@ -250,10 +251,11 @@ namespace Abc
             }
         }
 
-        // Do() and OnSome() do not return anything. They could return "this"
-        // but I prefer not to, this way it's clear that they are meant for
-        // actions with side-effects.
-        // No method OnNone(action), it is much simpler to write:
+        // Do() and Some() are specialized forms of Switch(), they do not return
+        // anything (a Unit in fact). They could return "this" but I prefer not
+        // to, this way it's clear that they are meant for actions with
+        // side-effects.
+        // We do not provide OnNone(action), since it is much simpler to write:
         //   if (maybe.IsNone) { action(); }
 
         /// <summary>
@@ -326,6 +328,21 @@ namespace Abc
         public T ValueOrThrow()
             => _isSome ? _value : throw EF.Maybe_IsNone;
 
+        [Pure]
+        public T ValueOrThrow(Exception exception)
+        {
+            if (_isSome)
+            {
+                return _value;
+            }
+            else
+            {
+                if (exception is null) { throw new Anexn(nameof(exception)); }
+                throw exception;
+            }
+        }
+
+        // REVIEW: remove ValueOrThrow(exceptionFactory)?
         [Pure]
         public T ValueOrThrow(Func<Exception> exceptionFactory)
         {
@@ -689,9 +706,9 @@ namespace Abc
     }
 
     // Iterable but not IEnumerable<>.
-    // 1) A maybe is a indeed collection but a rather trivial one.
+    // 1) A maybe is indeed a collection but a rather trivial one.
     // 2) Maybe<T> being a struct, I worry about hidden casts.
-    // 3) Source of confusion (conflicts?) if we import the System.Linq namespace.
+    // 3) Source of confusion (conflicts?) if we import System.Linq too.
     public partial struct Maybe<T>
     {
         [Pure]

@@ -35,7 +35,7 @@ namespace Abc
         public abstract bool IsError { get; }
 
         // Even w/ Err<T> this property never returns null, indeed in case of
-        // error the property getter throws.
+        // error the getter throws.
         [NotNull] public abstract T Value { get; }
 
         [Pure] public abstract Maybe<T> ToMaybe();
