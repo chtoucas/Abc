@@ -47,7 +47,7 @@ bool isNone = none.IsNone             // == true
 bool b = some.Contains("value")       // == true
 bool b = some.Contains("other")       // == false
 
-// Contains() always returns false for an empty maybe.
+// Of course, Contains() always returns false if the maybe is empty.
 bool b = none.Contains("value")       // == false
 bool b = none.Contains("other")       // == false
 ```
@@ -58,6 +58,7 @@ var some = Maybe.Some(4);
 
 // NB: next line is better written with Select(Math.Sqrt).
 Maybe<int> q = some.Where(x >= 0).Select(x => Math.Sqrt(x));    // == Maybe(2)
+
 // Or using the query expression syntax.
 Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x); // == Maybe(2)
 ```
@@ -75,7 +76,7 @@ Maybe<string> maybe = Maybe.SomeOrNone("...");
 // WARNING: value may be null here!
 string value = maybe.ValueOrDefault();
 
-// When the maybe is empty use a fallback value.
+// When the maybe is empty returns the specified replacement value.
 string value = maybe.ValueOrElse("other");
 // We may delay the creation of the replacement value. Here the example is a bit
 // contrive, we should imagine a situation where the creation of the replacement
@@ -105,6 +106,7 @@ string message = q.Switch(
     caseSome: x  => $"Square root = {x}."),
     caseNone: () => "The input was strictly negative.");
 
+// But, since the caseNone is constant, we should really write:
 string message = q.Switch(
     caseSome: x => $"Square root = {x}."),
     caseNone: "The input was strictly negative.");
@@ -143,7 +145,7 @@ var q = maybe.Select(May.ParseInt32)    // <-- Maybe<Maybe<int>>
 ```
 
 #### Query Expression Pattern
-We already saw `select` and `where`, but there is more.
+We already saw `Select` and `Where`, but there is more.
 ```csharp
 var q = from i in maybe1
         from j in maybe2
