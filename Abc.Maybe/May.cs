@@ -23,6 +23,7 @@ namespace Abc
     /// ...
     ///
     /// using May = MayEx;
+    ///
     /// // One can call both built-in and locally defined methods.
     /// Maybe<int> n = May.ParseInt32("1");
     /// Maybe<XXX> xxx = May.ParseXXX("XXX");
@@ -41,7 +42,10 @@ namespace Abc
         /// <see cref="Decimal"/> equivalent.
         /// </summary>
         public static Maybe<decimal> ParseDecimal(string? value)
-            => ParseDecimal(value, NumberStyles.Number, NumberFormatInfo.CurrentInfo);
+        {
+            return Decimal.TryParse(value, out decimal result)
+                ? Maybe.Some(result) : Maybe<decimal>.None;
+        }
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
@@ -55,21 +59,23 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<decimal>.None;
         }
 
+        // TODO: overloads with ReadOnlySpan<>. PublicAPI?
+#if NETSTANDARD2_1
+        public static Maybe<decimal> ParseDecimal(ReadOnlySpan<char> span)
+        {
+            return Decimal.TryParse(span, out decimal result)
+                ? Maybe.Some(result) : Maybe<decimal>.None;
+        }
+#endif
+
         /// <summary>
         /// Attemps to convert the string representation of a number to its
         /// <see cref="Double"/> equivalent.
         /// </summary>
         public static Maybe<double> ParseDouble(string? value)
         {
-            const NumberStyles DefaultStyle_ =
-                NumberStyles.AllowLeadingWhite
-                | NumberStyles.AllowTrailingWhite
-                | NumberStyles.AllowLeadingSign
-                | NumberStyles.AllowDecimalPoint
-                | NumberStyles.AllowThousands
-                | NumberStyles.AllowExponent;
-
-            return ParseDouble(value, DefaultStyle_, NumberFormatInfo.CurrentInfo);
+            return Double.TryParse(value, out double result)
+                ? Maybe.Some(result) : Maybe<double>.None;
         }
 
         /// <summary>
@@ -89,7 +95,10 @@ namespace Abc
         /// <see cref="Int16"/> equivalent.
         /// </summary>
         public static Maybe<short> ParseInt16(string? value)
-            => ParseInt16(value, NumberStyles.Integer, NumberFormatInfo.CurrentInfo);
+        {
+            return Int16.TryParse(value, out short result)
+                ? Maybe.Some(result) : Maybe<short>.None;
+        }
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
@@ -108,7 +117,10 @@ namespace Abc
         /// <see cref="Int32"/> equivalent.
         /// </summary>
         public static Maybe<int> ParseInt32(string? value)
-            => ParseInt32(value, NumberStyles.Integer, NumberFormatInfo.CurrentInfo);
+        {
+            return Int32.TryParse(value, out int result)
+                ? Maybe.Some(result) : Maybe<int>.None;
+        }
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
@@ -127,7 +139,10 @@ namespace Abc
         /// <see cref="Int64"/> equivalent.
         /// </summary>
         public static Maybe<long> ParseInt64(string? value)
-            => ParseInt64(value, NumberStyles.Integer, NumberFormatInfo.CurrentInfo);
+        {
+            return Int64.TryParse(value, out long result)
+                ? Maybe.Some(result) : Maybe<long>.None;
+        }
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
@@ -146,7 +161,10 @@ namespace Abc
         /// <see cref="Single"/> equivalent.
         /// </summary>
         public static Maybe<float> ParseSingle(string? value)
-            => ParseSingle(value, NumberStyles.Number, NumberFormatInfo.CurrentInfo);
+        {
+            return Single.TryParse(value, out float result)
+                ? Maybe.Some(result) : Maybe<float>.None;
+        }
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
@@ -166,7 +184,10 @@ namespace Abc
         /// </summary>
         [CLSCompliant(false)]
         public static Maybe<sbyte> ParseSByte(string? value)
-            => ParseSByte(value, NumberStyles.Number, NumberFormatInfo.CurrentInfo);
+        {
+            return SByte.TryParse(value, out sbyte result)
+                ? Maybe.Some(result) : Maybe<sbyte>.None;
+        }
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
@@ -187,7 +208,10 @@ namespace Abc
         /// </summary>
         [CLSCompliant(false)]
         public static Maybe<byte> ParseByte(string? value)
-            => ParseByte(value, NumberStyles.Number, NumberFormatInfo.CurrentInfo);
+        {
+            return Byte.TryParse(value, out byte result)
+                ? Maybe.Some(result) : Maybe<byte>.None;
+        }
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
@@ -208,7 +232,10 @@ namespace Abc
         /// </summary>
         [CLSCompliant(false)]
         public static Maybe<ushort> ParseUInt16(string? value)
-            => ParseUInt16(value, NumberStyles.Integer, NumberFormatInfo.CurrentInfo);
+        {
+            return UInt16.TryParse(value, out ushort result)
+                ? Maybe.Some(result) : Maybe<ushort>.None;
+        }
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
@@ -229,7 +256,10 @@ namespace Abc
         /// </summary>
         [CLSCompliant(false)]
         public static Maybe<uint> ParseUInt32(string? value)
-            => ParseUInt32(value, NumberStyles.Integer, NumberFormatInfo.CurrentInfo);
+        {
+            return UInt32.TryParse(value, out uint result)
+                ? Maybe.Some(result) : Maybe<uint>.None;
+        }
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
@@ -250,7 +280,10 @@ namespace Abc
         /// </summary>
         [CLSCompliant(false)]
         public static Maybe<ulong> ParseUInt64(string? value)
-            => ParseUInt64(value, NumberStyles.Integer, NumberFormatInfo.CurrentInfo);
+        {
+            return UInt64.TryParse(value, out ulong result)
+                ? Maybe.Some(result) : Maybe<ulong>.None;
+        }
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
