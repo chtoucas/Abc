@@ -40,6 +40,7 @@ namespace Abc
     /// Overview.
     ///
     /// The structure Maybe<T> is an option type for C#.
+    ///
     /// The intended usage is when T is a value type, a string, a (read-only?)
     /// record, or a function. For other reference types, it should be fine as
     /// long as T is an **immutable** reference type.
@@ -55,9 +56,9 @@ namespace Abc
     /// - IsNone
     ///
     /// Static factories (no public ctor).
-    /// - MabeFactory.None<T>()     the empty maybe
-    /// - MabeFactory.Some()        factory method for value types
-    /// - MabeFactory.SomeOrNone()
+    /// - Maybe.None<T>()    the empty maybe
+    /// - Maybe.Some()       factory method for value types
+    /// - Maybe.SomeOrNone()
     /// - Maybe.Of()
     /// - Maybe.Guard()
     ///

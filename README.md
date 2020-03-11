@@ -180,6 +180,7 @@ Developer Notes
 - Methods that return something should have the attribure `Pure`. It is not
   mandatory but it clearly states that the result should not be ignored.
 - Use nullable attributes whenever necessary.
+- Seal classes unless they are designed with extensibility in mind.
 
 ### TODOs
 
