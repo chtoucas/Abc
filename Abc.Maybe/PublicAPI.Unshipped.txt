@@ -41,7 +41,6 @@ Abc.Maybe<T>.ValueOrElse(System.Func<T> valueFactory) -> T
 Abc.Maybe<T>.ValueOrElse(T other) -> T
 Abc.Maybe<T>.ValueOrThrow() -> T
 Abc.Maybe<T>.ValueOrThrow(System.Exception exception) -> T
-Abc.Maybe<T>.ValueOrThrow(System.Func<System.Exception> exceptionFactory) -> T
 Abc.Maybe<T>.Where(System.Func<T, bool> predicate) -> Abc.Maybe<T>
 Abc.Maybe<T>.XorElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.Yield() -> System.Collections.Generic.IEnumerable<T>
@@ -108,9 +107,9 @@ static Abc.Linq.Qperators.ZipAny<T1, T2, TResult>(this System.Collections.Generi
 static Abc.Linq.Qperators.ZipAny<T1, T2, TResult>(this System.Collections.Generic.IEnumerable<T1> first, System.Collections.Generic.IEnumerable<T2> second, System.Func<T1, T2, Abc.Result<TResult>> resultSelector) -> System.Collections.Generic.IEnumerable<TResult>
 static Abc.May.ParseByte(string value) -> Abc.Maybe<byte>
 static Abc.May.ParseByte(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<byte>
-static Abc.May.ParseDateTime(string value) -> Abc.Maybe<System.DateTime>
-static Abc.May.ParseDateTime(string value, string format) -> Abc.Maybe<System.DateTime>
-static Abc.May.ParseDateTime(string value, string format, System.Globalization.DateTimeStyles style, System.IFormatProvider provider) -> Abc.Maybe<System.DateTime>
+static Abc.May.ParseDateTimeExact(string value) -> Abc.Maybe<System.DateTime>
+static Abc.May.ParseDateTimeExact(string value, string format) -> Abc.Maybe<System.DateTime>
+static Abc.May.ParseDateTimeExact(string value, string format, System.Globalization.DateTimeStyles style, System.IFormatProvider provider) -> Abc.Maybe<System.DateTime>
 static Abc.May.ParseDecimal(string value) -> Abc.Maybe<decimal>
 static Abc.May.ParseDecimal(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<decimal>
 static Abc.May.ParseDouble(string value) -> Abc.Maybe<double>

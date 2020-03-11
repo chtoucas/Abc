@@ -24,8 +24,10 @@ namespace Abc
     ///
     /// using May = MayEx;
     ///
-    /// // One can call both built-in and locally defined methods.
+    /// // One can call built-in methods.
     /// Maybe<int> n = May.ParseInt32("1");
+    ///
+    /// // But also locally defined methods.
     /// Maybe<XXX> xxx = May.ParseXXX("XXX");
     /// ]]></code>
     /// </example>
@@ -306,9 +308,11 @@ namespace Abc
             where TEnum : struct, Enum
             => ParseEnum<TEnum>(value, ignoreCase: true);
 
-        // This method exhibits the same behaviour as Enum.TryParse, in the
-        // sense that parsing any literal integer value will succeed even if
-        // it is not a valid enumeration value.
+        /// <remarks>
+        /// This method exhibits the same behaviour as Enum.TryParse, in the
+        /// sense that parsing any literal integer value will succeed even if
+        /// it is not a valid enumeration value.
+        /// </remarks>
         public static Maybe<TEnum> ParseEnum<TEnum>(string? value, bool ignoreCase)
             where TEnum : struct, Enum
             => Enum.TryParse(value, ignoreCase, out TEnum result)
@@ -316,13 +320,15 @@ namespace Abc
 
         // REVIEW: default format, format provider, Parse/ParseExact.
 
-        public static Maybe<DateTime> ParseDateTime(string? value)
-            => ParseDateTime(value, "o", DateTimeStyles.None, DateTimeFormatInfo.CurrentInfo);
+        public static Maybe<DateTime> ParseDateTimeExact(string? value)
+            => ParseDateTimeExact(
+                value, "o", DateTimeStyles.None, DateTimeFormatInfo.CurrentInfo);
 
-        public static Maybe<DateTime> ParseDateTime(string? value, string? format)
-            => ParseDateTime(value, format, DateTimeStyles.None, DateTimeFormatInfo.CurrentInfo);
+        public static Maybe<DateTime> ParseDateTimeExact(string? value, string? format)
+            => ParseDateTimeExact(
+                value, format, DateTimeStyles.None, DateTimeFormatInfo.CurrentInfo);
 
-        public static Maybe<DateTime> ParseDateTime(
+        public static Maybe<DateTime> ParseDateTimeExact(
             string? value,
             string? format,
             DateTimeStyles style,

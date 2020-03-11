@@ -23,7 +23,6 @@ namespace Abc
     //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
     // - IEquatable<T> (T == Maybe<T>), IComparable<T> but a bit missleading?
     // - Serializable?
-    // - Enhance and improve async methods.
     // - set ops.
     // - Struct really? Compare to ValueTuple
     //   http://mustoverride.com/tuples_structs/
@@ -343,21 +342,6 @@ namespace Abc
             }
         }
 
-        // REVIEW: remove ValueOrThrow(exceptionFactory)?
-        [Pure]
-        public T ValueOrThrow(Func<Exception> exceptionFactory)
-        {
-            if (_isSome)
-            {
-                return _value;
-            }
-            else
-            {
-                if (exceptionFactory is null) { throw new Anexn(nameof(exceptionFactory)); }
-                throw exceptionFactory();
-            }
-        }
-
         #endregion
     }
 
@@ -526,7 +510,7 @@ namespace Abc
     }
 
     // Async methods.
-    // Very much a work in progress.
+    // TODO: async is very much a work in progress.
     public partial struct Maybe<T>
     {
         [Pure]
