@@ -52,7 +52,7 @@ namespace Abc
         #region Sum()
 
         [Pure]
-        public static Maybe<T> Sum<T>(IEnumerable<Maybe<T>> source, Func<T, T, T> add, T seed)
+        public static Maybe<T> Sum<T>(IEnumerable<Maybe<T>> source, Func<T, T, T> add, T zero)
         {
             Require.NotNull(add, nameof(add));
 
@@ -64,7 +64,7 @@ namespace Abc
 
             T __sum(IEnumerable<T> seq)
             {
-                T sum = seed;
+                T sum = zero;
                 foreach (var item in seq)
                 {
                     sum = add(sum, item);
