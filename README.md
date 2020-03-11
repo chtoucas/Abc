@@ -187,7 +187,6 @@ Developer Notes
 
 ### TODOs
 
-- .NET Core 3.0 instead of 3.1.
 - Tests & code coverage.
 - XML comments with complete examples.
 - NuGet package.

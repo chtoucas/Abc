@@ -21,6 +21,8 @@ namespace Abc
     // - nullable attrs, notnull constraint.
     //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
+    //   https://devblogs.microsoft.com/dotnet/nullable-reference-types-in-csharp/
+    //   https://devblogs.microsoft.com/dotnet/embracing-nullable-reference-types/
     // - IEquatable<T> (T == Maybe<T>), IComparable<T> but a bit missleading?
     // - Serializable?
     // - set ops.
