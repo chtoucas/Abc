@@ -182,7 +182,7 @@ See the XML comments for samples.
 
 Your mantra should be
 
-**Maybe do not abuse the maybe**
+**_Maybe do not abuse the maybe_**
 
 #### Usage
 The `Maybe<T>` type is a value type. Even if it is a natural choice, it worried
@@ -195,7 +195,7 @@ me that the benefits will outweight the drawbacks.
 
 One can _indirectly_ create a maybe for a nullable type, but all static
 factory methods do not permit it. If you end up having to manipulate for say a
-`Maybe<int?>`, there is the method `Squash()` to escape the trap.
+`Maybe<int?>`, there is the method `Squash()` to convert it to a `Maybe<int>`.
 
 NB: `Result<T>` (not yet sure I will keep it) may serve as a replacement for
 `Maybe<T>` and is a reference type.
@@ -227,12 +227,11 @@ var q = from a in nvc.MayGetSingle("a")
             X = x.ValueOrElse("Y")
         }
 ```
-In the above query, the result is empty when:
-- at least one of the keys `a`, `b` or `c` does not exist or is multi-valued.
-- the single value of `c` is not the string representation of an integer > 10.
-
-and the result is NOT empty even if the key `x` does not exist, in which case
-we use a default value.
+In the above query, the result is empty when one of the keys `a`, `b` or `c`
+does not exist or is multi-valued, or the single value of `c` is not the string
+representation of an integer > 10. Morevover, the result is NOT empty even if
+the key `x` does not exist or is multi-valued, in which case we pick a default
+value.
 
 - **CONSIDER using a _maybe_ if the object is meant to be short-lived.**
 
