@@ -56,8 +56,9 @@ bool b = none.Contains("other")       // == false
 ```csharp
 var some = Maybe.Some(4);
 
+// NB: next line is better written with Select(Math.Sqrt).
 Maybe<int> q = some.Where(x >= 0).Select(x => Math.Sqrt(x));    // == Maybe(2)
-// Or using the Query Expression Pattern.
+// Or using the query expression syntax.
 Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x); // == Maybe(2)
 ```
 If, instead, we start with an empty _maybe_ or `Maybe.Some(-4)`, the result is
@@ -74,6 +75,7 @@ Maybe<string> maybe = Maybe.SomeOrNone("...");
 // WARNING: value may be null here!
 string value = maybe.ValueOrDefault();
 
+// When the maybe is empty use a fallback value.
 string value = maybe.ValueOrElse("other");
 // We may delay the creation of the replacement value. Here the example is a bit
 // contrive, we should imagine a situation where the creation of the replacement
@@ -86,7 +88,7 @@ string value = maybe.ValueOrThrow();
 // Throw a custom exception.
 string value = maybe.ValueOrThrow(new NotSupportedException("..."));
 ```
-A word of caution, the methods may only be considered safe when targetting
+A word of **caution**, the methods may only be considered safe when targetting
 .NET Core 3.0 or above, that is your project file should include something like
 this:
 ```xml
@@ -168,18 +170,17 @@ See the XML comments for samples.
 
 ### Guidelines
 
-Usage.
+#### Usage
 - CONSIDER using this type when `T` is a value type or an _immutable_ reference
   type.
 - AVOID using this type when `T` is a _mutable_ reference type.
 - DO NOT use a _maybe_ with nullable types, eg `Maybe<int?>`.
 
-General recommendations.
+#### General recommendations
 - DO NOT use `Maybe<T>` in public APIs.
-- DO use _maybe_'s when processing multiple nullable objects.
-- CONSIDER using _maybe_'s to validate then transform data you don't control.
+- DO use _maybe_'s when processing multiple nullable objects together.
 
-May-Parse pattern.
+#### May-Parse pattern
 - DO use this pattern instead of the Try-Parse pattern for reference types.
 - DO use the prefix _May_ for methods implementing this pattern.
 
