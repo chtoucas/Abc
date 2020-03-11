@@ -13,7 +13,7 @@ An Option type can help preventing null reference exceptions, but that's not the
 point, it really forces us to think about the outcome of a computation. We shall
 see a few real-world use cases below (web, UI, logging, to be written...).
 
-Construct a _maybe_.
+#### Construct a _maybe_ and basic properties
 ```csharp
 // Maybe of a value type.
 Maybe<int> q = Maybe.Some(1);
@@ -51,7 +51,7 @@ bool b = none.Contains("value")       // == false
 bool b = none.Contains("other")       // == false
 ```
 
-Map and filter the enclosed value (if any).
+#### Map and filter the enclosed value (if any)
 ```csharp
 var some = Maybe.Some(4);
 
@@ -62,8 +62,9 @@ Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x); // == Maybe(2)
 If, instead, we start with an empty _maybe_ or `Maybe.Some(-4)`, the result is
 an empty _maybe_, in both cases.
 
-_Safely extract the enclosed value._ `Maybe<T>` is a strict option type, we don't
-get direct access to the enclosed value.
+#### Safely extract the enclosed value
+`Maybe<T>` is a strict option type, we don't get direct access to the enclosed
+value.
 ```csharp
 Maybe<string> maybe = Maybe.SomeOrNone("...");
 
@@ -93,7 +94,7 @@ this:
 ```
 C# 8.0 will then complain if one tries to write `maybe.ValueOrElse(null)`.
 
-_Pattern matching:_ extract and map the enclosed value (if any).
+#### Pattern matching: extract and map the enclosed value (if any)
 ```csharp
 Maybe<int> q = from x in maybe where x >= 0 select Math.Sqrt(x);
 
@@ -106,7 +107,7 @@ string message = q.Switch(
     caseNone: "The input was strictly negative.");
 ```
 
-_Side-effects:_ do something with the enclosed value (if any).
+#### Side-effects: do something with the enclosed value (if any)
 ```csharp
 Maybe<int> q = from x in maybe where x >= 0 select Math.Sqrt(x);
 
@@ -119,11 +120,12 @@ q.OnSome(x => Console.WriteLine($"Square root = {x}.");
 if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 ```
 
-`Bind()` vs `Select()`. `Bind()` and `Select()` look very similar, but `Bind()`
-is for situations where the "selector" maps a value to a _maybe_ not to another
-value; the selector is then said to be a binder.
+#### Binding
+`Bind()` and `Select()` look very similar, but `Bind()` is for situations where
+the "selector" maps a value to a _maybe_ not to another value; the selector is
+then said to be a binder.
 Let's say that we wish to map a _maybe_ using the method `May.ParseInt32` which
-parses a string and returns a `Maybe<int>`; it's a binding operation not a 
+parses a string and returns a `Maybe<int>`; it's a binding operation not a
 mapping one.
 ```csharp
 Maybe<string> maybe = Maybe.Some("12345");
@@ -137,8 +139,8 @@ var q = maybe.Select(May.ParseInt32)    // <-- Maybe<Maybe<int>>
     .Flatten();                         // <-- Maybe<int>
 ```
 
-_Query Expression Pattern._ We already saw `select` and `where`, but there is
-more.
+#### Query Expression Pattern
+We already saw `select` and `where`, but there is more.
 ```csharp
 var q = from i in maybe1
         from j in maybe2
@@ -156,7 +158,7 @@ var q = from x in maybe1
         select (x, y, z)
 ```
 
-### More features
+### More Features
 
 See the XML comments for samples.
 - LINQ and collection extensions; see `Abc.Linq` and `Abc.Extensions`.
