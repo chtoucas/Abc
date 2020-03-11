@@ -17,31 +17,33 @@ Construct a _maybe_.
 ```csharp
 // Maybe of a value type.
 Maybe<int> q = Maybe.Some(1);
-Maybe<int> q = Maybe<int>.None;                     // The empty maybe of type int.
+Maybe<int> q = Maybe.None<int>();                   // The empty maybe of type int.
 
 // Maybe of a nullable value type.
 Maybe<int> q = Maybe.SomeOrNone((int?)1);
-Maybe<int> q = Maybe.SomeOrNone((int?)null);        // == Maybe<int>.None, an empty maybe.
+Maybe<int> q = Maybe.SomeOrNone((int?)null);        // The empty maybe of type int.
 
 // Maybe of a reference type.
 Maybe<string> q = Maybe.SomeOrNone("value");
-Maybe<string> q = Maybe.SomeOrNone((string?)null);  // == Maybe<string>.None, an empty maybe.
+Maybe<string> q = Maybe.SomeOrNone((string?)null);  // The empty maybe of type string.
 ```
 If NRTs (Nullable Reference Type) are available, `Maybe.SomeOrNone()` with a
 nullable string does not create a `Maybe<string?>` but it (correctly) returns
-a `Maybe<string>`. When you work with unconstrained generic type, there is an
-alternative way of constructing a _maybe_, namely `Maybe.Of()`, which was
-created specifically to handle this kind of situations; otherwise there is no
-reason to use it.
+a `Maybe<string>`. When working with unconstrained generic type, you cannot use
+`Maybe.Some[OrNone]()` or Maybe.None<T>()`. Hopefully, `Maybe.Of()` and
+`Maybe<T>.None` come to the rescue, they were specifically created to handle
+this kind of situation; otherwise there is no reason to use `Maybe.Of()` ---
+for `Maybe<T>.None` it is more a matter of taste.
 
-Check whether a _maybe_ contains a value or not.
+Check whether a _maybe_ is empty or not.
 ```csharp
 var some = Maybe.SomeOrNone("value");
-var none = Maybe<string>.None;
+var none = Maybe.None<string>()
 
 bool isNone = some.IsNone             // == false
 bool isNone = none.IsNone             // == true
 
+// We can also check whether it contains a specific value or not.
 bool b = some.Contains("value")       // == true
 bool b = some.Contains("other")       // == false
 
@@ -84,8 +86,8 @@ string value = maybe.ValueOrThrow(new NotSupportedException("..."));
 A word of caution, the methods may only be considered safe when targetting
 .NET Core 3.0 or above, that is your project file should include something like
 this:
-```
-<TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
+```xml
+<TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
 <Nullable>enable</Nullable>
 ```
 C# 8.0 will then complain if one tries to write `maybe.ValueOrElse(null)`.
