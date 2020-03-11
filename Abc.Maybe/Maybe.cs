@@ -128,6 +128,8 @@ namespace Abc
     public partial class Maybe
     {
         // Conversion from Maybe<T?> to  Maybe<T>.
+        // REVIEW: for ref types, Maybe<T?> is compiled to Maybe<T>, but in VS
+        // or .NET Core?
         [Pure]
         public static Maybe<T> Squash<T>(this in Maybe<T?> @this) where T : struct
             // When IsSome is true, Value.HasValue is also true, therefore we

@@ -3,15 +3,23 @@
 Features
 --------
 
-- A strict Option type.
+- A strict Option type for C#.
 - Utilities to write code in the ROP style (Railway Oriented Programming).
 
 Quick start with `Maybe<T>`
 ---------------------------
 
-An Option type can help preventing null reference exceptions, but that's not the
-point, it really forces us to think about the outcome of a computation. We shall
-see a few real-world use cases below (web, UI, logging, to be written...).
+An Option type or Maybe type (a better fit for what we use it for here), is like
+a box containing a value or no value at all.
+
+It can help preventing null reference exceptions, but that's not the point, it
+really forces us to think about the outcome of a computation. We shall see a few
+real-world use cases.
+
+First, it differs from a nullable in that it applies to both value types and
+reference types. Then, it is also possible to create a _maybe_ of a _maybe_
+(`Maybe<Maybe<T>>`). Also a nullable reference type, like `string?`, is just a
+string type to which C# adds a special (sentinel) value, the `null` value.
 
 #### Construct a _maybe_
 ```csharp
@@ -172,15 +180,60 @@ See the XML comments for samples.
 
 ### Guidelines
 
+Your mantra should be
+
+**Maybe do not abuse the maybe**
+
 #### Usage
+The `Maybe<T>` type is a value type. Even if it is a natural choice, it worried
+me and I hesitated for a while. The addition of value tuples to .NET convinced
+me that the benefits will outweight the drawbacks.
 - CONSIDER using this type when `T` is a value type or an _immutable_ reference
   type.
 - AVOID using this type when `T` is a _mutable_ reference type.
 - DO NOT use a _maybe_ with nullable types, eg `Maybe<int?>`.
 
+One can _indirectly_ create a maybe for a nullable type, but all static
+factory methods do not permit it. If you end up having to manipulate for say a
+`Maybe<int?>`, there is the method `Squash()` to escape the trap.
+
+NB: `Result<T>` (not yet sure I will keep it) may serve as a replacement for
+`Maybe<T>` and is a reference type.
+
 #### General recommendations
+First and foremost,
+- DO apply all guidelines for `ValueTuple<>` and, if they contradict what I say
+  here, follow your own wisdom.
+
 - DO NOT use `Maybe<T>` in public APIs.
+
+In general, I would even not recommend to use it in a general purpose library.
+Of course, this does not mean that you should not use this type at all, otherwise
+I would not have written this library.
+
 - DO use _maybe_'s when processing multiple nullable objects together.
+
+`MayGetSingle()` is an extension that return something only if the key exists and
+there is a unique value associated to it.
+```csharp
+var q = from a in nvc.MayGetSingle("a")
+        from b in nvc.MayGetSingle("b")
+        from c in nvc.MayGetSingle("c").Bind(May.ParseInt32)
+        let x = nvc.MayGetSingle("x")
+        where c > 10
+        select new {
+            A = a,
+            B = b,
+            X = x.ValueOrElse("Y")
+        }
+```
+In the above query, the result is empty when:
+- at least one of the keys `a`, `b` or `c` does not exist or is multi-valued.
+- the single value of `c` is not the string representation of an integer > 10.
+and the result is NOT empty even if the key `x` does not exist, in which case
+we use a default value.
+
+- CONSIDER using a _maybe_ if the object is meant to be short-lived.
 
 #### May-Parse pattern
 - DO use this pattern instead of the Try-Parse pattern for reference types.
