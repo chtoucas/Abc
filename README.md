@@ -5,15 +5,15 @@ Features
 
 - A strict Option type.
 - Utilities to write code in the ROP style (Railway Oriented Programming).
-- A fast Gregorian date type?
 
 Quick start with `Maybe<T>`
 ---------------------------
 
-An Option type can help to avoid null reference exceptions, but that's not the
-point, it forces us to think about the outcome of a computation. We shall see
-a few concrete examples below (web, UI, logging, to be written...).
+An Option type can help preventing null reference exceptions, but that's not the
+point, it really forces us to think about the outcome of a computation. We shall
+see a few use cases below (web, UI, logging, to be written...).
 
+Constructing a _maybe_.
 ```csharp
 // Maybe of a value type.
 Maybe<int> q = Maybe.Some(1);
@@ -28,7 +28,7 @@ Maybe<string> q = Maybe.SomeOrNone("value");
 Maybe<string> q = Maybe.SomeOrNone((string?)null);  // == Maybe<string>.None
 ```
 
-Map and filter the enclosed value.
+Map and filter the enclosed value if any.
 ```csharp
 var some = Maybe.Some(4);
 
@@ -36,8 +36,8 @@ Maybe<int> q = some.Where(x >= 0).Select(x => Math.Sqrt(x));
 // Or using the Query Expression Pattern.
 Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
 ```
-In both cases, the result is Maybe(2).
-If we start with an empty maybe or `Maybe.Some(-4)` instead, the result is
+In both cases, the result is a maybe of 2.
+If we start with an empty _maybe_ or `Maybe.Some(-4)` instead, the result is
 `Maybe<int>.None`.
 
 Safely extract the enclosed value. `Maybe<T>` is a strict option type, we don't
@@ -69,11 +69,11 @@ Pattern matching. Extract and map the enclosed value if any.
 ```csharp
 Maybe<int> q = from x in maybe where x >= 0 select Math.Sqrt(x);
 
-string value = q.Switch(
+string message = q.Switch(
     caseSome: x  => $"Square root = {x}."),
     caseNone: () => "The input was strictly negative.");
 
-string value = q.Switch(
+string message = q.Switch(
     caseSome: x => $"Square root = {x}."),
     caseNone: "The input was strictly negative.");
 ```
@@ -92,10 +92,11 @@ if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 ```
 
 `Bind()` vs `Select()`.
+Let's say that we want to use with a _maybe_ the method `May.ParseInt32` which
+parses a string and returns a `Maybe<int>`.
 ```csharp
 Maybe<string> maybe = Maybe.Some("12345");
 
-// May.ParseInt32 parses a string and returns a Maybe<int>.
 // DO write.
 var q = maybe.Bind(May.ParseInt32);     // <-- Maybe<int>
 // DO NOT write.
@@ -126,9 +127,14 @@ And much more, see the XML comments for samples.
 
 ### Recommendations
 
-- CONSIDER using maybe's to validate and transform data you don't control.
-- DO NOT create a maybe value for nullable types, eg `Maybe<int?>`.
+- CONSIDER using _maybe_'s to validate and transform data you don't control.
+- DO NOT create a _maybe_ value for nullable types, eg `Maybe<int?>`.
 - DO NOT use `Maybe<T>` in a public API.
+- AVOID using `Maybe<T>` when `T` is mutable reference type.
+
+May-Parse pattern:
+- DO use this pattern instead of the Try-Parse pattern for reference types.
+- DO use the prefix _Try_ for methods implementing this pattern.
 
 Developer Notes
 ---------------

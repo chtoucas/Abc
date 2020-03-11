@@ -1,6 +1,7 @@
 # Future plans?
 
 [Narvalo.NET](https://github.com/chtoucas/Narvalo.NET)
+- a fast Gregorian date type
 - country codes
 - currency codes
 - simple money type
