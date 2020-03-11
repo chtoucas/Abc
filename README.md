@@ -180,9 +180,7 @@ See the XML comments for samples.
 
 ### Guidelines
 
-Your mantra should be
-
-**_Maybe do not abuse the maybe_**
+Your mantra should be **_maybe do not abuse the maybe_**.
 
 #### Usage
 The `Maybe<T>` type is a value type. Even if it is a natural choice, it worried

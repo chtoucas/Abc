@@ -40,7 +40,7 @@ namespace Abc
         public static Maybe<IEnumerable<T>> EmptyIfNone<T>(this Maybe<IEnumerable<T>> @this)
             => @this.OrElse(Maybe.Empty<T>());
 
-        // Name it CollectAny() and replace the one in Maybe?
+        // Name it CollectAny() and replace the one in Maybe? Keep both?
         [Pure]
         public static Maybe<IEnumerable<T>> Collect<T>(IEnumerable<Maybe<T>> source)
         {
