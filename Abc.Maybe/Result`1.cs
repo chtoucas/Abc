@@ -45,7 +45,7 @@ namespace Abc
         public abstract Result<T> OrElse(Result<T> other);
     }
 
-    // Query Expression Pattern aka LINQ.
+    // Query Expression Pattern.
     public partial class Result<T>
     {
         [Pure]

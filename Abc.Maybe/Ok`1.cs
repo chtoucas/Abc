@@ -37,7 +37,7 @@ namespace Abc
             => this;
     }
 
-    // Query Expression Pattern aka LINQ.
+    // Query Expression Pattern.
     public partial class Ok<T>
     {
         [Pure]

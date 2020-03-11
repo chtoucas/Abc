@@ -45,7 +45,7 @@ namespace Abc
                 => this;
         }
 
-        // Query Expression Pattern aka LINQ.
+        // Query Expression Pattern.
         internal partial class Success
         {
             public override Faillible<TResult> Select<TResult>(Func<T, TResult> selector)

@@ -17,13 +17,13 @@ Constructing a _maybe_.
 ```csharp
 // Maybe of a value type.
 Maybe<int> q = Maybe.Some(1);
-Maybe<int> q = Maybe<int>.None;
+Maybe<int> q = Maybe<int>.None; // The empty maybe.
 
 // Maybe of a nullable value type.
 Maybe<int> q = Maybe.SomeOrNone((int?)1);
 Maybe<int> q = Maybe.SomeOrNone((int?)null);        // == Maybe<int>.None
 
-// Maybe of a reference type (NRT if available).
+// Maybe of a reference type (use NRT if available).
 Maybe<string> q = Maybe.SomeOrNone("value");
 Maybe<string> q = Maybe.SomeOrNone((string?)null);  // == Maybe<string>.None
 ```
@@ -92,17 +92,18 @@ if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 ```
 
 `Bind()` vs `Select()`.
-Let's say that we want to use with a _maybe_ the method `May.ParseInt32` which
+Let's say that we wish to map a _maybe_ using the method `May.ParseInt32` which
 parses a string and returns a `Maybe<int>`.
 ```csharp
 Maybe<string> maybe = Maybe.Some("12345");
 
 // DO write.
 var q = maybe.Bind(May.ParseInt32);     // <-- Maybe<int>
+
 // DO NOT write.
 var q = maybe.Select(May.ParseInt32)    // <-- Maybe<Maybe<int>>
     // We MUST then flatten the "double" maybe.
-    .Flatten();                 // <-- Maybe<int>
+    .Flatten();                         // <-- Maybe<int>
 ```
 
 Join.
@@ -130,11 +131,14 @@ And much more, see the XML comments for samples:
 
 ### Guidelines
 
+Usage:
 - CONSIDER using this type when `T` is a value type or an immutable reference type.
 - AVOID using this type when `T` is a mutable reference type.
 - DO NOT create a _maybe_ value for nullable types, eg `Maybe<int?>`.
 
-- DO NOT use `Maybe<T>` in a public API.
+General recommendations:
+- DO NOT use `Maybe<T>` in a public APIs.
+- DO use _maybe_'s when processing multiple nullable values.
 - CONSIDER using _maybe_'s to validate and transform data you don't control.
 
 May-Parse pattern:

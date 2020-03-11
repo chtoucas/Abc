@@ -87,7 +87,7 @@ namespace Abc
         }
     }
 
-    // Query Expression Pattern aka LINQ.
+    // Query Expression Pattern.
     public partial class MaybeTests
     {
         [Fact]

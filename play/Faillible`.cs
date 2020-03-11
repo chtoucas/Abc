@@ -52,7 +52,7 @@ namespace Abc
         public abstract Faillible<T> OrElse(Faillible<T> other);
     }
 
-    // Query Expression Pattern aka LINQ.
+    // Query Expression Pattern.
     public partial class Faillible<T>
     {
         [Pure]

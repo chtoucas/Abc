@@ -360,7 +360,7 @@ namespace Abc
         #endregion
     }
 
-    // Query Expression Pattern aka LINQ.
+    // Query Expression Pattern.
     public partial struct Maybe<T>
     {
         /// <example>

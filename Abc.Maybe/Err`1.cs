@@ -50,7 +50,7 @@ namespace Abc
             => other;
     }
 
-    // Query Expression Pattern aka LINQ.
+    // Query Expression Pattern.
     public partial class Err<T>
     {
         [Pure]

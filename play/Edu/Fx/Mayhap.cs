@@ -8,7 +8,7 @@ namespace Abc.Edu.Fx
 
     using Abc.Utilities;
 
-    // Query Expression Pattern aka LINQ.
+    // Query Expression Pattern.
     public static partial class Mayhap
     {
         public static Mayhap<TResult> SelectMany<T, TMiddle, TResult>(
