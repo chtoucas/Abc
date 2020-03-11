@@ -30,7 +30,7 @@ Maybe<string> q = Maybe.SomeOrNone((string?)null);  // The empty maybe of type s
 If NRTs (Nullable Reference Type) are available, `Maybe.SomeOrNone()` with a
 nullable string does not create a `Maybe<string?>` but it (correctly) returns
 a `Maybe<string>`. When working with unconstrained generic type, you cannot use
-`Maybe.Some[OrNone]()` or Maybe.None<T>()`. Hopefully, `Maybe.Of()` and
+`Maybe.Some[OrNone]()` or `Maybe.None<T>()`. Hopefully, `Maybe.Of()` and
 `Maybe<T>.None` come to the rescue, they were specifically created to handle
 this kind of situation; otherwise there is no reason to use `Maybe.Of()` ---
 for `Maybe<T>.None` it is more a matter of taste.
