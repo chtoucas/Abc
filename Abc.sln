@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc.Testing", "Abc.Testing\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "play", "play\play.csproj", "{23AD4F3B-5BE8-4C70-86D8-C572538096FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abc.Maybe", "Abc.Maybe\Abc.Maybe.csproj", "{2D1F5163-F407-4DCA-83B4-A5728566EA2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc.Maybe", "Abc.Maybe\Abc.Maybe.csproj", "{2D1F5163-F407-4DCA-83B4-A5728566EA2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

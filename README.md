@@ -11,7 +11,7 @@ Quick start with `Maybe<T>`
 
 An Option type can help preventing null reference exceptions, but that's not the
 point, it really forces us to think about the outcome of a computation. We shall
-see a few use cases below (web, UI, logging, to be written...).
+see a few real-world use cases below (web, UI, logging, to be written...).
 
 Constructing a _maybe_.
 ```csharp
@@ -36,9 +36,9 @@ Maybe<int> q = some.Where(x >= 0).Select(x => Math.Sqrt(x));
 // Or using the Query Expression Pattern.
 Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x);
 ```
-In both cases, the result is a maybe of 2.
-If we start with an empty _maybe_ or `Maybe.Some(-4)` instead, the result is
-`Maybe<int>.None`.
+In both cases, the result is a _maybe_ of 2.
+If instead we start with an empty _maybe_ or `Maybe.Some(-4)`, the result is
+an empty _maybe_ in both cases.
 
 Safely extract the enclosed value. `Maybe<T>` is a strict option type, we don't
 get a direct access to the enclosed value.
@@ -62,7 +62,7 @@ string value = maybe.ValueOrElse(() => "other");
 // If maybe is empty, throw InvalidOperationException.
 string value = maybe.ValueOrThrow();
 // Throw a custom exception.
-string value = maybe.ValueOrThrow(() => new Exception());
+string value = maybe.ValueOrThrow(new NotSupportedException("..."));
 ```
 
 Pattern matching. Extract and map the enclosed value if any.
@@ -123,18 +123,23 @@ var q = from x in maybe1
         select (x, y, z)
 ```
 
-And much more, see the XML comments for samples.
+And much more, see the XML comments for samples:
+- LINQ and collection extensions; see `Abc.Linq` and `Abc.Extensions`.
+- Parsing helpers; see `May`.
+- XML & SQL helpers; see `Abc.Extensions`.
 
-### Recommendations
+### Guidelines
 
-- CONSIDER using _maybe_'s to validate and transform data you don't control.
+- CONSIDER using this type when `T` is a value type or an immutable reference type.
+- AVOID using this type when `T` is a mutable reference type.
 - DO NOT create a _maybe_ value for nullable types, eg `Maybe<int?>`.
+
 - DO NOT use `Maybe<T>` in a public API.
-- AVOID using `Maybe<T>` when `T` is mutable reference type.
+- CONSIDER using _maybe_'s to validate and transform data you don't control.
 
 May-Parse pattern:
 - DO use this pattern instead of the Try-Parse pattern for reference types.
-- DO use the prefix _Try_ for methods implementing this pattern.
+- DO use the prefix _May_ for methods implementing this pattern.
 
 Developer Notes
 ---------------
@@ -142,3 +147,11 @@ Developer Notes
 - Methods that return something should have the attribure `Pure`. It is not
   mandatory but it clearly states that the result should not be ignored.
 - Use nullable attributes whenever necessary.
+
+### TODOs
+
+- .NET Core 3.0 instead of 3.1.
+- Tests & code coverage.
+- XML comments with complete examples.
+- NuGet package.
+- Perf tool.

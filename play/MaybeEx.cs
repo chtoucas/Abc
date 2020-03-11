@@ -3,12 +3,90 @@
 namespace Abc
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.Linq;
     using System.Xml.Linq;
+
+    using Abc.Utilities;
 
     using Anexn = System.ArgumentNullException;
 
+    // REVIEW: lazy extensions.
+
     public static partial class MaybeEx { }
+
+    // Core methods.
+    public partial class MaybeEx
+    {
+        // Replace Guard() with?
+        // These are not the "when" and "unless" of the Maybe monad.
+
+        [Pure]
+        public static Maybe<Unit> When(bool predicate)
+            => predicate ? Maybe.Unit : Maybe.Zero;
+
+        // Reverse of When().
+        [Pure]
+        public static Maybe<Unit> Unless(bool predicate)
+            => predicate ? Maybe.Zero : Maybe.Unit;
+    }
+
+    // Helpers related to IEnumerable<>.
+    // TODO: to be optimized if moved to main proj.
+    public static partial class MaybeEx
+    {
+        [Pure]
+        public static Maybe<IEnumerable<T>> EmptyIfNone<T>(this Maybe<IEnumerable<T>> @this)
+            => @this.OrElse(Maybe.Empty<T>());
+
+        // Name it CollectAny() and replace the one in Maybe?
+        [Pure]
+        public static Maybe<IEnumerable<T>> Collect<T>(IEnumerable<Maybe<T>> source)
+        {
+            return source.Aggregate(
+                Maybe.Empty<T>(),
+                (x, y) => x.ZipWith(y, Enumerable.Append));
+        }
+
+        #region Sum()
+
+        [Pure]
+        public static Maybe<T> Sum<T>(IEnumerable<Maybe<T>> source, Func<T, T, T> add, T seed)
+        {
+            Require.NotNull(add, nameof(add));
+
+            Maybe<IEnumerable<T>> aggr = source.Aggregate(
+                Maybe.Empty<T>(),
+                (x, y) => x.ZipWith(y, Enumerable.Append));
+
+            return aggr.Select(__sum);
+
+            T __sum(IEnumerable<T> seq)
+            {
+                T sum = seed;
+                foreach (var item in seq)
+                {
+                    sum = add(sum, item);
+                }
+                return sum;
+            }
+        }
+
+        // Add Sum() for all simple value types.
+
+        [Pure]
+        public static Maybe<int> Sum(IEnumerable<Maybe<int>> source)
+        {
+            Maybe<IEnumerable<int>> aggr = source.Aggregate(
+                Maybe.Empty<int>(),
+                (x, y) => x.ZipWith(y, Enumerable.Append));
+
+            return aggr.Select(Enumerable.Sum);
+        }
+
+        #endregion
+    }
 
     // Extension methods for Maybe<T> where T is disposable.
     public partial class MaybeEx
