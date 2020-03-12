@@ -15,24 +15,8 @@ namespace Abc
 
     // REVIEW: lazy extensions.
 
-    // Experimental extension methods for Maybe<T>.
+    // Experimental helpers & extension methods for Maybe<T>.
     public static partial class MaybeEx { }
-
-    // Core methods.
-    public partial class MaybeEx
-    {
-        // Replace Guard() with?
-        // These are not the "when" and "unless" of the Maybe monad.
-
-        [Pure]
-        public static Maybe<Unit> When(bool predicate)
-            => predicate ? Maybe.Unit : Maybe.Zero;
-
-        // Reverse of When().
-        [Pure]
-        public static Maybe<Unit> Unless(bool predicate)
-            => predicate ? Maybe.Zero : Maybe.Unit;
-    }
 
     // Async methods.
     public partial class MaybeEx
@@ -41,6 +25,7 @@ namespace Abc
         // https://devblogs.microsoft.com/dotnet/configureawait-faq/
         // Do not use the enumerator.
 
+        [Pure]
         public static async Task<Maybe<TResult>> BindAsync<T, TResult>(
             this Maybe<T> @this,
             Func<T, Task<Maybe<TResult>>> binder,
@@ -61,6 +46,7 @@ namespace Abc
             }
         }
 
+        [Pure]
         public static async Task<Maybe<TResult>> SelectAsync<T, TResult>(
             this Maybe<T> @this,
             Func<T, Task<TResult>> selector,
@@ -86,6 +72,7 @@ namespace Abc
         // More async methods.
         //
 
+        [Pure]
         public static async Task<Maybe<T>> WhereAsync<T>(
             this Maybe<T> @this,
             Func<T, Task<bool>> predicate)
@@ -97,6 +84,56 @@ namespace Abc
             async Task<Maybe<T>> __binder(T x)
                 => await predicate(x).ConfigureAwait(false) ? @this : Maybe<T>.None;
         }
+    }
+
+    // Side effects.
+    public partial class MaybeEx
+    {
+        public static void OnNone<T>(this Maybe<T> @this, Action action)
+        {
+            if (@this.IsNone)
+            {
+                if (action is null) { throw new Anexn(nameof(action)); }
+                action();
+            }
+        }
+
+        // Fluent version of Do(). Beware, does not throw for null actions.
+        // The version with exceptions does not really deserve to be included:
+        //   @this.Do(caseSome, caseNone);
+        //   return @this;
+        [Pure]
+        public static Maybe<T> OnSomeOrNone<T>(
+            this Maybe<T> @this, Action<T>? caseSome, Action? caseNone)
+        {
+            if (@this.IsNone)
+            {
+                caseNone?.Invoke();
+            }
+            else
+            {
+                // To be replaced by @this.Value if promoted to the main proj.
+                caseSome?.Invoke(@this.ValueOrDefault());
+            }
+            return @this;
+        }
+    }
+
+    // Misc methods.
+    public partial class MaybeEx
+    {
+        // These are not the "when" and "unless" of the Maybe monad but rather
+        // specialized versions of Where() when the state of the maybe and the
+        // value it encloses are not taken into account.
+
+        [Pure]
+        public static Maybe<T> When<T>(this Maybe<T> @this, bool predicate)
+            => predicate ? @this : Maybe<T>.None;
+
+        // Reverse of When().
+        [Pure]
+        public static Maybe<T> Unless<T>(this Maybe<T> @this, bool predicate)
+            => predicate ? Maybe<T>.None : @this;
     }
 
     // Helpers related to IEnumerable<>.
@@ -187,10 +224,12 @@ namespace Abc
     // Extensions methods for Maybe<T> where T is an XElement.
     public partial class MaybeEx
     {
+        [Pure]
         public static Maybe<T> MapValue<T>(
             this Maybe<XElement> @this, Func<string, T> selector)
             => from x in @this select selector(x.Value);
 
+        [Pure]
         public static Maybe<string> ValueOrNone(this Maybe<XElement> @this)
             => from x in @this select x.Value;
     }
@@ -198,10 +237,12 @@ namespace Abc
     // Extensions methods for Maybe<T> where T is an XAttribute.
     public partial class MaybeEx
     {
+        [Pure]
         public static Maybe<T> MapValue<T>(
             this Maybe<XAttribute> @this, Func<string, T> selector)
             => from x in @this select selector(x.Value);
 
+        [Pure]
         public static Maybe<string> ValueOrNone(this Maybe<XAttribute> @this)
             => from x in @this select x.Value;
     }

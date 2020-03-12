@@ -54,10 +54,12 @@ namespace Abc.Extensions
     public partial class SqlTypesX
     {
         public static Maybe<byte[]> Maybe(this SqlBinary @this)
-            => MaybeT.Guard(!@this.IsNull).ReplaceWith(@this.Value);
+            // With Guard():
+            //   MaybeT.Guard(!@this.IsNull).ReplaceWith(@this.Value);
+            => @this.IsNull ? Maybe<byte[]>.None : MaybeT.SomeOrNone(@this.Value);
 
         public static Maybe<string> Maybe(this SqlString @this)
-            => MaybeT.Guard(!@this.IsNull).ReplaceWith(@this.Value);
+            => @this.IsNull ? Maybe<string>.None : MaybeT.SomeOrNone(@this.Value);
 
         /// <remarks>
         /// Beware, this extension method does NOT throw when the object is null
