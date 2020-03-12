@@ -23,7 +23,6 @@ namespace Abc
     {
         // Configurable core async methods?
         // https://devblogs.microsoft.com/dotnet/configureawait-faq/
-        // Do not use the enumerator.
 
         [Pure]
         public static async Task<Maybe<TResult>> BindAsync<T, TResult>(
@@ -33,11 +32,9 @@ namespace Abc
         {
             Require.NotNull(binder, nameof(binder));
 
-            using var iter = @this.GetEnumerator();
-
-            if (iter.MoveNext())
+            if (@this.TryGetValue(out T value))
             {
-                return await binder(iter.Current)
+                return await binder(value)
                     .ConfigureAwait(continueOnCapturedContext);
             }
             else
@@ -54,11 +51,9 @@ namespace Abc
         {
             Require.NotNull(selector, nameof(selector));
 
-            using var iter = @this.GetEnumerator();
-
-            if (iter.MoveNext())
+            if (@this.TryGetValue(out T value))
             {
-                TResult result = await selector(iter.Current)
+                TResult result = await selector(value)
                     .ConfigureAwait(continueOnCapturedContext);
                 return Maybe.Of(result);
             }

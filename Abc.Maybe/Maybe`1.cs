@@ -18,7 +18,7 @@ namespace Abc
     using EF = Abc.Utilities.ExceptionFactory;
 
     // REVIEW: Maybe type
-    // - nullable attrs, notnull constraint.
+    // - nullable attrs, notnull constraint (on Maybe<T>?).
     //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
     //   https://devblogs.microsoft.com/dotnet/nullable-reference-types-in-csharp/
@@ -87,6 +87,7 @@ namespace Abc
     ///
     /// Safely escape the maybe.
     /// - Switch()           pattern matching
+    /// - TryGetValue()      try unwrap
     /// - ValueOrXXX()       unwrap
     /// - GetEnumerator()    iterable (implicit)
     /// - Yield()            enumerable (explicit)
@@ -141,7 +142,7 @@ namespace Abc
         /// Gets the enclosed value.
         /// <para>You MUST check IsSome before calling this property.</para>
         /// </summary>
-        // REVIEW: not null Value.
+        // REVIEW: not null Value. Simply remove and use TryGetValue()?
         [NotNull]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal T Value { get { Debug.Assert(_isSome); return _value; } }
@@ -253,6 +254,22 @@ namespace Abc
             else
             {
                 return caseNone;
+            }
+        }
+
+        [Pure]
+        public bool TryGetValue([MaybeNullWhen(false)] out T value)
+        {
+            if (_isSome)
+            {
+                value = _value;
+                return true;
+            }
+            else
+            {
+                // NULL_FORGIVING
+                value = default!;
+                return false;
             }
         }
 
@@ -737,6 +754,7 @@ namespace Abc
     // 3) Source of confusion (conflicts?) if we import System.Linq too.
     public partial struct Maybe<T>
     {
+        // REVIEW: now that I add TryGetValue(), remove this method?
         [Pure]
         public IEnumerator<T> GetEnumerator()
             => Yield(1).GetEnumerator();
