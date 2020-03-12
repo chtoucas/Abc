@@ -206,7 +206,7 @@ namespace Abc
             => _isSome ? this : other;
     }
 
-    // Safe escapes or side effects
+    // Safe escapes.
     // We do not throw ArgumentNullException right away, we delay the exception
     // until it is strictly necessary.
     public partial struct Maybe<T>
@@ -249,44 +249,6 @@ namespace Abc
             else
             {
                 return caseNone;
-            }
-        }
-
-        // Do() and Some() are specialized forms of Switch(), they do not return
-        // anything (a Unit in fact). They could return "this" but I prefer not
-        // to, this way it's clear that they are supposed to produce side effects.
-        // We do not provide OnNone(action), since it is much simpler to write:
-        //   if (maybe.IsNone) { action(); }
-
-        /// <summary>
-        /// If the current instance encloses a value, it executes
-        /// <paramref name="onSome"/>, otherwise it executes
-        /// <paramref name="onNone"/>.
-        /// </summary>
-        public void Do(Action<T> onSome, Action onNone)
-        {
-            if (_isSome)
-            {
-                if (onSome is null) { throw new Anexn(nameof(onSome)); }
-                onSome(_value);
-            }
-            else
-            {
-                if (onNone is null) { throw new Anexn(nameof(onNone)); }
-                onNone();
-            }
-        }
-
-        /// <summary>
-        /// If the current instance encloses a value, it executes
-        /// <paramref name="action"/>.
-        /// </summary>
-        public void OnSome(Action<T> action)
-        {
-            if (_isSome)
-            {
-                if (action is null) { throw new Anexn(nameof(action)); }
-                action(_value);
             }
         }
 
@@ -343,6 +305,49 @@ namespace Abc
         }
 
         #endregion
+    }
+
+    // Side effects.
+    // Do() and Some() are specialized forms of Switch(), they do not return
+    // anything (a Unit in fact). They could return "this" but I prefer not
+    // to, this way it's clear that they are supposed to produce side effects.
+    // We do not provide OnNone(action), since it is much simpler to write:
+    //   if (maybe.IsNone) { action(); }
+    // We do not throw ArgumentNullException right away, we delay the exception
+    // until it is strictly necessary.
+    public partial struct Maybe<T>
+    {
+        /// <summary>
+        /// If the current instance encloses a value, it executes
+        /// <paramref name="onSome"/>, otherwise it executes
+        /// <paramref name="onNone"/>.
+        /// </summary>
+        public void Do(Action<T> onSome, Action onNone)
+        {
+            if (_isSome)
+            {
+                if (onSome is null) { throw new Anexn(nameof(onSome)); }
+                onSome(_value);
+            }
+            else
+            {
+                if (onNone is null) { throw new Anexn(nameof(onNone)); }
+                onNone();
+            }
+        }
+
+        /// <summary>
+        /// If the current instance encloses a value, it executes
+        /// <paramref name="action"/>.
+        /// </summary>
+        public void OnSome(Action<T> action)
+        {
+            if (_isSome)
+            {
+                if (action is null) { throw new Anexn(nameof(action)); }
+                action(_value);
+            }
+        }
     }
 
     // Query Expression Pattern.
