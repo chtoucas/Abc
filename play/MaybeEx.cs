@@ -98,47 +98,23 @@ namespace Abc
             }
         }
 
-        // Enhanced versions of Do(). Purpose: debugging, logging.
-
-        // Beware, do not throw for null actions.
-        public static void When<T>(
-            this Maybe<T> @this, bool predicate, Action<T>? caseSome, Action? caseNone)
-        {
-            if (predicate)
-            {
-                if (@this.IsNone)
-                {
-                    caseNone?.Invoke();
-                }
-                else
-                {
-                    // To be replaced by @this.Value if promoted to the main proj.
-                    caseSome?.Invoke(@this.ValueOrDefault());
-                }
-            }
-        }
-
-        // Reverse of When().
-        public static void Unless<T>(
-            this Maybe<T> @this, bool predicate, Action<T>? caseSome, Action? caseNone)
-        {
-            When(@this, !predicate, caseSome, caseNone);
-        }
-
         // Fluent versions? They are easy to add locally. For instance,
         //   @this.Do(caseSome, caseNone);
         //   return @this;
         //
-        // Might be worth including when the action only depends on the
-        // predicate, not on the maybe. By the way, the "non-fluent" versions
-        // of the methods below are useless.
+        // Might be worth including when the action only depends on an external
+        // condition, not on the maybe. Purpose: debugging, logging.
+        // By the way, the "non-fluent" versions of the methods below are
+        // useless.
         //
         // Beware, do not throw for null actions.
-        [Pure]
+        // No attr [Pure], even if fluent API, we should be able to write
+        // maybe.(..anything..).When(...).ReplaceWith(...) BUT also
+        // maybe.(..anything..).When(...) without gettting a warning.
         public static Maybe<T> When<T>(
-            this Maybe<T> @this, bool predicate, Action? action)
+            this Maybe<T> @this, bool condition, Action? action)
         {
-            if (predicate)
+            if (condition)
             {
                 action?.Invoke();
             }
@@ -146,11 +122,10 @@ namespace Abc
         }
 
         // Reverse of When().
-        [Pure]
         public static Maybe<T> Unless<T>(
-            this Maybe<T> @this, bool predicate, Action? action)
+            this Maybe<T> @this, bool condition, Action? action)
         {
-            return When(@this, !predicate, action);
+            return When(@this, !condition, action);
         }
     }
 
@@ -161,8 +136,8 @@ namespace Abc
         // value it encloses are not taken into account.
 
         [Pure]
-        public static Maybe<T> Filter<T>(this Maybe<T> @this, bool predicate)
-            => predicate ? @this : Maybe<T>.None;
+        public static Maybe<T> Filter<T>(this Maybe<T> @this, bool condition)
+            => condition ? @this : Maybe<T>.None;
     }
 
     // Helpers related to IEnumerable<>.

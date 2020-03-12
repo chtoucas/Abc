@@ -72,8 +72,8 @@ namespace Abc
             => @this.IsSome ? @this.Value : Maybe<T>.None;
 
         [Pure]
-        public static Maybe<Unit> Guard(bool predicate)
-            => predicate ? Unit : Zero;
+        public static Maybe<Unit> Guard(bool condition)
+            => condition ? Unit : Zero;
     }
 
     // Factory methods.

@@ -36,11 +36,13 @@ Abc.Maybe<T>.Skip() -> Abc.Maybe<Abc.Unit>
 Abc.Maybe<T>.Switch<TResult>(System.Func<T, TResult> caseSome, System.Func<TResult> caseNone) -> TResult
 Abc.Maybe<T>.Switch<TResult>(System.Func<T, TResult> caseSome, TResult caseNone) -> TResult
 Abc.Maybe<T>.SwitchAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<TResult>> caseSome, System.Threading.Tasks.Task<TResult> caseNone) -> System.Threading.Tasks.Task<TResult>
+Abc.Maybe<T>.Unless(bool condition, System.Action<T> onSome, System.Action onNone) -> void
 Abc.Maybe<T>.ValueOrDefault() -> T
 Abc.Maybe<T>.ValueOrElse(System.Func<T> valueFactory) -> T
 Abc.Maybe<T>.ValueOrElse(T other) -> T
 Abc.Maybe<T>.ValueOrThrow() -> T
 Abc.Maybe<T>.ValueOrThrow(System.Exception exception) -> T
+Abc.Maybe<T>.When(bool condition, System.Action<T> onSome, System.Action onNone) -> void
 Abc.Maybe<T>.Where(System.Func<T, bool> predicate) -> Abc.Maybe<T>
 Abc.Maybe<T>.XorElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.Yield() -> System.Collections.Generic.IEnumerable<T>
@@ -143,7 +145,7 @@ static Abc.Maybe.Compose<TSource, TMiddle, TResult>(this System.Func<TSource, Ab
 static Abc.Maybe.ComposeBack<TSource, TMiddle, TResult>(this System.Func<TMiddle, Abc.Maybe<TResult>> this, System.Func<TSource, Abc.Maybe<TMiddle>> other) -> System.Func<TSource, Abc.Maybe<TResult>>
 static Abc.Maybe.Empty<T>() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 static Abc.Maybe.Flatten<T>(this in Abc.Maybe<Abc.Maybe<T>> this) -> Abc.Maybe<T>
-static Abc.Maybe.Guard(bool predicate) -> Abc.Maybe<Abc.Unit>
+static Abc.Maybe.Guard(bool condition) -> Abc.Maybe<Abc.Unit>
 static Abc.Maybe.Invoke<T1, T2, T3, T4, T5, TResult>(this Abc.Maybe<System.Func<T1, T2, T3, T4, T5, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third, Abc.Maybe<T4> fourth, Abc.Maybe<T5> fifth) -> Abc.Maybe<TResult>
 static Abc.Maybe.Invoke<T1, T2, T3, T4, TResult>(this Abc.Maybe<System.Func<T1, T2, T3, T4, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third, Abc.Maybe<T4> fourth) -> Abc.Maybe<TResult>
 static Abc.Maybe.Invoke<T1, T2, T3, TResult>(this Abc.Maybe<System.Func<T1, T2, T3, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third) -> Abc.Maybe<TResult>

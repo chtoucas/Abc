@@ -85,14 +85,18 @@ namespace Abc
     /// - SelectAsync()
     /// - OrElseAsync()
     ///
-    /// Safe escapes from a maybe.
+    /// Safely escape the maybe.
     /// - Switch()           pattern matching
     /// - ValueOrXXX()       unwrap
-    /// - Do()               actions with side effects
-    /// - OnSome()           action with side effects
     /// - GetEnumerator()    iterable (implicit)
     /// - Yield()            enumerable (explicit)
     /// - Contains()         singleton or empty set
+    ///
+    /// Side effects.
+    /// - Do()
+    /// - OnSome()
+    /// - When()
+    /// - Unless()
     /// ]]></remarks>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
@@ -207,7 +211,7 @@ namespace Abc
     }
 
     // Safe escapes.
-    // We do not throw ArgumentNullException right away, we delay the exception
+    // We do not throw ArgumentNullException right away, we delay arg check
     // until it is strictly necessary.
     public partial struct Maybe<T>
     {
@@ -251,8 +255,6 @@ namespace Abc
                 return caseNone;
             }
         }
-
-        #region Specialized versions
 
         /// <summary>
         /// Obtains the enclosed value if any; otherwise this method returns the
@@ -303,8 +305,6 @@ namespace Abc
                 throw exception;
             }
         }
-
-        #endregion
     }
 
     // Side effects.
@@ -313,7 +313,7 @@ namespace Abc
     // to, this way it's clear that they are supposed to produce side effects.
     // We do not provide OnNone(action), since it is much simpler to write:
     //   if (maybe.IsNone) { action(); }
-    // We do not throw ArgumentNullException right away, we delay the exception
+    // We do not throw ArgumentNullException right away, we delay arg check
     // until it is strictly necessary.
     public partial struct Maybe<T>
     {
@@ -322,6 +322,7 @@ namespace Abc
         /// <paramref name="onSome"/>, otherwise it executes
         /// <paramref name="onNone"/>.
         /// </summary>
+        /// <seealso cref="When"/>
         public void Do(Action<T> onSome, Action onNone)
         {
             if (_isSome)
@@ -346,6 +347,40 @@ namespace Abc
             {
                 if (action is null) { throw new Anexn(nameof(action)); }
                 action(_value);
+            }
+        }
+
+        // Enhanced versions of Do().
+        // Beware, contrary to Do(), they do not throw for null actions.
+
+        public void When(bool condition, Action<T>? onSome, Action? onNone)
+        {
+            if (condition)
+            {
+                if (_isSome)
+                {
+                    onSome?.Invoke(_value);
+                }
+                else
+                {
+                    onNone?.Invoke();
+                }
+            }
+        }
+
+        // Reverse of When().
+        public void Unless(bool condition, Action<T>? onSome, Action? onNone)
+        {
+            if (!condition)
+            {
+                if (_isSome)
+                {
+                    onSome?.Invoke(_value);
+                }
+                else
+                {
+                    onNone?.Invoke();
+                }
             }
         }
     }
