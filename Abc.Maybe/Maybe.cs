@@ -83,8 +83,8 @@ namespace Abc
         /// Obtains an instance of the empty <see cref="Maybe{T}" />.
         /// </summary>
         /// <remarks>
-        /// To obtain the empty maybe for an unconstrained type, please see
-        /// <see cref="Maybe{T}.None"/>.
+        /// To obtain the empty maybe for an unconstrained type, use
+        /// <see cref="Maybe{T}.None"/> instead.
         /// </remarks>
         public static Maybe<T> None<T>() where T : notnull
             => Maybe<T>.None;
@@ -158,6 +158,8 @@ namespace Abc
     // LINQ extensions but for IEnumerable<Maybe<T>>:
     // - Filtering: CollectAny (deferred).
     // - Aggregation: Any.
+    // LINQ extensions but not extension methods since they are not for
+    // IEnumerable<T>, also to avoid conflicts w/ the standard LINQ ops, eg Any().
     public partial class Maybe
     {
         [Pure]

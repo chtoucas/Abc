@@ -21,7 +21,8 @@ namespace Abc
     // - nullable attrs, notnull constraint.
     //   It would make a lot of sense to add a notnull constraint on the T of
     //   Maybe<T>, but it worries me a bit (I need to gain more experience with
-    //   the new NRT).
+    //   the new NRT). It simplies a few things, eg Maybe.Of(), it warns a user
+    //   trying to create a Maybe<int?> or a Maybe<string?>.
     //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
     //   https://devblogs.microsoft.com/dotnet/nullable-reference-types-in-csharp/
@@ -573,7 +574,6 @@ namespace Abc
     }
 
     // Async methods.
-    // TODO: async is very much a work in progress.
     public partial struct Maybe<T>
     {
         [Pure]
