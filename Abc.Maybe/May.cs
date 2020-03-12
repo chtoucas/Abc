@@ -4,6 +4,7 @@ namespace Abc
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     /// <summary>
@@ -44,6 +45,7 @@ namespace Abc
         /// Attemps to convert the string representation of a logical value to
         /// its <see cref="Boolean"/> equivalent.
         /// </summary>
+        [Pure]
         public static Maybe<bool> ParseBoolean(string? value)
         {
             return Boolean.TryParse(value, out bool result)
@@ -54,6 +56,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="Decimal"/> equivalent.
         /// </summary>
+        [Pure]
         public static Maybe<decimal> ParseDecimal(string? value)
         {
             return Decimal.TryParse(value, out decimal result)
@@ -65,6 +68,7 @@ namespace Abc
         /// <see cref="Decimal"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         public static Maybe<decimal> ParseDecimal(
             string? value, NumberStyles style, IFormatProvider? provider)
         {
@@ -76,6 +80,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="Double"/> equivalent.
         /// </summary>
+        [Pure]
         public static Maybe<double> ParseDouble(string? value)
         {
             return Double.TryParse(value, out double result)
@@ -87,6 +92,7 @@ namespace Abc
         /// <see cref="Double"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         public static Maybe<double> ParseDouble(
             string? value, NumberStyles style, IFormatProvider? provider)
         {
@@ -98,6 +104,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="Int16"/> equivalent.
         /// </summary>
+        [Pure]
         public static Maybe<short> ParseInt16(string? value)
         {
             return Int16.TryParse(value, out short result)
@@ -109,6 +116,7 @@ namespace Abc
         /// <see cref="Int16"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         public static Maybe<short> ParseInt16(
             string? value, NumberStyles style, IFormatProvider? provider)
         {
@@ -120,6 +128,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="Int32"/> equivalent.
         /// </summary>
+        [Pure]
         public static Maybe<int> ParseInt32(string? value)
         {
             return Int32.TryParse(value, out int result)
@@ -131,6 +140,7 @@ namespace Abc
         /// <see cref="Int32"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         public static Maybe<int> ParseInt32(
             string? value, NumberStyles style, IFormatProvider? provider)
         {
@@ -142,6 +152,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="Int64"/> equivalent.
         /// </summary>
+        [Pure]
         public static Maybe<long> ParseInt64(string? value)
         {
             return Int64.TryParse(value, out long result)
@@ -153,6 +164,7 @@ namespace Abc
         /// <see cref="Int64"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         public static Maybe<long> ParseInt64(
             string? value, NumberStyles style, IFormatProvider? provider)
         {
@@ -164,6 +176,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="Single"/> equivalent.
         /// </summary>
+        [Pure]
         public static Maybe<float> ParseSingle(string? value)
         {
             return Single.TryParse(value, out float result)
@@ -175,6 +188,7 @@ namespace Abc
         /// <see cref="Single"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         public static Maybe<float> ParseSingle(
             string? value, NumberStyles style, IFormatProvider? provider)
         {
@@ -186,6 +200,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="SByte"/> equivalent.
         /// </summary>
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<sbyte> ParseSByte(string? value)
         {
@@ -198,6 +213,7 @@ namespace Abc
         /// <see cref="SByte"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<sbyte> ParseSByte(
             string? value, NumberStyles style, IFormatProvider? provider)
@@ -210,6 +226,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="Byte"/> equivalent.
         /// </summary>
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<byte> ParseByte(string? value)
         {
@@ -222,6 +239,7 @@ namespace Abc
         /// <see cref="Byte"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<byte> ParseByte(
             string? value, NumberStyles style, IFormatProvider? provider)
@@ -234,6 +252,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="UInt16"/> equivalent.
         /// </summary>
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<ushort> ParseUInt16(string? value)
         {
@@ -246,6 +265,7 @@ namespace Abc
         /// <see cref="UInt16"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<ushort> ParseUInt16(
             string? value, NumberStyles style, IFormatProvider? provider)
@@ -258,6 +278,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="UInt32"/> equivalent.
         /// </summary>
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<uint> ParseUInt32(string? value)
         {
@@ -270,6 +291,7 @@ namespace Abc
         /// <see cref="UInt32"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<uint> ParseUInt32(
             string? value, NumberStyles style, IFormatProvider? provider)
@@ -282,6 +304,7 @@ namespace Abc
         /// Attemps to convert the string representation of a number to its
         /// <see cref="UInt64"/> equivalent.
         /// </summary>
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<ulong> ParseUInt64(string? value)
         {
@@ -294,6 +317,7 @@ namespace Abc
         /// <see cref="UInt64"/> equivalent using the specified style and
         /// culture-specific format.
         /// </summary>
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<ulong> ParseUInt64(
             string? value, NumberStyles style, IFormatProvider? provider)
@@ -311,6 +335,7 @@ namespace Abc
         /// value of one or more enumerated constants to an equivalent
         /// enumerated object.
         /// </summary>
+        [Pure]
         public static Maybe<TEnum> ParseEnum<TEnum>(string? value)
             where TEnum : struct, Enum
             => Enum.TryParse(value, out TEnum result)
@@ -326,10 +351,70 @@ namespace Abc
         /// sense that parsing any literal integer value will succeed even if
         /// it is not a valid enumeration value.
         /// </remarks>
+        [Pure]
         public static Maybe<TEnum> ParseEnum<TEnum>(string? value, bool ignoreCase)
             where TEnum : struct, Enum
             => Enum.TryParse(value, ignoreCase, out TEnum result)
                 ? Maybe.Some(result) : Maybe<TEnum>.None;
+
+        /// <summary>
+        /// Attempts to convert the specified string representation of a date
+        /// and time to its <see cref="DateTime"/> equivalent.
+        /// </summary>
+        [Pure]
+        public static Maybe<DateTime> ParseDateTime(string? value)
+        {
+            return DateTime.TryParse(value, out DateTime result)
+                ? Maybe.Some(result) : Maybe<DateTime>.None;
+        }
+
+        /// <summary>
+        /// Attempts to convert the specified string representation of a date
+        /// and time to its <see cref="DateTime"/> equivalent using the specified
+        /// culture-specific format information and formatting style.
+        /// </summary>
+        [Pure]
+        public static Maybe<DateTime> ParseDateTime(
+            string? value, IFormatProvider? provider, DateTimeStyles style)
+        {
+            return DateTime.TryParse(value, provider, style, out DateTime result)
+                ? Maybe.Some(result) : Maybe<DateTime>.None;
+        }
+
+        /// <summary>
+        /// Attempts to convert the specified string representation of a date
+        /// and time to its <see cref="DateTime"/> equivalent using the specified
+        /// format, culture-specific format information, and style. The format
+        /// of the string representation must match the specified format exactly.
+        /// </summary>
+        [Pure]
+        public static Maybe<DateTime> ParseDateTimeExactly(
+            string? value,
+            string? format,
+            IFormatProvider? provider,
+            DateTimeStyles style)
+        {
+            return DateTime.TryParseExact(value, format, provider, style, out DateTime result)
+                ? Maybe.Some(result) : Maybe<DateTime>.None;
+        }
+
+        /// <summary>
+        /// Attempts to convert the specified string representation of a date
+        /// and time to its <see cref="DateTime"/> equivalent using the
+        /// specified array of formats, culture-specific format information, and
+        /// style. The format of the string representation must match at least
+        /// one of the specified formats exactly.
+        /// </summary>
+        [Pure]
+        public static Maybe<DateTime> ParseDateTimeExactly(
+            string? value,
+            string?[]? formats,
+            IFormatProvider? provider,
+            DateTimeStyles style)
+        {
+            return DateTime.TryParseExact(value, formats, provider, style, out DateTime result)
+                ? Maybe.Some(result) : Maybe<DateTime>.None;
+        }
     }
 
     // Parsers for reference types.
@@ -339,6 +424,7 @@ namespace Abc
         /// Attemps to create a new <see cref="Uri"/> using the specified
         /// base and relative string instances.
         /// </summary>
+        [Pure]
         public static Maybe<Uri> CreateUri(Uri? baseUri, string? relativeUri)
         {
             Uri.TryCreate(baseUri, relativeUri, out Uri? uri);
@@ -349,6 +435,7 @@ namespace Abc
         /// Attemps to create a new <see cref="Uri"/> using the specified
         /// base and relative <see cref="Uri"/> instances.
         /// </summary>
+        [Pure]
         public static Maybe<Uri> CreateUri(Uri? baseUri, Uri? relativeUri)
         {
             Uri.TryCreate(baseUri, relativeUri, out Uri? uri);
@@ -359,6 +446,7 @@ namespace Abc
         /// Attemps to create a new <see cref="Uri"/> using the specified
         /// string instance and <see cref="UriKind"/>.
         /// </summary>
+        [Pure]
         [SuppressMessage("Design", "CA1054:Uri parameters should not be strings", Justification = "Uri creation")]
         public static Maybe<Uri> CreateUri(string? uriString, UriKind uriKind)
         {

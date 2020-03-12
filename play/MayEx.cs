@@ -3,6 +3,7 @@
 namespace Abc
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     public sealed partial class MayEx : May
@@ -49,30 +50,36 @@ namespace Abc
     // Overloads with ReadOnlySpan<>.
     public partial class MayEx
     {
+        [Pure]
         public static Maybe<bool> ParseBoolean(ReadOnlySpan<char> span)
         {
             return Boolean.TryParse(span, out bool result)
                 ? Maybe.Some(result) : Maybe<bool>.None;
         }
 
+        [Pure]
         public static Maybe<decimal> ParseDecimal(ReadOnlySpan<char> span)
         {
             return Decimal.TryParse(span, out decimal result)
                 ? Maybe.Some(result) : Maybe<decimal>.None;
         }
 
+        [Pure]
         public static Maybe<decimal> ParseDecimal(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
         {
             return Decimal.TryParse(span, style, provider, out decimal result)
                 ? Maybe.Some(result) : Maybe<decimal>.None;
         }
+
+        [Pure]
         public static Maybe<double> ParseDouble(ReadOnlySpan<char> span)
         {
             return Double.TryParse(span, out double result)
                 ? Maybe.Some(result) : Maybe<double>.None;
         }
 
+        [Pure]
         public static Maybe<double> ParseDouble(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
         {
@@ -80,12 +87,14 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<double>.None;
         }
 
+        [Pure]
         public static Maybe<short> ParseInt16(ReadOnlySpan<char> span)
         {
             return Int16.TryParse(span, out short result)
                 ? Maybe.Some(result) : Maybe<short>.None;
         }
 
+        [Pure]
         public static Maybe<short> ParseInt16(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
         {
@@ -93,12 +102,14 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<short>.None;
         }
 
+        [Pure]
         public static Maybe<int> ParseInt32(ReadOnlySpan<char> span)
         {
             return Int32.TryParse(span, out int result)
                 ? Maybe.Some(result) : Maybe<int>.None;
         }
 
+        [Pure]
         public static Maybe<int> ParseInt32(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
         {
@@ -106,12 +117,14 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<int>.None;
         }
 
+        [Pure]
         public static Maybe<long> ParseInt64(ReadOnlySpan<char> span)
         {
             return Int64.TryParse(span, out long result)
                 ? Maybe.Some(result) : Maybe<long>.None;
         }
 
+        [Pure]
         public static Maybe<long> ParseInt64(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
         {
@@ -119,12 +132,14 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<long>.None;
         }
 
+        [Pure]
         public static Maybe<float> ParseSingle(ReadOnlySpan<char> span)
         {
             return Single.TryParse(span, out float result)
                 ? Maybe.Some(result) : Maybe<float>.None;
         }
 
+        [Pure]
         public static Maybe<float> ParseSingle(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
         {
@@ -132,6 +147,7 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<float>.None;
         }
 
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<sbyte> ParseSByte(ReadOnlySpan<char> span)
         {
@@ -139,6 +155,7 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<sbyte>.None;
         }
 
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<sbyte> ParseSByte(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
@@ -147,6 +164,7 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<sbyte>.None;
         }
 
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<byte> ParseByte(ReadOnlySpan<char> span)
         {
@@ -154,6 +172,7 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<byte>.None;
         }
 
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<byte> ParseByte(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
@@ -162,6 +181,7 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<byte>.None;
         }
 
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<ushort> ParseUInt16(ReadOnlySpan<char> span)
         {
@@ -169,6 +189,7 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<ushort>.None;
         }
 
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<ushort> ParseUInt16(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
@@ -177,6 +198,7 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<ushort>.None;
         }
 
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<uint> ParseUInt32(ReadOnlySpan<char> span)
         {
@@ -184,6 +206,7 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<uint>.None;
         }
 
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<uint> ParseUInt32(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
@@ -192,6 +215,7 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<uint>.None;
         }
 
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<ulong> ParseUInt64(ReadOnlySpan<char> span)
         {
@@ -199,6 +223,7 @@ namespace Abc
                 ? Maybe.Some(result) : Maybe<ulong>.None;
         }
 
+        [Pure]
         [CLSCompliant(false)]
         public static Maybe<ulong> ParseUInt64(
             ReadOnlySpan<char> span, NumberStyles style, IFormatProvider? provider)
@@ -211,33 +236,55 @@ namespace Abc
     // Parsers for value types that are not simple types.
     public partial class MayEx
     {
+        [Pure]
         public static Maybe<object> ParseEnum(Type enumType, string? value)
             => Enum.TryParse(enumType, value, out object? result)
                 ? Maybe.SomeOrNone(result) : Maybe<object>.None;
 
+        [Pure]
         public static Maybe<object> ParseEnum(
             Type enumType, string? value, bool ignoreCase)
             => Enum.TryParse(enumType, value, ignoreCase, out object? result)
                 ? Maybe.SomeOrNone(result) : Maybe<object>.None;
 
-        // To be rewritten: default format, format provider, Parse/ParseExact,
-        // Overloads with ReadOnlySpan<>.
-
-        public static Maybe<DateTime> ParseDateTimeExact(string? value)
-            => ParseDateTimeExact(
-                value, "o", DateTimeStyles.None, DateTimeFormatInfo.CurrentInfo);
-
-        public static Maybe<DateTime> ParseDateTimeExact(string? value, string? format)
-            => ParseDateTimeExact(
-                value, format, DateTimeStyles.None, DateTimeFormatInfo.CurrentInfo);
-
-        public static Maybe<DateTime> ParseDateTimeExact(
-            string? value,
-            string? format,
-            DateTimeStyles style,
-            IFormatProvider? provider)
+        /// <summary>
+        /// Attempts to convert the specified string representation of a date
+        /// and time to its <see cref="DateTime"/> equivalent.
+        /// </summary>
+        [Pure]
+        public static Maybe<DateTime> ParseDateTime(ReadOnlySpan<char> span)
         {
-            return DateTime.TryParseExact(value, format, provider, style, out DateTime result)
+            return DateTime.TryParse(span, out DateTime result)
+                ? Maybe.Some(result) : Maybe<DateTime>.None;
+        }
+
+        [Pure]
+        public static Maybe<DateTime> ParseDateTime(
+            ReadOnlySpan<char> span, IFormatProvider? provider, DateTimeStyles style)
+        {
+            return DateTime.TryParse(span, provider, style, out DateTime result)
+                ? Maybe.Some(result) : Maybe<DateTime>.None;
+        }
+
+        [Pure]
+        public static Maybe<DateTime> ParseDateTimeExact(
+            ReadOnlySpan<char> span,
+            string? format,
+            IFormatProvider? provider,
+            DateTimeStyles style)
+        {
+            return DateTime.TryParseExact(span, format, provider, style, out DateTime result)
+                ? Maybe.Some(result) : Maybe<DateTime>.None;
+        }
+
+        [Pure]
+        public static Maybe<DateTime> ParseDateTimeExact(
+            ReadOnlySpan<char> span,
+            string?[]? formats,
+            IFormatProvider? provider,
+            DateTimeStyles style)
+        {
+            return DateTime.TryParseExact(span, formats, provider, style, out DateTime result)
                 ? Maybe.Some(result) : Maybe<DateTime>.None;
         }
     }

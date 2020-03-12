@@ -111,6 +111,10 @@ static Abc.May.CreateUri(string uriString, System.UriKind uriKind) -> Abc.Maybe<
 static Abc.May.ParseBoolean(string value) -> Abc.Maybe<bool>
 static Abc.May.ParseByte(string value) -> Abc.Maybe<byte>
 static Abc.May.ParseByte(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<byte>
+static Abc.May.ParseDateTime(string value) -> Abc.Maybe<System.DateTime>
+static Abc.May.ParseDateTime(string value, System.IFormatProvider provider, System.Globalization.DateTimeStyles style) -> Abc.Maybe<System.DateTime>
+static Abc.May.ParseDateTimeExactly(string value, string format, System.IFormatProvider provider, System.Globalization.DateTimeStyles style) -> Abc.Maybe<System.DateTime>
+static Abc.May.ParseDateTimeExactly(string value, string[] formats, System.IFormatProvider provider, System.Globalization.DateTimeStyles style) -> Abc.Maybe<System.DateTime>
 static Abc.May.ParseDecimal(string value) -> Abc.Maybe<decimal>
 static Abc.May.ParseDecimal(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<decimal>
 static Abc.May.ParseDouble(string value) -> Abc.Maybe<double>

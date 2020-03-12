@@ -239,6 +239,8 @@ value.
 
 - **CONSIDER using a _maybe_ if the object is meant to be short-lived.**
 
+- **ACOID using a _maybe_ in a performance-critical path.**
+
 #### May-Parse pattern
 - **DO use this pattern instead of the Try-Parse pattern for reference types.**
 - **DO use the prefix _May_ for methods implementing this pattern.**
@@ -248,7 +250,8 @@ Developer Notes
 
 - Methods that return something should have the attribure `Pure`. It is not
   mandatory but it clearly states that the result should not be ignored.
-- Use nullable attributes whenever necessary.
+  It might be superfluous these days, but "ça ne mange pas de pain".
+- Add nullable annotations whenever necessary.
 - Seal classes unless they are designed with extensibility in mind.
 
 ### TODOs
