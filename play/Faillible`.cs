@@ -20,7 +20,7 @@ namespace Abc
         public static readonly Faillible<Unit> Zero = Faillible<Unit>.None;
 
         [Pure]
-        public static Faillible<T> Succeed<T>([AllowNull]T value)
+        public static Faillible<T> Succeed<T>([AllowNull] T value)
             => value is null ? Faillible<T>.None : new Faillible<T>.Success(value);
 
         [Pure]

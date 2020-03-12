@@ -121,7 +121,7 @@ namespace Abc
         /// Initializes a new instance of the <see cref="Maybe{T}" /> struct
         /// from the specified value.
         /// </summary>
-        internal Maybe([DisallowNull]T value)
+        internal Maybe([DisallowNull] T value)
         {
             _isSome = true;
             _value = value;
@@ -294,7 +294,7 @@ namespace Abc
         /// <seealso cref="TryGetValue"/>
         [Pure]
         // It does work with null but then one should really use ValueOrDefault().
-        public T ValueOrElse([DisallowNull]T other)
+        public T ValueOrElse([DisallowNull] T other)
             => _isSome ? _value : other;
 
         [Pure]

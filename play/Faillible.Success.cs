@@ -19,7 +19,7 @@ namespace Abc
                 Value = default!;
             }
 
-            public Success([DisallowNull]T value)
+            public Success([DisallowNull] T value)
             {
                 Value = value ?? throw new Anexn(nameof(value));
             }

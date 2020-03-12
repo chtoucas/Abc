@@ -34,7 +34,7 @@ namespace Abc
         }
 
         [Pure]
-        public static Result<T> Of<T>([AllowNull]T value)
+        public static Result<T> Of<T>([AllowNull] T value)
         {
             if (value is null) { return Result<T>.None; }
             else { return new Ok<T>(value); }

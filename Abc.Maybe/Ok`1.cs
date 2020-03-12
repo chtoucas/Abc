@@ -15,7 +15,7 @@ namespace Abc
     /// </summary>
     public sealed partial class Ok<T> : Result<T>
     {
-        internal Ok([DisallowNull]T value)
+        internal Ok([DisallowNull] T value)
         {
             Value = value;
         }
