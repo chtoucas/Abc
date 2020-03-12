@@ -9,17 +9,17 @@ Features
 Quick start with `Maybe<T>`
 ---------------------------
 
-An Option type or Maybe type (a better fit for what we use it for here), is like
+An Option type or Maybe type (a better fit for what we use it for), is like
 a box containing a value or no value at all.
 
 It can help preventing null reference exceptions, but that's not the point, it
 really forces us to think about the outcome of a computation. We shall see a few
 real-world use cases.
 
-First, it differs from a nullable in that it applies to both value types and
-reference types. Then, it is also possible to create a _maybe_ of a _maybe_
-(`Maybe<Maybe<T>>`). Also a nullable reference type, like `string?`, is just a
-string type to which C# adds a special (sentinel) value, the `null` value.
+It differs from a nullable in that it applies to both value types and
+reference types. Also a nullable reference type, like `string?`, is just a
+string type to which the language adds a special (sentinel) value, the `null`
+value. It is also possible to create a _maybe_ of a _maybe_ (`Maybe<Maybe<T>>`).
 
 #### Construct a _maybe_
 ```csharp
@@ -114,7 +114,7 @@ string message = q.Switch(
     caseSome: x  => $"Square root = {x}."),
     caseNone: () => "The input was strictly negative.");
 
-// But, since the caseNone is constant, we should really write:
+// But, since caseNone is constant, it is better written:
 string message = q.Switch(
     caseSome: x => $"Square root = {x}."),
     caseNone: "The input was strictly negative.");
@@ -193,10 +193,10 @@ me that the benefits will outweight the drawbacks.
 
 One can _indirectly_ create a maybe for a nullable type, but all static
 factory methods do not permit it. If you end up having to manipulate for say a
-`Maybe<int?>`, there is the method `Squash()` to convert it to a `Maybe<int>`.
+`Maybe<int?>`, there is a method `Squash()` to convert it to a `Maybe<int>`.
 
-NB: `Result<T>` (not yet sure I will keep it) may serve as a replacement for
-`Maybe<T>` and is a reference type.
+NB: `Result<T>` (not yet sure I will keep it) is a reference type and may serve
+as a replacement for `Maybe<T>`.
 
 #### General recommendations
 First and foremost,
@@ -214,6 +214,8 @@ I would not have written this library.
 `MayGetSingle()` is an extension that returns something only if the key exists and
 there is a unique value associated to it.
 ```csharp
+NameValueCollection nvc;
+
 var q = from a in nvc.MayGetSingle("a")
         from b in nvc.MayGetSingle("b")
         from c in nvc.MayGetSingle("c").Bind(May.ParseInt32)
