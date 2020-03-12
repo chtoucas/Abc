@@ -144,12 +144,19 @@ namespace Abc
         public static Maybe<IEnumerable<T>> EmptyIfNone<T>(this Maybe<IEnumerable<T>> @this)
             => @this.OrElse(Maybe.Empty<T>());
 
-        // Name it CollectAny() and replace the one in Maybe? Keep both?
+        // What it should do:
+        // - if the input sequence is empty, returns the maybe of an empty
+        //   sequence.
+        // - if all maybe's in the input sequence are empty, returns the empty
+        //   maybe of type IEnumerable<T>.
+        // - otherwise, returns the maybe of the sequence of wrapped values.
+        // See also CollectAny().
         [Pure]
-        public static Maybe<IEnumerable<T>> Collect<T>(IEnumerable<Maybe<T>> source)
+        public static Maybe<IEnumerable<T>> ToMaybe<T>(IEnumerable<Maybe<T>> source)
         {
             return source.Aggregate(
-                Maybe.Empty<T>(),
+                //Maybe.Empty<T>(),
+                Maybe<IEnumerable<T>>.None,
                 (x, y) => x.ZipWith(y, Enumerable.Append));
         }
 
