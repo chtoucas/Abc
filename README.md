@@ -207,7 +207,7 @@ First and foremost,
 - **DO apply all guidelines for `ValueTuple<>`** and, if they contradict what I say
   here, follow your own wisdom.
 
-- **DO NOT use `Maybe<T>` in public APIs.**
+- **DO NOT use `Maybe<T>` as a parameter in public APIs.**
 
 In general, I would even not recommend to use it in a general purpose library.
 Of course, this does not mean that you should not use this type at all, otherwise
