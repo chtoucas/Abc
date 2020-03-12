@@ -45,7 +45,6 @@ namespace Abc
     /// The intended usage is when T is a value type, a string, a (read-only?)
     /// record, or a function. For other reference types, it should be fine as
     /// long as T is an **immutable** reference type.
-    /// It don't recommend to use this type in a public API.
     ///
     /// Static properties.
     /// - Maybe<T>.None

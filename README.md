@@ -191,6 +191,10 @@ me that the benefits will outweight the drawbacks.
 - **AVOID using this type when `T` is a _mutable_ reference type.**
 - **DO NOT use a _maybe_ with nullable types, eg `Maybe<int?>`.**
 
+The intended usage is when `T` is a value type, a string, a (read-only?) record,
+or a function. For other reference types, it should be fine as long as T is an
+immutable reference type.
+
 One can _indirectly_ create a maybe for a nullable type, but all static
 factory methods do not permit it. If you end up having to manipulate for say a
 `Maybe<int?>`, there is a method `Squash()` to convert it to a `Maybe<int>`.
