@@ -105,11 +105,12 @@ static Abc.Linq.Qperators.WhereAny<TSource>(this System.Collections.Generic.IEnu
 static Abc.Linq.Qperators.WhereAny<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Result<bool>> predicate) -> System.Collections.Generic.IEnumerable<TSource>
 static Abc.Linq.Qperators.ZipAny<T1, T2, TResult>(this System.Collections.Generic.IEnumerable<T1> first, System.Collections.Generic.IEnumerable<T2> second, System.Func<T1, T2, Abc.Maybe<TResult>> resultSelector) -> System.Collections.Generic.IEnumerable<TResult>
 static Abc.Linq.Qperators.ZipAny<T1, T2, TResult>(this System.Collections.Generic.IEnumerable<T1> first, System.Collections.Generic.IEnumerable<T2> second, System.Func<T1, T2, Abc.Result<TResult>> resultSelector) -> System.Collections.Generic.IEnumerable<TResult>
+static Abc.May.CreateUri(System.Uri baseUri, System.Uri relativeUri) -> Abc.Maybe<System.Uri>
+static Abc.May.CreateUri(System.Uri baseUri, string relativeUri) -> Abc.Maybe<System.Uri>
+static Abc.May.CreateUri(string uriString, System.UriKind uriKind) -> Abc.Maybe<System.Uri>
+static Abc.May.ParseBoolean(string value) -> Abc.Maybe<bool>
 static Abc.May.ParseByte(string value) -> Abc.Maybe<byte>
 static Abc.May.ParseByte(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<byte>
-static Abc.May.ParseDateTimeExact(string value) -> Abc.Maybe<System.DateTime>
-static Abc.May.ParseDateTimeExact(string value, string format) -> Abc.Maybe<System.DateTime>
-static Abc.May.ParseDateTimeExact(string value, string format, System.Globalization.DateTimeStyles style, System.IFormatProvider provider) -> Abc.Maybe<System.DateTime>
 static Abc.May.ParseDecimal(string value) -> Abc.Maybe<decimal>
 static Abc.May.ParseDecimal(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<decimal>
 static Abc.May.ParseDouble(string value) -> Abc.Maybe<double>
@@ -132,7 +133,6 @@ static Abc.May.ParseUInt32(string value) -> Abc.Maybe<uint>
 static Abc.May.ParseUInt32(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<uint>
 static Abc.May.ParseUInt64(string value) -> Abc.Maybe<ulong>
 static Abc.May.ParseUInt64(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<ulong>
-static Abc.May.ParseUri(string value, System.UriKind uriKind) -> Abc.Maybe<System.Uri>
 static Abc.Maybe.Any<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> Abc.Maybe<T>
 static Abc.Maybe.CollectAny<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> System.Collections.Generic.IEnumerable<T>
 static Abc.Maybe.Compose<TSource, TMiddle, TResult>(this System.Func<TSource, Abc.Maybe<TMiddle>> this, System.Func<TMiddle, Abc.Maybe<TResult>> other) -> System.Func<TSource, Abc.Maybe<TResult>>

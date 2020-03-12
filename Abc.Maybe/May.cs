@@ -3,6 +3,7 @@
 namespace Abc
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     /// <summary>
@@ -40,6 +41,16 @@ namespace Abc
     public partial class May
     {
         /// <summary>
+        /// Attemps to convert the string representation of a logical value to
+        /// its <see cref="Boolean"/> equivalent.
+        /// </summary>
+        public static Maybe<bool> ParseBoolean(string? value)
+        {
+            return Boolean.TryParse(value, out bool result)
+                ? Maybe.Some(result) : Maybe<bool>.None;
+        }
+
+        /// <summary>
         /// Attemps to convert the string representation of a number to its
         /// <see cref="Decimal"/> equivalent.
         /// </summary>
@@ -60,15 +71,6 @@ namespace Abc
             return Decimal.TryParse(value, style, provider, out decimal result)
                 ? Maybe.Some(result) : Maybe<decimal>.None;
         }
-
-        // TODO: overloads with ReadOnlySpan<>. PublicAPI?
-#if NETSTANDARD2_1
-        public static Maybe<decimal> ParseDecimal(ReadOnlySpan<char> span)
-        {
-            return Decimal.TryParse(span, out decimal result)
-                ? Maybe.Some(result) : Maybe<decimal>.None;
-        }
-#endif
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
@@ -304,10 +306,21 @@ namespace Abc
     // Parsers for value types that are not simple types.
     public partial class May
     {
+        /// <summary>
+        /// Attemps to convert the string representation of the name or numeric
+        /// value of one or more enumerated constants to an equivalent
+        /// enumerated object.
+        /// </summary>
         public static Maybe<TEnum> ParseEnum<TEnum>(string? value)
             where TEnum : struct, Enum
-            => ParseEnum<TEnum>(value, ignoreCase: true);
+            => Enum.TryParse(value, out TEnum result)
+                ? Maybe.Some(result) : Maybe<TEnum>.None;
 
+        /// <summary>
+        /// Attemps to convert the string representation of the name or numeric
+        /// value of one or more enumerated constants to an equivalent
+        /// enumerated object.
+        /// </summary>
         /// <remarks>
         /// This method exhibits the same behaviour as Enum.TryParse, in the
         /// sense that parsing any literal integer value will succeed even if
@@ -317,26 +330,6 @@ namespace Abc
             where TEnum : struct, Enum
             => Enum.TryParse(value, ignoreCase, out TEnum result)
                 ? Maybe.Some(result) : Maybe<TEnum>.None;
-
-        // REVIEW: default format, format provider, Parse/ParseExact.
-
-        public static Maybe<DateTime> ParseDateTimeExact(string? value)
-            => ParseDateTimeExact(
-                value, "o", DateTimeStyles.None, DateTimeFormatInfo.CurrentInfo);
-
-        public static Maybe<DateTime> ParseDateTimeExact(string? value, string? format)
-            => ParseDateTimeExact(
-                value, format, DateTimeStyles.None, DateTimeFormatInfo.CurrentInfo);
-
-        public static Maybe<DateTime> ParseDateTimeExact(
-            string? value,
-            string? format,
-            DateTimeStyles style,
-            IFormatProvider? provider)
-        {
-            return DateTime.TryParseExact(value, format, provider, style, out DateTime result)
-                ? Maybe.Some(result) : Maybe<DateTime>.None;
-        }
     }
 
     // Parsers for reference types.
@@ -344,11 +337,32 @@ namespace Abc
     {
         /// <summary>
         /// Attemps to create a new <see cref="Uri"/> using the specified
+        /// base and relative string instances.
+        /// </summary>
+        public static Maybe<Uri> CreateUri(Uri? baseUri, string? relativeUri)
+        {
+            Uri.TryCreate(baseUri, relativeUri, out Uri? uri);
+            return Maybe.SomeOrNone(uri);
+        }
+
+        /// <summary>
+        /// Attemps to create a new <see cref="Uri"/> using the specified
+        /// base and relative <see cref="Uri"/> instances.
+        /// </summary>
+        public static Maybe<Uri> CreateUri(Uri? baseUri, Uri? relativeUri)
+        {
+            Uri.TryCreate(baseUri, relativeUri, out Uri? uri);
+            return Maybe.SomeOrNone(uri);
+        }
+
+        /// <summary>
+        /// Attemps to create a new <see cref="Uri"/> using the specified
         /// string instance and <see cref="UriKind"/>.
         /// </summary>
-        public static Maybe<Uri> ParseUri(string? value, UriKind uriKind)
+        [SuppressMessage("Design", "CA1054:Uri parameters should not be strings", Justification = "Uri creation")]
+        public static Maybe<Uri> CreateUri(string? uriString, UriKind uriKind)
         {
-            Uri.TryCreate(value, uriKind, out Uri? uri);
+            Uri.TryCreate(uriString, uriKind, out Uri? uri);
             return Maybe.SomeOrNone(uri);
         }
     }
