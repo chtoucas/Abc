@@ -18,7 +18,10 @@ namespace Abc
     using EF = Abc.Utilities.ExceptionFactory;
 
     // REVIEW: Maybe type
-    // - nullable attrs, notnull constraint (on Maybe<T>?).
+    // - nullable attrs, notnull constraint.
+    //   It would make a lot of sense to add a notnull constraint on the T of
+    //   Maybe<T>, but it worries me a bit (I need to gain more experience with
+    //   the new NRT).
     //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
     //   https://devblogs.microsoft.com/dotnet/nullable-reference-types-in-csharp/
@@ -90,6 +93,7 @@ namespace Abc
     /// - TryGetValue()      try unwrap
     /// - ValueOrXXX()       unwrap
     /// - GetEnumerator()    iterable (implicit)
+    /// - ToEnumerable()     enumerable (explicit)
     /// - Yield()            enumerable (explicit)
     /// - Contains()         singleton or empty set
     ///
@@ -142,7 +146,7 @@ namespace Abc
         /// Gets the enclosed value.
         /// <para>You MUST check IsSome before calling this property.</para>
         /// </summary>
-        // REVIEW: not null Value. Simply remove and use TryGetValue()?
+        // REVIEW: not null Value.
         [NotNull]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal T Value { get { Debug.Assert(_isSome); return _value; } }
@@ -277,6 +281,7 @@ namespace Abc
         /// Obtains the enclosed value if any; otherwise this method returns the
         /// default value of type <typeparamref name="T"/>.
         /// </summary>
+        /// <seealso cref="TryGetValue"/>
         [Pure]
         [return: MaybeNull]
         public T ValueOrDefault()
@@ -286,6 +291,7 @@ namespace Abc
         /// Obtains the enclosed value if any; otherwise this method returns
         /// <paramref name="other"/>.
         /// </summary>
+        /// <seealso cref="TryGetValue"/>
         [Pure]
         // It does work with null but then one should really use ValueOrDefault().
         public T ValueOrElse([DisallowNull]T other)
@@ -754,11 +760,23 @@ namespace Abc
     // 3) Source of confusion (conflicts?) if we import System.Linq too.
     public partial struct Maybe<T>
     {
-        // REVIEW: now that I add TryGetValue(), remove this method?
+        // REVIEW: now that I add TryGetValue(), do we need this method anymore?
+        // At the same time, since we have ToEnumerable(), it seems natural to
+        // have GetEnumerator() too.
         [Pure]
         public IEnumerator<T> GetEnumerator()
-            => Yield(1).GetEnumerator();
+            => ToEnumerable().GetEnumerator();
 
+        /// <summary>
+        /// Converts the current instance to <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        // Only useful if we want to manipulate a maybe together with another
+        // sequence.
+        [Pure]
+        public IEnumerable<T> ToEnumerable()
+            => _isSome ? Enumerable.Repeat(_value, 1) : Enumerable.Empty<T>();
+
+        // Yield break or yield return "count" times.
         /// See also <seealso cref="Replicate(int)"/> and the comments there.
         [Pure]
         public IEnumerable<T> Yield(int count)
