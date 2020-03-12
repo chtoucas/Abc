@@ -294,7 +294,7 @@ namespace Abc
 
         /// <summary>
         /// Obtains the enclosed value if any; otherwise this method returns the
-        /// default value of the <typeparamref name="T"/> type.
+        /// default value of type <typeparamref name="T"/>.
         /// </summary>
         [Pure]
         [return: MaybeNull]
