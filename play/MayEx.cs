@@ -6,6 +6,8 @@ namespace Abc
     using System.Diagnostics.Contracts;
     using System.Globalization;
 
+    // More May-Parse methods. Mostly wraps Try-Parse methods that are not
+    // available in .NET Standard 2.0.
     public sealed partial class MayEx : May
     {
         private MayEx() { }
@@ -47,7 +49,6 @@ namespace Abc
     }
 
     // Parsers for simple value types.
-    // Overloads with ReadOnlySpan<>.
     public partial class MayEx
     {
         [Pure]
@@ -247,10 +248,6 @@ namespace Abc
             => Enum.TryParse(enumType, value, ignoreCase, out object? result)
                 ? Maybe.SomeOrNone(result) : Maybe<object>.None;
 
-        /// <summary>
-        /// Attempts to convert the specified string representation of a date
-        /// and time to its <see cref="DateTime"/> equivalent.
-        /// </summary>
         [Pure]
         public static Maybe<DateTime> ParseDateTime(ReadOnlySpan<char> span)
         {

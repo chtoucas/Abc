@@ -6,7 +6,10 @@ namespace Abc
 
     using Xunit;
 
-    public sealed partial class AssertEx : Assert { }
+    public sealed partial class AssertEx : Assert
+    {
+        private AssertEx() { }
+    }
 
     public partial class AssertEx
     {
