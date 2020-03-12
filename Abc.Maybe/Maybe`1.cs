@@ -58,8 +58,8 @@ namespace Abc
     /// Static factories (no public ctor).
     /// - Maybe.None<T>()    the empty maybe
     /// - Maybe.Some()       factory method for value types
-    /// - Maybe.SomeOrNone()
-    /// - Maybe.Of()
+    /// - Maybe.SomeOrNone() factory method for nullable value or reference types
+    /// - Maybe.Of()         unconstrained factory method
     /// - Maybe.Guard()
     ///
     /// Instance methods where the result is another maybe.
@@ -88,8 +88,8 @@ namespace Abc
     /// Safe escapes from a maybe.
     /// - Switch()           pattern matching
     /// - ValueOrXXX()       unwrap
-    /// - Do()               side-effects actions
-    /// - OnSome()           side-effects actions
+    /// - Do()               actions with side effects
+    /// - OnSome()           action with side effects
     /// - GetEnumerator()    iterable (implicit)
     /// - Yield()            enumerable (explicit)
     /// - Contains()         singleton or empty set
@@ -206,7 +206,7 @@ namespace Abc
             => _isSome ? this : other;
     }
 
-    // Safe escapes.
+    // Safe escapes or side effects
     // We do not throw ArgumentNullException right away, we delay the exception
     // until it is strictly necessary.
     public partial struct Maybe<T>
@@ -254,8 +254,7 @@ namespace Abc
 
         // Do() and Some() are specialized forms of Switch(), they do not return
         // anything (a Unit in fact). They could return "this" but I prefer not
-        // to, this way it's clear that they are meant for actions with
-        // side-effects.
+        // to, this way it's clear that they are supposed to produce side effects.
         // We do not provide OnNone(action), since it is much simpler to write:
         //   if (maybe.IsNone) { action(); }
 

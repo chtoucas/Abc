@@ -120,7 +120,7 @@ string message = q.Switch(
     caseNone: "The input was strictly negative.");
 ```
 
-#### Side-effects: do something with the enclosed value (if any)
+#### Side effects: do something with the enclosed value (if any)
 ```csharp
 Maybe<int> q = from x in maybe where x >= 0 select Math.Sqrt(x);
 
