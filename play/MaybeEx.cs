@@ -6,6 +6,7 @@ namespace Abc
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Xml.Linq;
 
     using Abc.Utilities;
@@ -14,6 +15,7 @@ namespace Abc
 
     // REVIEW: lazy extensions.
 
+    // Experimental extension methods for Maybe<T>.
     public static partial class MaybeEx { }
 
     // Core methods.
@@ -30,6 +32,71 @@ namespace Abc
         [Pure]
         public static Maybe<Unit> Unless(bool predicate)
             => predicate ? Maybe.Zero : Maybe.Unit;
+    }
+
+    // Async methods.
+    public partial class MaybeEx
+    {
+        // Configurable core async methods?
+        // https://devblogs.microsoft.com/dotnet/configureawait-faq/
+        // Do not use the enumerator.
+
+        public static async Task<Maybe<TResult>> BindAsync<T, TResult>(
+            this Maybe<T> @this,
+            Func<T, Task<Maybe<TResult>>> binder,
+            bool continueOnCapturedContext)
+        {
+            Require.NotNull(binder, nameof(binder));
+
+            using var iter = @this.GetEnumerator();
+
+            if (iter.MoveNext())
+            {
+                return await binder(iter.Current)
+                    .ConfigureAwait(continueOnCapturedContext);
+            }
+            else
+            {
+                return Maybe<TResult>.None;
+            }
+        }
+
+        public static async Task<Maybe<TResult>> SelectAsync<T, TResult>(
+            this Maybe<T> @this,
+            Func<T, Task<TResult>> selector,
+            bool continueOnCapturedContext)
+        {
+            Require.NotNull(selector, nameof(selector));
+
+            using var iter = @this.GetEnumerator();
+
+            if (iter.MoveNext())
+            {
+                TResult result = await selector(iter.Current)
+                    .ConfigureAwait(continueOnCapturedContext);
+                return Maybe.Of(result);
+            }
+            else
+            {
+                return Maybe<TResult>.None;
+            }
+        }
+
+        //
+        // More async methods.
+        //
+
+        public static async Task<Maybe<T>> WhereAsync<T>(
+            this Maybe<T> @this,
+            Func<T, Task<bool>> predicate)
+        {
+            Require.NotNull(predicate, nameof(predicate));
+
+            return await @this.BindAsync(__binder).ConfigureAwait(false);
+
+            async Task<Maybe<T>> __binder(T x)
+                => await predicate(x).ConfigureAwait(false) ? @this : Maybe<T>.None;
+        }
     }
 
     // Helpers related to IEnumerable<>.
