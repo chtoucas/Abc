@@ -70,9 +70,6 @@ namespace Abc
         public static Maybe<T> Flatten<T>(this in Maybe<Maybe<T>> @this)
             => @this.IsSome ? @this.Value : Maybe<T>.None;
 
-        [Pure]
-        public static Maybe<Unit> Guard(bool condition)
-            => condition ? Unit : Zero;
     }
 
     // Factory methods.
@@ -121,6 +118,14 @@ namespace Abc
         [Pure]
         public static Maybe<T> SomeOrNone<T>(T? value) where T : class
             => value is null ? Maybe<T>.None : new Maybe<T>(value);
+    }
+
+    // Misc methods.
+    public partial class Maybe
+    {
+        [Pure]
+        public static Maybe<Unit> Guard(bool condition)
+            => condition ? Unit : Zero;
     }
 
     // Extension methods for Maybe<T> where T is a struct.

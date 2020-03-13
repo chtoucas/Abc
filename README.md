@@ -252,9 +252,10 @@ The intended usage is when `T` is a value type, a string, a (read-only?) record,
 or a function. For other reference types, it should be fine as long as T is an
 immutable reference type.
 
-One can _indirectly_ create a maybe for a nullable type, but all static
-factory methods do not permit it. If you end up having to manipulate for say a
-`Maybe<int?>`, there is a method `Squash()` to convert it to a `Maybe<int>`.
+One can _indirectly_ (maybe I managed to entirely avoid this) create a maybe for
+a nullable (value or reference) type, but all static factory methods do not permit
+it. If you end up having to manipulate for say a `Maybe<int?>`, there is a method
+`Squash()` to convert it to a `Maybe<int>`.
 
 NB: `Result<T>` (not yet sure I will keep it) is a reference type and may serve
 as a replacement for `Maybe<T>`.
@@ -285,7 +286,7 @@ Developer Notes
 
 - Methods that return something should have the attribure `Pure`. It is not
   mandatory but it clearly states that the result should not be ignored.
-  It might be superfluous these days, but "ça ne mange pas de pain".
+  It might seem superfluous, but "ça ne mange pas de pain".
 - Add nullable annotations whenever necessary.
 - Seal classes unless they are designed with extensibility in mind.
 
