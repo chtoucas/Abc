@@ -28,9 +28,10 @@ namespace Abc
     //   https://devblogs.microsoft.com/dotnet/nullable-reference-types-in-csharp/
     //   https://devblogs.microsoft.com/dotnet/embracing-nullable-reference-types/
     // - IEquatable<T> (T == Maybe<T>), IComparable<T> but a bit missleading?
+    //   IEqualityComparer<T>.
     // - Serializable?
-    // - set ops.
-    // - Struct really? Compare to ValueTuple
+    // - Set ops POV.
+    // - Struct really? Explain and compare to ValueTuple
     //   http://mustoverride.com/tuples_structs/
     //   https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
 
@@ -46,34 +47,34 @@ namespace Abc
     ///
     /// The structure Maybe<T> is an option type for C#.
     ///
-    /// The intended usage is when T is a value type, a string, a (read-only?)
+    /// The intended usage is when T is a value type, a string, a read-only
     /// record, or a function. For other reference types, it should be fine as
     /// long as T is an **immutable** reference type.
     ///
     /// Static properties.
-    /// - Maybe<T>.None
-    /// - Maybe.None
+    /// - Maybe<T>.None         the empty maybe of type T
+    /// - Maybe.None            the empty maybe of type Unit
     /// - Maybe.Unit
     ///
     /// Instance properties (no public access to the enclosed value if any,
     /// ie no property Value).
-    /// - IsNone
+    /// - IsNone                is this the empty maybe?
     ///
     /// Static factories (no public ctor).
-    /// - Maybe.None<T>()    the empty maybe
-    /// - Maybe.Some()       factory method for value types
-    /// - Maybe.SomeOrNone() factory method for nullable value or reference types
-    /// - Maybe.Of()         unconstrained factory method
+    /// - Maybe.None<T>()       the empty maybe
+    /// - Maybe.Some()          factory method for value types
+    /// - Maybe.SomeOrNone()    factory method for nullable value or reference types
+    /// - Maybe.Of()            unconstrained factory method
     /// - Maybe.Guard()
     ///
     /// Instance methods where the result is another maybe.
     /// - Bind()
-    /// - Select()           LINQ select
-    /// - SelectMany()       LINQ select many
-    /// - Where()            LINQ filter
-    /// - Join()             LINQ join
-    /// - GroupJoin()        LINQ group join
-    /// - OrElse()           coalescing
+    /// - Select()              LINQ select
+    /// - SelectMany()          LINQ select many
+    /// - Where()               LINQ filter
+    /// - Join()                LINQ join
+    /// - GroupJoin()           LINQ group join
+    /// - OrElse()              coalescing
     /// - XorElse()
     /// - ZipWith()
     /// - Apply()
@@ -90,13 +91,13 @@ namespace Abc
     /// - OrElseAsync()
     ///
     /// Safely escape the maybe.
-    /// - Switch()           pattern matching
-    /// - TryGetValue()      try unwrap
-    /// - ValueOrXXX()       unwrap
-    /// - GetEnumerator()    iterable (implicit)
-    /// - ToEnumerable()     enumerable (explicit)
-    /// - Yield()            enumerable (explicit)
-    /// - Contains()         singleton or empty set
+    /// - Switch()              pattern matching
+    /// - TryGetValue()         try unwrap
+    /// - ValueOrXXX()          unwrap
+    /// - GetEnumerator()       iterable (implicit)
+    /// - ToEnumerable()        enumerable (explicit)
+    /// - Yield()               enumerable (explicit)
+    /// - Contains()            singleton or empty set?
     ///
     /// Side effects.
     /// - Do()
@@ -147,7 +148,7 @@ namespace Abc
         /// Gets the enclosed value.
         /// <para>You MUST check IsSome before calling this property.</para>
         /// </summary>
-        // REVIEW: not null Value.
+        // REVIEW: not null attr.
         [NotNull]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal T Value { get { Debug.Assert(_isSome); return _value; } }
@@ -760,7 +761,7 @@ namespace Abc
     // 3) Source of confusion (conflicts?) if we import System.Linq too.
     public partial struct Maybe<T>
     {
-        // REVIEW: now that I add TryGetValue(), do we need this method anymore?
+        // REVIEW: now that we have TryGetValue(), do we need this method anymore?
         // At the same time, since we have ToEnumerable(), it seems natural to
         // have GetEnumerator() too.
         [Pure]

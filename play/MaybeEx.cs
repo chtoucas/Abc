@@ -13,7 +13,7 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // REVIEW: lazy extensions.
+    // REVIEW: lazy extensions. Code to be optimized if moved to main proj.
 
     // Experimental helpers & extension methods for Maybe<T>.
     public static partial class MaybeEx { }
@@ -127,7 +127,7 @@ namespace Abc
     // Misc methods.
     public partial class MaybeEx
     {
-        // Specialized versions of Where() when the state of the maybe and the
+        // Specialized version of Where() when the state of the maybe and the
         // value it encloses are not taken into account.
 
         [Pure]
@@ -136,7 +136,6 @@ namespace Abc
     }
 
     // Helpers related to IEnumerable<>.
-    // TODO: to be optimized if moved to main proj.
     public static partial class MaybeEx
     {
         [Pure]
@@ -151,11 +150,10 @@ namespace Abc
         // - otherwise, returns the maybe of the sequence of wrapped values.
         // See also CollectAny().
         [Pure]
-        public static Maybe<IEnumerable<T>> ToMaybe<T>(IEnumerable<Maybe<T>> source)
+        public static Maybe<IEnumerable<T>> Collect<T>(IEnumerable<Maybe<T>> source)
         {
             return source.Aggregate(
-                //Maybe.Empty<T>(),
-                Maybe<IEnumerable<T>>.None,
+                Maybe.Empty<T>(),
                 (x, y) => x.ZipWith(y, Enumerable.Append));
         }
 
