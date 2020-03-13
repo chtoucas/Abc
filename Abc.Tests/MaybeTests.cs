@@ -3,6 +3,7 @@
 namespace Abc
 {
     using System;
+    using System.Linq;
 
     using Xunit;
 
@@ -161,16 +162,16 @@ namespace Abc
     // Iterable.
     public partial class MaybeTests
     {
-        //[Fact]
-        //public static void ToEnumerable()
-        //{
-        //    // Arrange
-        //    var some = Maybe.Of("value");
-        //    var none = Maybe<string>.None;
-        //    // Act & Assert
-        //    Assert.Equal(Enumerable.Repeat("value", 1), some.ToEnumerable());
-        //    Assert.Empty(none.ToEnumerable());
-        //}
+        [Fact]
+        public static void ToEnumerable()
+        {
+            // Arrange
+            var some = Maybe.Of("value");
+            var none = Maybe<string>.None;
+            // Act & Assert
+            Assert.Equal(Enumerable.Repeat("value", 1), some.ToEnumerable());
+            Assert.Empty(none.ToEnumerable());
+        }
 
         [Fact]
         public static void GetEnumerator_Some()
