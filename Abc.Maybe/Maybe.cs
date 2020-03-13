@@ -198,7 +198,6 @@ namespace Abc
         {
             if (source is null) { throw new Anexn(nameof(source)); }
 
-            // TODO: optimize when IList<Maybe<T>>.
             foreach (Maybe<T> item in source)
             {
                 if (item.IsSome) { return item; }

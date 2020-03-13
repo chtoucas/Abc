@@ -24,6 +24,7 @@ namespace Abc.Linq
             if (index < 0) { return Maybe<TSource>.None; }
 
             // Fast track.
+            // REVIEW: remove ICollection.
             if (source is ICollection<TSource> collection)
             {
                 int count = collection.Count;
@@ -38,7 +39,7 @@ namespace Abc.Linq
             // Slow track.
             using var iter = source.GetEnumerator();
 
-            // Note use of -1 so that we start off my moving onto element 0.
+            // Notice the use of -1 so that we start off my moving onto element 0.
             // Don't want to use i <= index in case index == int.MaxValue!
             // We don't need to fetch the current value each time - get to the
             // right place first.
