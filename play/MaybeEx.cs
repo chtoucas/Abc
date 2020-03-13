@@ -178,7 +178,7 @@ namespace Abc
         // For Maybe<T>, it amounts to returning the first non-empty item, or
         // an empty maybe if they are all empty.
         [Pure]
-        public static Maybe<T> FirstSome<T>(IEnumerable<Maybe<T>> source)
+        public static Maybe<T> FirstOrNone<T>(IEnumerable<Maybe<T>> source)
         {
             return source.FirstOrDefault(x => !x.IsNone);
         }
