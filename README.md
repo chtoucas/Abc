@@ -186,43 +186,9 @@ See the XML comments for samples.
 - Parsing helpers; see `May`.
 - XML & SQL data type helpers; see `Abc.Extensions`.
 
-### Guidelines
+### Samples
 
-Your mantra should be **_maybe do not abuse the maybe_**.
-
-#### Usage
-The `Maybe<T>` type is a value type. Even if it is a natural choice, it worried
-me and I hesitated for a while. The addition of value tuples to .NET convinced
-me that the benefits will outweight the drawbacks.
-- **CONSIDER using this type when `T` is a value type or an _immutable_ reference
-  type.**
-- **AVOID using this type when `T` is a _mutable_ reference type.**
-- **DO NOT use a _maybe_ with nullable types, eg `Maybe<int?>`.**
-
-The intended usage is when `T` is a value type, a string, a (read-only?) record,
-or a function. For other reference types, it should be fine as long as T is an
-immutable reference type.
-
-One can _indirectly_ create a maybe for a nullable type, but all static
-factory methods do not permit it. If you end up having to manipulate for say a
-`Maybe<int?>`, there is a method `Squash()` to convert it to a `Maybe<int>`.
-
-NB: `Result<T>` (not yet sure I will keep it) is a reference type and may serve
-as a replacement for `Maybe<T>`.
-
-#### General recommendations
-First and foremost,
-- **DO apply all guidelines for `ValueTuple<>`** and, if they contradict what I say
-  here, follow your own wisdom.
-
-- **DO NOT use `Maybe<T>` as a parameter in public APIs.**
-
-In general, I would even not recommend to use it in a general purpose library.
-Of course, this does not mean that you should not use this type at all, otherwise
-I would not have written this library.
-
-- **DO use _maybe_'s when processing multiple nullable objects together.**
-
+#### Processing multiple nullable objects together
 `MayGetSingle()` is an extension that returns something only if the key exists and
 there is a unique value associated to it.
 ```csharp
@@ -245,11 +211,47 @@ representation of an integer > 10. Morevover, the result is NOT empty even if
 the key `x` does not exist or is multi-valued, in which case we pick a default
 value.
 
-- **CONSIDER using a _maybe_ if the object is meant to be short-lived.**
+Guidelines
+----------
+
+Your mantra should be **_maybe do not abuse the maybe_**.
+
+### Usage
+The `Maybe<T>` type is a value type. Even if it is a natural choice, it worried
+me and I hesitated for a while. The addition of value tuples to .NET convinced
+me that the benefits will outweight the drawbacks.
+- **CONSIDER using this type when `T` is a value type or an _immutable_ reference
+  type.**
+- **AVOID using this type when `T` is a _mutable_ reference type.**
+- **DO NOT use a _maybe_ with nullable types, eg `Maybe<int?>`.**
+
+The intended usage is when `T` is a value type, a string, a (read-only?) record,
+or a function. For other reference types, it should be fine as long as T is an
+immutable reference type.
+
+One can _indirectly_ create a maybe for a nullable type, but all static
+factory methods do not permit it. If you end up having to manipulate for say a
+`Maybe<int?>`, there is a method `Squash()` to convert it to a `Maybe<int>`.
+
+NB: `Result<T>` (not yet sure I will keep it) is a reference type and may serve
+as a replacement for `Maybe<T>`.
+
+### General recommendations
+First and foremost,
+- **DO apply all guidelines for `ValueTuple<>`** and, if they contradict what I say
+  here, follow your own wisdom.
+
+- **DO NOT use `Maybe<T>` as a parameter in public APIs.**
+
+In general, I would even not recommend to use it in a general purpose library.
+Of course, this does not mean that you should not use this type at all, otherwise
+I would not have written this library.
+
+- **AVOID using a _maybe_ if the object is expected to be long-lived.**
 
 - **AVOID using a _maybe_ in a performance-critical path.**
 
-#### May-Parse pattern
+### May-Parse pattern
 - **DO use this pattern instead of the Try-Parse pattern for reference types.**
 - **DO use the prefix _May_ for methods implementing this pattern.**
 
