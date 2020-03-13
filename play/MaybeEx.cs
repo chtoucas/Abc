@@ -16,6 +16,8 @@ namespace Abc
     // REVIEW: lazy extensions. Code to be optimized if moved to main proj.
 
     // Experimental helpers & extension methods for Maybe<T>.
+    // NB: only a few of them may be considered for inclusion in the main proj.
+    // Most of them are pretty straightforward.
     public static partial class MaybeEx { }
 
     // Async methods.
@@ -173,8 +175,10 @@ namespace Abc
         }
 
         // Aggregation: monadic sum.
+        // For Maybe<T>, it amounts to returning the first non-empty item, or
+        // an empty maybe if they are all empty.
         [Pure]
-        public static Maybe<T> Sum<T>(IEnumerable<Maybe<T>> source)
+        public static Maybe<T> FirstSome<T>(IEnumerable<Maybe<T>> source)
         {
             return source.FirstOrDefault(x => !x.IsNone);
         }
@@ -215,7 +219,7 @@ namespace Abc
         #endregion
     }
 
-    // Extensions methods for Maybe<T> where T is an XElement.
+    // Extensions methods for Maybe<T> where T is an XElement or an XAttribute.
     public partial class MaybeEx
     {
         [Pure]
@@ -226,11 +230,7 @@ namespace Abc
         [Pure]
         public static Maybe<string> ValueOrNone(this Maybe<XElement> @this)
             => from x in @this select x.Value;
-    }
 
-    // Extensions methods for Maybe<T> where T is an XAttribute.
-    public partial class MaybeEx
-    {
         [Pure]
         public static Maybe<T> MapValue<T>(
             this Maybe<XAttribute> @this, Func<string, T> selector)
