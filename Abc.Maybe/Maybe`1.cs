@@ -716,7 +716,7 @@ namespace Abc
         }
 
         // FIXME: ReplaceWith() works with null but then one should really use
-        // ContinueWith(Maybe<TResult>.None).
+        // ContinueWith(Maybe<TResult>.None). Remove ReplaceWith()?
         // We offer two versions to be able to inform the caller that the method
         // return a Maybe<TResult> not a Maybe<TResult?>.
 
