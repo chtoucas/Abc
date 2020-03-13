@@ -3,23 +3,31 @@
 Features
 --------
 
-- A strict Option type for C#.
+- An option type for C#.
 - Utilities to write code in the ROP style (Railway Oriented Programming).
 
 Quick start with `Maybe<T>`
 ---------------------------
 
-An Option type or Maybe type (a better fit for what we use it for), is like
+An option type or maybe type (a better fit for what we use it for), is like
 a box containing a value or no value at all.
 
 It can help preventing null reference exceptions, but that's not the point, it
-really forces us to think about the outcome of a computation. We shall see a few
-real-world use cases.
+really forces us to think about the outcome of a computation. Hopefully, we
+shall see a few compelling use cases for a maybe type.
 
-It differs from a nullable in that it applies to both value types and
-reference types. Also a nullable reference type, like `string?`, is just a
-string type to which the language adds a special (sentinel) value, the `null`
-value. It is also possible to create a _maybe_ of a _maybe_ (`Maybe<Maybe<T>>`).
+An option type is a very simple sum type `Maybe<T> = Some<T> | None` (exclusive
+or, but of course this is not possible in C#), whereas a nullable value type,
+like `int?`, is just an integer type to which the language adds a special
+(sentinel) value, the `null` value. What's the difference? You can't ignore the
+fact that an option is either something or nothing, you are forced to handle
+both cases.
+
+`Maybe<T>` also differs from a nullable in that it applies to both value types
+and reference types; NRTs do not count since they are not actual .NET types but
+annotations that the compiler can take advantage of. There are many other small
+differences. For instance, one can nest _maybe_'s (`Maybe<Maybe<T>>`) whereas
+one can't create an `int??`; `Nullable<Nullable<T>>` is not valid in C#.
 
 #### Construct a _maybe_
 ```csharp
@@ -239,7 +247,7 @@ value.
 
 - **CONSIDER using a _maybe_ if the object is meant to be short-lived.**
 
-- **ACOID using a _maybe_ in a performance-critical path.**
+- **AVOID using a _maybe_ in a performance-critical path.**
 
 #### May-Parse pattern
 - **DO use this pattern instead of the Try-Parse pattern for reference types.**
@@ -247,6 +255,8 @@ value.
 
 Developer Notes
 ---------------
+
+### Guidelines
 
 - Methods that return something should have the attribure `Pure`. It is not
   mandatory but it clearly states that the result should not be ignored.
