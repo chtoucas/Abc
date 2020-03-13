@@ -15,7 +15,7 @@ namespace Abc
     public partial class ResultEx
     {
         [Pure]
-        public static IEnumerable<T> ValueOrEmptyEnumerable<T>(
+        public static IEnumerable<T> ValueOrEmpty<T>(
             this Result<IEnumerable<T>> @this)
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
@@ -29,28 +29,11 @@ namespace Abc
             return from x in source where !x.IsError select x.Value;
         }
 
+        // Any()
         [Pure]
         public static Result<T> FirstSuccess<T>(IEnumerable<Result<T>> source)
         {
             return source.FirstOrDefault(x => !x.IsError);
-        }
-
-        [Pure]
-        public static Result<T> LastSuccess<T>(IEnumerable<Result<T>> source)
-        {
-            return source.LastOrDefault(x => !x.IsError);
-        }
-
-        [Pure]
-        public static Result<T> FirstError<T>(IEnumerable<Result<T>> source)
-        {
-            return source.FirstOrDefault(x => x.IsError);
-        }
-
-        [Pure]
-        public static Result<T> LastError<T>(IEnumerable<Result<T>> source)
-        {
-            return source.LastOrDefault(x => x.IsError);
         }
     }
 }

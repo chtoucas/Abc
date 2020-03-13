@@ -139,46 +139,18 @@ namespace Abc
     public static partial class MaybeEx
     {
         [Pure]
-        public static IEnumerable<T> ValueOrEmptyEnumerable<T>(
+        public static IEnumerable<T> ValueOrEmpty<T>(
             this Maybe<IEnumerable<T>> @this)
         {
             return @this.ValueOrElse(Enumerable.Empty<T>());
         }
 
         [Pure]
-        public static Maybe<IEnumerable<T>> EmptyEnumerableIfNone<T>(
+        public static Maybe<IEnumerable<T>> EmptyIfNone<T>(
             this Maybe<IEnumerable<T>> @this)
         {
             return @this.OrElse(Maybe.EmptyEnumerable<T>());
         }
-
-        #region Aggregation Any()
-
-        [Pure]
-        public static Maybe<T> FirstSome<T>(IEnumerable<Maybe<T>> source)
-        {
-            return source.FirstOrDefault(x => !x.IsNone);
-        }
-
-        [Pure]
-        public static Maybe<T> LastSome<T>(IEnumerable<Maybe<T>> source)
-        {
-            return source.LastOrDefault(x => !x.IsNone);
-        }
-
-        [Pure]
-        public static Maybe<T> FirstNone<T>(IEnumerable<Maybe<T>> source)
-        {
-            return source.FirstOrDefault(x => x.IsNone);
-        }
-
-        [Pure]
-        public static Maybe<T> LastNone<T>(IEnumerable<Maybe<T>> source)
-        {
-            return source.LastOrDefault(x => x.IsNone);
-        }
-
-        #endregion
 
         // What it should do:
         // - If the input sequence is empty,
@@ -194,6 +166,13 @@ namespace Abc
             return source.Aggregate(
                 Maybe.EmptyEnumerable<T>(),
                 (x, y) => x.ZipWith(y, Enumerable.Append));
+        }
+
+        // Aggregation Any()
+        [Pure]
+        public static Maybe<T> FirstSome<T>(IEnumerable<Maybe<T>> source)
+        {
+            return source.FirstOrDefault(x => !x.IsNone);
         }
 
         #region Aggregation Sum()
