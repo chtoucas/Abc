@@ -4,23 +4,22 @@
 - [Guidelines](#guidelines)
 - [Developer notes](#developer-notes)
 
-Features:
+`Abc` features:
 - An option type for C#.
 - Utilities to write code in the ROP style (Railway Oriented Programming).
 
-Quick start with `Maybe<T>`
+Quick Start with `Maybe<T>`
 ---------------------------
 
-Summary:
-- [Construct a _maybe_](#construct-a-maybe)
-- [Check whether a _maybe_ is empty or not](#check-whether-a-maybe-is-empty-or-not)
-- [Map and filter the enclosed value (if any)](#map-and-filter-the-enclosed-value-if-any)
-- [Safely extract the enclosed value](#safely-extract-the-enclosed-value)
-- [Pattern matching: extract and map the enclosed value (if any)](#pattern-matching-extract-and-map-the-enclosed-value-if-any)
-- [Side effects: do something with the enclosed value (if any)](#side-effects-do-something-with-the-enclosed-value-if-any)
+- [Construction](#construct-a-maybe)
+- [Empty or not?](#check-whether-a-maybe-is-empty-or-not)
+- [Map and filter](#map-and-filter-the-enclosed-value-if-any)
+- [Safe escapes](#safely-extract-the-enclosed-value)
+- [Pattern matching](#pattern-matching-extract-and-map-the-enclosed-value-if-any)
+- [Side effects](#side-effects-do-something-with-the-enclosed-value-if-any)
 - [Binding](#binding)
 - [Query Expression Pattern](#query-expression-pattern)
-- [More Features](#more-features)
+- [More features](#more-features)
 - [Samples](#samples)
 
 An option type or maybe type (a better fit for what we use it for), is like
@@ -38,10 +37,11 @@ fact that an option is either something or nothing, you are forced to handle
 both cases.
 
 `Maybe<T>` also differs from a nullable in that it applies to both value types
-and reference types; NRTs do not count since they are not actual .NET types but
-annotations that the compiler can take advantage of. There are many other small
-differences. For instance, one can nest _maybe_'s (`Maybe<Maybe<T>>`) whereas
-one can't create an `int??`; `Nullable<Nullable<T>>` is not valid in C#.
+and reference types; NRTs (Nullable Reference Types) do not count since they are
+not actual .NET types but annotations that the compiler can take advantage of.
+There are many other small differences. For instance, one can nest _maybe_'s
+(`Maybe<Maybe<T>>`) whereas one can't create an `int??`; `Nullable<Nullable<T>>`
+is not valid in C#.
 
 ### Construct a _maybe_
 
@@ -58,13 +58,13 @@ Maybe<int> q = Maybe.SomeOrNone((int?)null);        // The empty maybe of type i
 Maybe<string> q = Maybe.SomeOrNone("value");
 Maybe<string> q = Maybe.SomeOrNone((string?)null);  // The empty maybe of type string.
 ```
-If NRTs (Nullable Reference Type) are available, `Maybe.SomeOrNone()` with a
-nullable string does not create a `Maybe<string?>` but it (correctly) returns
-a `Maybe<string>`. When working with unconstrained generic type, you cannot use
-`Maybe.Some[OrNone]()` or `Maybe.None<T>()`. Hopefully, `Maybe.Of()` and
-`Maybe<T>.None` come to the rescue, they were specifically created to handle
-this kind of situation; otherwise there is no reason to use `Maybe.Of()` ---
-for `Maybe<T>.None` it is more a matter of taste.
+If NRTs are available, `Maybe.SomeOrNone()` with a nullable string does not
+create a `Maybe<string?>` but it (correctly) returns a `Maybe<string>`. When
+working with unconstrained generic type, you cannot use `Maybe.Some[OrNone]()`
+or `Maybe.None<T>()`. Hopefully, `Maybe.Of()` and `Maybe<T>.None` come to the
+rescue, they were specifically created to handle this kind of situation;
+otherwise there is no reason to use `Maybe.Of()` --- for `Maybe<T>.None` it is
+more a matter of taste.
 
 ### Check whether a _maybe_ is empty or not
 
@@ -201,7 +201,7 @@ var q = from x in maybe1
         select (x, y, z)
 ```
 
-### More Features
+### More features
 
 See the XML comments for samples.
 - LINQ and collection extensions; see `Abc.Linq` and `Abc.Extensions`.
