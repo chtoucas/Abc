@@ -72,7 +72,7 @@ namespace Abc
     /// - SelectMany()          LINQ select many
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
-    /// - GroupJoin()           LINQ group join (disabled)
+    /// - GroupJoin()           LINQ group join
     /// - OrElse()              coalescing
     /// - XorElse()
     /// - ZipWith()
@@ -483,7 +483,7 @@ namespace Abc
         /// Query expression syntax:
         /// <code><![CDATA[
         ///   from x in outer
-        ///   from y in inner
+        ///   join y in inner
         ///     on outerKeySelector(x) equals innerKeySelector(y)
         ///   select resultSelector(x, y)
         /// ]]></code>
@@ -529,6 +529,57 @@ namespace Abc
                 comparer ?? EqualityComparer<TKey>.Default);
         }
 
+        /// <example>
+        /// Query expression syntax:
+        /// <code><![CDATA[
+        ///   from x in outer
+        ///   join y in inner
+        ///     on outerKeySelector(x) equals innerKeySelector(y)
+        ///     into Y
+        ///   select resultSelector(x, Y)
+        /// ]]></code>
+        /// </example>
+        [Pure]
+        public Maybe<TResult> GroupJoin<TInner, TKey, TResult>(
+            Maybe<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, Maybe<TInner>, TResult> resultSelector)
+        {
+            if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+            return GroupJoinImpl(
+                inner,
+                outerKeySelector,
+                innerKeySelector,
+                resultSelector,
+                EqualityComparer<TKey>.Default);
+        }
+
+        // No query expression syntax.
+        // If comparer is null, the default equality comparer is used instead.
+        [Pure]
+        public Maybe<TResult> GroupJoin<TInner, TKey, TResult>(
+            Maybe<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, Maybe<TInner>, TResult> resultSelector,
+            IEqualityComparer<TKey>? comparer)
+        {
+            if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+            return GroupJoinImpl(
+                inner,
+                outerKeySelector,
+                innerKeySelector,
+                resultSelector,
+                comparer ?? EqualityComparer<TKey>.Default);
+        }
+
         [Pure]
         private Maybe<TResult> JoinImpl<TInner, TKey, TResult>(
             Maybe<TInner> inner,
@@ -551,35 +602,27 @@ namespace Abc
             return Maybe<TResult>.None;
         }
 
-        //
-        // TODO: GroupJoin currently disabled.
-        //
+        [Pure]
+        private Maybe<TResult> GroupJoinImpl<TInner, TKey, TResult>(
+            Maybe<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, Maybe<TInner>, TResult> resultSelector,
+            IEqualityComparer<TKey> comparer)
+        {
+            if (_isSome && inner._isSome)
+            {
+                TKey outerKey = outerKeySelector(_value);
+                TKey innerKey = innerKeySelector(inner._value);
 
-        //[Pure]
-        //public Maybe<TResult> GroupJoin<TInner, TKey, TResult>(
-        //    Maybe<TInner> inner,
-        //    Func<T, TKey> outerKeySelector,
-        //    Func<TInner, TKey> innerKeySelector,
-        //    Func<T, Maybe<TInner>, TResult> resultSelector,
-        //    IEqualityComparer<TKey>? comparer)
-        //{
-        //    if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
-        //    if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
-        //    if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+                if (comparer.Equals(outerKey, innerKey))
+                {
+                    return Maybe.Of(resultSelector(_value, inner));
+                }
+            }
 
-        //    if (_isSome && inner._isSome)
-        //    {
-        //        TKey outerKey = outerKeySelector(_value);
-        //        TKey innerKey = innerKeySelector(inner._value);
-
-        //        if (comparer.Equals(outerKey, innerKey))
-        //        {
-        //            return Maybe.Of(resultSelector(_value, inner));
-        //        }
-        //    }
-
-        //    return Maybe<TResult>.None;
-        //}
+            return Maybe<TResult>.None;
+        }
     }
 
     // Async methods.
