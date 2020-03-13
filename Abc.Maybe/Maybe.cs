@@ -13,7 +13,7 @@ namespace Abc
     // REVIEW: Maybe extensions & helpers; see also MaybeEx in "play".
     // - playing with modifier "in". Currently only added to ext methods for
     //   Maybe<T> where T is a struct.
-    // - I don't like the name Empty<T>().
+    // - I don't like the name Empty<T>(). EmptyEnumerable ?
     // - Maybe<IEnumerable>; see CollectAny().
 
     /// <summary>
@@ -162,6 +162,10 @@ namespace Abc
     // IEnumerable<T>, also to avoid conflicts w/ the standard LINQ ops, eg Any().
     public partial class Maybe
     {
+        //
+        // Maybe<IEnumerable<T>>.
+        //
+
         [Pure]
         public static Maybe<IEnumerable<T>> Empty<T>()
             => MaybeEnumerable_<T>.Empty;
@@ -170,12 +174,26 @@ namespace Abc
         public static IEnumerable<T> ValueOrEmpty<T>(this Maybe<IEnumerable<T>> @this)
             => @this.IsSome ? @this.Value : Enumerable.Empty<T>();
 
+        //
+        // IEnumerable<Maybe<T>>.
+        //
+
+        // Behaviour:
+        // - If the input sequence is empty
+        //     or all maybe's in the input sequence are empty
+        //   returns an empty sequence.
+        // - Otherwise,
+        //   returns the sequence of values.
         [Pure]
         public static IEnumerable<T> CollectAny<T>(IEnumerable<Maybe<T>> source)
         {
             return from x in source where x.IsSome select x.Value;
         }
 
+        // - If the sequence is empty or only contains empty maybe's,
+        //   returns Maybe<T>.None.
+        // - If the sequence does contain at least one non-empty maybe,
+        //   returns the first one found when iterating.
         [Pure]
         public static Maybe<T> Any<T>(IEnumerable<Maybe<T>> source)
         {

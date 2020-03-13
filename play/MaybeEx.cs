@@ -143,11 +143,12 @@ namespace Abc
             => @this.OrElse(Maybe.Empty<T>());
 
         // What it should do:
-        // - if the input sequence is empty, returns the maybe of an empty
-        //   sequence.
-        // - if all maybe's in the input sequence are empty, returns the empty
-        //   maybe of type IEnumerable<T>.
-        // - otherwise, returns the maybe of the sequence of wrapped values.
+        // - If the input sequence is empty,
+        //   returns Maybe.Of(empty sequence).
+        // - If all maybe's in the input sequence are empty,
+        //   returns Maybe<IEnumerable<T>>.None.
+        // - Otherwise,
+        //   returns Maybe.Of(sequence of values).
         // See also CollectAny().
         [Pure]
         public static Maybe<IEnumerable<T>> Collect<T>(IEnumerable<Maybe<T>> source)

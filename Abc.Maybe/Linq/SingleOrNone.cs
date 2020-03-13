@@ -17,8 +17,8 @@ namespace Abc.Linq
         /// <see cref="Maybe{TSource}.None"/> if the sequence is empty or
         /// contains more than one element.
         /// <para>Here we differ in behaviour from the standard query
-        /// SingleOrDefault which throws an exception if there is more than one
-        /// element in the sequence.</para>
+        /// <c>SingleOrDefault</c> which throws an exception if there is more
+        /// than one element in the sequence.</para>
         /// </summary>
         [Pure]
         public static Maybe<TSource> SingleOrNone<TSource>(this IEnumerable<TSource> source)
@@ -48,8 +48,8 @@ namespace Abc.Linq
         /// a specified predicate, or <see cref="Maybe{TSource}.None"/>
         /// if no such element exists or there are more than one of them.
         /// <para>Here we differ in behaviour from the standard query
-        /// SingleOrDefault which throws an exception if more than one element
-        /// satisfies the predicate.</para>
+        /// <c>SingleOrDefault</c> which throws an exception if more than one
+        /// element satisfying the predicate.</para>
         /// </summary>
         [Pure]
         public static Maybe<TSource> SingleOrNone<TSource>(
