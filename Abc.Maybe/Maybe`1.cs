@@ -85,7 +85,7 @@ namespace Abc
     /// - Replicate()
     /// - Duplicate()
     ///
-    /// Safely escape the maybe (no public access to the enclosed value if any,
+    /// Escape the maybe (no public access to the enclosed value if any,
     /// ie no property Value).
     /// - Switch()              pattern matching
     /// - TryGetValue()         try unwrap
@@ -227,6 +227,9 @@ namespace Abc
     }
 
     // Safe escapes.
+    // Actually, only ValueOrThrow() is truely safe, the other can only be
+    // verified by the compiler and under special conditions (C# 8.0 and
+    // .NET Core 3.0 or above).
     // We do not throw ArgumentNullException right away, we delay arg check
     // until it is strictly necessary.
     public partial struct Maybe<T>
