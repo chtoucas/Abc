@@ -29,6 +29,10 @@ namespace Abc.Utilities
             => new InvalidOperationException("The sequence was empty.");
 
         [Pure]
+        public static NotSupportedException ReadOnlyCollection
+            => new NotSupportedException("The collection is read-only.");
+
+        [Pure]
         [DebuggerStepThrough]
         public static ArgumentException InvalidType(
             string paramName, Type expected, object obj)

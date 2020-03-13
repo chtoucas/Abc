@@ -15,12 +15,6 @@ namespace Abc.Edu.Linq
     public static class Sequence
     {
         /// <summary>
-        /// Generates a sequence that contains exactly one value.
-        /// </summary>
-        public static IEnumerable<T> Return<T>(T value)
-            => Enumerable.Repeat(value, 1);
-
-        /// <summary>
         /// Generates an infinite sequence of one repeated value.
         /// </summary>
         public static IEnumerable<T> Repeat<T>(T value)

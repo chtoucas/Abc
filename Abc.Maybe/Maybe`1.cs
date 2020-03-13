@@ -21,14 +21,15 @@ namespace Abc
     // - nullable attrs, notnull constraint.
     //   It would make a lot of sense to add a notnull constraint on the T of
     //   Maybe<T>, but it worries me a bit (I need to gain more experience with
-    //   the new NRT). It simplies a few things, eg Maybe.Of(), it warns a user
-    //   trying to create a Maybe<int?> or a Maybe<string?>.
+    //   the new NRT). It allows to warn a user trying to create a Maybe<int?>
+    //   or a Maybe<string?>.
     //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
     //   https://devblogs.microsoft.com/dotnet/nullable-reference-types-in-csharp/
     //   https://devblogs.microsoft.com/dotnet/embracing-nullable-reference-types/
     // - IEquatable<T> (T == Maybe<T>), IComparable<T> but a bit missleading?
     //   IEqualityComparer<T>.
+    // - Move Join() and GroupJoin() to Maybe?
     // - Serializable?
     // - Set ops POV.
     // - Struct really? Explain and compare to ValueTuple
@@ -785,7 +786,7 @@ namespace Abc
         /// <seealso cref="Yield(int)"/>
         /// <remarks>
         /// The difference with <see cref="Yield(int)"/> is in the treatment of
-        /// an empty maybe. <see cref="Yield(int)"/> with an empty maybe returns
+        /// an empty maybe. <see cref="Yield(int)"/> for an empty maybe returns
         /// an empty sequence, whereas this method returns an empty maybe (no
         /// sequence at all).
         /// </remarks>
@@ -797,7 +798,7 @@ namespace Abc
         /// <seealso cref="Yield()"/>
         /// <remarks>
         /// The difference with <see cref="Yield()"/> is in the treatment of
-        /// an empty maybe. <see cref="Yield()"/> with an empty maybe returns
+        /// an empty maybe. <see cref="Yield()"/> for an empty maybe returns
         /// an empty sequence, whereas this method returns an empty maybe (no
         /// sequence at all).
         /// </remarks>
@@ -826,7 +827,7 @@ namespace Abc
         // sequence.
         [Pure]
         public IEnumerable<T> ToEnumerable()
-            => _isSome ? Enumerable.Repeat(_value, 1) : Enumerable.Empty<T>();
+            => _isSome ? Sequence.Return(_value) : Enumerable.Empty<T>();
 
         // Yield break or yield return "count" times.
         /// See also <seealso cref="Replicate(int)"/> and the comments there.
