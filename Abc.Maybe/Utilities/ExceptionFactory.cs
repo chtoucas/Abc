@@ -15,7 +15,7 @@ namespace Abc.Utilities
     internal static class ExceptionFactory
     {
         [Pure]
-        public static InvalidOperationException Maybe_IsNone
+        public static InvalidOperationException Maybe_NoValue
             => new InvalidOperationException("The object does not contain any value.");
 
         [Pure]

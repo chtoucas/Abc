@@ -325,7 +325,7 @@ namespace Abc
 
         [Pure]
         public T ValueOrThrow()
-            => _isSome ? _value : throw EF.Maybe_IsNone;
+            => _isSome ? _value : throw EF.Maybe_NoValue;
 
         [Pure]
         public T ValueOrThrow(Exception exception)
