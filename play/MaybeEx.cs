@@ -13,11 +13,12 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // REVIEW: lazy extensions. Code to be optimized if moved to main proj.
+    // REVIEW: lazy extensions.
 
     // Experimental helpers & extension methods for Maybe<T>.
-    // NB: only a few of them may be considered for inclusion in the main proj.
+    // NB: only a handful of them may be considered for inclusion in the main proj.
     // Most of them are pretty straightforward.
+    // Important: code to be optimized if promoted.
     public static partial class MaybeEx { }
 
     // Async methods.
@@ -129,6 +130,39 @@ namespace Abc
     // Misc methods.
     public partial class MaybeEx
     {
+        // ReplaceWith() causes some API problems and since we already have
+        // ContinueWith(), it's better left off.
+        // We offer two versions to be able to inform the caller that the method
+        // return a Maybe<TResult> not a Maybe<TResult?>.
+
+        /// <remarks>
+        /// <code><![CDATA[
+        ///   Some(1) & 2L == Some(2L)
+        ///   None    & 2L == None
+        /// ]]></code>
+        /// </remarks>
+        // Compare to the nullable equiv w/ x an int? and y a long:
+        //   (x.HasValue ? (long?)y : (long?)null).
+        [Pure]
+        public static Maybe<TResult> ReplaceWith<T, TResult>(
+            this Maybe<T> @this, TResult? value)
+            where TResult : class
+        {
+            return !@this.IsNone ? Maybe.SomeOrNone(value)
+                : Maybe<TResult>.None;
+        }
+
+        // It works with null but then one should really use
+        // ContinueWith(Maybe<TResult>.None).
+        [Pure]
+        public static Maybe<TResult> ReplaceWith<T, TResult>(
+            this Maybe<T> @this, TResult? value)
+            where TResult : struct
+        {
+            return !@this.IsNone && value.HasValue ? Maybe.Some(value.Value)
+                : Maybe<TResult>.None;
+        }
+
         // Specialized version of Where() when the state of the maybe and the
         // value it encloses are not taken into account.
 

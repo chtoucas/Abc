@@ -78,7 +78,6 @@ namespace Abc
     /// - XorElse()
     /// - ZipWith()
     /// - Apply()
-    /// - ReplaceWith()
     /// - ContinueWith()
     /// - PassThru()
     /// - Skip()
@@ -696,35 +695,6 @@ namespace Abc
         public Maybe<TResult> Apply<TResult>(Maybe<Func<T, TResult>> applicative)
         {
             return _isSome && applicative._isSome ? Maybe.Of(applicative._value(_value))
-                : Maybe<TResult>.None;
-        }
-
-        /// <remarks>
-        /// <code><![CDATA[
-        ///   Some(1) & 2L == Some(2L)
-        ///   None    & 2L == None
-        /// ]]></code>
-        /// </remarks>
-        // Compare to the nullable equiv w/ x an int? and y a long:
-        //   (x.HasValue ? (long?)y : (long?)null).
-        [Pure]
-        public Maybe<TResult> ReplaceWith<TResult>(TResult? value)
-            where TResult : class
-        {
-            return _isSome && !(value is null) ? new Maybe<TResult>(value)
-                : Maybe<TResult>.None;
-        }
-
-        // FIXME: ReplaceWith() works with null but then one should really use
-        // ContinueWith(Maybe<TResult>.None). Remove ReplaceWith()?
-        // We offer two versions to be able to inform the caller that the method
-        // return a Maybe<TResult> not a Maybe<TResult?>.
-
-        [Pure]
-        public Maybe<TResult> ReplaceWith<TResult>(TResult? value)
-            where TResult : struct
-        {
-            return _isSome && value.HasValue ? new Maybe<TResult>(value.Value)
                 : Maybe<TResult>.None;
         }
 
