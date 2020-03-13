@@ -157,8 +157,6 @@ namespace Abc
         /// Gets the enclosed value.
         /// <para>You MUST check IsSome before calling this property.</para>
         /// </summary>
-        // REVIEW: not null attr.
-        [NotNull]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal T Value { get { Debug.Assert(_isSome); return _value; } }
 
@@ -285,7 +283,7 @@ namespace Abc
             }
             else
             {
-                // NULL_FORGIVING
+                // NULL_FORGIVING: Try-Parse pattern.
                 value = default!;
                 return false;
             }
@@ -973,8 +971,8 @@ namespace Abc
         {
             if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
-            // When _isSome is true, Value is NOT null.
-            return _isSome ? comparer.GetHashCode(Value) : 0;
+            // NULL_FORGIVING: when _isSome is true, _value is NOT null.
+            return _isSome ? comparer.GetHashCode(_value!) : 0;
         }
     }
 }
