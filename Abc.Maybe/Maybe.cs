@@ -154,23 +154,24 @@ namespace Abc
     }
 
     // Extension methods for Maybe<T> where T is enumerable.
-    // LINQ extensions but for IEnumerable<Maybe<T>>.
-    // LINQ extensions but not extension methods since they are not for
-    // IEnumerable<T>, also to avoid conflicts w/ the standard LINQ ops, eg Any().
     public partial class Maybe
     {
-        //
-        // Maybe<IEnumerable<T>>.
-        //
-
         [Pure]
         public static Maybe<IEnumerable<T>> EmptyEnumerable<T>()
             => MaybeEnumerable_<T>.Empty;
 
-        //
-        // IEnumerable<Maybe<T>>.
-        //
+        private static class MaybeEnumerable_<T>
+        {
+            internal static readonly Maybe<IEnumerable<T>> Empty
+                = Of(Enumerable.Empty<T>());
+        }
+    }
 
+    // LINQ extensions for IEnumerable<Maybe<T>> but not extension methods since
+    // they are not for IEnumerable<T>, also to avoid conflicts w/ the standard
+    // LINQ ops.
+    public partial class Maybe
+    {
         // Filtering: CollectAny(deferred).
         // Behaviour:
         // - If the input sequence is empty
@@ -182,12 +183,6 @@ namespace Abc
         public static IEnumerable<T> CollectAny<T>(IEnumerable<Maybe<T>> source)
         {
             return from x in source where x.IsSome select x.Value;
-        }
-
-        private static class MaybeEnumerable_<T>
-        {
-            internal static readonly Maybe<IEnumerable<T>> Empty
-                = Of(Enumerable.Empty<T>());
         }
     }
 

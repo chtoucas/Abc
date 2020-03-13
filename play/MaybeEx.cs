@@ -135,8 +135,8 @@ namespace Abc
             => condition ? @this : Maybe<T>.None;
     }
 
-    // Helpers related to IEnumerable<>.
-    public static partial class MaybeEx
+    // Extension methods for Maybe<T> where T is enumerable.
+    public partial class MaybeEx
     {
         [Pure]
         public static IEnumerable<T> ValueOrEmpty<T>(
@@ -151,7 +151,11 @@ namespace Abc
         {
             return @this.OrElse(Maybe.EmptyEnumerable<T>());
         }
+    }
 
+    // LINQ extensions for IEnumerable<Maybe<T>>.
+    public partial class MaybeEx
+    {
         // What it should do:
         // - If the input sequence is empty,
         //   returns Maybe.Of(empty sequence).
@@ -178,7 +182,8 @@ namespace Abc
         #region Aggregation Sum()
 
         [Pure]
-        public static Maybe<T> Sum<T>(IEnumerable<Maybe<T>> source, Func<T, T, T> add, T zero)
+        public static Maybe<T> Sum<T>(
+            IEnumerable<Maybe<T>> source, Func<T, T, T> add, T zero)
         {
             Require.NotNull(add, nameof(add));
 

@@ -127,7 +127,6 @@ namespace Abc
     }
 
     // Extension methods for Result<T> where T is enumerable.
-    // LINQ extensions for IEnumerable<Result<T>>.
     public partial class Result
     {
         [Pure]
