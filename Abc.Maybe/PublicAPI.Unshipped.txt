@@ -143,11 +143,11 @@ static Abc.May.ParseUInt32(string value) -> Abc.Maybe<uint>
 static Abc.May.ParseUInt32(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<uint>
 static Abc.May.ParseUInt64(string value) -> Abc.Maybe<ulong>
 static Abc.May.ParseUInt64(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<ulong>
-static Abc.Maybe.Any<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> Abc.Maybe<T>
 static Abc.Maybe.CollectAny<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> System.Collections.Generic.IEnumerable<T>
 static Abc.Maybe.Compose<TSource, TMiddle, TResult>(this System.Func<TSource, Abc.Maybe<TMiddle>> this, System.Func<TMiddle, Abc.Maybe<TResult>> other) -> System.Func<TSource, Abc.Maybe<TResult>>
 static Abc.Maybe.ComposeBack<TSource, TMiddle, TResult>(this System.Func<TMiddle, Abc.Maybe<TResult>> this, System.Func<TSource, Abc.Maybe<TMiddle>> other) -> System.Func<TSource, Abc.Maybe<TResult>>
 static Abc.Maybe.EmptyEnumerable<T>() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
+static Abc.Maybe.FirstSome<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> Abc.Maybe<T>
 static Abc.Maybe.Flatten<T>(this in Abc.Maybe<Abc.Maybe<T>> this) -> Abc.Maybe<T>
 static Abc.Maybe.Guard(bool condition) -> Abc.Maybe<Abc.Unit>
 static Abc.Maybe.Invoke<T1, T2, T3, T4, T5, TResult>(this Abc.Maybe<System.Func<T1, T2, T3, T4, T5, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third, Abc.Maybe<T4> fourth, Abc.Maybe<T5> fifth) -> Abc.Maybe<TResult>

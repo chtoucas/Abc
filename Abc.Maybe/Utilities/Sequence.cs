@@ -17,13 +17,13 @@ namespace Abc.Utilities
         /// <summary>
         /// Generates a sequence that contains exactly one element.
         /// </summary>
-        public static IEnumerable<T> Return<T>(T element)
+        public static IEnumerable<T> Singleton<T>(T element)
         {
             // We could write:
             //   return Enumerable.Repeat(element, 1);
-            // but then LINQ operators can optimize operations for lists which
-            // does not seem to be the type produced by Repeat().
-            return new ReturnList_<T>(element);
+            // but then many LINQ operators are optimized for lists, and
+            // Enumerable.Repeat() does not seem to produce one.
+            return new SingletonList_<T>(element);
         }
 
         /// <summary>
@@ -37,13 +37,13 @@ namespace Abc.Utilities
             }
         }
 
-        private sealed class ReturnList_<T> : IList<T>, IReadOnlyList<T>
+        private sealed class SingletonList_<T> : IList<T>, IReadOnlyList<T>
         {
-            readonly T _value;
+            private readonly T _element;
 
-            public ReturnList_(T value)
+            public SingletonList_(T element)
             {
-                _value = value;
+                _element = element;
             }
 
             public int Count => 1;
@@ -52,18 +52,18 @@ namespace Abc.Utilities
 
             public T this[int index]
             {
-                get => index == 0 ? _value : throw new AoorException(nameof(index));
+                get => index == 0 ? _element : throw new AoorException(nameof(index));
                 set => throw EF.ReadOnlyCollection;
             }
 
             public bool Contains(T item)
-                => EqualityComparer<T>.Default.Equals(item, _value);
+                => EqualityComparer<T>.Default.Equals(item, _element);
 
             public void CopyTo(T[] array, int arrayIndex)
-                => array[arrayIndex] = _value;
+                => array[arrayIndex] = _element;
 
             public int IndexOf(T item)
-                => EqualityComparer<T>.Default.Equals(item, _value) ? 0 : -1;
+                => EqualityComparer<T>.Default.Equals(item, _element) ? 0 : -1;
 
             public void Add(T item) => throw EF.ReadOnlyCollection;
             public void Clear() => throw EF.ReadOnlyCollection;
@@ -73,7 +73,7 @@ namespace Abc.Utilities
 
             public IEnumerator<T> GetEnumerator()
             {
-                yield return _value;
+                yield return _element;
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

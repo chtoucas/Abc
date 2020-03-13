@@ -5,15 +5,18 @@ namespace Abc.Linq
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.Linq;
 
-    // For IEnumerable<T?>, prefer ElementAtOrDefault() over ElementAtOrNone().
     public static partial class Qperators
     {
         /// <summary>
         /// Returns the element at the specified index in a sequence or
         /// <see cref="Maybe{TSource}.None"/> if the index is out of range.
         /// </summary>
-        // Adapted from https://github.com/jskeet/edulinq/blob/master/src/Edulinq/ElementAt.cs
+        /// <remarks>
+        /// For <c>IEnumerable&lt;T?&gt;</c>, prefer
+        /// <see cref="Enumerable.ElementAtOrDefault"/> over this method.
+        /// </remarks>
         [Pure]
         public static Maybe<TSource> ElementAtOrNone<TSource>(
             this IEnumerable<TSource> source,
@@ -24,34 +27,25 @@ namespace Abc.Linq
             if (index < 0) { return Maybe<TSource>.None; }
 
             // Fast track.
-            // REVIEW: remove ICollection.
-            if (source is ICollection<TSource> collection)
+            if (source is IList<TSource> list)
             {
-                int count = collection.Count;
-                if (index >= count) { return Maybe<TSource>.None; }
-
-                if (source is IList<TSource> list)
-                {
-                    return Maybe.Of(list[index]);
-                }
+                return index < list.Count ? Maybe.Of(list[index]) : Maybe<TSource>.None;
             }
 
             // Slow track.
             using var iter = source.GetEnumerator();
 
-            // Notice the use of -1 so that we start off my moving onto element 0.
-            // Don't want to use i <= index in case index == int.MaxValue!
-            // We don't need to fetch the current value each time - get to the
-            // right place first.
-            for (int i = -1; i < index; i++)
+            while (iter.MoveNext())
             {
-                if (!iter.MoveNext())
+                if (index == 0)
                 {
-                    return Maybe<TSource>.None;
+                    return Maybe.Of(iter.Current);
                 }
+
+                index--;
             }
 
-            return Maybe.Of(iter.Current);
+            return Maybe<TSource>.None;
         }
     }
 }

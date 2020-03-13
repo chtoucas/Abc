@@ -189,12 +189,15 @@ namespace Abc
             return from x in source where x.IsSome select x.Value;
         }
 
+        // TODO: add LastSome(). Optimize
+        // Returns the first non-empty maybe; if none is found returns the empty
+        // maybe.
         // - If the sequence is empty or only contains empty maybe's,
         //   returns Maybe<T>.None.
         // - If the sequence does contain at least one non-empty maybe,
         //   returns the first one found when iterating.
         [Pure]
-        public static Maybe<T> Any<T>(IEnumerable<Maybe<T>> source)
+        public static Maybe<T> FirstSome<T>(IEnumerable<Maybe<T>> source)
         {
             if (source is null) { throw new Anexn(nameof(source)); }
 

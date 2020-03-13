@@ -827,7 +827,7 @@ namespace Abc
         // sequence.
         [Pure]
         public IEnumerable<T> ToEnumerable()
-            => _isSome ? Sequence.Return(_value) : Enumerable.Empty<T>();
+            => _isSome ? Sequence.Singleton(_value) : Enumerable.Empty<T>();
 
         // Yield break or yield return "count" times.
         /// See also <seealso cref="Replicate(int)"/> and the comments there.
