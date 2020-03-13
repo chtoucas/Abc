@@ -47,7 +47,7 @@ namespace Abc
     ///
     /// The structure Maybe<T> is an option type for C#.
     ///
-    /// The intended usage is when T is a value type, a string, a read-only
+    /// The intended usage is when T is a value type, a string, a (read-only?)
     /// record, or a function. For other reference types, it should be fine as
     /// long as T is an **immutable** reference type.
     ///
