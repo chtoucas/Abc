@@ -272,12 +272,10 @@ Of course, this does not mean that you should not use this type at all, otherwis
 I would not have written this library.
 
 - **AVOID using a _maybe_ if the object is expected to be long-lived.**
-
 - **AVOID using a _maybe_ in a performance-critical path.**
 
-### May-Parse pattern
-
-- **DO use this pattern instead of the Try-Parse pattern for reference types.**
+- **DO use May-Parse pattern instead of the Try-Parse pattern for reference
+  types.**
 - **DO use the prefix _May_ for methods implementing this pattern.**
 
 Developer Notes

@@ -54,14 +54,13 @@ namespace Abc
     /// Static properties.
     /// - Maybe<T>.None         the empty maybe of type T
     /// - Maybe.None            the empty maybe of type Unit
-    /// - Maybe.Unit
+    /// - Maybe.Unit            the unit for Maybe<T>
     ///
-    /// Instance properties (no public access to the enclosed value if any,
-    /// ie no property Value).
+    /// Instance properties.
     /// - IsNone                is this the empty maybe?
     ///
     /// Static factories (no public ctor).
-    /// - Maybe.None<T>()       the empty maybe
+    /// - Maybe.None<T>()       the empty maybe of type T
     /// - Maybe.Some()          factory method for value types
     /// - Maybe.SomeOrNone()    factory method for nullable value or reference types
     /// - Maybe.Of()            unconstrained factory method
@@ -73,7 +72,7 @@ namespace Abc
     /// - SelectMany()          LINQ select many
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
-    /// - GroupJoin()           LINQ group join
+    /// - GroupJoin()           LINQ group join (disabled)
     /// - OrElse()              coalescing
     /// - XorElse()
     /// - ZipWith()
@@ -85,17 +84,17 @@ namespace Abc
     /// - Replicate()
     /// - Duplicate()
     ///
-    /// Async methods.
-    /// - BindAsync()
-    /// - SelectAsync()
-    /// - OrElseAsync()
-    ///
-    /// Safely escape the maybe.
+    /// Safely escape the maybe (no public access to the enclosed value if any,
+    /// ie no property Value).
     /// - Switch()              pattern matching
     /// - TryGetValue()         try unwrap
-    /// - ValueOrXXX()          unwrap
+    /// - ValueOrDefault()      unwrap
+    /// - ValueOrElse()
+    /// - ValueOrthrow()
+    ///
+    /// Set and enumerable related methods.
     /// - GetEnumerator()       iterable (implicit)
-    /// - ToEnumerable()        enumerable (explicit)
+    /// - ToEnumerable()        convert to an enumerable
     /// - Yield()               enumerable (explicit)
     /// - Contains()            singleton or empty set?
     ///
@@ -104,6 +103,15 @@ namespace Abc
     /// - OnSome()
     /// - When()
     /// - Unless()
+    ///
+    /// Async versions of the core methods.
+    /// - BindAsync()           async binding
+    /// - SelectAsync()         async mapping
+    /// - OrElseAsync()         async coalescing
+    /// - SwitchAsync()         async pattern matching
+    ///
+    /// We also have several extension methods for specific types of T, eg
+    /// structs, functions or enumerables; see the Maybe class.
     /// ]]></remarks>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
