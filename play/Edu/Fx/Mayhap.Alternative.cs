@@ -101,7 +101,7 @@ namespace Abc.Edu.Fx
             //
             // Zero or more.
 
-            return Some(mayhap).Otherwise(Empty<T>());
+            return Some(mayhap).Otherwise(EmptyEnumerable<T>());
         }
 
         public static Mayhap<Mayhap<T>> Optional<T>(this Mayhap<T> @this)

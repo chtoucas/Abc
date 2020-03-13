@@ -172,9 +172,9 @@ namespace Abc
                 (x, y) => x.ZipWith(y, Enumerable.Append));
         }
 
-        // Aggregation Any()
+        // Aggregation: monadic sum.
         [Pure]
-        public static Maybe<T> FirstSome<T>(IEnumerable<Maybe<T>> source)
+        public static Maybe<T> Sum<T>(IEnumerable<Maybe<T>> source)
         {
             return source.FirstOrDefault(x => !x.IsNone);
         }

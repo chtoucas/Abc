@@ -18,14 +18,14 @@ namespace Abc.Edu.Fx
     // Methods
     // -------
     // Bare minimum (>>= or fmap):
-    // - >>=            obj.Bind()
-    // - fmap           obj.Select()
-    // - >>             ext.ContinueWith() in Applicative
-    // - return         Mayhap<T>.η()
+    // - >>=                        obj.Bind()
+    // - fmap                       obj.Select()
+    // - >>                         ext.ContinueWith() in Applicative
+    // - return                     Mayhap<T>.η()
     // - fail
     //
     // Standard API:
-    // - mapM & mapM_
+    // - mapM & mapM_               enumerable.SelectAny()
     // - forM & forM_
     // - sequence & sequence_
     // - <<=                        Func$.Invoke()
@@ -35,9 +35,9 @@ namespace Abc.Edu.Fx
     // - void                       obj.Skip() in Functor
     //
     // - join                       Mayhap<T>.μ()
-    // - msum                       IEnumerable<Mayhap<T>>.Collect()
+    // - msum                       Mayhap.Sum()
     // - mfilter                    ext.Where()
-    // - filterM
+    // - filterM                    enumerable.WhereAny()
     // - mapAndUnzipM
     // - zipWithM & zipWithM_
     // - foldM & foldM_
@@ -57,6 +57,16 @@ namespace Abc.Edu.Fx
     // - <$!>
     public partial class Mayhap
     {
+        public static Mayhap<IEnumerable<T>> EmptyEnumerable<T>()
+            => MayhapEnumerable_<T>.Empty;
+
+        private static class MayhapEnumerable_<T>
+        {
+            internal static readonly Mayhap<IEnumerable<T>> Empty
+                = Mayhap<IEnumerable<T>>.η(Enumerable.Empty<T>());
+        }
+
+        /// <summary>mapM</summary>
         public static Mayhap<IEnumerable<TResult>> SelectAny<TSource, TResult>(
             this IEnumerable<TSource> source,
             Func<TSource, Mayhap<TResult>> selector)
@@ -75,7 +85,14 @@ namespace Abc.Edu.Fx
             // these actions from left to right, and collect the results. For a
             // version that ignores the results see mapM_.
 
-            return CollectAny(source.Select(selector));
+            return __collectAny(source.Select(selector));
+
+            // sequenceA
+            static Mayhap<IEnumerable<T>> __collectAny<T>(IEnumerable<Mayhap<T>> source)
+            {
+                var seed = MayhapEnumerable_<T>.Empty;
+                return source.Aggregate(seed, (x, y) => x.ZipWith(y, Enumerable.Append));
+            }
         }
 
         /// <summary>(=&lt;&lt;)</summary>
@@ -116,7 +133,7 @@ namespace Abc.Edu.Fx
     public partial class Mayhap
     {
         /// <summary>msum</summary>
-        public static Mayhap<T> Any<T>(this IEnumerable<Mayhap<T>> source)
+        public static Mayhap<T> Sum<T>(IEnumerable<Mayhap<T>> source)
         {
             // msum :: (Foldable t, MonadPlus m) => t (m a) -> m a
             // msum = asum
@@ -153,7 +170,7 @@ namespace Abc.Edu.Fx
             // This generalizes the list-based filter function.
 
             return source.Aggregate(
-                Empty<TSource>(),
+                EmptyEnumerable<TSource>(),
                 (m, x) => predicate(x).ZipWith(m, __zipper(x)));
 
             Func<bool, IEnumerable<TSource>, IEnumerable<TSource>> __zipper(TSource item)
