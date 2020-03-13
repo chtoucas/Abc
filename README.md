@@ -11,6 +11,18 @@ Features:
 Quick start with `Maybe<T>`
 ---------------------------
 
+Summary:
+- [Construct a _maybe_](#construct-a-maybe)
+- [Check whether a _maybe_ is empty or not](#check-whether-a-maybe-is-empty-or-not)
+- [Map and filter the enclosed value (if any)](#map-and-filter-the-enclosed-value-if-any)
+- [Safely extract the enclosed value](#safely-extract-the-enclosed-value)
+- [Pattern matching: extract and map the enclosed value (if any)](#pattern-matching-extract-and-map-the-enclosed-value-if-any)
+- [Side effects: do something with the enclosed value (if any)](#side-effects-do-something-with-the-enclosed-value-if-any)
+- [Binding](#binding)
+- [Query Expression Pattern](#query-expression-pattern)
+- [More Features](#more-features)
+- [Samples](#samples)
+
 An option type or maybe type (a better fit for what we use it for), is like
 a box containing a value or no value at all.
 
@@ -31,7 +43,8 @@ annotations that the compiler can take advantage of. There are many other small
 differences. For instance, one can nest _maybe_'s (`Maybe<Maybe<T>>`) whereas
 one can't create an `int??`; `Nullable<Nullable<T>>` is not valid in C#.
 
-#### Construct a _maybe_
+### Construct a _maybe_
+
 ```csharp
 // Maybe of a value type.
 Maybe<int> q = Maybe.Some(1);
@@ -53,7 +66,8 @@ a `Maybe<string>`. When working with unconstrained generic type, you cannot use
 this kind of situation; otherwise there is no reason to use `Maybe.Of()` ---
 for `Maybe<T>.None` it is more a matter of taste.
 
-#### Check whether a _maybe_ is empty or not
+### Check whether a _maybe_ is empty or not
+
 ```csharp
 var some = Maybe.SomeOrNone("value");
 var none = Maybe.None<string>()
@@ -70,7 +84,8 @@ bool b = none.Contains("value")       // == false
 bool b = none.Contains("other")       // == false
 ```
 
-#### Map and filter the enclosed value (if any)
+### Map and filter the enclosed value (if any)
+
 ```csharp
 var some = Maybe.Some(4);
 
@@ -83,7 +98,8 @@ Maybe<int> q = from x in some where x >= 0 select Math.Sqrt(x); // == Maybe(2)
 If, instead, we start with an empty _maybe_ or `Maybe.Some(-4)`, the result is
 an empty _maybe_, in both cases.
 
-#### Safely extract the enclosed value
+### Safely extract the enclosed value
+
 `Maybe<T>` is a strict option type, we don't get direct access to the enclosed
 value.
 ```csharp
@@ -116,7 +132,8 @@ this:
 ```
 C# 8.0 will then complain if one tries to write `maybe.ValueOrElse(null)`.
 
-#### Pattern matching: extract and map the enclosed value (if any)
+### Pattern matching: extract and map the enclosed value (if any)
+
 ```csharp
 Maybe<int> q = from x in maybe where x >= 0 select Math.Sqrt(x);
 
@@ -130,7 +147,8 @@ string message = q.Switch(
     caseNone: "The input was strictly negative.");
 ```
 
-#### Side effects: do something with the enclosed value (if any)
+### Side effects: do something with the enclosed value (if any)
+
 ```csharp
 Maybe<int> q = from x in maybe where x >= 0 select Math.Sqrt(x);
 
@@ -143,7 +161,8 @@ q.OnSome(x => Console.WriteLine($"Square root = {x}.");
 if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 ```
 
-#### Binding
+### Binding
+
 `Bind()` and `Select()` look very similar, but `Bind()` is for situations where
 the "selector" maps a value to a _maybe_ not to another value; the selector is
 then said to be a binder.
@@ -162,7 +181,8 @@ var q = maybe.Select(May.ParseInt32)    // <-- Maybe<Maybe<int>>
     .Flatten();                         // <-- Maybe<int>
 ```
 
-#### Query Expression Pattern
+### Query Expression Pattern
+
 We already saw `Select` and `Where`, but there is more.
 ```csharp
 var q = from i in maybe1
@@ -219,6 +239,7 @@ Guidelines
 Your mantra should be "**_maybe do not abuse the maybe_**".
 
 ### Usage
+
 The `Maybe<T>` type is a value type. Even if it is a natural choice, it worried
 me and I hesitated for a while. The addition of value tuples to .NET convinced
 me that the benefits will outweight the drawbacks.
@@ -239,6 +260,7 @@ NB: `Result<T>` (not yet sure I will keep it) is a reference type and may serve
 as a replacement for `Maybe<T>`.
 
 ### General recommendations
+
 First and foremost,
 - **DO apply all guidelines for `ValueTuple<>`** and, if they contradict what I say
   here, follow your own wisdom.
@@ -254,6 +276,7 @@ I would not have written this library.
 - **AVOID using a _maybe_ in a performance-critical path.**
 
 ### May-Parse pattern
+
 - **DO use this pattern instead of the Try-Parse pattern for reference types.**
 - **DO use the prefix _May_ for methods implementing this pattern.**
 
