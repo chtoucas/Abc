@@ -147,7 +147,6 @@ static Abc.Maybe.CollectAny<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<
 static Abc.Maybe.Compose<TSource, TMiddle, TResult>(this System.Func<TSource, Abc.Maybe<TMiddle>> this, System.Func<TMiddle, Abc.Maybe<TResult>> other) -> System.Func<TSource, Abc.Maybe<TResult>>
 static Abc.Maybe.ComposeBack<TSource, TMiddle, TResult>(this System.Func<TMiddle, Abc.Maybe<TResult>> this, System.Func<TSource, Abc.Maybe<TMiddle>> other) -> System.Func<TSource, Abc.Maybe<TResult>>
 static Abc.Maybe.EmptyEnumerable<T>() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
-static Abc.Maybe.FirstSome<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> Abc.Maybe<T>
 static Abc.Maybe.Flatten<T>(this in Abc.Maybe<Abc.Maybe<T>> this) -> Abc.Maybe<T>
 static Abc.Maybe.Guard(bool condition) -> Abc.Maybe<Abc.Unit>
 static Abc.Maybe.Invoke<T1, T2, T3, T4, T5, TResult>(this Abc.Maybe<System.Func<T1, T2, T3, T4, T5, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third, Abc.Maybe<T4> fourth, Abc.Maybe<T5> fifth) -> Abc.Maybe<TResult>
@@ -172,16 +171,13 @@ static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T> this) -> T?
 static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T?> this) -> T?
 static Abc.Maybe.Use<TDisposable, TResult>(this Abc.Maybe<TDisposable> this, System.Func<TDisposable, Abc.Maybe<TResult>> binder) -> Abc.Maybe<TResult>
 static Abc.Maybe.Use<TDisposable, TResult>(this Abc.Maybe<TDisposable> this, System.Func<TDisposable, TResult> selector) -> Abc.Maybe<TResult>
-static Abc.Maybe.ValueOrEmpty<T>(this Abc.Maybe<System.Collections.Generic.IEnumerable<T>> this) -> System.Collections.Generic.IEnumerable<T>
 static Abc.Maybe<T>.operator !=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator <(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator <=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
-static Abc.Result.Any<T>(System.Collections.Generic.IEnumerable<Abc.Result<T>> source) -> Abc.Result<T>
-static Abc.Result.CollectAny<T>(System.Collections.Generic.IEnumerable<Abc.Result<T>> source) -> System.Collections.Generic.IEnumerable<T>
-static Abc.Result.Empty<T>() -> Abc.Result<System.Collections.Generic.IEnumerable<T>>
+static Abc.Result.EmptyEnumerable<T>() -> Abc.Result<System.Collections.Generic.IEnumerable<T>>
 static Abc.Result.Err(string message) -> Abc.Err<Abc.Unit>
 static Abc.Result.Err<T>(string message) -> Abc.Err<T>
 static Abc.Result.Flatten<T>(this Abc.Result<Abc.Result<T>> this) -> Abc.Result<T>
@@ -194,7 +190,6 @@ static Abc.Result.SomeOrNone<T>(T? value) -> Abc.Result<T>
 static Abc.Result.Squash<T>(this Abc.Err<T?> this) -> Abc.Err<T>
 static Abc.Result.Squash<T>(this Abc.Ok<T?> this) -> Abc.Ok<T>
 static Abc.Result.Squash<T>(this Abc.Result<T?> this) -> Abc.Result<T>
-static Abc.Result.ValueOrEmpty<T>(this Abc.Result<System.Collections.Generic.IEnumerable<T>> this) -> System.Collections.Generic.IEnumerable<T>
 static Abc.Unit.operator !=(Abc.Unit left, Abc.Unit right) -> bool
 static Abc.Unit.operator !=(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator !=(System.ValueTuple left, Abc.Unit right) -> bool

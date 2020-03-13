@@ -39,7 +39,7 @@ namespace Abc.Extensions
             this NameValueCollection @this, string name, Func<string, Maybe<T>> parser)
         {
             var q = from values in @this.MayGetValues(name) select values.SelectAny(parser);
-            return q.ValueOrEmpty();
+            return q.ValueOrEmptyEnumerable();
 
             //// Check args eagerly.
             //if (@this is null) { throw new ArgumentNullException(nameof(@this)); }

@@ -154,9 +154,7 @@ namespace Abc
     }
 
     // Extension methods for Maybe<T> where T is enumerable.
-    // LINQ extensions but for IEnumerable<Maybe<T>>:
-    // - Filtering: CollectAny (deferred).
-    // - Aggregation: Any.
+    // LINQ extensions but for IEnumerable<Maybe<T>>.
     // LINQ extensions but not extension methods since they are not for
     // IEnumerable<T>, also to avoid conflicts w/ the standard LINQ ops, eg Any().
     public partial class Maybe
@@ -169,14 +167,11 @@ namespace Abc
         public static Maybe<IEnumerable<T>> EmptyEnumerable<T>()
             => MaybeEnumerable_<T>.Empty;
 
-        [Pure]
-        public static IEnumerable<T> ValueOrEmpty<T>(this Maybe<IEnumerable<T>> @this)
-            => @this.IsSome ? @this.Value : Enumerable.Empty<T>();
-
         //
         // IEnumerable<Maybe<T>>.
         //
 
+        // Filtering: CollectAny(deferred).
         // Behaviour:
         // - If the input sequence is empty
         //     or all maybe's in the input sequence are empty
@@ -187,26 +182,6 @@ namespace Abc
         public static IEnumerable<T> CollectAny<T>(IEnumerable<Maybe<T>> source)
         {
             return from x in source where x.IsSome select x.Value;
-        }
-
-        // TODO: add LastSome(). Optimize
-        // Returns the first non-empty maybe; if none is found returns the empty
-        // maybe.
-        // - If the sequence is empty or only contains empty maybe's,
-        //   returns Maybe<T>.None.
-        // - If the sequence does contain at least one non-empty maybe,
-        //   returns the first one found when iterating.
-        [Pure]
-        public static Maybe<T> FirstSome<T>(IEnumerable<Maybe<T>> source)
-        {
-            if (source is null) { throw new Anexn(nameof(source)); }
-
-            foreach (Maybe<T> item in source)
-            {
-                if (item.IsSome) { return item; }
-            }
-
-            return Maybe<T>.None;
         }
 
         private static class MaybeEnumerable_<T>

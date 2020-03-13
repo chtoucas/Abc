@@ -139,8 +139,46 @@ namespace Abc
     public static partial class MaybeEx
     {
         [Pure]
-        public static Maybe<IEnumerable<T>> EmptyIfNone<T>(this Maybe<IEnumerable<T>> @this)
-            => @this.OrElse(Maybe.EmptyEnumerable<T>());
+        public static IEnumerable<T> ValueOrEmptyEnumerable<T>(
+            this Maybe<IEnumerable<T>> @this)
+        {
+            return @this.ValueOrElse(Enumerable.Empty<T>());
+        }
+
+        [Pure]
+        public static Maybe<IEnumerable<T>> EmptyEnumerableIfNone<T>(
+            this Maybe<IEnumerable<T>> @this)
+        {
+            return @this.OrElse(Maybe.EmptyEnumerable<T>());
+        }
+
+        #region Aggregation Any()
+
+        [Pure]
+        public static Maybe<T> FirstSome<T>(IEnumerable<Maybe<T>> source)
+        {
+            return source.FirstOrDefault(x => !x.IsNone);
+        }
+
+        [Pure]
+        public static Maybe<T> LastSome<T>(IEnumerable<Maybe<T>> source)
+        {
+            return source.LastOrDefault(x => !x.IsNone);
+        }
+
+        [Pure]
+        public static Maybe<T> FirstNone<T>(IEnumerable<Maybe<T>> source)
+        {
+            return source.FirstOrDefault(x => x.IsNone);
+        }
+
+        [Pure]
+        public static Maybe<T> LastNone<T>(IEnumerable<Maybe<T>> source)
+        {
+            return source.LastOrDefault(x => x.IsNone);
+        }
+
+        #endregion
 
         // What it should do:
         // - If the input sequence is empty,
@@ -158,16 +196,14 @@ namespace Abc
                 (x, y) => x.ZipWith(y, Enumerable.Append));
         }
 
-        #region Sum()
+        #region Aggregation Sum()
 
         [Pure]
         public static Maybe<T> Sum<T>(IEnumerable<Maybe<T>> source, Func<T, T, T> add, T zero)
         {
             Require.NotNull(add, nameof(add));
 
-            Maybe<IEnumerable<T>> aggr = source.Aggregate(
-                Maybe.EmptyEnumerable<T>(),
-                (x, y) => x.ZipWith(y, Enumerable.Append));
+            Maybe<IEnumerable<T>> aggr = Collect(source);
 
             return aggr.Select(__sum);
 
@@ -187,9 +223,7 @@ namespace Abc
         [Pure]
         public static Maybe<int> Sum(IEnumerable<Maybe<int>> source)
         {
-            Maybe<IEnumerable<int>> aggr = source.Aggregate(
-                Maybe.EmptyEnumerable<int>(),
-                (x, y) => x.ZipWith(y, Enumerable.Append));
+            Maybe<IEnumerable<int>> aggr = Collect(source);
 
             return aggr.Select(Enumerable.Sum);
         }

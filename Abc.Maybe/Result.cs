@@ -131,35 +131,8 @@ namespace Abc
     public partial class Result
     {
         [Pure]
-        public static Result<IEnumerable<T>> Empty<T>()
+        public static Result<IEnumerable<T>> EmptyEnumerable<T>()
             => ResultEnumerable_<T>.Empty;
-
-        [Pure]
-        public static IEnumerable<T> ValueOrEmpty<T>(this Result<IEnumerable<T>> @this)
-        {
-            if (@this is null) { throw new Anexn(nameof(@this)); }
-
-            return @this.IsError ? Enumerable.Empty<T>() : @this.Value;
-        }
-
-        [Pure]
-        public static IEnumerable<T> CollectAny<T>(IEnumerable<Result<T>> source)
-        {
-            return from x in source where !x.IsError select x.Value;
-        }
-
-        [Pure]
-        public static Result<T> Any<T>(IEnumerable<Result<T>> source)
-        {
-            if (source is null) { throw new Anexn(nameof(source)); }
-
-            foreach (Result<T> item in source)
-            {
-                if (!item.IsError) { return item; }
-            }
-
-            return Result<T>.None;
-        }
 
         private static class ResultEnumerable_<T>
         {
