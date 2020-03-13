@@ -140,7 +140,7 @@ namespace Abc
     {
         [Pure]
         public static Maybe<IEnumerable<T>> EmptyIfNone<T>(this Maybe<IEnumerable<T>> @this)
-            => @this.OrElse(Maybe.Empty<T>());
+            => @this.OrElse(Maybe.EmptyEnumerable<T>());
 
         // What it should do:
         // - If the input sequence is empty,
@@ -154,7 +154,7 @@ namespace Abc
         public static Maybe<IEnumerable<T>> Collect<T>(IEnumerable<Maybe<T>> source)
         {
             return source.Aggregate(
-                Maybe.Empty<T>(),
+                Maybe.EmptyEnumerable<T>(),
                 (x, y) => x.ZipWith(y, Enumerable.Append));
         }
 
@@ -166,7 +166,7 @@ namespace Abc
             Require.NotNull(add, nameof(add));
 
             Maybe<IEnumerable<T>> aggr = source.Aggregate(
-                Maybe.Empty<T>(),
+                Maybe.EmptyEnumerable<T>(),
                 (x, y) => x.ZipWith(y, Enumerable.Append));
 
             return aggr.Select(__sum);
@@ -188,7 +188,7 @@ namespace Abc
         public static Maybe<int> Sum(IEnumerable<Maybe<int>> source)
         {
             Maybe<IEnumerable<int>> aggr = source.Aggregate(
-                Maybe.Empty<int>(),
+                Maybe.EmptyEnumerable<int>(),
                 (x, y) => x.ZipWith(y, Enumerable.Append));
 
             return aggr.Select(Enumerable.Sum);

@@ -13,7 +13,6 @@ namespace Abc
     // REVIEW: Maybe extensions & helpers; see also MaybeEx in "play".
     // - playing with modifier "in". Currently only added to ext methods for
     //   Maybe<T> where T is a struct.
-    // - I don't like the name Empty<T>(). EmptyEnumerable ?
     // - Maybe<IEnumerable>; see CollectAny().
 
     /// <summary>
@@ -167,7 +166,7 @@ namespace Abc
         //
 
         [Pure]
-        public static Maybe<IEnumerable<T>> Empty<T>()
+        public static Maybe<IEnumerable<T>> EmptyEnumerable<T>()
             => MaybeEnumerable_<T>.Empty;
 
         [Pure]

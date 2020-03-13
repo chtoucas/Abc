@@ -8,8 +8,6 @@ namespace Abc.Utilities
     using AoorException = System.ArgumentOutOfRangeException;
     using EF = ExceptionFactory;
 
-    // REVIEW: optimize.
-
     /// <summary>
     /// Provides static helpers to produce new sequences.
     /// <para>This class cannot be inherited.</para>
