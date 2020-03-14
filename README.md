@@ -276,7 +276,7 @@ First and foremost,
 - **DO apply all guidelines for `ValueTuple<>` and, if they contradict what I
   say here, follow your own wisdom.**
 
-The `Maybe<T>` type is a value type. Even if it is a natural choice, it worried
+The `Maybe<T>` type is a _value type_. Even if it is a natural choice, it worried
 me and I hesitated for a while. The addition of value tuples to .NET convinced
 me that the benefits will outweight the drawbacks.
 - **CONSIDER using this type when `T` is a value type or an _immutable_ reference
@@ -326,7 +326,7 @@ otherwise I would not have written this library. _Maybe_'s should be
 - **DO use the prefix _May_ for methods implementing this pattern.**
 
 For reference types, a _maybe_ offers a better paradigm than a `null` to express
-the inability to return a reasonnable result.
+the inability to return a meaningful result.
 
 Developer Notes
 ---------------

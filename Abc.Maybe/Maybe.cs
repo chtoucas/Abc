@@ -178,7 +178,7 @@ namespace Abc
     // LINQ ops.
     public partial class Maybe
     {
-        // Filtering: CollectAny(deferred).
+        // Filtering: CollectAny (deferred).
         // Behaviour:
         // - If the input sequence is empty
         //     or all maybe's in the input sequence are empty
