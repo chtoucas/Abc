@@ -520,7 +520,7 @@ namespace Abc
         }
 
         // No query expression syntax.
-        // If comparer is null, the default equality comparer is used instead.
+        // If "comparer" is null, the default equality comparer is used instead.
         [Pure]
         public Maybe<TResult> Join<TInner, TKey, TResult>(
             Maybe<TInner> inner,
@@ -547,8 +547,8 @@ namespace Abc
         ///   from x in outer
         ///   join y in inner
         ///     on outerKeySelector(x) equals innerKeySelector(y)
-        ///     into Y
-        ///   select resultSelector(x, Y)
+        ///     into Z
+        ///   select resultSelector(x, Z)
         /// ]]></code>
         /// </example>
         [Pure]
@@ -687,7 +687,7 @@ namespace Abc
 
     // Misc methods.
     // They can all be built from Select() or Bind(), but we prefer not to
-    // since they require the creation of temporary functions.
+    // since this forces us to use (unnecessary) lambda functions.
     public partial struct Maybe<T>
     {
         [Pure]

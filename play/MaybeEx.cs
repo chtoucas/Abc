@@ -296,7 +296,7 @@ namespace Abc
         #endregion
     }
 
-    // Extensions methods for Maybe<T> where T is an XElement or an XAttribute.
+    // Extensions methods for Maybe<T> where T is an XObject.
     public partial class MaybeEx
     {
         [Pure]
