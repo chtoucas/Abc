@@ -133,6 +133,8 @@ namespace Abc
         /// </summary>
         internal Maybe([DisallowNull] T value)
         {
+            Debug.Assert(value != null);
+
             _isSome = true;
             _value = value;
         }
@@ -785,6 +787,8 @@ namespace Abc
     // 1) A maybe is indeed a collection but a rather trivial one.
     // 2) Maybe<T> being a struct, I worry about hidden casts.
     // 3) Source of confusion (conflicts?) if we import System.Linq too.
+    // Furthermore, this type does NOT implement the whole Query Expression
+    // Pattern.
     public partial struct Maybe<T>
     {
         // REVIEW: now that we have TryGetValue(), do we need this method anymore?

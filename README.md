@@ -238,7 +238,7 @@ Guidelines
 
 Your mantra should be "**_maybe do not abuse the maybe_**".
 
-### Usage
+### Generic type parameter
 
 The `Maybe<T>` type is a value type. Even if it is a natural choice, it worried
 me and I hesitated for a while. The addition of value tuples to .NET convinced
@@ -250,31 +250,34 @@ me that the benefits will outweight the drawbacks.
 
 The intended usage is when `T` is a value type, a string, a (read-only?) record,
 or a function. For other reference types, it should be fine as long as T is an
-immutable reference type.
+_immutable_ reference type.
 
-One can _indirectly_ (maybe I managed to entirely avoid this) create a maybe for
-a nullable (value or reference) type, but all static factory methods do not permit
-it. If you end up having to manipulate for say a `Maybe<int?>`, there is a method
-`Squash()` to convert it to a `Maybe<int>`.
+One can _indirectly_ create a maybe for a nullable (value or reference) type
+--- maybe I managed to entirely avoid this, but I am not sure ---, but all
+static factory methods do not permit it. If you end up having to manipulate for
+say a `Maybe<int?>`, there is a method `Squash()` to convert it to a `Maybe<int>`.
 
 NB: `Result<T>` could be a replacement for `Maybe<T>` for cases when we do want
 a reference type (work in progress and I am really not sure that I will keep it).
 
-### General recommendations
+### Usage
 
 First and foremost,
-- **DO apply all guidelines for `ValueTuple<>`** and, if they contradict what I say
-  here, follow your own wisdom.
-
+- **DO apply all guidelines for `ValueTuple<>`** and, if they contradict what I
+  say here, follow your own wisdom.
 - **DO NOT use `Maybe<T>` as a parameter in public APIs.**
 
-In general, I would even not recommend to use it in a general purpose library.
-Of course, this does not mean that you should not use this type at all, otherwise
-I would not have written this library.
+When tempted to do so, we should think harder, most certainly there is a better
+design. It is also dubious to see a method returning a _maybe_ when the method
+has no reason to fail. In general, I would even not recommend to use `Maybe<T>`
+in a general purpose library. Of course, this does not mean that you should not
+use this type at all, otherwise I would not have written this library.
 
+Regarding performance:
 - **AVOID using a _maybe_ if the object is expected to be long-lived.**
-- **AVOID using a _maybe_ in a performance-critical path.**
+- **AVOID using a _maybe_ in hot code paths.**
 
+About the May-Parse pattern:
 - **DO use May-Parse pattern instead of the Try-Parse pattern for reference
   types.**
 - **DO use the prefix _May_ for methods implementing this pattern.**
