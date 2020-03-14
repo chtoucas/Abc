@@ -72,7 +72,7 @@ more a matter of taste.
 In practice (to be completed)
 ```csharp
 // A condition and a value type.
-var maybe = condition ? Maybe.Some(1) : Maybe<int>;
+Maybe<int> maybe = condition ? Maybe.Some(1) : Maybe.None<int>();
 ```
 
 ### Deconstruct a _maybe_
@@ -81,15 +81,16 @@ No actual built-in C# deconstruction, but something quite similar, even though
 this is not really something that you should do (except if you are trying to
 extend the capabilities of `Maybe<T>`).
 ```csharp
-// Value type.
+// Value type, eg Maybe<int>.
 bool isSome = maybe.TryGetValue(out int value);
 
-// Reference type. Beware, "value" may be null.
-// Although the actual signature is (out string value), it's good practice to
-// add the question mark to emphasize the nullability of value; C# allows us to
-// do that with NRTs (remember they are not actual .NET types).
+// Reference type, eg Maybe<string>. Beware, "value" may be null.
 bool isSome = maybe.TryGetValue(out string? value);
 ```
+Although the actual signature is `(out string value)`, it's good practice to
+add the question mark in order to emphasize the nullability of "value"; C#
+allows us to do that with NRTs (remember they are not actual .NET types).
+
 For the right way see [below](#safely-extract-the-enclosed-value).
 
 ### Check whether a _maybe_ is empty or not
