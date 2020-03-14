@@ -66,7 +66,7 @@ create a `Maybe<string?>` but it (correctly) returns a `Maybe<string>`. When
 working with unconstrained generic type, you cannot use `Maybe.Some[OrNone]()`
 or `Maybe.None<T>()`. Hopefully, `Maybe.Of()` and `Maybe<T>.None` come to the
 rescue, they were specifically created to handle this kind of situation;
-otherwise there is no reason to use `Maybe.Of()` --- with `Maybe<T>.None` it is
+otherwise there is no reason to use `Maybe.Of()` — with `Maybe<T>.None` it is
 more a matter of taste.
 
 In practice (to be completed)
@@ -91,7 +91,7 @@ Although the actual signature is `(out string value)`, it's good practice to
 add the question mark in order to emphasize the nullability of "value"; C#
 allows us to do that with NRTs (remember they are not actual .NET types).
 
-For the right way see [below](#safely-extract-the-enclosed-value).
+For the right pattern see [below](#safely-extract-the-enclosed-value).
 
 ### Check whether a _maybe_ is empty or not
 
@@ -281,7 +281,7 @@ or a function. For other reference types, it should be fine as long as T is an
 _immutable_ reference type.
 
 One can _indirectly_ create a maybe for a nullable (value or reference) type
---- maybe I managed to entirely avoid this, but I am not sure ---, but all
+— maybe I managed to entirely avoid this, but I am not sure —, but all
 static factory methods do not permit it. If you end up having to manipulate for
 say a `Maybe<int?>`, there is a method `Squash()` to convert it to a `Maybe<int>`.
 
@@ -306,7 +306,7 @@ otherwise I would not have written this library. _Maybe_'s should be ephemeral
 and mostly confined inside a method.
 
 Regarding performance:
-- **AVOID using a _maybe_ if the object is expected to be long-lived.** (why?)
+- **AVOID using a _maybe_ if the object is expected to be long-lived.** (why not?)
 - **AVOID using a _maybe_ in hot code paths.**
 
 (struct could imply a ton of copying, what about LINQ (seq of _maybe_'s)?)
