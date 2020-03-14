@@ -26,8 +26,10 @@ An option type or maybe type (a better fit for what we use it for), is like
 a box containing a value or no value at all.
 
 It can help preventing null reference exceptions, but that's not the point, it
-really forces us to think about the outcome of a computation. Hopefully, we
-shall see a few compelling use cases for a maybe type.
+really forces us to think about the outcome of a computation. What it is not is
+a general replacement for null references. Code quality should also improve since
+an algorithm with _maybe_'s is often shorter and closer to the intent, and
+therefore simpler to follow and maintain, than the counterpart written without.
 
 An option type is a very simple sum type `Maybe<T> = Some<T> | None` (exclusive
 or, but of course this is not possible in C#), whereas a nullable value type,
