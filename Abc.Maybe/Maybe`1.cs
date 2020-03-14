@@ -21,15 +21,16 @@ namespace Abc
     // - nullable attrs, notnull constraint.
     //   It would make a lot of sense to add a notnull constraint on the T of
     //   Maybe<T>, but it worries me a bit (I need to gain more experience with
-    //   the new NRT). It allows to warn a user trying to create a Maybe<int?>
-    //   or a Maybe<string?>.
+    //   the new NRT). It would allow to warn a user trying to create a
+    //   Maybe<int?> or a Maybe<string?>, maybe I managed to entirely avoid the
+    //   ability to do so, but I am not sure.
     //   https://docs.microsoft.com/en-us/dotnet/csharp/nullable-attributes
     //   https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/
     //   https://devblogs.microsoft.com/dotnet/nullable-reference-types-in-csharp/
     //   https://devblogs.microsoft.com/dotnet/embracing-nullable-reference-types/
     // - IEquatable<T> (T == Maybe<T>), IComparable<T> but a bit missleading?
-    //   IEqualityComparer<T>.
-    // - Move Join() and GroupJoin() to Maybe?
+    //   Overloads w/ IEqualityComparer<T>.
+    // - Move Join() and GroupJoin() to Maybe? We need compelling examples.
     // - Serializable? Binary serialization only.
     //   https://docs.microsoft.com/en-us/dotnet/standard/serialization/binary-serialization
     // - Set ops POV.
