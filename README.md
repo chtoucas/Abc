@@ -269,16 +269,19 @@ First and foremost,
 
 When tempted to do so, we should think harder, most certainly there is a better
 design. It is also dubious to see a method returning a _maybe_ when the method
-has no reason to fail.
+has no reason to fail. Nevertheless, do not replace exceptions with _maybe_'s
+when the error is actually "exceptional".
 
 In general, I would even not recommend to expose `Maybe<T>` in a general purpose
 library. Of course, this does not mean that you should not use this type at all,
-otherwise I would not have written this library. _Maybe_'s are generally
-ephemeral and used inside a method.
+otherwise I would not have written this library. _Maybe_'s should be ephemeral
+and mostly confined inside a method.
 
 Regarding performance:
-- **AVOID using a _maybe_ if the object is expected to be long-lived.**
+- **AVOID using a _maybe_ if the object is expected to be long-lived.** (why?)
 - **AVOID using a _maybe_ in hot code paths.**
+
+(struct could imply a ton of copying, what about LINQ (seq of _maybe_'s)?)
 
 About the May-Parse pattern:
 - **DO use the May-Parse pattern instead of the Try-Parse pattern for reference
