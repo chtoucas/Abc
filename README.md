@@ -12,6 +12,7 @@ Quick Start with `Maybe<T>`
 ---------------------------
 
 - [Construction](#construct-a-maybe)
+- [Deconstruction](#deconstruct-a-maybe)
 - [Empty or not?](#check-whether-a-maybe-is-empty-or-not)
 - [Map and filter](#map-and-filter-the-enclosed-value-if-any)
 - [Safe escapes](#safely-extract-the-enclosed-value)
@@ -65,8 +66,31 @@ create a `Maybe<string?>` but it (correctly) returns a `Maybe<string>`. When
 working with unconstrained generic type, you cannot use `Maybe.Some[OrNone]()`
 or `Maybe.None<T>()`. Hopefully, `Maybe.Of()` and `Maybe<T>.None` come to the
 rescue, they were specifically created to handle this kind of situation;
-otherwise there is no reason to use `Maybe.Of()` --- for `Maybe<T>.None` it is
+otherwise there is no reason to use `Maybe.Of()` --- with `Maybe<T>.None` it is
 more a matter of taste.
+
+In practice (to be completed)
+```csharp
+// A condition and a value type.
+var maybe = condition ? Maybe.Some(1) : Maybe<int>;
+```
+
+### Deconstruct a _maybe_
+
+No actual built-in C# deconstruction, but something quite similar, even though
+this is not really something that you should do (except if you are trying to
+extend the capabilities of `Maybe<T>`).
+```csharp
+// Value type.
+bool isSome = maybe.TryGetValue(out int value);
+
+// Reference type. Beware, "value" may be null.
+// Although the actual signature is (out string value), it's good practice to
+// add the question mark to emphasize the nullability of value; C# allows us to
+// do that with NRTs (remember they are not actual .NET types).
+bool isSome = maybe.TryGetValue(out string? value);
+```
+For the right way see [below](#safely-extract-the-enclosed-value).
 
 ### Check whether a _maybe_ is empty or not
 
@@ -109,8 +133,9 @@ Maybe<string> maybe = Maybe.SomeOrNone("...");
 
 // First the truely unsafe way of doing things, not recommended but at least
 // it is clear from the method's name that the result might be null.
-// WARNING: value may be null here!
-string value = maybe.ValueOrDefault();
+// WARNING: value may be null here! See also the remark we made while explaining
+// TryGetValue().
+string? value = maybe.ValueOrDefault();
 
 // When the maybe is empty returns the specified replacement value.
 string value = maybe.ValueOrElse("other");
