@@ -58,12 +58,12 @@ override Abc.Unit.ToString() -> string
 static Abc.Linq.Qperators.ElementAtOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, int index) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.FirstOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.FirstOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>
-static Abc.Linq.Qperators.Fold<TSource, TAccumulate>(this System.Collections.Generic.IEnumerable<TSource> source, TAccumulate seed, System.Func<TAccumulate, TSource, Abc.Maybe<TAccumulate>> accumulator) -> Abc.Maybe<TAccumulate>
-static Abc.Linq.Qperators.Fold<TSource, TAccumulate>(this System.Collections.Generic.IEnumerable<TSource> source, TAccumulate seed, System.Func<TAccumulate, TSource, Abc.Maybe<TAccumulate>> accumulator, System.Func<Abc.Maybe<TAccumulate>, bool> predicate) -> Abc.Maybe<TAccumulate>
+static Abc.Linq.Qperators.FoldAny<TSource, TAccumulate>(this System.Collections.Generic.IEnumerable<TSource> source, TAccumulate seed, System.Func<TAccumulate, TSource, Abc.Maybe<TAccumulate>> accumulator) -> Abc.Maybe<TAccumulate>
+static Abc.Linq.Qperators.FoldAny<TSource, TAccumulate>(this System.Collections.Generic.IEnumerable<TSource> source, TAccumulate seed, System.Func<TAccumulate, TSource, Abc.Maybe<TAccumulate>> accumulator, System.Func<Abc.Maybe<TAccumulate>, bool> predicate) -> Abc.Maybe<TAccumulate>
 static Abc.Linq.Qperators.LastOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.LastOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>
-static Abc.Linq.Qperators.Reduce<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, Abc.Maybe<TSource>> accumulator) -> Abc.Maybe<TSource>
-static Abc.Linq.Qperators.Reduce<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, Abc.Maybe<TSource>> accumulator, System.Func<Abc.Maybe<TSource>, bool> predicate) -> Abc.Maybe<TSource>
+static Abc.Linq.Qperators.ReduceAny<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, Abc.Maybe<TSource>> accumulator) -> Abc.Maybe<TSource>
+static Abc.Linq.Qperators.ReduceAny<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, Abc.Maybe<TSource>> accumulator, System.Func<Abc.Maybe<TSource>, bool> predicate) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.SelectAny<TSource, TResult>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Maybe<TResult>> selector) -> System.Collections.Generic.IEnumerable<TResult>
 static Abc.Linq.Qperators.SingleOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.SingleOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>

@@ -13,7 +13,7 @@ namespace Abc.Linq
     public partial class Qperators
     {
         [Pure]
-        public static Maybe<TSource> Reduce<TSource>(
+        public static Maybe<TSource> ReduceAny<TSource>(
             this IEnumerable<TSource> source,
             Func<TSource, TSource, Maybe<TSource>> accumulator)
         {
@@ -33,7 +33,7 @@ namespace Abc.Linq
         }
 
         [Pure]
-        public static Maybe<TSource> Reduce<TSource>(
+        public static Maybe<TSource> ReduceAny<TSource>(
             this IEnumerable<TSource> source,
             Func<TSource, TSource, Maybe<TSource>> accumulator,
             Func<Maybe<TSource>, bool> predicate)

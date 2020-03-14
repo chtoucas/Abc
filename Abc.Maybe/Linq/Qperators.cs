@@ -9,5 +9,30 @@ namespace Abc.Linq
     /// <see cref="IEnumerable{T}"/>.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
+    ///
+    /// <remarks><![CDATA[
+    /// Overview of the new LINQ operators.
+    ///
+    /// Projecting:
+    /// - SelectAny()       deferred streaming execution
+    ///
+    /// Filtering:
+    /// - WhereAny()        deferred streaming execution
+    ///
+    /// Joining:
+    /// - ZipAny()          deferred streaming execution
+    ///
+    /// Aggregation operations:
+    /// - FoldAny()         immediate execution
+    /// - ReduceAny()       immediate execution
+    ///
+    /// Element operations:
+    /// - FirstOrNone()     immediate execution
+    /// - LastOrNone()      immediate execution
+    /// - ElementAtOrNone() immediate execution
+    ///
+    /// Reference:
+    /// https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/classification-of-standard-query-operators-by-manner-of-execution
+    /// ]]></remarks>
     public static partial class Qperators { }
 }
