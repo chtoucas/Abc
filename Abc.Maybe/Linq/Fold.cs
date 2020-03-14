@@ -20,7 +20,7 @@ namespace Abc.Linq
             if (source is null) { throw new Anexn(nameof(source)); }
             if (accumulator is null) { throw new Anexn(nameof(accumulator)); }
 
-            // TODO: optimiser (break the loop early).
+            // TODO: optimize (break the loop early).
             using var iter = source.GetEnumerator();
 
             var r = Maybe.Of(seed);

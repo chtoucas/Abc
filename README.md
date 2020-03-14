@@ -257,8 +257,8 @@ a nullable (value or reference) type, but all static factory methods do not perm
 it. If you end up having to manipulate for say a `Maybe<int?>`, there is a method
 `Squash()` to convert it to a `Maybe<int>`.
 
-NB: `Result<T>` (not yet sure I will keep it) is a reference type and may serve
-as a replacement for `Maybe<T>`.
+NB: `Result<T>` could be a replacement for `Maybe<T>` for cases when we do want
+a reference type (work in progress and I am really not sure that I will keep it).
 
 ### General recommendations
 

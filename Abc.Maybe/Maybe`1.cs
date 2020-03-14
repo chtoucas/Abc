@@ -89,8 +89,8 @@ namespace Abc
     /// - Switch()              pattern matching
     /// - TryGetValue()         try unwrap
     /// - ValueOrDefault()      unwrap
-    /// - ValueOrElse()
-    /// - ValueOrthrow()
+    /// - ValueOrElse()         unwrap if possible, otherwise use a replacement
+    /// - ValueOrthrow()        unwrap if possible, otherwise throw
     ///
     /// Set and enumerable related methods.
     /// - GetEnumerator()       iterable (implicit)

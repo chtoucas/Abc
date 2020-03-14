@@ -13,7 +13,7 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // REVIEW: lazy extensions.
+    // REVIEW: lazy extensions, is there anything to do w/ for say Lazy<Maybe<T>>?
 
     // Experimental helpers & extension methods for Maybe<T>.
     // NB: only a handful of them may be considered for inclusion in the main proj.
