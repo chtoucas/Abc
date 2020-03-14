@@ -46,7 +46,7 @@ namespace Abc
     /// in the section remarks).</para>
     /// </summary>
     ///
-    /// <remarks><![CDATA[
+    /// <_text><![CDATA[
     /// Overview.
     ///
     /// The structure Maybe<T> is an option type for C#.
@@ -115,7 +115,7 @@ namespace Abc
     ///
     /// We also have several extension methods for specific types of T, eg
     /// structs, functions or enumerables; see the static class Maybe.
-    /// ]]></remarks>
+    /// ]]></_text>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
     public readonly partial struct Maybe<T>
