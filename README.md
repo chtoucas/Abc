@@ -263,22 +263,25 @@ a reference type (work in progress and I am really not sure that I will keep it)
 ### Usage
 
 First and foremost,
-- **DO apply all guidelines for `ValueTuple<>`** and, if they contradict what I
-  say here, follow your own wisdom.
+- **DO apply all guidelines for `ValueTuple<>` and, if they contradict what I
+  say here, follow your own wisdom.**
 - **DO NOT use `Maybe<T>` as a parameter in public APIs.**
 
 When tempted to do so, we should think harder, most certainly there is a better
 design. It is also dubious to see a method returning a _maybe_ when the method
-has no reason to fail. In general, I would even not recommend to use `Maybe<T>`
-in a general purpose library. Of course, this does not mean that you should not
-use this type at all, otherwise I would not have written this library.
+has no reason to fail.
+
+In general, I would even not recommend to expose `Maybe<T>` in a general purpose
+library. Of course, this does not mean that you should not use this type at all,
+otherwise I would not have written this library. _Maybe_'s are generally
+ephemeral and used inside a method.
 
 Regarding performance:
 - **AVOID using a _maybe_ if the object is expected to be long-lived.**
 - **AVOID using a _maybe_ in hot code paths.**
 
 About the May-Parse pattern:
-- **DO use May-Parse pattern instead of the Try-Parse pattern for reference
+- **DO use the May-Parse pattern instead of the Try-Parse pattern for reference
   types.**
 - **DO use the prefix _May_ for methods implementing this pattern.**
 

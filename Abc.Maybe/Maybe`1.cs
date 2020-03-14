@@ -30,15 +30,17 @@ namespace Abc
     // - IEquatable<T> (T == Maybe<T>), IComparable<T> but a bit missleading?
     //   IEqualityComparer<T>.
     // - Move Join() and GroupJoin() to Maybe?
-    // - Serializable?
+    // - Serializable? Binary serialization only.
+    //   https://docs.microsoft.com/en-us/dotnet/standard/serialization/binary-serialization
     // - Set ops POV.
     // - Struct really? Explain and compare to ValueTuple
+    //   https://docs.microsoft.com/en-gb/dotnet/csharp/tuples
     //   http://mustoverride.com/tuples_structs/
     //   https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
 
     /// <summary>
-    /// Represents an object that is either a single value of type T, or no
-    /// value at all.
+    /// Represents an object that is either a single value of type
+    /// <typeparamref name="T"/>, or no value at all.
     /// <para><see cref="Maybe{T}"/> is an immutable struct (but see caveats
     /// in the section remarks).</para>
     /// </summary>
@@ -111,7 +113,7 @@ namespace Abc
     /// - SwitchAsync()         async pattern matching
     ///
     /// We also have several extension methods for specific types of T, eg
-    /// structs, functions or enumerables; see the Maybe class.
+    /// structs, functions or enumerables; see the static class Maybe.
     /// ]]></remarks>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
@@ -119,6 +121,9 @@ namespace Abc
         : IEquatable<Maybe<T>>, IStructuralEquatable,
             IComparable<Maybe<T>>, IComparable, IStructuralComparable
     {
+        // We use explicit backing fields to find quickly all occurences of the
+        // corresponding properties outside the struct.
+
         private readonly bool _isSome;
 
         /// <summary>
@@ -142,9 +147,9 @@ namespace Abc
         /// <summary>
         /// Checks whether the current instance is empty or not.
         /// </summary>
-        // We expose this prop to ease extensibility, see MaybeEx in "play",
+        // We expose this property to ease extensibility, see MaybeEx in "play",
         // but this not mandatory, in fact everything should work fine without
-        // this property.
+        // it.
         public bool IsNone => !_isSome;
 
         /// <summary>

@@ -15,12 +15,13 @@ namespace Abc
 
     // REVIEW: lazy extensions, is there anything to do w/ for say Lazy<Maybe<T>>?
 
+    // NB: the code should be optimized if promoted to the main project.
+
     // Experimental helpers & extension methods for Maybe<T>.
-    // NB: only a handful of them may be considered for inclusion in the main proj.
-    // Most of them are pretty straightforward.
-    // WARNING: code to be optimized if promoted.
-    // NB: methods using IsNone are tagged w/ MAYBE_ISNONE. If we finally decide
-    // to hide this property, we SHOULD add these methods to Maybe<T>.
+    // Only a handful of them are really considered for inclusion in the main
+    // project as most of them are pretty straightforward.
+    // NB: if we change our mind and decide to hide (or rather remove) the
+    // property IsNone, we SHOULD add the methods using it to Maybe<T>.
     public static partial class MaybeEx { }
 
     // Async methods.
@@ -91,7 +92,6 @@ namespace Abc
     {
         public static void OnNone<T>(this Maybe<T> @this, Action action)
         {
-            // MAYBE_ISNONE
             if (@this.IsNone)
             {
                 if (action is null) { throw new Anexn(nameof(action)); }
@@ -164,7 +164,6 @@ namespace Abc
         // Simple solution: since IsNone is public, we do not really need to
         // bother w/ ReplaceWith(), same thing with ContinueWith() in fact.
 
-        // MAYBE_ISNONE
 #if true
         /// <remarks>
         /// <code><![CDATA[
@@ -258,7 +257,6 @@ namespace Abc
         [Pure]
         public static Maybe<T> FirstOrNone<T>(IEnumerable<Maybe<T>> source)
         {
-            // MAYBE_ISNONE
             return source.FirstOrDefault(x => !x.IsNone);
         }
 

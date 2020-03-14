@@ -11,7 +11,7 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
 
     // REVIEW: Maybe extensions & helpers; see also MaybeEx in "play".
-    // - playing with modifier "in". Currently only added to ext methods for
+    // - playing with the modifier "in". Currently only added to ext methods for
     //   Maybe<T> where T is a struct.
     // - Maybe<IEnumerable>; see CollectAny().
 
