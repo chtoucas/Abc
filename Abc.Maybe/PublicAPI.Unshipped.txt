@@ -1,8 +1,3 @@
-Abc.Err<T>
-Abc.Err<T>.Err(string message) -> void
-Abc.Err<T>.IsNone.get -> bool
-Abc.Err<T>.Message.get -> string
-Abc.Err<T>.WithGenericType<TOther>() -> Abc.Err<TOther>
 Abc.Linq.Qperators
 Abc.May
 Abc.May.May() -> void
@@ -50,45 +45,13 @@ Abc.Maybe<T>.XorElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.Yield() -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.Yield(int count) -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TOther, TResult> zipper) -> Abc.Maybe<TResult>
-Abc.Ok<T>
-Abc.Result
-Abc.Result<T>
 Abc.Unit
 Abc.Unit.Equals(Abc.Unit other) -> bool
 Abc.Unit.Equals(System.ValueTuple other) -> bool
 Abc.Unit.Unit() -> void
-abstract Abc.Result<T>.IsError.get -> bool
-abstract Abc.Result<T>.Join<TInner, TKey, TResult>(Abc.Result<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector) -> Abc.Result<TResult>
-abstract Abc.Result<T>.Join<TInner, TKey, TResult>(Abc.Result<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> Abc.Result<TResult>
-abstract Abc.Result<T>.OrElse(Abc.Result<T> other) -> Abc.Result<T>
-abstract Abc.Result<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
-abstract Abc.Result<T>.SelectMany<TMiddle, TResult>(System.Func<T, Abc.Result<TMiddle>> selector, System.Func<T, TMiddle, TResult> resultSelector) -> Abc.Result<TResult>
-abstract Abc.Result<T>.ToMaybe() -> Abc.Maybe<T>
-abstract Abc.Result<T>.Value.get -> T
-abstract Abc.Result<T>.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
-override Abc.Err<T>.IsError.get -> bool
-override Abc.Err<T>.Join<TInner, TKey, TResult>(Abc.Result<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector) -> Abc.Result<TResult>
-override Abc.Err<T>.Join<TInner, TKey, TResult>(Abc.Result<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> Abc.Result<TResult>
-override Abc.Err<T>.OrElse(Abc.Result<T> other) -> Abc.Result<T>
-override Abc.Err<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
-override Abc.Err<T>.SelectMany<TMiddle, TResult>(System.Func<T, Abc.Result<TMiddle>> selector, System.Func<T, TMiddle, TResult> resultSelector) -> Abc.Result<TResult>
-override Abc.Err<T>.ToMaybe() -> Abc.Maybe<T>
-override Abc.Err<T>.ToString() -> string
-override Abc.Err<T>.Value.get -> T
-override Abc.Err<T>.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
 override Abc.Maybe<T>.Equals(object obj) -> bool
 override Abc.Maybe<T>.GetHashCode() -> int
 override Abc.Maybe<T>.ToString() -> string
-override Abc.Ok<T>.IsError.get -> bool
-override Abc.Ok<T>.Join<TInner, TKey, TResult>(Abc.Result<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector) -> Abc.Result<TResult>
-override Abc.Ok<T>.Join<TInner, TKey, TResult>(Abc.Result<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> Abc.Result<TResult>
-override Abc.Ok<T>.OrElse(Abc.Result<T> other) -> Abc.Result<T>
-override Abc.Ok<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Result<TResult>
-override Abc.Ok<T>.SelectMany<TMiddle, TResult>(System.Func<T, Abc.Result<TMiddle>> selector, System.Func<T, TMiddle, TResult> resultSelector) -> Abc.Result<TResult>
-override Abc.Ok<T>.ToMaybe() -> Abc.Maybe<T>
-override Abc.Ok<T>.ToString() -> string
-override Abc.Ok<T>.Value.get -> T
-override Abc.Ok<T>.Where(System.Func<T, bool> predicate) -> Abc.Result<T>
 override Abc.Unit.Equals(object obj) -> bool
 override Abc.Unit.GetHashCode() -> int
 override Abc.Unit.ToString() -> string
@@ -102,13 +65,10 @@ static Abc.Linq.Qperators.LastOrNone<TSource>(this System.Collections.Generic.IE
 static Abc.Linq.Qperators.Reduce<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, Abc.Maybe<TSource>> accumulator) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.Reduce<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, Abc.Maybe<TSource>> accumulator, System.Func<Abc.Maybe<TSource>, bool> predicate) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.SelectAny<TSource, TResult>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Maybe<TResult>> selector) -> System.Collections.Generic.IEnumerable<TResult>
-static Abc.Linq.Qperators.SelectAny<TSource, TResult>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Result<TResult>> selector) -> System.Collections.Generic.IEnumerable<TResult>
 static Abc.Linq.Qperators.SingleOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.SingleOrNone<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, bool> predicate) -> Abc.Maybe<TSource>
 static Abc.Linq.Qperators.WhereAny<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Maybe<bool>> predicate) -> System.Collections.Generic.IEnumerable<TSource>
-static Abc.Linq.Qperators.WhereAny<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, Abc.Result<bool>> predicate) -> System.Collections.Generic.IEnumerable<TSource>
 static Abc.Linq.Qperators.ZipAny<T1, T2, TResult>(this System.Collections.Generic.IEnumerable<T1> first, System.Collections.Generic.IEnumerable<T2> second, System.Func<T1, T2, Abc.Maybe<TResult>> resultSelector) -> System.Collections.Generic.IEnumerable<TResult>
-static Abc.Linq.Qperators.ZipAny<T1, T2, TResult>(this System.Collections.Generic.IEnumerable<T1> first, System.Collections.Generic.IEnumerable<T2> second, System.Func<T1, T2, Abc.Result<TResult>> resultSelector) -> System.Collections.Generic.IEnumerable<TResult>
 static Abc.May.CreateUri(System.Uri baseUri, System.Uri relativeUri) -> Abc.Maybe<System.Uri>
 static Abc.May.CreateUri(System.Uri baseUri, string relativeUri) -> Abc.Maybe<System.Uri>
 static Abc.May.CreateUri(string uriString, System.UriKind uriKind) -> Abc.Maybe<System.Uri>
@@ -175,19 +135,6 @@ static Abc.Maybe<T>.operator <=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
-static Abc.Result.EmptyEnumerable<T>() -> Abc.Result<System.Collections.Generic.IEnumerable<T>>
-static Abc.Result.Err(string message) -> Abc.Err<Abc.Unit>
-static Abc.Result.Err<T>(string message) -> Abc.Err<T>
-static Abc.Result.Flatten<T>(this Abc.Result<Abc.Result<T>> this) -> Abc.Result<T>
-static Abc.Result.None<T>() -> Abc.Err<T>
-static Abc.Result.Of<T>(T value) -> Abc.Result<T>
-static Abc.Result.Of<T>(T? value) -> Abc.Result<T>
-static Abc.Result.Some<T>(T value) -> Abc.Ok<T>
-static Abc.Result.SomeOrNone<T>(T value) -> Abc.Result<T>
-static Abc.Result.SomeOrNone<T>(T? value) -> Abc.Result<T>
-static Abc.Result.Squash<T>(this Abc.Err<T?> this) -> Abc.Err<T>
-static Abc.Result.Squash<T>(this Abc.Ok<T?> this) -> Abc.Ok<T>
-static Abc.Result.Squash<T>(this Abc.Result<T?> this) -> Abc.Result<T>
 static Abc.Unit.operator !=(Abc.Unit left, Abc.Unit right) -> bool
 static Abc.Unit.operator !=(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator !=(System.ValueTuple left, Abc.Unit right) -> bool
@@ -197,7 +144,4 @@ static Abc.Unit.operator ==(System.ValueTuple left, Abc.Unit right) -> bool
 static readonly Abc.Maybe.Unit -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Maybe.Zero -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Maybe<T>.None -> Abc.Maybe<T>
-static readonly Abc.Result.Unit -> Abc.Result<Abc.Unit>
-static readonly Abc.Result.Zero -> Abc.Err<Abc.Unit>
-static readonly Abc.Result<T>.None -> Abc.Err<T>
 static readonly Abc.Unit.Default -> Abc.Unit

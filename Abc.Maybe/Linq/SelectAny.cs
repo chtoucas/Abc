@@ -20,16 +20,5 @@ namespace Abc.Linq
                    where result.IsSome
                    select result.Value;
         }
-
-        [Pure]
-        public static IEnumerable<TResult> SelectAny<TSource, TResult>(
-            this IEnumerable<TSource> source,
-            Func<TSource, Result<TResult>> selector)
-        {
-            return from x in source
-                   let result = selector(x)
-                   where !result.IsError
-                   select result.Value;
-        }
     }
 }

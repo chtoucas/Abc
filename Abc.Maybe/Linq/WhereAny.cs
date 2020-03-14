@@ -20,16 +20,5 @@ namespace Abc.Linq
                    where result.IsSome && result.Value
                    select x;
         }
-
-        [Pure]
-        public static IEnumerable<TSource> WhereAny<TSource>(
-            this IEnumerable<TSource> source,
-            Func<TSource, Result<bool>> predicate)
-        {
-            return from x in source
-                   let result = predicate(x)
-                   where !result.IsError && result.Value
-                   select x;
-        }
     }
 }
