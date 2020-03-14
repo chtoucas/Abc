@@ -1,8 +1,8 @@
 # Abécédaire
 
-- [Quick start with `Maybe<T>`](#quick-start-with-maybet)
-- [Guidelines](#guidelines)
-- [Developer notes](#developer-notes)
+- [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
+- [Usage Guidelines](#usage-guidelines)
+- [Developer Notes](#developer-notes)
 
 `Abc` features:
 - An option type for C#.
@@ -20,10 +20,10 @@ Quick Start with `Maybe<T>`
 - [Side effects](#side-effects-do-something-with-the-enclosed-value-if-any)
 - [Binding](#binding)
 - [Query Expression Pattern](#query-expression-pattern)
-- [More features](#more-features)
+- [More](#more)
 - [Samples](#samples)
 
-An option type or maybe type (a better fit for what we use it for), is like
+An option type, aka maybe type (a better fit for what we use it for), is like
 a box containing a value or no value at all.
 
 It can help preventing null reference exceptions, but that's not the point, it
@@ -45,6 +45,11 @@ not actual .NET types but annotations that the compiler can take advantage of.
 There are many other small differences. For instance, one can nest _maybe_'s
 (`Maybe<Maybe<T>>`) whereas one can't create an `int??`; `Nullable<Nullable<T>>`
 is not valid in C#.
+
+#### Use cases
+
+(to be done: untaint data, validate, transform, filter, correctness,
+SQL `null`, may-parse pattern, command-line args, HTTP query params)
 
 ### Construct a _maybe_
 
@@ -213,6 +218,7 @@ var q = maybe.Select(May.ParseInt32)    // <-- Maybe<Maybe<int>>
 
 We already saw `Select` and `Where`, but there is more.
 ```csharp
+// Cross join.
 var q = from i in maybe1
         from j in maybe2
         select i + j
@@ -229,12 +235,12 @@ var q = from x in maybe1
         select (x, y, z)
 ```
 
-### More features
+### More
 
 See the XML comments for samples.
-- LINQ and collection extensions; see `Abc.Linq` and `Abc.Extensions`.
-- Parsing helpers; see `May`.
-- XML & SQL data type helpers; see `Abc.Extensions`.
+- LINQ and collection extensions in `Abc.Linq` and `Abc.Extensions`.
+- Parsing helpers provided by the static class `May`.
+- XML & SQL data type helpers in `Abc.Extensions`.
 
 ### Samples
 
@@ -261,12 +267,14 @@ representation of an integer > 10. Morevover, the result is NOT empty even if
 the key `x` does not exist or is multi-valued, in which case we pick a default
 value.
 
-Guidelines
-----------
+Usage Guidelines
+----------------
 
 Your mantra should be "**_maybe do not abuse the maybe_**".
 
-### Generic type parameter
+First and foremost,
+- **DO apply all guidelines for `ValueTuple<>` and, if they contradict what I
+  say here, follow your own wisdom.**
 
 The `Maybe<T>` type is a value type. Even if it is a natural choice, it worried
 me and I hesitated for a while. The addition of value tuples to .NET convinced
@@ -288,33 +296,37 @@ say a `Maybe<int?>`, there is a method `Squash()` to convert it to a `Maybe<int>
 NB: `Result<T>` could be a replacement for `Maybe<T>` for cases when we do want
 a reference type (work in progress and I am really not sure that I will keep it).
 
-### Usage
-
-First and foremost,
-- **DO apply all guidelines for `ValueTuple<>` and, if they contradict what I
-  say here, follow your own wisdom.**
+#### API design
 - **DO NOT use `Maybe<T>` as a parameter in public APIs.**
 
 When tempted to do so, we should think harder, most certainly there is a better
 design. It is also dubious to see a method returning a _maybe_ when the method
-has no reason to fail. Nevertheless, do not replace exceptions with _maybe_'s
+has no reason to fail. On a side note, do not replace exceptions with _maybe_'s
 when the error is actually "exceptional".
 
-In general, I would even not recommend to expose `Maybe<T>` in a general purpose
-library. Of course, this does not mean that you should not use this type at all,
-otherwise I would not have written this library. _Maybe_'s should be ephemeral
-and mostly confined inside a method.
+In general, I would not even recommend to expose `Maybe<T>` in a general purpose
+library. For instance, returning a _maybe_ raises the concern that unexperienced
+users may be tempted to progagate the _maybe_ to a higher level even if they can
+handle the failure, which would cause unnecessary complications and further
+usability problems.
 
-Regarding performance:
+Of course, this does not mean that you should not use this type at all,
+otherwise I would not have written this library. _Maybe_'s should be
+**ephemeral** and mostly confined inside a method.
+
+#### Regarding performance
 - **AVOID using a _maybe_ if the object is expected to be long-lived.** (why not?)
 - **AVOID using a _maybe_ in hot code paths.**
 
 (struct could imply a ton of copying, what about LINQ (seq of _maybe_'s)?)
 
-About the May-Parse pattern:
+#### About the May-Parse pattern
 - **DO use the May-Parse pattern instead of the Try-Parse pattern for reference
   types.**
 - **DO use the prefix _May_ for methods implementing this pattern.**
+
+For reference types, a _maybe_ offers a better paradigm than a `null` to express
+the inability to return a reasonnable result.
 
 Developer Notes
 ---------------

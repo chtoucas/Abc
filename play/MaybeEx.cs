@@ -13,7 +13,8 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // REVIEW: lazy extensions, is there anything to do w/ for say Lazy<Maybe<T>>?
+    // REVIEW: lazy extensions, is there anything we can do w/ for say
+    // Lazy<Maybe<T>>?
 
     // NB: the code should be optimized if promoted to the main project.
 
