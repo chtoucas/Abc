@@ -140,6 +140,9 @@ namespace Abc
         /// <summary>
         /// Checks whether the current instance is empty or not.
         /// </summary>
+        // We expose this prop to ease extensibility, see MaybeEx in "play",
+        // but this not mandatory, in fact everything should work fine without
+        // this property.
         public bool IsNone => !_isSome;
 
         /// <summary>

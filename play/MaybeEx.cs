@@ -18,7 +18,9 @@ namespace Abc
     // Experimental helpers & extension methods for Maybe<T>.
     // NB: only a handful of them may be considered for inclusion in the main proj.
     // Most of them are pretty straightforward.
-    // Important: code to be optimized if promoted.
+    // WARNING: code to be optimized if promoted.
+    // NB: methods using IsNone are tagged w/ MAYBE_ISNONE. If we finally decide
+    // to hide this property, we SHOULD add these methods to Maybe<T>.
     public static partial class MaybeEx { }
 
     // Async methods.
@@ -89,6 +91,7 @@ namespace Abc
     {
         public static void OnNone<T>(this Maybe<T> @this, Action action)
         {
+            // MAYBE_ISNONE
             if (@this.IsNone)
             {
                 if (action is null) { throw new Anexn(nameof(action)); }
@@ -130,11 +133,39 @@ namespace Abc
     // Misc methods.
     public partial class MaybeEx
     {
-        // ReplaceWith() causes some API problems and since we already have
-        // ContinueWith(), it's better left off.
-        // We offer two versions to be able to inform the caller that the method
-        // return a Maybe<TResult> not a Maybe<TResult?>.
+        // Objectives: constraint TResult : notnull, prevent the creation of
+        // Maybe<TResult?>, alternative to ContinueWith() to avoid the creation
+        // of a Maybe when it is not strictly necessary.
+        //
+        // We should be able to write:
+        //   maybe.ReplaceWith(1)
+        //   maybe.ReplaceWith((TResult)obj)
+        // We should NOT be able to write:
+        //   maybe.ReplaceWith((int?)1)         // nullable value type
+        //   maybe.ReplaceWith((TResult?)null)  // nullable reference type
+        //
+        // We want to offer two versions of ReplaceWith(), one for classes and
+        // another for structs, to make sure that the method returns a
+        // Maybe<TResult> not a Maybe<TResult?>, but it causes some API problems,
+        // and since we already have ContinueWith(), it's better left off for now.
+        // Moreover it is just a Select(_ => other); we only bother because we
+        // would like to avoid the creation of an unnecessary lambda.
+        // Of course, if we don't mind about Maybe<TResult?> the obvious
+        // solution is to have only a single method to treat all cases.
+        // NB: this looks a lot like the problem we have with Maybe.SomeOrNone()
+        // and Maybe.Of().
+        //
+        // Other point: we should write "where TResult : notnull", since when
+        // "other" is null we should rather use ContinueWith(), nervertheless,
+        // whatever I try, I end up double-checking null's, in ReplaceWith()
+        // and in the factory method --- that was another reason why we have
+        // two versions of ReplaceWith().
+        //
+        // Simple solution: since IsNone is public, we do not really need to
+        // bother w/ ReplaceWith(), same thing with ContinueWith() in fact.
 
+        // MAYBE_ISNONE
+#if true
         /// <remarks>
         /// <code><![CDATA[
         ///   Some(1) & 2L == Some(2L)
@@ -143,6 +174,16 @@ namespace Abc
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long:
         //   (x.HasValue ? (long?)y : (long?)null).
+        // It does work with null but then one should really use ContinueWith().
+        [Pure]
+        public static Maybe<TResult> ReplaceWith<T, TResult>(
+            this Maybe<T> @this, TResult value)
+            where TResult : notnull
+        {
+            // Drawback: double-null checks for structs.
+            return !@this.IsNone ? Maybe.Of(value) : Maybe<TResult>.None;
+        }
+#else
         [Pure]
         public static Maybe<TResult> ReplaceWith<T, TResult>(
             this Maybe<T> @this, TResult? value)
@@ -153,7 +194,9 @@ namespace Abc
         }
 
         // It works with null but then one should really use
-        // ContinueWith(Maybe<TResult>.None).
+        // ContinueWith(Maybe<TResult>.None). We can't remove the nullable
+        // in the param otherwise we would have two methods with the same
+        // name.
         [Pure]
         public static Maybe<TResult> ReplaceWith<T, TResult>(
             this Maybe<T> @this, TResult? value)
@@ -162,6 +205,7 @@ namespace Abc
             return !@this.IsNone && value.HasValue ? Maybe.Some(value.Value)
                 : Maybe<TResult>.None;
         }
+#endif
 
         // Specialized version of Where() when the state of the maybe and the
         // value it encloses are not taken into account.
@@ -214,6 +258,7 @@ namespace Abc
         [Pure]
         public static Maybe<T> FirstOrNone<T>(IEnumerable<Maybe<T>> source)
         {
+            // MAYBE_ISNONE
             return source.FirstOrDefault(x => !x.IsNone);
         }
 

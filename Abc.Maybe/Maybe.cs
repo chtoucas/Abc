@@ -56,6 +56,7 @@ namespace Abc
         /// <see cref="SomeOrNone{T}(T?)"/> or <see cref="SomeOrNone{T}(T)"/>
         /// should be used instead.</para>
         /// </summary>
+        // Unconstrained version Of SomeOrNone() and Some().
         // F# Workflow: return.
         [Pure]
         public static Maybe<T> Of<T>([AllowNull] T value)
