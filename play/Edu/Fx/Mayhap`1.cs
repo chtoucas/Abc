@@ -149,10 +149,35 @@ namespace Abc.Edu.Fx
         }
     }
 
-    // Boolean operations, just for fun.
+    // Boolean & bitwise operations, just for fun.
+    // The analogy with bools and bits is a bit contrived.
+    // https://en.wikipedia.org/wiki/Bitwise_operation
+    // Knuth vol. 4A
     public partial struct Mayhap<T>
     {
-        // AND.
+#pragma warning disable CA2225 // Operator overloads have named alternates
+
+        public static bool operator true(Mayhap<T> value)
+            => value._isSome;
+
+        public static bool operator false(Mayhap<T> value)
+            => !value._isSome;
+
+        public static Mayhap<T> operator &(Mayhap<T> left, Mayhap<T> right)
+            => left.And(right);
+
+        public static Mayhap<T> operator |(Mayhap<T> left, Mayhap<T> right)
+            => left.Or(right);
+
+        public static Mayhap<T> operator ^(Mayhap<T> left, Mayhap<T> right)
+            => left.Xor(right);
+
+#pragma warning restore CA2225
+
+        // REVIEW: AND.
+
+        // Truth table: 0001.
+        // Conjunction AND.
         //   Some(1) & Some(2) == Some(1)
         //   Some(1) & None    == None
         //   None    & Some(2) == None
@@ -161,25 +186,26 @@ namespace Abc.Edu.Fx
         public Mayhap<T> And(Mayhap<T> other)
             => other._isSome ? this : None;
 
-        // Sort of AND.
+        // Conjunction, sort of AND.
         //   Some(1) & Some(2) == Some(2)
         //   Some(1) & None    == None
         //   None    & Some(2) == None
         //   None    & None    == None
         // Identical to Applicative.ContinueWith()
-        public Mayhap<TResult> AndThen<TResult>(Mayhap<TResult> other)
-            => _isSome ? other : Mayhap<TResult>.None;
+        public Mayhap<T> AndThen(Mayhap<T> other)
+            => _isSome ? other : Mayhap<T>.None;
 
-        // OR.
-        //   Some(1) | Some(2) == Some(1)
-        //   Some(1) | None    == Some(1)
-        //   None    | Some(2) == Some(2)
-        //   None    | None    == None
-        // Identical to Alternative.Otherwise().
-        public Mayhap<T> Or(Mayhap<T> other)
-            => _isSome ? this : other;
+        // Truth table: 0010.
+        // Nonimplication NOT (->), "but not".
+        //   Some(1) : Some(2) == None
+        //   Some(1) : None    == Some(1)
+        //   None    : Some(2) == None
+        //   None    : None    == None
+        public Mayhap<T> Nimply(Mayhap<T> other)
+            => !other._isSome ? this : None;
 
-        // XOR.
+        // Truth table: 0110.
+        // Exclusive disjunction XOR.
         //   Some(1) ^ Some(2) == None
         //   Some(1) ^ None    == Some(1)
         //   None    ^ Some(2) == Some(2)
@@ -189,21 +215,24 @@ namespace Abc.Edu.Fx
                 ? other._isSome ? None : this
                 : other._isSome ? other : None;
 
-        // NOT (->).
-        //   Some(1) : Some(2) == None
-        //   Some(1) : None    == Some(1)
-        //   None    : Some(2) == None
-        //   None    : None    == None
-        public Mayhap<T> Nimply(Mayhap<T> other)
-            => !other._isSome ? this : None;
-
-        // NOT (<-).
+        // Truth table: 0100.
+        // Converse nonimplication NOT (<-), "not ... but".
         //   Some(1) : Some(2) == None
         //   Some(1) : None    == None
         //   None    : Some(2) == Some(2)
         //   None    : None    == None
-        public Mayhap<TResult> NYlpmi<TResult>(Mayhap<TResult> other)
-            => !_isSome ? other : Mayhap<TResult>.None;
+        public Mayhap<T> NYlpmi(Mayhap<T> other)
+            => !_isSome ? other : Mayhap<T>.None;
+
+        // Truth table: 0111.
+        // Inclusive disjunction OR.
+        //   Some(1) | Some(2) == Some(1)
+        //   Some(1) | None    == Some(1)
+        //   None    | Some(2) == Some(2)
+        //   None    | None    == None
+        // Identical to Alternative.Otherwise().
+        public Mayhap<T> Or(Mayhap<T> other)
+            => _isSome ? this : other;
     }
 
     // Interface IEquatable<>.

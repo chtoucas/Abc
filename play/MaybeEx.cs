@@ -221,25 +221,27 @@ namespace Abc
         public static Maybe<T> Filter<T>(this Maybe<T> @this, bool condition)
             => condition ? @this : Maybe<T>.None;
 
-        // NOT (<-).
+        // Converse nonimplication, "not P but Q".
         //   Some(1) : Some(2) == None
         //   Some(1) : None    == None
         //   None    : Some(2) == Some(2)
         //   None    : None    == None
         // Like ContinueWith() but when @this is the empty maybe.
+        // ContinueWith() == ContinueWithIfSome().
         [Pure]
-        public static Maybe<TResult> NYlpmi<T, TResult>(
+        public static Maybe<TResult> ContinueWithIfNone<T, TResult>(
             this Maybe<T> @this, Maybe<TResult> other)
             => @this.IsNone ? other : Maybe<TResult>.None;
 
-        // NOT (->), not imply
+        // Nonimplication, "P but not Q".
         //   Some(1) : Some(2) == None
         //   Some(1) : None    == Some(1)
         //   None    : Some(2) == None
         //   None    : None    == None
         // Like PassThru() but when "other" is the empty maybe.
+        // PassThru() == PassThruWhenSome().
         [Pure]
-        public static Maybe<T> Nimply<T, TOther>(
+        public static Maybe<T> PassThruWhenNone<T, TOther>(
             this Maybe<T> @this, Maybe<TOther> other)
             => other.IsNone ? @this : Maybe<T>.None;
     }

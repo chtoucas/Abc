@@ -30,7 +30,6 @@ namespace Abc
     //   https://devblogs.microsoft.com/dotnet/embracing-nullable-reference-types/
     // - IEquatable<T> (T == Maybe<T>), IComparable<T> but a bit missleading?
     //   Overloads w/ IEqualityComparer<T>.
-    // - boolean ops.
     // - Move Join() and GroupJoin() to Maybe? We need compelling examples.
     // - Serializable? Binary serialization only.
     //   https://docs.microsoft.com/en-us/dotnet/standard/serialization/binary-serialization
@@ -210,7 +209,6 @@ namespace Abc
         /// <seealso cref="Maybe.None{T}"/>
         public static readonly Maybe<T> None = default;
 
-        // F# Workflow: let!.
         [Pure]
         public Maybe<TResult> Bind<TResult>(Func<T, Maybe<TResult>> binder)
         {
@@ -732,6 +730,7 @@ namespace Abc
         /// the result.
         /// </para>
         /// </remarks>
+        // F# Workflow: let!.
         [Pure]
         public Maybe<TResult> ZipWith<TOther, TResult>(
             Maybe<TOther> other,
@@ -753,10 +752,10 @@ namespace Abc
         /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
         /// binder <c>_ => other</c>.
         /// <code><![CDATA[
-        ///   Some(1) & Some(2L) == Some(2L)
-        ///   Some(1) & None     == None
-        ///   None    & Some(2L) == None
-        ///   None    & None     == None
+        ///   Some(1) RAND Some(2L) == Some(2L)
+        ///   Some(1) RAND None     == None
+        ///   None    RAND Some(2L) == None
+        ///   None    RAND None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
@@ -771,10 +770,10 @@ namespace Abc
         /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
         /// binder <c>_ => this</c>.
         /// <code><![CDATA[
-        ///   Some(1) & Some(2L) == Some(1)
-        ///   Some(1) & None     == None
-        ///   None    & Some(2L) == None
-        ///   None    & None     == None
+        ///   Some(1) LAND Some(2L) == Some(1)
+        ///   Some(1) LAND None     == None
+        ///   None    LAND Some(2L) == None
+        ///   None    LAND None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
@@ -789,10 +788,10 @@ namespace Abc
         /// This method can be though as an exclusive OR for maybe's, provided
         /// that an empty maybe is said to be false.
         /// <code><![CDATA[
-        ///   Some(1) ^ Some(2) == None
-        ///   Some(1) ^ None    == Some(1)
-        ///   None    ^ Some(2) == Some(2)
-        ///   None    ^ None    == None
+        ///   Some(1) XOR Some(2) == None
+        ///   Some(1) XOR None    == Some(1)
+        ///   None    XOR Some(2) == Some(2)
+        ///   None    XOR None    == None
         /// ]]></code>
         /// </remarks>
         [Pure]
