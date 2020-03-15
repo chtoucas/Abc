@@ -267,7 +267,6 @@ namespace Abc
             this Maybe<T> @this, Maybe<TResult> other)
             => @this.IsNone ? other : Maybe<TResult>.None;
 
-        // Truth table: 0010.
         // Nonimplication, "P but not Q".
         /// <code><![CDATA[
         ///   Some(1) NIMPLY Some(2) == None
