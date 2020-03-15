@@ -9,9 +9,6 @@ namespace Abc.Edu.Fx
 
     using Abc.Utilities;
 
-    // WARNING: This code does NOT reflect best practice.
-    // [The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html).
-
     /// <summary>
     /// Represents the Maybe monad.
     /// </summary>
@@ -31,11 +28,8 @@ namespace Abc.Edu.Fx
                 some: x => $"Mayhap({x})",
                 none: "Mayhap(None)");
 
-        public IEnumerable<T> Yield()
+        public IEnumerable<T> ToEnumerable()
             => _isSome ? Enumerable.Repeat(_value, 1) : Enumerable.Empty<T>();
-
-        public IEnumerator<T> GetEnumerator()
-            => Yield().GetEnumerator();
 
         public bool Contains(T value)
             => match(
@@ -156,7 +150,6 @@ namespace Abc.Edu.Fx
     }
 
     // Boolean operations, just for fun.
-    // https://blog.codinghorror.com/a-visual-explanation-of-sql-joins/
     public partial struct Mayhap<T>
     {
         // AND.

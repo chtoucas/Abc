@@ -2,7 +2,10 @@
 -----------------
 The classes found here exist for the sole purpose of my own education.
 API and documentation are **adapted** (copied) from the Haskell sources.
-The port from Haskell is quite loose and the result is NOT meant for efficiency.
+The port from Haskell is quite loose, the result is NOT meant for efficiency
+and does NOT reflect best practice.
+
+[The Haskell 98 Report](https://www.haskell.org/onlinereport/monad.html)
 
 Overview
 --------
