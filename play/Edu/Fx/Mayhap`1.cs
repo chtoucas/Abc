@@ -150,9 +150,6 @@ namespace Abc.Edu.Fx
     }
 
     // Boolean & bitwise operations, just for fun.
-    // The analogy with bools and bits is a bit contrived.
-    // https://en.wikipedia.org/wiki/Bitwise_operation
-    // Knuth vol. 4A
     public partial struct Mayhap<T>
     {
 #pragma warning disable CA2225 // Operator overloads have named alternates
@@ -167,72 +164,23 @@ namespace Abc.Edu.Fx
             => left.And(right);
 
         public static Mayhap<T> operator |(Mayhap<T> left, Mayhap<T> right)
-            => left.Or(right);
+            => left.OrElse(right);
 
         public static Mayhap<T> operator ^(Mayhap<T> left, Mayhap<T> right)
             => left.Xor(right);
 
 #pragma warning restore CA2225
 
-        // REVIEW: AND.
+        // FIXME: AND = PassThru() or ContinueWith()?
 
-        // Truth table: 0001.
-        // Conjunction AND.
-        //   Some(1) & Some(2) == Some(1)
-        //   Some(1) & None    == None
-        //   None    & Some(2) == None
-        //   None    & None    == None
-        // Identical to Applicative.PassThru().
+        // Applicative.PassThru().
         public Mayhap<T> And(Mayhap<T> other)
             => other._isSome ? this : None;
 
-        // Conjunction, sort of AND.
-        //   Some(1) & Some(2) == Some(2)
-        //   Some(1) & None    == None
-        //   None    & Some(2) == None
-        //   None    & None    == None
-        // Identical to Applicative.ContinueWith()
-        public Mayhap<T> AndThen(Mayhap<T> other)
-            => _isSome ? other : Mayhap<T>.None;
-
-        // Truth table: 0010.
-        // Nonimplication NOT (->), "but not".
-        //   Some(1) : Some(2) == None
-        //   Some(1) : None    == Some(1)
-        //   None    : Some(2) == None
-        //   None    : None    == None
-        public Mayhap<T> Nimply(Mayhap<T> other)
-            => !other._isSome ? this : None;
-
-        // Truth table: 0110.
-        // Exclusive disjunction XOR.
-        //   Some(1) ^ Some(2) == None
-        //   Some(1) ^ None    == Some(1)
-        //   None    ^ Some(2) == Some(2)
-        //   None    ^ None    == None
         public Mayhap<T> Xor(Mayhap<T> other)
             => _isSome
                 ? other._isSome ? None : this
                 : other._isSome ? other : None;
-
-        // Truth table: 0100.
-        // Converse nonimplication NOT (<-), "not ... but".
-        //   Some(1) : Some(2) == None
-        //   Some(1) : None    == None
-        //   None    : Some(2) == Some(2)
-        //   None    : None    == None
-        public Mayhap<T> NYlpmi(Mayhap<T> other)
-            => !_isSome ? other : Mayhap<T>.None;
-
-        // Truth table: 0111.
-        // Inclusive disjunction OR.
-        //   Some(1) | Some(2) == Some(1)
-        //   Some(1) | None    == Some(1)
-        //   None    | Some(2) == Some(2)
-        //   None    | None    == None
-        // Identical to Alternative.Otherwise().
-        public Mayhap<T> Or(Mayhap<T> other)
-            => _isSome ? this : other;
     }
 
     // Interface IEquatable<>.

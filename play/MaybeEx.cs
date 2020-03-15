@@ -220,12 +220,46 @@ namespace Abc
         [Pure]
         public static Maybe<T> Filter<T>(this Maybe<T> @this, bool condition)
             => condition ? @this : Maybe<T>.None;
+    }
+
+    // GATES, boolean & bitwise operations.
+    // The analogy with bools and bits is a bit contrived.
+    // Convention:
+    // - ...IfNone() or ...IfSome(), the current instance is empty or not.
+    // - ...WhenNone() or ...WhenSome(), the other maybe is empty or not.
+    // References:
+    // - Knuth vol. 4A
+    // - https://en.wikipedia.org/wiki/Bitwise_operation
+    public partial class MaybeEx
+    {
+        // Truth table / Gate / Method / Description
+        //   0000
+        //   0001   AND     PassThru()*                 conjunction; and
+        //   -      -       ContinueWith()*             -
+        //   0010   NIMPLY  PassThruWhenNone()          nonimplication; difference; but not
+        //   0011
+        //   0100           ContinueWithIfNone()        converse nonimplication; not ... but
+        //   0101
+        //   0110   XOR     XorElse()*                  exclusive disjunction; nonequivalence
+        //   0111   OR      OrElse()*                   inclusive disjunction; or; and/or
+        //   1000   NOR                                 nondisjunction
+        //   1001   XNOR                                equivalence; if and only if; "iff"
+        //   1010
+        //   1011
+        //   1100
+        //   1101
+        //   1110   NAND                                nonconjunction
+        //   1111
+        //
+        // * Already in Maybe<T>.
 
         // Converse nonimplication, "not P but Q".
-        //   Some(1) : Some(2) == None
-        //   Some(1) : None    == None
-        //   None    : Some(2) == Some(2)
-        //   None    : None    == None
+        /// <code><![CDATA[
+        ///   Some(1) not(<-) Some(2) == None
+        ///   Some(1) not(<-) None    == None
+        ///   None    not(<-) Some(2) == Some(2)
+        ///   None    not(<-) None    == None
+        /// ]]></code>
         // Like ContinueWith() but when @this is the empty maybe.
         // ContinueWith() == ContinueWithIfSome().
         [Pure]
@@ -233,11 +267,14 @@ namespace Abc
             this Maybe<T> @this, Maybe<TResult> other)
             => @this.IsNone ? other : Maybe<TResult>.None;
 
+        // Truth table: 0010.
         // Nonimplication, "P but not Q".
-        //   Some(1) : Some(2) == None
-        //   Some(1) : None    == Some(1)
-        //   None    : Some(2) == None
-        //   None    : None    == None
+        /// <code><![CDATA[
+        ///   Some(1) NIMPLY Some(2) == None
+        ///   Some(1) NIMPLY None    == Some(1)
+        ///   None    NIMPLY Some(2) == None
+        ///   None    NIMPLY None    == None
+        /// ]]></code>
         // Like PassThru() but when "other" is the empty maybe.
         // PassThru() == PassThruWhenSome().
         [Pure]
