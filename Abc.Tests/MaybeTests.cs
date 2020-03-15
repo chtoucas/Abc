@@ -142,11 +142,11 @@ namespace Abc
             // None.SelectMany(Some) -> None
             Assert.None(Ø.SelectMany(i => Maybe.Some(2 * i), (i, j) => i + j));
             Assert.None(from i in Ø from j in Maybe.Some(2 * i) select i + j);
-
             // Some.SelectMany(None) -> None
             Assert.None(One.SelectMany(_ => Ø, (i, j) => i + j));
             Assert.None(from i in One from j in Ø select i + j);
-            // None.SelectMany(Some) -> Some
+
+            // Some.SelectMany(Some) -> Some
             Assert.Some(3, One.SelectMany(i => Maybe.Some(2 * i), (i, j) => i + j));
             Assert.Some(3, from i in One from j in Maybe.Some(2 * i) select i + j);
         }
@@ -169,11 +169,60 @@ namespace Abc
             Assert.None(Ø.ZipWith(Ø, (i, j) => i + j));
             // None.ZipWith(Some) -> None
             Assert.None(Ø.ZipWith(Two, (i, j) => i + j));
-
             // Some.ZipWith(None) -> None
             Assert.None(One.ZipWith(Ø, (i, j) => i + j));
-            // None.ZipWith(Some) -> Some
+
+            // Some.ZipWith(Some) -> Some
             Assert.Some(3, One.ZipWith(Two, (i, j) => i + j));
+        }
+
+        [Fact]
+        public static void ContinueWith()
+        {
+            // None.ContinueWith(None) -> None
+            Assert.None(Ø.ContinueWith(Ø));
+            // None.ContinueWith(Some) -> None
+            Assert.None(Ø.ContinueWith(Two));
+            // Some.ContinueWith(None) -> None
+            Assert.None(One.ContinueWith(Ø));
+
+            // Some.ContinueWith(Some) -> Some
+            Assert.Some(2, One.ContinueWith(Two));
+        }
+
+        [Fact]
+        public static void PassThru()
+        {
+            // None.PassThru(None) -> None
+            Assert.None(Ø.PassThru(Ø));
+            // None.PassThru(Some) -> None
+            Assert.None(Ø.PassThru(Two));
+            // Some.PassThru(None) -> None
+            Assert.None(One.PassThru(Ø));
+
+            // Some.PassThru(Some) -> Some
+            Assert.Some(1, One.PassThru(Two));
+        }
+
+        [Fact]
+        public static void XorElse()
+        {
+            // None.XorElse(None) -> None
+            Assert.None(Ø.XorElse(Ø));
+            // Some.XorElse(Some) -> None
+            Assert.None(One.XorElse(Two));
+
+            // None.XorElse(Some) -> Some
+            Assert.Some(2, Ø.XorElse(Two));
+            // Some.XorElse(None) -> Some
+            Assert.Some(1, One.XorElse(Ø));
+        }
+
+        [Fact]
+        public static void Skip()
+        {
+            Assert.Equal(Maybe.Zero, Ø.Skip());
+            Assert.Equal(Maybe.Unit, One.Skip());
         }
     }
 

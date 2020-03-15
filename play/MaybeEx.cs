@@ -167,6 +167,8 @@ namespace Abc
 
 #if true
         /// <remarks>
+        /// <see cref="ReplaceWith"/> is a <see cref="Maybe{T}.Select"/> with a
+        /// constant selector <c>_ => value</c>.
         /// <code><![CDATA[
         ///   Some(1) & 2L == Some(2L)
         ///   None    & 2L == None

@@ -77,9 +77,9 @@ namespace Abc
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
     /// - GroupJoin()           LINQ group join
-    /// - OrElse()              coalescing
+    /// - OrElse()              coalesce
     /// - XorElse()
-    /// - ZipWith()
+    /// - ZipWith()             cross join
     /// - Apply()
     /// - ContinueWith()
     /// - PassThru()
@@ -700,10 +700,17 @@ namespace Abc
     // since this forces us to use (unnecessary) lambda functions.
     public partial struct Maybe<T>
     {
+        [Pure]
+        public Maybe<TResult> Apply<TResult>(Maybe<Func<T, TResult>> applicative)
+        {
+            return _isSome && applicative._isSome ? Maybe.Of(applicative._value(_value))
+                : Maybe<TResult>.None;
+        }
+
         /// <remarks>
         /// <see cref="ZipWith"/> generalizes <see cref="Bind"/>. Indeed,
         /// <see cref="Bind"/> is <see cref="ZipWith"/> with a constant
-        /// zipper <c>(_, y) => y</c>:
+        /// zipper <c>(_, y) => y</c>; in query syntax:
         /// <code><![CDATA[
         ///   from x in maybe
         ///   from y in other
@@ -724,14 +731,14 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        [Pure]
-        public Maybe<TResult> Apply<TResult>(Maybe<Func<T, TResult>> applicative)
-        {
-            return _isSome && applicative._isSome ? Maybe.Of(applicative._value(_value))
-                : Maybe<TResult>.None;
-        }
-
+        /// <summary>
+        /// Returns <paramref name="other"/> if the current instance is not
+        /// empty; otherwise returns the empty maybe of type
+        /// <typeparamref name="TResult"/>.
+        /// </summary>
         /// <remarks>
+        /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
+        /// binder <c>_ => other</c>.
         /// <code><![CDATA[
         ///   Some(1) & Some(2L) == Some(2L)
         ///   Some(1) & None     == None
@@ -748,6 +755,8 @@ namespace Abc
         }
 
         /// <remarks>
+        /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
+        /// binder <c>_ => this</c>.
         /// <code><![CDATA[
         ///   Some(1) & Some(2L) == Some(1)
         ///   Some(1) & None     == None
