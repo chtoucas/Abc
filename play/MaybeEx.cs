@@ -229,47 +229,79 @@ namespace Abc
     // - ...WhenNone() or ...WhenSome(), the other maybe is empty or not.
     // References:
     // - Knuth vol. 4A
+    // - https://en.wikipedia.org/wiki/Logical_connective (naming)
     // - https://en.wikipedia.org/wiki/Logic_gate
     // - https://en.wikipedia.org/wiki/Bitwise_operation
     public partial class MaybeEx
     {
-        // X = not(x) et Y = not(y)
         // Truth table / Gate / Notation / Method / Description
-        //   0000             0                                 contradiction; falsehood; antilogy
-        //   0001   AND     x & y   PassThru()*                 conjunction; and
-        //   -      -       -       ContinueWith()*             -
-        //   0010   NIMPLY  x & Y   PassThruWhenNone()          nonimplication; difference; but not
-        //   0011           x                                   left projection
-        //   0100           X & y   ContinueWithIfNone()        converse nonimplication; not ... but
-        //   0101               y                               right projection
-        //   0110   XOR     x ^ y   XorElse()*                  exclusive disjunction; nonequivalence; xor
-        //   0111   OR      x | y   OrElse()*                   inclusive disjunction; or; and/or
-        //   -      -       -       Otherwise()                 -
-        //   1000   NOR     X & Y                               nondisjunction; neither ... nor (gate: joint denial)
-        //   1001   XNOR    X ^ Y                               equivalence; if and only if; "iff" (gate: biconditional)
-        //   1010               Y                               right complementation
-        //   1011           x | Y                               converse implication; if
-        //   1100           X                                   left complementation
-        //   1101           X | y                               implication; only if; if ... then
-        //   1110   NAND    X | Y                               nonconjunction; not both (gate: alternative denial)
-        //   1111             1                                 affirmation; validity; tautology
+        //   0000             0                             contradiction; falsehood; antilogy
+        //   0001   AND     x & y   PassThru()              conjunction; and
+        //   -      -       -       ContinueWith()             -
+        //   0010   NIMPLY  x & Y   PassThruWhenNone()      nonimplication; difference; but not
+        //   0011           x                               left projection
+        //   0100           X & y   ContinueWithIfNone()    converse nonimplication; not ... but
+        //   0101               y                           right projection
+        //   0110   XOR     x ^ y   XorElse()               exclusive disjunction; nonequivalence; xor
+        //   0111   OR      x | y   OrElse()                inclusive disjunction; or; and/or
+        //   -      -       -       Otherwise()             -
+        // Where X = not(x) and Y = not(y)
         //
-        // * Already in Maybe<T>.
+        // Possible combinations:
+        //   Some(1)  Some(2L)  -> None, Some(1), Some(2L)
+        //   Some(1)  None      -> None, Some(1)
+        //   None     Some(2L)  -> None, Some(2L)
+        //   None     None      -> None
+        // Compare to the truth table at https://en.wikipedia.org/wiki/Bitwise_operation
+        //   0000 -
+        //   0020 "ContinueWithIfNone"    NOT(<-)
+        //   0100 "PassThruWhenNone"      NOT(->) aka NIMPLY
+        //   0120 XorElse()               XOR
         //
-        // Truth table "translated":
-        //   None    * None
-        //   None    * Some(2)
-        //   Some(1) * None
-        //   Some(1) * Some(2)
-        // This explains that truth tables starting with 1 can not have any
-        // equivalent here.
+        //   1000 PassThru()              AND
+        //   1020 "RightProjection"       "right projection"
+        //   1100 -                       left projection       <-- useless, ignore right
+        //   1120 OrElse()                OR
+        //
+        //   2000 ContinueWith()          AND
+        //   2020 -                       right projection      <-- useless, ignore left
+        //   2100 "LeftProjection"        "left projection"
+        //   2120 "Otherwise"             "OR"
 
-        // Variant to OrElse.
+        // Converse nonimplication, "not P but Q".
+        // Like ContinueWith() but when @this is the empty maybe.
+        // ContinueWith() == ContinueWithIfSome().
         /// <code><![CDATA[
-        ///   None    * None    == None
-        ///   None    * Some(2) == Some(2)
-        ///   Some(1) * None    == Some(1)
-        ///   Some(1) * Some(2) == Some(2)     <-- instead of Some(1)
+        ///   Some(1) NOT(<-) Some(2L) == None
+        ///   Some(1) NOT(<-) None     == None
+        ///   None    NOT(<-) Some(2L) == Some(2L)
+        ///   None    NOT(<-) None     == None
+        /// ]]></code>
+        [Pure]
+        public static Maybe<TResult> ContinueWithIfNone<T, TResult>(
+            this Maybe<T> @this, Maybe<TResult> other)
+            => @this.IsNone ? other : Maybe<TResult>.None;
+
+        // Nonimplication, "P but not Q".
+        // Like PassThru() but when "other" is the empty maybe.
+        // PassThru() == PassThruWhenSome().
+        /// <code><![CDATA[
+        ///   Some(1) NOT(->) Some(2L) == None
+        ///   Some(1) NOT(->) None     == Some(1)
+        ///   None    NOT(->) Some(2L) == None
+        ///   None    NOT(->) None     == None
+        /// ]]></code>
+        [Pure]
+        public static Maybe<T> PassThruWhenNone<T, TOther>(
+            this Maybe<T> @this, Maybe<TOther> other)
+            => other.IsNone ? @this : Maybe<T>.None;
+
+        // Variant of OrElse(): this.Otherwise(other) == other.OrElse(this).
+        /// <code><![CDATA[
+        ///   Some(1) OR Some(2) == Some(2)
+        ///   Some(1) OR None    == Some(1)
+        ///   None    OR Some(2) == Some(2)
+        ///   None    OR None    == None
         /// ]]></code>
         [Pure]
         public static Maybe<T> Otherwise<T>(
@@ -277,33 +309,27 @@ namespace Abc
             => @this.IsNone ? other
                 : other.IsNone ? @this : other;
 
-        // Converse nonimplication, "not P but Q".
-        /// <code><![CDATA[
-        ///   None    not(<-) None    == None
-        ///   None    not(<-) Some(2) == Some(2)
-        ///   Some(1) not(<-) None    == None
-        ///   Some(1) not(<-) Some(2) == None
-        /// ]]></code>
-        // Like ContinueWith() but when @this is the empty maybe.
-        // ContinueWith() == ContinueWithIfSome().
-        [Pure]
-        public static Maybe<TResult> ContinueWithIfNone<T, TResult>(
-            this Maybe<T> @this, Maybe<TResult> other)
-            => @this.IsNone ? other : Maybe<TResult>.None;
+        ///// <code><![CDATA[
+        /////   Some(1) R Some(2) == Some(1)
+        /////   Some(1) R None    == None
+        /////   None    R Some(2) == Some(2)
+        /////   None    R None    == None
+        ///// ]]></code>
+        //[Pure]
+        //public static Maybe<T> RightProjection<T>(
+        //    this Maybe<T> @this, Maybe<T> other)
+        //    => throw new NotImplementedException();
 
-        // Nonimplication, "P but not Q".
-        /// <code><![CDATA[
-        ///   None    NIMPLY None    == None
-        ///   None    NIMPLY Some(2) == None
-        ///   Some(1) NIMPLY None    == Some(1)
-        ///   Some(1) NIMPLY Some(2) == None
-        /// ]]></code>
-        // Like PassThru() but when "other" is the empty maybe.
-        // PassThru() == PassThruWhenSome().
-        [Pure]
-        public static Maybe<T> PassThruWhenNone<T, TOther>(
-            this Maybe<T> @this, Maybe<TOther> other)
-            => other.IsNone ? @this : Maybe<T>.None;
+        ///// <code><![CDATA[
+        /////   Some(1) L Some(2) == Some(2)
+        /////   Some(1) L None    == Some(1)
+        /////   None    L Some(2) == None
+        /////   None    L None    == None
+        ///// ]]></code>
+        //[Pure]
+        //public static Maybe<T> LeftProjection<T>(
+        //    this Maybe<T> @this, Maybe<T> other)
+        //    => throw new NotImplementedException();
     }
 
     // Extension methods for Maybe<T> where T is enumerable.
