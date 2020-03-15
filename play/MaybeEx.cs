@@ -13,14 +13,20 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // REVIEW: lazy extensions, is there anything we can do w/ for say
-    // Lazy<Maybe<T>>?
+    // REVIEW: lazy extensions. Is there anything useful we can do w/
+    // Lazy<Maybe<T>> or Maybe<Lazy<T>>?
 
     // NB: the code should be optimized if promoted to the main project.
 
     // Experimental helpers & extension methods for Maybe<T>.
+    //
     // Only a handful of them are really considered for inclusion in the main
     // project as most of them are pretty straightforward.
+    // Currently, the best candidates for promotion are:
+    // - the configurable async methods
+    // - ReplaceWith(), a specialization of Select()
+    // - Filter(), a specialization of Where()
+    //
     // NB: if we change our mind and decide to hide (or rather remove) the
     // property IsNone, we SHOULD add the methods using it to Maybe<T>.
     public static partial class MaybeEx { }
@@ -211,10 +217,31 @@ namespace Abc
 
         // Specialized version of Where() when the state of the maybe and the
         // value it encloses are not taken into account.
-
         [Pure]
         public static Maybe<T> Filter<T>(this Maybe<T> @this, bool condition)
             => condition ? @this : Maybe<T>.None;
+
+        // NOT (<-).
+        //   Some(1) : Some(2) == None
+        //   Some(1) : None    == None
+        //   None    : Some(2) == Some(2)
+        //   None    : None    == None
+        // Like ContinueWith() but when @this is the empty maybe.
+        [Pure]
+        public static Maybe<TResult> NYlpmi<T, TResult>(
+            this Maybe<T> @this, Maybe<TResult> other)
+            => @this.IsNone ? other : Maybe<TResult>.None;
+
+        // NOT (->), not imply
+        //   Some(1) : Some(2) == None
+        //   Some(1) : None    == Some(1)
+        //   None    : Some(2) == None
+        //   None    : None    == None
+        // Like PassThru() but when "other" is the empty maybe.
+        [Pure]
+        public static Maybe<T> Nimply<T, TOther>(
+            this Maybe<T> @this, Maybe<TOther> other)
+            => other.IsNone ? @this : Maybe<T>.None;
     }
 
     // Extension methods for Maybe<T> where T is enumerable.

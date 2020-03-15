@@ -195,7 +195,7 @@ namespace Abc.Edu.Fx
         //   None    : Some(2) == None
         //   None    : None    == None
         public Mayhap<T> Nimply(Mayhap<T> other)
-            => _isSome && !other._isSome ? this : None;
+            => !other._isSome ? this : None;
 
         // NOT (<-).
         //   Some(1) : Some(2) == None
@@ -203,7 +203,7 @@ namespace Abc.Edu.Fx
         //   None    : Some(2) == Some(2)
         //   None    : None    == None
         public Mayhap<TResult> NYlpmi<TResult>(Mayhap<TResult> other)
-            => !_isSome && other._isSome ? other : Mayhap<TResult>.None;
+            => !_isSome ? other : Mayhap<TResult>.None;
     }
 
     // Interface IEquatable<>.
