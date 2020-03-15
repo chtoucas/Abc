@@ -483,7 +483,16 @@ namespace Abc
         ///   select zipper(x, y)
         /// ]]></code>
         /// Lesson: don't use <see cref="SelectMany"/> when <see cref="ZipWith"/>
-        /// would do the job but without a (hidden) lambda function.
+        /// would do the job but without a (hidden) lambda function. As for
+        /// <see cref="Bind"/>, it is <see cref="SelectMany"/> with a constant
+        /// result selector <c>(_, y) => y</c>:
+        /// <code><![CDATA[
+        ///   from x in maybe
+        ///   from y in binder(x)
+        ///   select y
+        /// ]]></code>
+        /// Lesson: don't use <see cref="SelectMany"/> when <see cref="Bind"/>
+        /// suffices.
         /// </remarks>
         [Pure]
         public Maybe<TResult> SelectMany<TMiddle, TResult>(
@@ -708,16 +717,19 @@ namespace Abc
         }
 
         /// <remarks>
-        /// <see cref="ZipWith"/> generalizes <see cref="Bind"/>. Indeed,
-        /// <see cref="Bind"/> is <see cref="ZipWith"/> with a constant
-        /// zipper <c>(_, y) => y</c>; in query syntax:
+        /// <para>
+        /// <see cref="ZipWith"/> generalizes <see cref="Bind"/> to two maybe's.
+        /// Perhaps it is better understood using F# computation expressions:
         /// <code><![CDATA[
-        ///   from x in maybe
-        ///   from y in other
-        ///   select y
+        ///   maybe {
+        ///     let! x = this;          // Unwrap this
+        ///     let! y = other;         // Unwrap other
+        ///     return zipper(x, y);    // Zip then wrap (return = wrap)
+        ///   }
         /// ]]></code>
-        /// Lesson: don't use <see cref="ZipWith"/> when <see cref="Bind"/>
-        /// suffices.
+        /// Roughly, unwrap the two maybe's, apply a zipper and eventually wrap
+        /// the result.
+        /// </para>
         /// </remarks>
         [Pure]
         public Maybe<TResult> ZipWith<TOther, TResult>(
@@ -843,6 +855,8 @@ namespace Abc
         [Pure]
         public IEnumerable<T> ToEnumerable()
             => _isSome ? Sequence.Singleton(_value) : Enumerable.Empty<T>();
+
+        // REVIEW: Yield() is not a good name (it's not the F# yield).
 
         // Yield break or yield return "count" times.
         /// See also <seealso cref="Replicate(int)"/> and the comments there.
