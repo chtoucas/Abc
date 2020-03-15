@@ -159,6 +159,24 @@ namespace Abc
         }
     }
 
+    // Misc methods.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void ZipWith()
+        {
+            // None.ZipWith(None) -> None
+            Assert.None(Ø.ZipWith(Ø, (i, j) => i + j));
+            // None.ZipWith(Some) -> None
+            Assert.None(Ø.ZipWith(Two, (i, j) => i + j));
+
+            // Some.ZipWith(None) -> None
+            Assert.None(One.ZipWith(Ø, (i, j) => i + j));
+            // None.ZipWith(Some) -> Some
+            Assert.Some(3, One.ZipWith(Two, (i, j) => i + j));
+        }
+    }
+
     // Iterable.
     public partial class MaybeTests
     {

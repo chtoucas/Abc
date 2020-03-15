@@ -464,9 +464,7 @@ namespace Abc
             return _isSome && predicate(_value) ? this : None;
         }
 
-        /// <remarks>
-        /// Generalizes both <see cref="Bind"/> and <see cref="ZipWith"/>.
-        /// </remarks>
+        /// <seealso cref="ZipWith"/>
         /// <example>
         /// Query expression syntax:
         /// <code><![CDATA[
@@ -475,6 +473,18 @@ namespace Abc
         ///   select resultSelector(x, y)
         /// ]]></code>
         /// </example>
+        /// <remarks>
+        /// <see cref="SelectMany"/> generalizes both <see cref="ZipWith"/> and
+        /// <see cref="Bind"/>. Namely, <see cref="ZipWith"/> is
+        /// <see cref="SelectMany"/> with a constant selector <c>_ => other</c>:
+        /// <code><![CDATA[
+        ///   from x in maybe
+        ///   from y in other
+        ///   select zipper(x, y)
+        /// ]]></code>
+        /// Lesson: don't use <see cref="SelectMany"/> when <see cref="ZipWith"/>
+        /// would do the job but without a (hidden) lambda function.
+        /// </remarks>
         [Pure]
         public Maybe<TResult> SelectMany<TMiddle, TResult>(
             Func<T, Maybe<TMiddle>> selector,
@@ -690,6 +700,18 @@ namespace Abc
     // since this forces us to use (unnecessary) lambda functions.
     public partial struct Maybe<T>
     {
+        /// <remarks>
+        /// <see cref="ZipWith"/> generalizes <see cref="Bind"/>. Indeed,
+        /// <see cref="Bind"/> is <see cref="ZipWith"/> with a constant
+        /// zipper <c>(_, y) => y</c>:
+        /// <code><![CDATA[
+        ///   from x in maybe
+        ///   from y in other
+        ///   select y
+        /// ]]></code>
+        /// Lesson: don't use <see cref="ZipWith"/> when <see cref="Bind"/>
+        /// suffices.
+        /// </remarks>
         [Pure]
         public Maybe<TResult> ZipWith<TOther, TResult>(
             Maybe<TOther> other,

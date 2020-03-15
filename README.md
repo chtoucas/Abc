@@ -222,6 +222,8 @@ We already saw `Select` and `Where`, but there is more.
 var q = from i in maybe1
         from j in maybe2
         select i + j
+// But it is better written without a (hidden) lambda function.
+var q = maybe1.ZipWith(maybe2, (i, j) => i + j);
 
 var q = from i in maybe
         from j in Maybe.Some(2 * i)
