@@ -78,6 +78,7 @@ namespace Abc
         }
     }
 
+    // Core methods.
     public partial class MaybeTests
     {
         [Fact]
@@ -85,6 +86,20 @@ namespace Abc
         {
             Assert.ThrowsArgNullEx("binder", () => Ø.Bind((Func<int, Maybe<string>>)null!));
             Assert.ThrowsArgNullEx("binder", () => One.Bind((Func<int, Maybe<string>>)null!));
+        }
+
+        [Fact]
+        public static void OrElse()
+        {
+            // None.OrElse(None) -> None
+            Assert.None(Ø.OrElse(Ø));
+
+            // None.OrElse(Some) -> Some
+            Assert.Some(2, Ø.OrElse(Two));
+            // Some.OrElse(None) -> Some
+            Assert.Some(1, One.OrElse(Ø));
+            // Some.OrElse(Some) -> Some
+            Assert.Some(1, One.OrElse(Two));
         }
     }
 
