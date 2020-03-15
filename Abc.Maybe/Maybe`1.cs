@@ -30,6 +30,7 @@ namespace Abc
     //   https://devblogs.microsoft.com/dotnet/embracing-nullable-reference-types/
     // - IEquatable<T> (T == Maybe<T>), IComparable<T> but a bit missleading?
     //   Overloads w/ IEqualityComparer<T>.
+    // - boolean ops.
     // - Move Join() and GroupJoin() to Maybe? We need compelling examples.
     // - Serializable? Binary serialization only.
     //   https://docs.microsoft.com/en-us/dotnet/standard/serialization/binary-serialization
@@ -71,18 +72,18 @@ namespace Abc
     /// - Maybe.Guard()
     ///
     /// Instance methods where the result is another maybe.
-    /// - Bind()
+    /// - Bind()                unwrap then map to another maybe
     /// - Select()              LINQ select
     /// - SelectMany()          LINQ select many
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
     /// - GroupJoin()           LINQ group join
-    /// - OrElse()              coalesce
-    /// - XorElse()
+    /// - OrElse()              coalesce, inclusive OR
+    /// - XorElse()             exclusive OR
     /// - ZipWith()             cross join
     /// - Apply()
-    /// - ContinueWith()
-    /// - PassThru()
+    /// - ContinueWith()        replace a non-empty maybe by another one, logical "right" AND
+    /// - PassThru()            logical "left" AND
     /// - Skip()
     /// - Replicate()
     /// - Duplicate()

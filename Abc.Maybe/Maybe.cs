@@ -162,6 +162,9 @@ namespace Abc
     // Extension methods for Maybe<T> where T is enumerable.
     public partial class Maybe
     {
+        // Obtains the maybe of the empty sequence.
+        // Beware, this is not the same as the empty maybe of type
+        // IEnumerable<T>.
         [Pure]
         public static Maybe<IEnumerable<T>> EmptyEnumerable<T>()
             => MaybeEnumerable_<T>.Empty;
