@@ -229,36 +229,60 @@ namespace Abc
     // - ...WhenNone() or ...WhenSome(), the other maybe is empty or not.
     // References:
     // - Knuth vol. 4A
+    // - https://en.wikipedia.org/wiki/Logic_gate
     // - https://en.wikipedia.org/wiki/Bitwise_operation
     public partial class MaybeEx
     {
-        // Truth table / Gate / Method / Description
-        //   0000
-        //   0001   AND     PassThru()*                 conjunction; and
-        //   -      -       ContinueWith()*             -
-        //   0010   NIMPLY  PassThruWhenNone()          nonimplication; difference; but not
-        //   0011
-        //   0100           ContinueWithIfNone()        converse nonimplication; not ... but
-        //   0101
-        //   0110   XOR     XorElse()*                  exclusive disjunction; nonequivalence
-        //   0111   OR      OrElse()*                   inclusive disjunction; or; and/or
-        //   1000   NOR                                 nondisjunction
-        //   1001   XNOR                                equivalence; if and only if; "iff"
-        //   1010
-        //   1011
-        //   1100
-        //   1101
-        //   1110   NAND                                nonconjunction
-        //   1111
+        // X = not(x) et Y = not(y)
+        // Truth table / Gate / Notation / Method / Description
+        //   0000             0                                 contradiction; falsehood; antilogy
+        //   0001   AND     x & y   PassThru()*                 conjunction; and
+        //   -      -       -       ContinueWith()*             -
+        //   0010   NIMPLY  x & Y   PassThruWhenNone()          nonimplication; difference; but not
+        //   0011           x                                   left projection
+        //   0100           X & y   ContinueWithIfNone()        converse nonimplication; not ... but
+        //   0101               y                               right projection
+        //   0110   XOR     x ^ y   XorElse()*                  exclusive disjunction; nonequivalence; xor
+        //   0111   OR      x | y   OrElse()*                   inclusive disjunction; or; and/or
+        //   -      -       -       Otherwise()                 -
+        //   1000   NOR     X & Y                               nondisjunction; neither ... nor (gate: joint denial)
+        //   1001   XNOR    X ^ Y                               equivalence; if and only if; "iff" (gate: biconditional)
+        //   1010               Y                               right complementation
+        //   1011           x | Y                               converse implication; if
+        //   1100           X                                   left complementation
+        //   1101           X | y                               implication; only if; if ... then
+        //   1110   NAND    X | Y                               nonconjunction; not both (gate: alternative denial)
+        //   1111             1                                 affirmation; validity; tautology
         //
         // * Already in Maybe<T>.
+        //
+        // Truth table "translated":
+        //   None    * None
+        //   None    * Some(2)
+        //   Some(1) * None
+        //   Some(1) * Some(2)
+        // This explains that truth tables starting with 1 can not have any
+        // equivalent here.
+
+        // Variant to OrElse.
+        /// <code><![CDATA[
+        ///   None    * None    == None
+        ///   None    * Some(2) == Some(2)
+        ///   Some(1) * None    == Some(1)
+        ///   Some(1) * Some(2) == Some(2)     <-- instead of Some(1)
+        /// ]]></code>
+        [Pure]
+        public static Maybe<T> Otherwise<T>(
+            this Maybe<T> @this, Maybe<T> other)
+            => @this.IsNone ? other
+                : other.IsNone ? @this : other;
 
         // Converse nonimplication, "not P but Q".
         /// <code><![CDATA[
-        ///   Some(1) not(<-) Some(2) == None
-        ///   Some(1) not(<-) None    == None
-        ///   None    not(<-) Some(2) == Some(2)
         ///   None    not(<-) None    == None
+        ///   None    not(<-) Some(2) == Some(2)
+        ///   Some(1) not(<-) None    == None
+        ///   Some(1) not(<-) Some(2) == None
         /// ]]></code>
         // Like ContinueWith() but when @this is the empty maybe.
         // ContinueWith() == ContinueWithIfSome().
@@ -269,10 +293,10 @@ namespace Abc
 
         // Nonimplication, "P but not Q".
         /// <code><![CDATA[
-        ///   Some(1) NIMPLY Some(2) == None
-        ///   Some(1) NIMPLY None    == Some(1)
-        ///   None    NIMPLY Some(2) == None
         ///   None    NIMPLY None    == None
+        ///   None    NIMPLY Some(2) == None
+        ///   Some(1) NIMPLY None    == Some(1)
+        ///   Some(1) NIMPLY Some(2) == None
         /// ]]></code>
         // Like PassThru() but when "other" is the empty maybe.
         // PassThru() == PassThruWhenSome().
