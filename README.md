@@ -33,8 +33,8 @@ an algorithm with _maybe_'s is often shorter and closer to the intent, and
 therefore simpler to follow and maintain, than the counterpart written without.
 
 An option type is a very simple sum type `Maybe<T> = Some<T> | None` (exclusive
-or, but of course this is not possible in C#), whereas a nullable value type,
-like `int?`, is just an integer type to which the language adds a special
+or, but of course this is not possible in C#), whereas a "nullable" type,
+like `string`, is just a string type to which the language adds a special
 (sentinel) value, the `null` value. What's the difference? You can't ignore the
 fact that an option is either something or nothing, you are forced to handle
 both cases.
@@ -345,7 +345,7 @@ Developer Notes
 
 - Target .NET Standard 2.1 too to be able to distribute a version with nullable
   annotations?
-- Tests & code coverage.
+- Tests & code coverage (OpenCover or Coverlet).
 - XML comments with complete examples.
 - NuGet package.
 - Perf tool.

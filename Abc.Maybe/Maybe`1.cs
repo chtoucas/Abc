@@ -77,7 +77,7 @@ namespace Abc
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
     /// - GroupJoin()           LINQ group join
-    /// - OrElse()              coalesce, OR gate
+    /// - OrElse()              coalescing, OR gate
     /// - XorElse()             XOR gate
     /// - ZipWith()             cross join
     /// - Apply()
@@ -717,8 +717,14 @@ namespace Abc
 
         /// <remarks>
         /// <para>
-        /// <see cref="ZipWith"/> generalizes <see cref="Bind"/> to two maybe's.
-        /// Perhaps it is better understood using F# computation expressions:
+        /// <see cref="ZipWith"/> generalizes <see cref="Select"/> to two maybe's,
+        /// it is also a special case of <see cref="SelectMany"/>; see the
+        /// comments there. Roughly, <see cref="ZipWith"/> unwraps two maybe's,
+        /// then applies a zipper, and eventually wraps the result.
+        /// </para>
+        /// <para>
+        /// Compare to the F# computation expressions for an hypothetical maybe
+        /// workflow:
         /// <code><![CDATA[
         ///   maybe {
         ///     let! x = this;          // Unwrap this
@@ -726,8 +732,10 @@ namespace Abc
         ///     return zipper(x, y);    // Zip then wrap (return = wrap)
         ///   }
         /// ]]></code>
-        /// Roughly, unwrap the two maybe's, apply a zipper and eventually wrap
-        /// the result.
+        /// F# users are lucky, the special syntax even extends to more than two
+        /// maybe's. Nothing similar in C#. Adding ZipWith's with more parameters
+        /// is a possibility but it looks artificial; for a better(?) solution
+        /// see the Lift methods in <see cref="Maybe"/>.
         /// </para>
         /// </remarks>
         // F# Workflow: let!.
@@ -880,6 +888,14 @@ namespace Abc
         public bool Contains(T value)
             => _isSome && EqualityComparer<T>.Default.Equals(_value, value);
     }
+
+    // REVIEW: the rules should be compatible with the one followed by for say
+    // a nullable int.
+    // For the comparison operators <, >, <=, and >=, if one or both operands
+    // are null, the result is false; otherwise, the contained values of
+    // operands are compared. Do not assume that because a particular comparison
+    // (for example, <=) returns false, the opposite comparison (>) returns true.
+    // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/nullable-value-types#lifted-operators
 
     // Interface IComparable<>.
     public partial struct Maybe<T>

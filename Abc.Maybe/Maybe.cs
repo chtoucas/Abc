@@ -258,6 +258,8 @@ namespace Abc
     }
 
     // Lift, promote functions to maybe's.
+    // Very much like lifted operators for nullables.
+    // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/nullable-value-types#lifted-operators
     public partial class Maybe
     {
         /// <seealso cref="Maybe{T}.Select"/>
