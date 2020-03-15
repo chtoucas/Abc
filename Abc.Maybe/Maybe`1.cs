@@ -77,12 +77,12 @@ namespace Abc
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
     /// - GroupJoin()           LINQ group join
-    /// - OrElse()              coalesce, inclusive OR
-    /// - XorElse()             exclusive OR
+    /// - OrElse()              coalesce, OR gate
+    /// - XorElse()             XOR gate
     /// - ZipWith()             cross join
     /// - Apply()
-    /// - ContinueWith()        replace a non-empty maybe by another one, logical "right" AND
-    /// - PassThru()            logical "left" AND
+    /// - ContinueWith()        replace a non-empty maybe by another one, "right" AND gate
+    /// - PassThru()            "left" AND gate
     /// - Skip()
     /// - Replicate()
     /// - Duplicate()
@@ -752,10 +752,10 @@ namespace Abc
         /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
         /// binder <c>_ => other</c>.
         /// <code><![CDATA[
-        ///   Some(1) RAND Some(2L) == Some(2L)
-        ///   Some(1) RAND None     == None
-        ///   None    RAND Some(2L) == None
-        ///   None    RAND None     == None
+        ///   Some(1) AND Some(2L) == Some(2L)
+        ///   Some(1) AND None     == None
+        ///   None    AND Some(2L) == None
+        ///   None    AND None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
@@ -770,10 +770,10 @@ namespace Abc
         /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
         /// binder <c>_ => this</c>.
         /// <code><![CDATA[
-        ///   Some(1) LAND Some(2L) == Some(1)
-        ///   Some(1) LAND None     == None
-        ///   None    LAND Some(2L) == None
-        ///   None    LAND None     == None
+        ///   Some(1) AND Some(2L) == Some(1)
+        ///   Some(1) AND None     == None
+        ///   None    AND Some(2L) == None
+        ///   None    AND None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
@@ -817,7 +817,10 @@ namespace Abc
         /// </remarks>
         [Pure]
         public Maybe<IEnumerable<T>> Replicate(int count)
-            => Select(x => Enumerable.Repeat(x, count));
+            // Identical to:
+            //   Select(x => Enumerable.Repeat(x, count));
+            => _isSome ? Maybe.Of(Enumerable.Repeat(_value, count))
+                : Maybe<IEnumerable<T>>.None;
 
         // Beware, infinite loop!
         /// <seealso cref="Yield()"/>
