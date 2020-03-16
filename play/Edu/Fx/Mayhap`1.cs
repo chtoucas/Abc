@@ -149,36 +149,6 @@ namespace Abc.Edu.Fx
         }
     }
 
-    // Boolean & bitwise operations, just for fun.
-    public partial struct Mayhap<T>
-    {
-#pragma warning disable CA2225 // Operator overloads have named alternates
-
-        public static bool operator true(Mayhap<T> value)
-            => value._isSome;
-
-        public static bool operator false(Mayhap<T> value)
-            => !value._isSome;
-
-        public static Mayhap<T> operator &(Mayhap<T> left, Mayhap<T> right)
-            => left.AndThen(right);
-
-        public static Mayhap<T> operator |(Mayhap<T> left, Mayhap<T> right)
-            => left.OrElse(right);
-
-        public static Mayhap<T> operator ^(Mayhap<T> left, Mayhap<T> right)
-            => left.XorElse(right);
-
-#pragma warning restore CA2225
-
-        public Mayhap<T> AndThen(Mayhap<T> other)
-            => _isSome ? other : None;
-
-        public Mayhap<T> XorElse(Mayhap<T> other)
-            => _isSome ? other._isSome ? None : this
-                : other;
-    }
-
     // Interface IEquatable<>.
     public partial struct Mayhap<T>
     {
