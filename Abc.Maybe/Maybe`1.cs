@@ -81,6 +81,7 @@ namespace Abc
     /// - XorElse()             either (XOR gate)
     /// - ZipWith()             cross join
     /// - ContinueWith()        creates a continuation (AND gate)
+    /// - ContinueWithIfNone()
     /// - Skip()
     /// - Replicate()
     /// - Duplicate()
@@ -770,6 +771,27 @@ namespace Abc
         public Maybe<TResult> ContinueWith<TResult>(Maybe<TResult> other)
         {
             return _isSome ? other : Maybe<TResult>.None;
+        }
+
+        // Converse nonimplication; mnemotechnic "not P but Q".
+        // Like ContinueWith() but when @this is the empty maybe.
+        // ContinueWithIfNone() = flip ContinueUnless():
+        //   this.ContinueWithIfNone(other) = other.ContinueUnless(this)
+        // where ContinueUnless() is defined in MaybeEx (play project).
+        // Whereas ContinueWith() maps
+        //   some(X) to some(Y), and none(X) to none(Y)
+        // ContinueWithIfNone() maps
+        //   some(X) to none(Y), and none(X) to some(Y)
+        /// <code><![CDATA[
+        ///   Some(1) ContinueWithIfNone Some(2L) == None
+        ///   Some(1) ContinueWithIfNone None     == None
+        ///   None    ContinueWithIfNone Some(2L) == Some(2L)
+        ///   None    ContinueWithIfNone None     == None
+        /// ]]></code>
+        [Pure]
+        public Maybe<TResult> ContinueWithIfNone<TResult>(Maybe<TResult> other)
+        {
+            return IsSome ? Maybe<TResult>.None : other;
         }
 
         // Exclusive disjunction; mnemotechnic: "either P or Q, but not both".

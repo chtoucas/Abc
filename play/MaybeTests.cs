@@ -49,6 +49,15 @@ namespace Abc
         [Fact]
         public static void OrElse()
         {
+            // Some Some -> Some
+            Assert.Some(1, One.OrElse(Two));
+            // Some None -> Some
+            Assert.Some(1, One.OrElse(Ø));
+            // None Some -> Some
+            Assert.Some(2, Ø.OrElse(Two));
+            // None None -> None
+            Assert.None(Ø.OrElse(Ø));
+
             // OrElse() is OrElseRTL() flipped.
             Assert.Some(1, Two.OrElseRTL(One));
             Assert.Some(1, Ø.OrElseRTL(One));
@@ -78,6 +87,15 @@ namespace Abc
         [Fact]
         public static void ContinueWith()
         {
+            // Some Some -> Some
+            Assert.Some(2L, One.ContinueWith(TwoL));
+            // Some None -> None
+            Assert.None(One.ContinueWith(ØL));
+            // None Some -> None
+            Assert.None(Ø.ContinueWith(TwoL));
+            // None None -> None
+            Assert.None(Ø.ContinueWith(ØL));
+
             // ContinueWith() is ContinueWhen() flipped.
             Assert.Some(2L, TwoL.ContinueWhen(One));
             Assert.None(ØL.ContinueWhen(One));

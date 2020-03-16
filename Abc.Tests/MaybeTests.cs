@@ -205,6 +205,19 @@ namespace Abc
         }
 
         [Fact]
+        public static void ContinueWithIfNone()
+        {
+            // Some Some -> None
+            Assert.None(One.ContinueWithIfNone(TwoL));
+            // Some None -> None
+            Assert.None(One.ContinueWithIfNone(ØL));
+            // None Some -> Some
+            Assert.Some(2L, Ø.ContinueWithIfNone(TwoL));
+            // None None -> None
+            Assert.None(Ø.ContinueWithIfNone(ØL));
+        }
+
+        [Fact]
         public static void XorElse()
         {
             // Some Some -> None

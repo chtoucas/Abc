@@ -338,27 +338,6 @@ namespace Abc
             return other.IsNone ? Maybe<T>.None : @this;
         }
 
-        // Converse nonimplication; mnemotechnic "not P but Q".
-        // Like ContinueWith() but when @this is the empty maybe.
-        // ContinueWithIfNone() = flip ContinueUnless():
-        //   this.ContinueWithIfNone(other) = other.ContinueUnless(this)
-        // Whereas ContinueWith() maps
-        //   some(X) to some(Y), and none(X) to none(Y)
-        // ContinueWithIfNone() maps
-        //   some(X) to none(Y), and none(X) to some(Y)
-        /// <code><![CDATA[
-        ///   Some(1) ContinueWithIfNone Some(2L) == None
-        ///   Some(1) ContinueWithIfNone None     == None
-        ///   None    ContinueWithIfNone Some(2L) == Some(2L)
-        ///   None    ContinueWithIfNone None     == None
-        /// ]]></code>
-        [Pure]
-        public static Maybe<TResult> ContinueWithIfNone<T, TResult>(
-            this Maybe<T> @this, Maybe<TResult> other)
-        {
-            return @this.IsNone ? other : Maybe<TResult>.None;
-        }
-
         // Nonimplication or abjunction; mnemotechnic "P but not Q".
         // Like ContinueWhen() but when "other" is the empty maybe.
         // ContinueUnless() = flip ContinueWithIfNone():
