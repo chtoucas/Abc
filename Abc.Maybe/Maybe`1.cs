@@ -707,13 +707,6 @@ namespace Abc
     // since this forces us to use (unnecessary) lambda functions.
     public partial struct Maybe<T>
     {
-        //[Pure]
-        //public Maybe<TResult> Apply<TResult>(Maybe<Func<T, TResult>> applicative)
-        //{
-        //    return _isSome && applicative._isSome ? Maybe.Of(applicative._value(_value))
-        //        : Maybe<TResult>.None;
-        //}
-
         /// <remarks>
         /// <para>
         /// <see cref="ZipWith"/> is <see cref="Select"/> with two maybe's,

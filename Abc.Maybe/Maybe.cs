@@ -14,6 +14,7 @@ namespace Abc
     // - playing with the modifier "in". Currently only added to ext methods for
     //   Maybe<T> where T is a struct.
     // - Maybe<IEnumerable>; see CollectAny().
+    // - Invoke()?
 
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
@@ -334,9 +335,67 @@ namespace Abc
     // Extension methods for Maybe<T> where T is a function.
     public partial class Maybe
     {
-        ///// <seealso cref="Maybe{T}.Apply"/>
+        #region Invoke()
+
         [Pure]
         public static Maybe<TResult> Invoke<TSource, TResult>(
+            this Maybe<Func<TSource, TResult>> @this,
+            TSource value)
+        {
+            return @this.IsSome ? Of(@this.Value(value)) : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, TResult>(
+            this Maybe<Func<T1, T2, TResult>> @this,
+            T1 first,
+            T2 second)
+        {
+            return @this.IsSome ? Of(@this.Value(first, second)) : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, T3, TResult>(
+            this Maybe<Func<T1, T2, T3, TResult>> @this,
+            T1 first,
+            T2 second,
+            T3 third)
+        {
+            return @this.IsSome ? Of(@this.Value(first, second, third))
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, T3, T4, TResult>(
+            this Maybe<Func<T1, T2, T3, T4, TResult>> @this,
+            T1 first,
+            T2 second,
+            T3 third,
+            T4 fourth)
+        {
+            return @this.IsSome ? Of(@this.Value(first, second, third, fourth))
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public static Maybe<TResult> Invoke<T1, T2, T3, T4, T5, TResult>(
+            this Maybe<Func<T1, T2, T3, T4, T5, TResult>> @this,
+            T1 first,
+            T2 second,
+            T3 third,
+            T4 fourth,
+            T5 fifth)
+        {
+            return @this.IsSome ? Of(@this.Value(first, second, third, fourth, fifth))
+                : Maybe<TResult>.None;
+        }
+
+        #endregion
+
+        #region Apply()
+
+        [Pure]
+        public static Maybe<TResult> Apply<TSource, TResult>(
             this Maybe<Func<TSource, TResult>> @this,
             Maybe<TSource> maybe)
         {
@@ -345,7 +404,7 @@ namespace Abc
         }
 
         [Pure]
-        public static Maybe<TResult> Invoke<T1, T2, TResult>(
+        public static Maybe<TResult> Apply<T1, T2, TResult>(
             this Maybe<Func<T1, T2, TResult>> @this,
             Maybe<T1> first,
             Maybe<T2> second)
@@ -356,7 +415,7 @@ namespace Abc
         }
 
         [Pure]
-        public static Maybe<TResult> Invoke<T1, T2, T3, TResult>(
+        public static Maybe<TResult> Apply<T1, T2, T3, TResult>(
             this Maybe<Func<T1, T2, T3, TResult>> @this,
             Maybe<T1> first,
             Maybe<T2> second,
@@ -368,7 +427,7 @@ namespace Abc
         }
 
         [Pure]
-        public static Maybe<TResult> Invoke<T1, T2, T3, T4, TResult>(
+        public static Maybe<TResult> Apply<T1, T2, T3, T4, TResult>(
             this Maybe<Func<T1, T2, T3, T4, TResult>> @this,
             Maybe<T1> first,
             Maybe<T2> second,
@@ -381,7 +440,7 @@ namespace Abc
         }
 
         [Pure]
-        public static Maybe<TResult> Invoke<T1, T2, T3, T4, T5, TResult>(
+        public static Maybe<TResult> Apply<T1, T2, T3, T4, T5, TResult>(
             this Maybe<Func<T1, T2, T3, T4, T5, TResult>> @this,
             Maybe<T1> first,
             Maybe<T2> second,
@@ -393,5 +452,7 @@ namespace Abc
                 ? Of(@this.Value(first.Value, second.Value, third.Value, fourth.Value, fifth.Value))
                 : Maybe<TResult>.None;
         }
+
+        #endregion
     }
 }
