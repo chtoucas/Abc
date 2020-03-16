@@ -22,7 +22,7 @@ namespace Abc.Edu.Fx
     //
     // Standard API:
     // - *>         ext.ContinueWith()
-    // - <*         ext.ContinueWhen() or PassThru()?
+    // - <*         ext.PassThruWhen()
     // - <**>       ext.Apply()
     // - liftA      Mayhap.Lift()
     // - liftA3     Mayhap.Lift()
@@ -82,7 +82,7 @@ namespace Abc.Edu.Fx
         /// <para>Sequence actions, discarding the value of the second argument.
         /// </para>
         /// </summary>
-        public static Mayhap<TSource> ContinueWhen<TSource, TOther>(
+        public static Mayhap<TSource> PassThruWhen<TSource, TOther>(
             this Mayhap<TSource> @this,
             Mayhap<TOther> other)
         {

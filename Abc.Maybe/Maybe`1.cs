@@ -81,7 +81,7 @@ namespace Abc
     /// - XorElse()             either (XOR gate)
     /// - ZipWith()             cross join
     /// - ContinueWith()        creates a continuation (AND gate)
-    /// - ContinueWithIfNone()
+    /// - PassThruUnless()
     /// - Skip()
     /// - Replicate()
     /// - Duplicate()
@@ -749,9 +749,9 @@ namespace Abc
         }
 
         // Conjunction; mnemotechnic "Q if P", "P and then Q".
-        // ContinueWith() = flip ContinueWhen():
-        //   this.ContinueWith(other) = other.ContinueWhen(this)
-        // where ContinueWhen() is defined in MaybeEx (play project).
+        // ContinueWith() = flip PassThruWhen():
+        //   this.ContinueWith(other) = other.PassThruWhen(this)
+        // where PassThruWhen() is defined in MaybeEx (play project).
         /// <summary>
         /// Continues with <paramref name="other"/> if the current instance is
         /// not empty; otherwise returns the empty maybe of type
@@ -777,25 +777,22 @@ namespace Abc
             return _isSome ? other : Maybe<TResult>.None;
         }
 
-        // Converse nonimplication; mnemotechnic "not P but Q".
-        // Like ContinueWith() but when @this is the empty maybe.
-        // ContinueWithIfNone() = flip ContinueUnless():
-        //   this.ContinueWithIfNone(other) = other.ContinueUnless(this)
-        // where ContinueUnless() is defined in MaybeEx (play project).
-        // Whereas ContinueWith() maps
-        //   some(X) to some(Y), and none(X) to none(Y)
-        // ContinueWithIfNone() maps
-        //   some(X) to none(Y), and none(X) to some(Y)
+        // REVIEW: simpler name? DiscardWhen(), SkipWhen(), CancelWhen().
+        // Nonimplication or abjunction; mnemotechnic "P but not Q".
+        // Like PassThruWhen() but when "other" is the empty maybe.
+        // PassThruUnless() = flip ContinueWithIfNone():
+        //   this.PassThruUnless(other) = other.ContinueWithIfNone(this)
+        // where ContinueWithIfNone() is defined in MaybeEx (play project).
         /// <code><![CDATA[
-        ///   Some(1) ContinueWithIfNone Some(2L) == None
-        ///   Some(1) ContinueWithIfNone None     == None
-        ///   None    ContinueWithIfNone Some(2L) == Some(2L)
-        ///   None    ContinueWithIfNone None     == None
+        ///   Some(1) PassThruUnless Some(2L) == None
+        ///   Some(1) PassThruUnless None     == Some(1)
+        ///   None    PassThruUnless Some(2L) == None
+        ///   None    PassThruUnless None     == None
         /// ]]></code>
         [Pure]
-        public Maybe<TResult> ContinueWithIfNone<TResult>(Maybe<TResult> other)
+        public Maybe<T> PassThruUnless<TOther>(Maybe<TOther> other)
         {
-            return _isSome ? Maybe<TResult>.None : other;
+            return other._isSome ? Maybe<T>.None : this;
         }
 
         // Exclusive disjunction; mnemotechnic: "either P or Q, but not both".

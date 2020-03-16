@@ -8,7 +8,6 @@ Abc.Maybe<T>.BindAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<Abc.M
 Abc.Maybe<T>.CompareTo(Abc.Maybe<T> other) -> int
 Abc.Maybe<T>.Contains(T value) -> bool
 Abc.Maybe<T>.ContinueWith<TResult>(Abc.Maybe<TResult> other) -> Abc.Maybe<TResult>
-Abc.Maybe<T>.ContinueWithIfNone<TResult>(Abc.Maybe<TResult> other) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Do(System.Action<T> onSome, System.Action onNone) -> void
 Abc.Maybe<T>.Duplicate() -> Abc.Maybe<Abc.Maybe<T>>
 Abc.Maybe<T>.Equals(Abc.Maybe<T> other) -> bool
@@ -21,6 +20,7 @@ Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T,
 Abc.Maybe<T>.OnSome(System.Action<T> action) -> void
 Abc.Maybe<T>.OrElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.OrElseAsync(System.Threading.Tasks.Task<Abc.Maybe<T>> other) -> System.Threading.Tasks.Task<Abc.Maybe<T>>
+Abc.Maybe<T>.PassThruUnless<TOther>(Abc.Maybe<TOther> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.Replicate() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 Abc.Maybe<T>.Replicate(int count) -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 Abc.Maybe<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Maybe<TResult>
