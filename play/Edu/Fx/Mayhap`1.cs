@@ -171,8 +171,6 @@ namespace Abc.Edu.Fx
 
 #pragma warning restore CA2225
 
-        // ContinueWith() rather than ContinueIf(): if this is "true", then we
-        // "evaluate" other. Of course, this is not a real justification.
         public Mayhap<T> AndThen(Mayhap<T> other)
             => _isSome ? other : None;
 

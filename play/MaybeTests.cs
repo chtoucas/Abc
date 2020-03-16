@@ -78,26 +78,26 @@ namespace Abc
         [Fact]
         public static void ContinueWith()
         {
-            // ContinueWith() is ContinueIf() flipped.
-            Assert.Some(2L, TwoL.ContinueIf(One));
-            Assert.None(ØL.ContinueIf(One));
-            Assert.None(TwoL.ContinueIf(Ø));
-            Assert.None(ØL.ContinueIf(Ø));
+            // ContinueWith() is ContinueWhen() flipped.
+            Assert.Some(2L, TwoL.ContinueWhen(One));
+            Assert.None(ØL.ContinueWhen(One));
+            Assert.None(TwoL.ContinueWhen(Ø));
+            Assert.None(ØL.ContinueWhen(Ø));
         }
 
         [Fact]
-        public static void ContinueIf()
+        public static void ContinueWhen()
         {
             // Some Some -> Some
-            Assert.Some(1, One.ContinueIf(TwoL));
+            Assert.Some(1, One.ContinueWhen(TwoL));
             // Some None -> None
-            Assert.None(One.ContinueIf(ØL));
+            Assert.None(One.ContinueWhen(ØL));
             // None Some -> None
-            Assert.None(Ø.ContinueIf(TwoL));
+            Assert.None(Ø.ContinueWhen(TwoL));
             // None None -> None
-            Assert.None(Ø.ContinueIf(ØL));
+            Assert.None(Ø.ContinueWhen(ØL));
 
-            // ContinueIf() is ContinueWith() flipped.
+            // ContinueWhen() is ContinueWith() flipped.
             Assert.Some(1, TwoL.ContinueWith(One));
             Assert.None(ØL.ContinueWith(One));
             Assert.None(TwoL.ContinueWith(Ø));

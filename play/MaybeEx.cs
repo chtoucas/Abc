@@ -239,23 +239,23 @@ namespace Abc
         //   0100 ContinueUnless()      NOT(->) aka NIMPLY
         //   0120 XorElse()             XOR
         //
-        //   1000 ContinueIf()          AND
+        //   1000 ContinueWhen()        AND
         //   1020 "RightProject"        "right projection"
-        //   1100 Ignore()              left projection
+        //   1100 Ignore()              "left projection"
         //   1120 OrElse()              OR
         //
         //   2000 ContinueWith()        AND
-        //   2020 Always()              right projection
+        //   2020 Always()              "right projection"
         //   2100 "LeftProject"         "left projection"
-        //   2120 OrElseRTL()           "OR"
+        //   2120 OrElseRTL()           OR
         //
         // Overview: return type / pseudo-code
         //   x.OrElse(y)                same types      x is some ? x : y
         //   x.OrElseRTL(y)             same types      y is some ? y : x
         //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
         //   x.ContinueWith(y)          type y          x is some ? y : none
-        //   x.ContinueWithIfNone(y)    type y          x is some ? none : y
-        //   x.ContinueIf(y)            type x          y is some ? x : none
+        //   x.ContinueWithIfNone(y)    type y          x is some ? none : y    // DiscardOrContinueWith()? Cancel
+        //   x.ContinueWhen(y)          type x          y is some ? x : none    // ContinueWhen()?
         //   x.ContinueUnless(y)        type x          y is some ? none : x
         //   x.Ignore(y)                type x          x
         //   x.Always(y)                type y          y
@@ -266,7 +266,7 @@ namespace Abc
         // Method / flipped method
         //               x.OrElse(y) == y.OrElseRTL(x)
         //              x.XorElse(y) == y.XorElse(x)
-        //         x.ContinueWith(y) == y.ContinueIf(x)
+        //         x.ContinueWith(y) == y.ContinueWhen(x)
         //   x.ContinueWithIfNone(y) == y.ContinueUnless(x)
         //         x.RightProject(y) == y.LeftProject(x)
         //               x.Ignore(y) == y.Always(x)
@@ -310,8 +310,8 @@ namespace Abc
         }
 
         // Conjunction; mnemotechnic "P if Q".
-        // ContinueIf() = flip ContinueWith():
-        //   this.ContinueIf(other) = other.ContinueWith(this)
+        // ContinueWhen() = flip ContinueWith():
+        //   this.ContinueWhen(other) = other.ContinueWith(this)
         /// <summary>
         /// Returns the current instance if <paramref name="other"/> is not
         /// empty; otherwise returns the empty maybe of type
@@ -321,16 +321,16 @@ namespace Abc
         /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
         /// binder <c>_ => this</c>.
         /// <code><![CDATA[
-        ///   Some(1) ContinueIf Some(2L) == Some(1)
-        ///   Some(1) ContinueIf None     == None
-        ///   None    ContinueIf Some(2L) == None
-        ///   None    ContinueIf None     == None
+        ///   Some(1) ContinueWhen Some(2L) == Some(1)
+        ///   Some(1) ContinueWhen None     == None
+        ///   None    ContinueWhen Some(2L) == None
+        ///   None    ContinueWhen None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
         //   (y.HasValue ? x : (int?)null).
         [Pure]
-        public static Maybe<T> ContinueIf<T, TOther>(
+        public static Maybe<T> ContinueWhen<T, TOther>(
             this Maybe<T> @this, Maybe<TOther> other)
         {
             return other.IsNone ? Maybe<T>.None : @this;
@@ -354,7 +354,7 @@ namespace Abc
         }
 
         // Nonimplication or abjunction; mnemotechnic "P but not Q".
-        // Like ContinueIf() but when "other" is the empty maybe.
+        // Like ContinueWhen() but when "other" is the empty maybe.
         // ContinueUnless() = flip ContinueWithIfNone():
         //   this.ContinueUnless(other) = other.ContinueWithIfNone(this)
         /// <code><![CDATA[
