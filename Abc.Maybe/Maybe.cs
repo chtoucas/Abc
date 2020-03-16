@@ -14,7 +14,6 @@ namespace Abc
     // - playing with the modifier "in". Currently only added to ext methods for
     //   Maybe<T> where T is a struct.
     // - Maybe<IEnumerable>; see CollectAny().
-    // - Invoke()?
 
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.
@@ -342,6 +341,7 @@ namespace Abc
             this Maybe<Func<TSource, TResult>> @this,
             TSource value)
         {
+            // return @this.Select(f => f(value));
             return @this.IsSome ? Of(@this.Value(value)) : Maybe<TResult>.None;
         }
 
@@ -399,6 +399,7 @@ namespace Abc
             this Maybe<Func<TSource, TResult>> @this,
             Maybe<TSource> maybe)
         {
+            // return @this.Bind(f => maybe.Select(f));
             return @this.IsSome && maybe.IsSome ? Of(@this.Value(maybe.Value))
                 : Maybe<TResult>.None;
         }

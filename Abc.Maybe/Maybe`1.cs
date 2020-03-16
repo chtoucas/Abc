@@ -746,6 +746,7 @@ namespace Abc
         // Conjunction; mnemotechnic "Q if P", "P and then Q".
         // ContinueWith() = flip ContinueWhen():
         //   this.ContinueWith(other) = other.ContinueWhen(this)
+        // where ContinueWhen() is defined in MaybeEx (play project).
         /// <summary>
         /// Continues with <paramref name="other"/> if the current instance is
         /// not empty; otherwise returns the empty maybe of type
