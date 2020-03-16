@@ -774,6 +774,11 @@ namespace Abc
             return _isSome ? other : Maybe<TResult>.None;
         }
 
+        /// <summary>
+        /// Returns the current instance if <paramref name="other"/> is not
+        /// empty; otherwise returns the empty maybe of type
+        /// <typeparamref name="TOther"/>.
+        /// </summary>
         /// <remarks>
         /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
         /// binder <c>_ => this</c>.

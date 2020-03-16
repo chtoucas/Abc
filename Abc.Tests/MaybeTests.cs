@@ -16,6 +16,8 @@ namespace Abc
         private static readonly Maybe<int> Ø = Maybe<int>.None;
         private static readonly Maybe<int> One = Maybe.Some(1);
         private static readonly Maybe<int> Two = Maybe.Some(2);
+        private static readonly Maybe<long> ØL = Maybe<long>.None;
+        private static readonly Maybe<long> TwoL = Maybe.Some(2L);
     }
 
     // Construction, properties.
@@ -91,15 +93,14 @@ namespace Abc
         [Fact]
         public static void OrElse()
         {
-            // None.OrElse(None) -> None
-            Assert.None(Ø.OrElse(Ø));
-
-            // None.OrElse(Some) -> Some
-            Assert.Some(2, Ø.OrElse(Two));
-            // Some.OrElse(None) -> Some
-            Assert.Some(1, One.OrElse(Ø));
-            // Some.OrElse(Some) -> Some
+            // Some Some -> Some
             Assert.Some(1, One.OrElse(Two));
+            // Some None -> Some
+            Assert.Some(1, One.OrElse(Ø));
+            // None Some -> Some
+            Assert.Some(2, Ø.OrElse(Two));
+            // None None -> None
+            Assert.None(Ø.OrElse(Ø));
         }
     }
 
@@ -180,57 +181,53 @@ namespace Abc
         [Fact]
         public static void ZipWith()
         {
-            // None.ZipWith(None) -> None
-            Assert.None(Ø.ZipWith(Ø, (i, j) => i + j));
-            // None.ZipWith(Some) -> None
-            Assert.None(Ø.ZipWith(Two, (i, j) => i + j));
-            // Some.ZipWith(None) -> None
-            Assert.None(One.ZipWith(Ø, (i, j) => i + j));
-
-            // Some.ZipWith(Some) -> Some
-            Assert.Some(3, One.ZipWith(Two, (i, j) => i + j));
+            // Some Some -> Some
+            Assert.Some(3L, One.ZipWith(TwoL, (i, j) => i + j));
+            // Some None -> None
+            Assert.None(One.ZipWith(ØL, (i, j) => i + j));
+            // None Some -> None
+            Assert.None(Ø.ZipWith(TwoL, (i, j) => i + j));
+            // None None -> None
+            Assert.None(Ø.ZipWith(ØL, (i, j) => i + j));
         }
 
         [Fact]
         public static void ContinueWith()
         {
-            // None.ContinueWith(None) -> None
-            Assert.None(Ø.ContinueWith(Ø));
-            // None.ContinueWith(Some) -> None
-            Assert.None(Ø.ContinueWith(Two));
-            // Some.ContinueWith(None) -> None
-            Assert.None(One.ContinueWith(Ø));
-
-            // Some.ContinueWith(Some) -> Some
-            Assert.Some(2, One.ContinueWith(Two));
+            // Some Some -> Some
+            Assert.Some(2L, One.ContinueWith(TwoL));
+            // Some None -> None
+            Assert.None(One.ContinueWith(ØL));
+            // None Some -> None
+            Assert.None(Ø.ContinueWith(TwoL));
+            // None None -> None
+            Assert.None(Ø.ContinueWith(ØL));
         }
 
         [Fact]
         public static void PassThru()
         {
-            // None.PassThru(None) -> None
-            Assert.None(Ø.PassThru(Ø));
-            // None.PassThru(Some) -> None
-            Assert.None(Ø.PassThru(Two));
-            // Some.PassThru(None) -> None
-            Assert.None(One.PassThru(Ø));
-
-            // Some.PassThru(Some) -> Some
-            Assert.Some(1, One.PassThru(Two));
+            // Some Some -> Some
+            Assert.Some(1, One.PassThru(TwoL));
+            // Some None -> None
+            Assert.None(One.PassThru(ØL));
+            // None Some -> None
+            Assert.None(Ø.PassThru(TwoL));
+            // None None -> None
+            Assert.None(Ø.PassThru(ØL));
         }
 
         [Fact]
         public static void XorElse()
         {
-            // None.XorElse(None) -> None
-            Assert.None(Ø.XorElse(Ø));
-            // Some.XorElse(Some) -> None
+            // Some Some -> None
             Assert.None(One.XorElse(Two));
-
-            // None.XorElse(Some) -> Some
-            Assert.Some(2, Ø.XorElse(Two));
-            // Some.XorElse(None) -> Some
+            // Some None -> Some
             Assert.Some(1, One.XorElse(Ø));
+            // None Some -> Some
+            Assert.Some(2, Ø.XorElse(Two));
+            // None None -> None
+            Assert.None(Ø.XorElse(Ø));
         }
 
         [Fact]
