@@ -47,6 +47,44 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
+        public static void Ignore()
+        {
+            // Some Some -> Some
+            Assert.Some(1, One.Ignore(TwoL));
+            // Some None -> Some
+            Assert.Some(1, One.Ignore(ØL));
+            // None Some -> None
+            Assert.None(Ø.Ignore(TwoL));
+            // None None -> None
+            Assert.None(Ø.Ignore(ØL));
+
+            // Ignore() is Always() flipped.
+            Assert.Some(1, TwoL.Always(One));
+            Assert.Some(1, ØL.Always(One));
+            Assert.None(TwoL.Always(Ø));
+            Assert.None(ØL.Always(Ø));
+        }
+
+        [Fact]
+        public static void Always()
+        {
+            // Some Some -> Some
+            Assert.Some(2L, One.Always(TwoL));
+            // Some None -> None
+            Assert.None(One.Always(ØL));
+            // None Some -> Some
+            Assert.Some(2L, Ø.Always(TwoL));
+            // None None -> None
+            Assert.None(Ø.Always(ØL));
+
+            // Always() is Ignore() flipped.
+            Assert.Some(2L, TwoL.Ignore(One));
+            Assert.None(ØL.Ignore(One));
+            Assert.Some(2L, TwoL.Ignore(Ø));
+            Assert.None(ØL.Ignore(Ø));
+        }
+
+        [Fact]
         public static void ContinueWithIfNone()
         {
             // Some Some -> None
@@ -57,6 +95,12 @@ namespace Abc
             Assert.Some(2L, Ø.ContinueWithIfNone(TwoL));
             // None None -> None
             Assert.None(Ø.ContinueWithIfNone(ØL));
+
+            // ContinueWithIfNone() is PassThruWhenNone() flipped.
+            Assert.None(TwoL.PassThruWhenNone(One));
+            Assert.None(ØL.PassThruWhenNone(One));
+            Assert.Some(2L, TwoL.PassThruWhenNone(Ø));
+            Assert.None(ØL.PassThruWhenNone(Ø));
         }
 
         [Fact]
@@ -70,6 +114,22 @@ namespace Abc
             Assert.None(Ø.PassThruWhenNone(TwoL));
             // None None -> None
             Assert.None(Ø.PassThruWhenNone(ØL));
+
+            // PassThruWhenNone() is ContinueWithIfNone() flipped.
+            Assert.None(TwoL.ContinueWithIfNone(One));
+            Assert.Some(1, ØL.ContinueWithIfNone(One));
+            Assert.None(TwoL.ContinueWithIfNone(Ø));
+            Assert.None(ØL.ContinueWithIfNone(Ø));
+        }
+
+        [Fact]
+        public static void OrElse()
+        {
+            // OrElse() is OrElseRTL() flipped.
+            Assert.Some(1, Two.OrElseRTL(One));
+            Assert.Some(1, Ø.OrElseRTL(One));
+            Assert.Some(2, Two.OrElseRTL(Ø));
+            Assert.None(Ø.OrElseRTL(Ø));
         }
 
         [Fact]
@@ -84,7 +144,7 @@ namespace Abc
             // None None -> None
             Assert.None(Ø.OrElseRTL(Ø));
 
-            // OrElseRTL() is OrElse() but reading from right to left.
+            // OrElseRTL() is OrElse() flipped.
             Assert.Some(2, Two.OrElse(One));
             Assert.Some(1, Ø.OrElse(One));
             Assert.Some(2, Two.OrElse(Ø));

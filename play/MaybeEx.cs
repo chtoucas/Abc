@@ -246,11 +246,11 @@ namespace Abc
         //
         //   1000 PassThru()            AND
         //   1020 "RightProject"        "right projection"
-        //   1100 -                     left projection       <-- useless, ignore right
+        //   1100 Ignore()              left projection       <-- useless, ignore right
         //   1120 OrElse()              OR
         //
         //   2000 ContinueWith()        AND
-        //   2020 -                     right projection      <-- useless, ignore left
+        //   2020 Always()              right projection      <-- useless, ignore left
         //   2100 "LeftProject"         "left projection"
         //   2120 OrElseRTL()           "OR"
         //
@@ -263,6 +263,8 @@ namespace Abc
         //   x.PassThru(y)              type x          y is some ? x : none
         //   x.PassThruIfNone(y)        type x          y is none ? x : none
         //
+        //   x.Ignore(y)                type x          x
+        //   x.Always(y)                type y          y
         //   x.RightProject(y)          type x = y      x is some ? (y is some ? x : y) : y
         //   x.LeftProject(y)           type x = y      x is some ? (y is some ? y : x) : x
         //
@@ -273,8 +275,38 @@ namespace Abc
         // - ContinueWith() is really ContinueWithIfSome()
         // - PassThru() is really PassThruWhenSome()
 
+#pragma warning disable CA1801 // -Review unused parameters
+        // Ignore() = flip Always():
+        //   this.Ignore(other) = other.Always(this)
+        /// <code><![CDATA[
+        ///   Some(1) Ignore Some(2L) == Some(1)
+        ///   Some(1) Ignore None     == Some(1)
+        ///   None    Ignore Some(2L) == None
+        ///   None    Ignore None     == None
+        /// ]]></code>
+        [Pure]
+        public static Maybe<T> Ignore<T, TOther>(
+            this Maybe<T> @this, Maybe<TOther> other)
+            => @this;
+#pragma warning restore CA1801
+
+        // Always() = flip Ignore():
+        //   this.Always(other) = other.Ignore(this)
+        /// <code><![CDATA[
+        ///   Some(1) Always Some(2L) == Some(2L)
+        ///   Some(1) Always None     == None
+        ///   None    Always Some(2L) == Some(2L)
+        ///   None    Always None     == None
+        /// ]]></code>
+        [Pure]
+        public static Maybe<TResult> Always<T, TResult>(
+            this Maybe<T> @this, Maybe<TResult> other)
+            => other;
+
         // Converse nonimplication; mnemotechnic "not P but Q".
         // Like ContinueWith() but when @this is the empty maybe.
+        // ContinueWithIfNone() = flip PassThruWhenNone():
+        //   this.ContinueWithIfNone(other) = other.PassThruWhenNone(this)
         /// <code><![CDATA[
         ///   Some(1) ContinueWithIfNone Some(2L) == None
         ///   Some(1) ContinueWithIfNone None     == None
@@ -288,6 +320,8 @@ namespace Abc
 
         // Nonimplication; mnemotechnic "P but not Q".
         // Like PassThru() but when "other" is the empty maybe.
+        // PassThruWhenNone() = flip ContinueWithIfNone():
+        //   this.PassThruWhenNone(other) = other.ContinueWithIfNone(this)
         /// <code><![CDATA[
         ///   Some(1) PassThruWhenNone Some(2L) == None
         ///   Some(1) PassThruWhenNone None     == Some(1)
@@ -299,9 +333,9 @@ namespace Abc
             this Maybe<T> @this, Maybe<TOther> other)
             => other.IsNone ? @this : Maybe<T>.None;
 
-        // Conjunction.
-        // Flipped OrElse(): this.OrElseRTL(other) == other.OrElse(this).
-        // RTL = right-to-left.
+        // Conjunction. RTL = right-to-left.
+        // OrElseRTL() = flip OrElse():
+        //   this.OrElseRTL(other) == other.OrElse(this).
         /// <code><![CDATA[
         ///   Some(1) OrElseRTL Some(2) == Some(2)
         ///   Some(1) OrElseRTL None    == Some(1)

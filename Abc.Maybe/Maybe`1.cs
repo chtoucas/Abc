@@ -81,7 +81,7 @@ namespace Abc
     /// - XorElse()             XOR gate
     /// - ZipWith()             cross join
     /// - Apply()
-    /// - ContinueWith()        replace a non-empty maybe by another one, "right" AND gate
+    /// - ContinueWith()        "right" AND gate
     /// - PassThru()            "left" AND gate
     /// - Skip()
     /// - Replicate()
@@ -219,7 +219,7 @@ namespace Abc
 
         // Inclusive disjunction; mnemotechnic: "P otherwise Q".
         /// <remarks>
-        /// Generalizes the null-coalescing operator (??).
+        /// Generalizes the null-coalescing operator (??) to maybe's.
         /// <code><![CDATA[
         ///   Some(1) ?? Some(2) == Some(1)
         ///   Some(1) ?? None    == Some(1)
@@ -753,6 +753,8 @@ namespace Abc
         }
 
         // Conjunction; mnemotechnic "Q if P", "P and then Q".
+        // ContinueWith() = flip PassThru():
+        //   this.ContinueWith(other) = other.PassThru(this)
         /// <summary>
         /// Returns <paramref name="other"/> if the current instance is not
         /// empty; otherwise returns the empty maybe of type
@@ -777,6 +779,8 @@ namespace Abc
         }
 
         // Conjunction; mnemotechnic "P if Q".
+        // PassThru() = flip ContinueWith():
+        //   this.PassThru(other) = other.ContinueWith(this)
         /// <summary>
         /// Returns the current instance if <paramref name="other"/> is not
         /// empty; otherwise returns the empty maybe of type
@@ -802,14 +806,14 @@ namespace Abc
 
         // Exclusive disjunction; mnemotechnic: "either P or Q, but not both".
         /// <remarks>
-        /// This method can be though as an exclusive OR for maybe's, provided
-        /// that an empty maybe is said to be false.
         /// <code><![CDATA[
         ///   Some(1) XorElse Some(2) == None
         ///   Some(1) XorElse None    == Some(1)
         ///   None    XorElse Some(2) == Some(2)
         ///   None    XorElse None    == None
         /// ]]></code>
+        /// This method can be though as an exclusive OR for maybe's, provided
+        /// that an empty maybe is said to be false.
         /// </remarks>
         [Pure]
         public Maybe<T> XorElse(Maybe<T> other)
