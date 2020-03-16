@@ -240,16 +240,16 @@ namespace Abc
         //   0120 XorElse()             XOR
         //
         //   1000 ContinueWhen()        AND
-        //   1020 LeftIfSome()          "right projection"
-        //   1100 Ignore()              "left projection"
+        //   1020 LeftAnd()             right projection
+        //   1100 Ignore()              left projection
         //   1120 OrElse()              OR
         //
         //   2000 ContinueWith()        AND
-        //   2020 Always()              "right projection"
-        //   2100 RightIfSome()         "left projection"
+        //   2020 Always()              right projection
+        //   2100 RightAnd()            left projection
         //   2120 OrElseRTL()           OR
         //
-        // Overview: return type / pseudo-code
+        // Overview: op / return type / pseudo-code
         //   x.OrElse(y)                same types      x is some ? x : y
         //   x.OrElseRTL(y)             same types      y is some ? y : x
         //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
@@ -260,15 +260,15 @@ namespace Abc
         //   x.Ignore(y)                type x          x
         //   x.Always(y)                type y          y
         //
-        //   LeftIfSome(x, y)           same types      x is some && y is some ? x : y
-        //   RightIfSome(x, y)          same types      x is some && y is some ? y : x
+        //   LeftAnd(x, y)              same types      x is some && y is some ? x : y
+        //   RightAnd(x, y)             same types      x is some && y is some ? y : x
         //
         // Method / flipped method
         //               x.OrElse(y) == y.OrElseRTL(x)
         //              x.XorElse(y) == y.XorElse(x)
         //         x.ContinueWith(y) == y.ContinueWhen(x)
         //   x.ContinueWithIfNone(y) == y.ContinueUnless(x)
-        //          LeftIfSome(x, y) == RightIfSome(y, x)
+        //             LeftAnd(x, y) == RightAnd(y, x)
         //               x.Ignore(y) == y.Always(x)
         //
         // References:
@@ -389,31 +389,31 @@ namespace Abc
         }
 
         // If left or right is empty, returns right; otherwise returns left.
-        // LeftIfSome() = flip RightIfSome():
-        //   LeftIfSome(left, right) == RightIfSome(right, left).
+        // LeftAnd() = flip RightAnd():
+        //   LeftAnd(left, right) == RightAnd(right, left).
         /// <code><![CDATA[
-        ///   Some(1) LeftIfSome Some(2) == Some(1)
-        ///   Some(1) LeftIfSome None    == None
-        ///   None    LeftIfSome Some(2) == Some(2)
-        ///   None    LeftIfSome None    == None
+        ///   Some(1) LeftAnd Some(2) == Some(1)
+        ///   Some(1) LeftAnd None    == None
+        ///   None    LeftAnd Some(2) == Some(2)
+        ///   None    LeftAnd None    == None
         /// ]]></code>
         [Pure]
-        public static Maybe<T> LeftIfSome<T>(Maybe<T> left, Maybe<T> right)
+        public static Maybe<T> LeftAnd<T>(Maybe<T> left, Maybe<T> right)
         {
             return !left.IsNone && !right.IsNone ? left : right;
         }
 
         // If left or right is empty, returns left; otherwise returns right.
-        // RightIfSome() = flip LeftIfSome():
-        //   RightIfSome(left, right) == LeftIfSome(right, left).
+        // RightAnd() = flip LeftAnd():
+        //   RightAnd(left, right) == LeftAnd(right, left).
         /// <code><![CDATA[
-        ///   Some(1) RightIfSome Some(2) == Some(2)
-        ///   Some(1) RightIfSome None    == Some(1)
-        ///   None    RightIfSome Some(2) == None
-        ///   None    RightIfSome None    == None
+        ///   Some(1) RightAnd Some(2) == Some(2)
+        ///   Some(1) RightAnd None    == Some(1)
+        ///   None    RightAnd Some(2) == None
+        ///   None    RightAnd None    == None
         /// ]]></code>
         [Pure]
-        public static Maybe<T> RightIfSome<T>(Maybe<T> left, Maybe<T> right)
+        public static Maybe<T> RightAnd<T>(Maybe<T> left, Maybe<T> right)
         {
             return !left.IsNone && !right.IsNone ? right : left;
         }

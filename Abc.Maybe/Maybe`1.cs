@@ -77,11 +77,11 @@ namespace Abc
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
     /// - GroupJoin()           LINQ group join
-    /// - OrElse()              none-coalescing, OR gate
-    /// - XorElse()             XOR gate
+    /// - OrElse()              none-coalescing (OR gate)
+    /// - XorElse()             either (XOR gate)
     /// - ZipWith()             cross join
     /// - Apply()
-    /// - ContinueWith()        AND gate
+    /// - ContinueWith()        creates a continuation (AND gate)
     /// - Skip()
     /// - Replicate()
     /// - Duplicate()
@@ -755,8 +755,8 @@ namespace Abc
         // ContinueWith() = flip ContinueWhen():
         //   this.ContinueWith(other) = other.ContinueWhen(this)
         /// <summary>
-        /// Returns <paramref name="other"/> if the current instance is not
-        /// empty; otherwise returns the empty maybe of type
+        /// Continues with <paramref name="other"/> if the current instance is
+        /// not empty; otherwise returns the empty maybe of type
         /// <typeparamref name="TResult"/>.
         /// </summary>
         /// <remarks>
@@ -768,6 +768,8 @@ namespace Abc
         ///   None    ContinueWith Some(2L) == None
         ///   None    ContinueWith None     == None
         /// ]]></code>
+        /// This method can be though as an AND for maybe's, provided that an
+        /// empty maybe is said to be false.
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
         //   (x.HasValue ? y : (long?)null).

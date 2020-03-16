@@ -143,41 +143,41 @@ namespace Abc
         }
 
         [Fact]
-        public static void LeftIfSome()
+        public static void LeftAnd()
         {
             // Some Some -> Some
-            Assert.Some(1, MaybeEx.LeftIfSome(One, Two));
+            Assert.Some(1, MaybeEx.LeftAnd(One, Two));
             // Some None -> None
-            Assert.None(MaybeEx.LeftIfSome(One, Ø));
+            Assert.None(MaybeEx.LeftAnd(One, Ø));
             // None Some -> Some
-            Assert.Some(2, MaybeEx.LeftIfSome(Ø, Two));
+            Assert.Some(2, MaybeEx.LeftAnd(Ø, Two));
             // None None -> None
-            Assert.None(MaybeEx.LeftIfSome(Ø, Ø));
+            Assert.None(MaybeEx.LeftAnd(Ø, Ø));
 
-            // LeftIfSome() is RightIfSome() flipped.
-            Assert.Some(1, MaybeEx.RightIfSome(Two, One));
-            Assert.None(MaybeEx.RightIfSome(Ø, One));
-            Assert.Some(2, MaybeEx.RightIfSome(Two, Ø));
-            Assert.None(MaybeEx.RightIfSome(Ø, Ø));
+            // LeftAnd() is RightAnd() flipped.
+            Assert.Some(1, MaybeEx.RightAnd(Two, One));
+            Assert.None(MaybeEx.RightAnd(Ø, One));
+            Assert.Some(2, MaybeEx.RightAnd(Two, Ø));
+            Assert.None(MaybeEx.RightAnd(Ø, Ø));
         }
 
         [Fact]
-        public static void RightIfSome()
+        public static void RightAnd()
         {
             // Some Some -> Some
-            Assert.Some(2, MaybeEx.RightIfSome(One, Two));
+            Assert.Some(2, MaybeEx.RightAnd(One, Two));
             // Some None -> Some
-            Assert.Some(1, MaybeEx.RightIfSome(One, Ø));
+            Assert.Some(1, MaybeEx.RightAnd(One, Ø));
             // None Some -> None
-            Assert.None(MaybeEx.RightIfSome(Ø, Two));
+            Assert.None(MaybeEx.RightAnd(Ø, Two));
             // None None -> None
-            Assert.None(MaybeEx.RightIfSome(Ø, Ø));
+            Assert.None(MaybeEx.RightAnd(Ø, Ø));
 
-            // RightIfSome() is LeftIfSome() flipped.
-            Assert.Some(2, MaybeEx.LeftIfSome(Two, One));
-            Assert.Some(1, MaybeEx.LeftIfSome(Ø, One));
-            Assert.None(MaybeEx.LeftIfSome(Two, Ø));
-            Assert.None(MaybeEx.LeftIfSome(Ø, Ø));
+            // RightAnd() is LeftAnd() flipped.
+            Assert.Some(2, MaybeEx.LeftAnd(Two, One));
+            Assert.Some(1, MaybeEx.LeftAnd(Ø, One));
+            Assert.None(MaybeEx.LeftAnd(Two, Ø));
+            Assert.None(MaybeEx.LeftAnd(Ø, Ø));
         }
 
         [Fact]
