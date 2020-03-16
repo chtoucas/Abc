@@ -704,8 +704,12 @@ namespace Abc
     }
 
     // Misc methods.
-    // They can all be built from Select() or Bind(), but we prefer not to
-    // since this forces us to use (unnecessary) lambda functions.
+    // Some can be built from Select() or Bind(), but we prefer not to since
+    // this forces us to use (unnecessary) lambda functions.
+    // Methods that are independent of Select()/Bind():
+    // - ContinueWithIfNone()
+    // - XorElse()
+    // Maybe this can be done in conjunction w/ OrElse(), but I haven't check.
     public partial struct Maybe<T>
     {
         /// <remarks>
@@ -791,7 +795,7 @@ namespace Abc
         [Pure]
         public Maybe<TResult> ContinueWithIfNone<TResult>(Maybe<TResult> other)
         {
-            return IsSome ? Maybe<TResult>.None : other;
+            return _isSome ? Maybe<TResult>.None : other;
         }
 
         // Exclusive disjunction; mnemotechnic: "either P or Q, but not both".
