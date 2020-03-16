@@ -80,7 +80,6 @@ namespace Abc
     /// - OrElse()              none-coalescing (OR gate)
     /// - XorElse()             either (XOR gate)
     /// - ZipWith()             cross join
-    /// - Apply()
     /// - ContinueWith()        creates a continuation (AND gate)
     /// - Skip()
     /// - Replicate()
@@ -708,12 +707,12 @@ namespace Abc
     // since this forces us to use (unnecessary) lambda functions.
     public partial struct Maybe<T>
     {
-        [Pure]
-        public Maybe<TResult> Apply<TResult>(Maybe<Func<T, TResult>> applicative)
-        {
-            return _isSome && applicative._isSome ? Maybe.Of(applicative._value(_value))
-                : Maybe<TResult>.None;
-        }
+        //[Pure]
+        //public Maybe<TResult> Apply<TResult>(Maybe<Func<T, TResult>> applicative)
+        //{
+        //    return _isSome && applicative._isSome ? Maybe.Of(applicative._value(_value))
+        //        : Maybe<TResult>.None;
+        //}
 
         /// <remarks>
         /// <para>
@@ -886,6 +885,7 @@ namespace Abc
     // operands are compared. Do not assume that because a particular comparison
     // (for example, <=) returns false, the opposite comparison (>) returns true.
     // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/nullable-value-types#lifted-operators
+    // https://ericlippert.com/2015/08/31/nullable-comparisons-are-weird/
 
     // Interface IComparable<>.
     public partial struct Maybe<T>

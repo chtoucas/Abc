@@ -3,7 +3,6 @@ Abc.May
 Abc.May.May() -> void
 Abc.Maybe
 Abc.Maybe<T>
-Abc.Maybe<T>.Apply<TResult>(Abc.Maybe<System.Func<T, TResult>> applicative) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Bind<TResult>(System.Func<T, Abc.Maybe<TResult>> binder) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.BindAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<Abc.Maybe<TResult>>> binder) -> System.Threading.Tasks.Task<Abc.Maybe<TResult>>
 Abc.Maybe<T>.CompareTo(Abc.Maybe<T> other) -> int

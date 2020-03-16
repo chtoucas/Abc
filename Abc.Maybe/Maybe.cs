@@ -334,13 +334,14 @@ namespace Abc
     // Extension methods for Maybe<T> where T is a function.
     public partial class Maybe
     {
-        /// <seealso cref="Maybe{T}.Apply"/>
+        ///// <seealso cref="Maybe{T}.Apply"/>
         [Pure]
         public static Maybe<TResult> Invoke<TSource, TResult>(
             this Maybe<Func<TSource, TResult>> @this,
             Maybe<TSource> maybe)
         {
-            return maybe.Apply(@this);
+            return @this.IsSome && maybe.IsSome ? Of(@this.Value(maybe.Value))
+                : Maybe<TResult>.None;
         }
 
         [Pure]
