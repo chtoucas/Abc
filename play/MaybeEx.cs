@@ -23,7 +23,7 @@ namespace Abc
     // Only a handful of them are really considered for inclusion in the main
     // project as most of them are pretty straightforward.
     // Currently, the best candidates for promotion are:
-    // - the configurable async methods
+    // - configurable async methods
     // - ReplaceWith(), a specialization of Select()
     // - Filter(), a specialization of Where()
     //
@@ -253,10 +253,10 @@ namespace Abc
         //   x.OrElse(y)                same types      x is some ? x : y
         //   x.OrElseRTL(y)             same types      y is some ? y : x
         //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
-        //   x.ContinueWith(y)          type y          x is some ? y : none
-        //   x.ContinueWithIfNone(y)    type y          x is some ? none : y    // DiscardOrContinueWith()? Cancel
-        //   x.ContinueWhen(y)          type x          y is some ? x : none
-        //   x.ContinueUnless(y)        type x          y is some ? none : x
+        //   x.ContinueWith(y)          type y          x is some ? y : none(y)
+        //   x.ContinueWithIfNone(y)    type y          x is some ? none(y) : y
+        //   x.ContinueWhen(y)          type x          y is some ? x : none(x)
+        //   x.ContinueUnless(y)        type x          y is some ? none(x) : x
         //   x.Ignore(y)                type x          x
         //   x.Always(y)                type y          y
         //
@@ -333,6 +333,8 @@ namespace Abc
         public static Maybe<T> ContinueWhen<T, TOther>(
             this Maybe<T> @this, Maybe<TOther> other)
         {
+            // Using Bind():
+            //   other.Bind(_ => @this);
             return other.IsNone ? Maybe<T>.None : @this;
         }
 
@@ -340,6 +342,10 @@ namespace Abc
         // Like ContinueWith() but when @this is the empty maybe.
         // ContinueWithIfNone() = flip ContinueUnless():
         //   this.ContinueWithIfNone(other) = other.ContinueUnless(this)
+        // Whereas ContinueWith() maps
+        //   some(X) to some(Y), and none(X) to none(Y)
+        // ContinueWithIfNone() maps
+        //   some(X) to none(Y), and none(X) to some(Y)
         /// <code><![CDATA[
         ///   Some(1) ContinueWithIfNone Some(2L) == None
         ///   Some(1) ContinueWithIfNone None     == None
