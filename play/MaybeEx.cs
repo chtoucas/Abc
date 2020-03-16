@@ -240,13 +240,13 @@ namespace Abc
         //   0120 XorElse()             XOR
         //
         //   1000 ContinueWhen()        AND
-        //   1020 "RightProject"        "right projection"
+        //   1020 LeftIfSome()          "right projection"
         //   1100 Ignore()              "left projection"
         //   1120 OrElse()              OR
         //
         //   2000 ContinueWith()        AND
         //   2020 Always()              "right projection"
-        //   2100 "LeftProject"         "left projection"
+        //   2100 RightIfSome()         "left projection"
         //   2120 OrElseRTL()           OR
         //
         // Overview: return type / pseudo-code
@@ -255,20 +255,20 @@ namespace Abc
         //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
         //   x.ContinueWith(y)          type y          x is some ? y : none
         //   x.ContinueWithIfNone(y)    type y          x is some ? none : y    // DiscardOrContinueWith()? Cancel
-        //   x.ContinueWhen(y)          type x          y is some ? x : none    // ContinueWhen()?
+        //   x.ContinueWhen(y)          type x          y is some ? x : none
         //   x.ContinueUnless(y)        type x          y is some ? none : x
         //   x.Ignore(y)                type x          x
         //   x.Always(y)                type y          y
         //
-        //   x.RightProject(y)          same types      x is some && y is some ? x : y
-        //   x.LeftProject(y)           same types      x is some && y is some ? y : x
+        //   LeftIfSome(x, y)           same types      x is some && y is some ? x : y
+        //   RightIfSome(x, y)          same types      x is some && y is some ? y : x
         //
         // Method / flipped method
         //               x.OrElse(y) == y.OrElseRTL(x)
         //              x.XorElse(y) == y.XorElse(x)
         //         x.ContinueWith(y) == y.ContinueWhen(x)
         //   x.ContinueWithIfNone(y) == y.ContinueUnless(x)
-        //         x.RightProject(y) == y.LeftProject(x)
+        //          LeftIfSome(x, y) == RightIfSome(y, x)
         //               x.Ignore(y) == y.Always(x)
         //
         // References:
@@ -388,34 +388,34 @@ namespace Abc
                 : other;
         }
 
-        // RightProject() = flip LeftProject():
-        //   this.RightProject(other) == other.LeftProject(this).
+        // If left or right is empty, returns right; otherwise returns left.
+        // LeftIfSome() = flip RightIfSome():
+        //   LeftIfSome(left, right) == RightIfSome(right, left).
         /// <code><![CDATA[
-        ///   Some(1) RightProject Some(2) == Some(1)
-        ///   Some(1) RightProject None    == None
-        ///   None    RightProject Some(2) == Some(2)
-        ///   None    RightProject None    == None
+        ///   Some(1) LeftIfSome Some(2) == Some(1)
+        ///   Some(1) LeftIfSome None    == None
+        ///   None    LeftIfSome Some(2) == Some(2)
+        ///   None    LeftIfSome None    == None
         /// ]]></code>
         [Pure]
-        public static Maybe<T> RightProject<T>(
-            this Maybe<T> @this, Maybe<T> other)
+        public static Maybe<T> LeftIfSome<T>(Maybe<T> left, Maybe<T> right)
         {
-            return !@this.IsNone && !other.IsNone ? @this : other;
+            return !left.IsNone && !right.IsNone ? left : right;
         }
 
-        // LeftProject() = flip RightProject():
-        //   this.LeftProject(other) == other.RightProject(this).
+        // If left or right is empty, returns left; otherwise returns right.
+        // RightIfSome() = flip LeftIfSome():
+        //   RightIfSome(left, right) == LeftIfSome(right, left).
         /// <code><![CDATA[
-        ///   Some(1) LeftProject Some(2) == Some(2)
-        ///   Some(1) LeftProject None    == Some(1)
-        ///   None    LeftProject Some(2) == None
-        ///   None    LeftProject None    == None
+        ///   Some(1) RightIfSome Some(2) == Some(2)
+        ///   Some(1) RightIfSome None    == Some(1)
+        ///   None    RightIfSome Some(2) == None
+        ///   None    RightIfSome None    == None
         /// ]]></code>
         [Pure]
-        public static Maybe<T> LeftProject<T>(
-            this Maybe<T> @this, Maybe<T> other)
+        public static Maybe<T> RightIfSome<T>(Maybe<T> left, Maybe<T> right)
         {
-            return !@this.IsNone && !other.IsNone ? other : @this;
+            return !left.IsNone && !right.IsNone ? right : left;
         }
     }
 
