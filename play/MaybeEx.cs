@@ -251,7 +251,7 @@ namespace Abc
         //   2000 ContinueWith()          AND
         //   2020 -                       right projection      <-- useless, ignore left
         //   2100 "LeftProjection"        "left projection"
-        //   2120 "Otherwise"             "OR"
+        //   2120 OrElseRTL()             "OR"
         // Naming convention:
         // - ...IfNone() or ...IfSome(), the current instance is empty or not.
         // - ...WhenNone() or ...WhenSome(), the other maybe is empty or not.
@@ -285,7 +285,7 @@ namespace Abc
             this Maybe<T> @this, Maybe<TOther> other)
             => other.IsNone ? @this : Maybe<T>.None;
 
-        // Variant of OrElse(): this.Otherwise(other) == other.OrElse(this).
+        // Reversed OrElse(): this.OrElseRTL(other) == other.OrElse(this).
         /// <code><![CDATA[
         ///   Some(1) OR Some(2) == Some(2)
         ///   Some(1) OR None    == Some(1)
@@ -293,7 +293,7 @@ namespace Abc
         ///   None    OR None    == None
         /// ]]></code>
         [Pure]
-        public static Maybe<T> Otherwise<T>(
+        public static Maybe<T> OrElseRTL<T>(
             this Maybe<T> @this, Maybe<T> other)
             => @this.IsNone ? other
                 : other.IsNone ? @this : other;

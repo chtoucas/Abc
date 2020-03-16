@@ -73,16 +73,22 @@ namespace Abc
         }
 
         [Fact]
-        public static void Otherwise()
+        public static void OrElseRTL()
         {
             // Some Some -> Some
-            Assert.Some(2, One.Otherwise(Two));
+            Assert.Some(2, One.OrElseRTL(Two));
             // Some None -> Some
-            Assert.Some(1, One.Otherwise(Ø));
+            Assert.Some(1, One.OrElseRTL(Ø));
             // None Some -> Some
-            Assert.Some(2, Ø.Otherwise(Two));
+            Assert.Some(2, Ø.OrElseRTL(Two));
             // None None -> None
-            Assert.None(Ø.Otherwise(Ø));
+            Assert.None(Ø.OrElseRTL(Ø));
+
+            // EsleRo() is OrElse() but reading from right to left.
+            Assert.Some(2, Two.OrElse(One));
+            Assert.Some(1, Ø.OrElse(One));
+            Assert.Some(2, Two.OrElse(Ø));
+            Assert.None(Ø.OrElse(Ø));
         }
     }
 }

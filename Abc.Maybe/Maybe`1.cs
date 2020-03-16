@@ -77,7 +77,7 @@ namespace Abc
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
     /// - GroupJoin()           LINQ group join
-    /// - OrElse()              coalescing, OR gate
+    /// - OrElse()              none-coalescing, OR gate
     /// - XorElse()             XOR gate
     /// - ZipWith()             cross join
     /// - Apply()
