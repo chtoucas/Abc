@@ -78,26 +78,26 @@ namespace Abc
         [Fact]
         public static void ContinueWith()
         {
-            // ContinueWith() is PassThru() flipped.
-            Assert.Some(2L, TwoL.PassThru(One));
-            Assert.None(ØL.PassThru(One));
-            Assert.None(TwoL.PassThru(Ø));
-            Assert.None(ØL.PassThru(Ø));
+            // ContinueWith() is ContinueIf() flipped.
+            Assert.Some(2L, TwoL.ContinueIf(One));
+            Assert.None(ØL.ContinueIf(One));
+            Assert.None(TwoL.ContinueIf(Ø));
+            Assert.None(ØL.ContinueIf(Ø));
         }
 
         [Fact]
-        public static void PassThru()
+        public static void ContinueIf()
         {
             // Some Some -> Some
-            Assert.Some(1, One.PassThru(TwoL));
+            Assert.Some(1, One.ContinueIf(TwoL));
             // Some None -> None
-            Assert.None(One.PassThru(ØL));
+            Assert.None(One.ContinueIf(ØL));
             // None Some -> None
-            Assert.None(Ø.PassThru(TwoL));
+            Assert.None(Ø.ContinueIf(TwoL));
             // None None -> None
-            Assert.None(Ø.PassThru(ØL));
+            Assert.None(Ø.ContinueIf(ØL));
 
-            // PassThru() is ContinueWith() flipped.
+            // ContinueIf() is ContinueWith() flipped.
             Assert.Some(1, TwoL.ContinueWith(One));
             Assert.None(ØL.ContinueWith(One));
             Assert.None(TwoL.ContinueWith(Ø));
@@ -116,26 +116,26 @@ namespace Abc
             // None None -> None
             Assert.None(Ø.ContinueWithIfNone(ØL));
 
-            // ContinueWithIfNone() is PassThruWhenNone() flipped.
-            Assert.None(TwoL.PassThruWhenNone(One));
-            Assert.None(ØL.PassThruWhenNone(One));
-            Assert.Some(2L, TwoL.PassThruWhenNone(Ø));
-            Assert.None(ØL.PassThruWhenNone(Ø));
+            // ContinueWithIfNone() is ContinueUnless() flipped.
+            Assert.None(TwoL.ContinueUnless(One));
+            Assert.None(ØL.ContinueUnless(One));
+            Assert.Some(2L, TwoL.ContinueUnless(Ø));
+            Assert.None(ØL.ContinueUnless(Ø));
         }
 
         [Fact]
-        public static void PassThruWhenNone()
+        public static void ContinueUnless()
         {
             // Some Some -> None
-            Assert.None(One.PassThruWhenNone(TwoL));
+            Assert.None(One.ContinueUnless(TwoL));
             // Some None -> Some
-            Assert.Some(1, One.PassThruWhenNone(ØL));
+            Assert.Some(1, One.ContinueUnless(ØL));
             // None Some -> None
-            Assert.None(Ø.PassThruWhenNone(TwoL));
+            Assert.None(Ø.ContinueUnless(TwoL));
             // None None -> None
-            Assert.None(Ø.PassThruWhenNone(ØL));
+            Assert.None(Ø.ContinueUnless(ØL));
 
-            // PassThruWhenNone() is ContinueWithIfNone() flipped.
+            // ContinueUnless() is ContinueWithIfNone() flipped.
             Assert.None(TwoL.ContinueWithIfNone(One));
             Assert.Some(1, ØL.ContinueWithIfNone(One));
             Assert.None(TwoL.ContinueWithIfNone(Ø));

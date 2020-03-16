@@ -236,10 +236,10 @@ namespace Abc
         // Compare to the truth table at https://en.wikipedia.org/wiki/Bitwise_operation
         //   0000 -
         //   0020 ContinueWithIfNone()  NOT(<-)
-        //   0100 PassThruWhenNone()    NOT(->) aka NIMPLY
+        //   0100 ContinueUnless()      NOT(->) aka NIMPLY
         //   0120 XorElse()             XOR
         //
-        //   1000 PassThru()            AND
+        //   1000 ContinueIf()          AND
         //   1020 "RightProject"        "right projection"
         //   1100 Ignore()              left projection
         //   1120 OrElse()              OR
@@ -254,32 +254,25 @@ namespace Abc
         //   x.OrElseRTL(y)             same types      y is some ? y : x
         //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
         //   x.ContinueWith(y)          type y          x is some ? y : none
-        //   x.ContinueWithIfNone(y)    type y          x is none ? y : none
-        //   x.PassThru(y)              type x          y is some ? x : none
-        //   x.PassThruWhenNone(y)      type x          y is none ? x : none
-        //
-        //   x.RightProject(y)          same types      x is some ? (y is some ? x : y) : y
-        //   x.LeftProject(y)           same types      x is some ? (y is some ? y : x) : x
+        //   x.ContinueWithIfNone(y)    type y          x is some ? none : y
+        //   x.ContinueIf(y)            type x          y is some ? x : none
+        //   x.ContinueUnless(y)        type x          y is some ? none : x
         //   x.Ignore(y)                type x          x
         //   x.Always(y)                type y          y
+        //
+        //   x.RightProject(y)          same types      x is some && y is some ? x : y
+        //   x.LeftProject(y)           same types      x is some && y is some ? y : x
         //
         // Method / flipped method
         //               x.OrElse(y) == y.OrElseRTL(x)
         //              x.XorElse(y) == y.XorElse(x)
-        //         x.ContinueWith(y) == y.PassThru(x)
-        //   x.ContinueWithIfNone(y) == y.PassThruWhenNone(x)
+        //         x.ContinueWith(y) == y.ContinueIf(x)
+        //   x.ContinueWithIfNone(y) == y.ContinueUnless(x)
         //         x.RightProject(y) == y.LeftProject(x)
         //               x.Ignore(y) == y.Always(x)
         //
-        // Naming convention:
-        // - ...IfNone() or ...IfSome(), the current instance is empty or not.
-        // - ...WhenNone() or ...WhenSome(), the other maybe is empty or not.
-        // that is:
-        // - ContinueWith() is really ContinueWithIfSome()
-        // - PassThru() is really PassThruWhenSome()
-        //
         // References:
-        // - Knuth vol. 4A
+        // - Knuth vol. 4A, chap. 7.1
         // - https://en.wikipedia.org/wiki/Logical_connective
         // - https://en.wikipedia.org/wiki/Logic_gate
         // - https://en.wikipedia.org/wiki/Bitwise_operation
@@ -317,8 +310,8 @@ namespace Abc
         }
 
         // Conjunction; mnemotechnic "P if Q".
-        // PassThru() = flip ContinueWith():
-        //   this.PassThru(other) = other.ContinueWith(this)
+        // ContinueIf() = flip ContinueWith():
+        //   this.ContinueIf(other) = other.ContinueWith(this)
         /// <summary>
         /// Returns the current instance if <paramref name="other"/> is not
         /// empty; otherwise returns the empty maybe of type
@@ -328,16 +321,16 @@ namespace Abc
         /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
         /// binder <c>_ => this</c>.
         /// <code><![CDATA[
-        ///   Some(1) PassThru Some(2L) == Some(1)
-        ///   Some(1) PassThru None     == None
-        ///   None    PassThru Some(2L) == None
-        ///   None    PassThru None     == None
+        ///   Some(1) ContinueIf Some(2L) == Some(1)
+        ///   Some(1) ContinueIf None     == None
+        ///   None    ContinueIf Some(2L) == None
+        ///   None    ContinueIf None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
         //   (y.HasValue ? x : (int?)null).
         [Pure]
-        public static Maybe<T> PassThru<T, TOther>(
+        public static Maybe<T> ContinueIf<T, TOther>(
             this Maybe<T> @this, Maybe<TOther> other)
         {
             return other.IsNone ? Maybe<T>.None : @this;
@@ -345,8 +338,8 @@ namespace Abc
 
         // Converse nonimplication; mnemotechnic "not P but Q".
         // Like ContinueWith() but when @this is the empty maybe.
-        // ContinueWithIfNone() = flip PassThruWhenNone():
-        //   this.ContinueWithIfNone(other) = other.PassThruWhenNone(this)
+        // ContinueWithIfNone() = flip ContinueUnless():
+        //   this.ContinueWithIfNone(other) = other.ContinueUnless(this)
         /// <code><![CDATA[
         ///   Some(1) ContinueWithIfNone Some(2L) == None
         ///   Some(1) ContinueWithIfNone None     == None
@@ -360,18 +353,18 @@ namespace Abc
             return @this.IsNone ? other : Maybe<TResult>.None;
         }
 
-        // Nonimplication; mnemotechnic "P but not Q".
-        // Like PassThru() but when "other" is the empty maybe.
-        // PassThruWhenNone() = flip ContinueWithIfNone():
-        //   this.PassThruWhenNone(other) = other.ContinueWithIfNone(this)
+        // Nonimplication or abjunction; mnemotechnic "P but not Q".
+        // Like ContinueIf() but when "other" is the empty maybe.
+        // ContinueUnless() = flip ContinueWithIfNone():
+        //   this.ContinueUnless(other) = other.ContinueWithIfNone(this)
         /// <code><![CDATA[
-        ///   Some(1) PassThruWhenNone Some(2L) == None
-        ///   Some(1) PassThruWhenNone None     == Some(1)
-        ///   None    PassThruWhenNone Some(2L) == None
-        ///   None    PassThruWhenNone None     == None
+        ///   Some(1) ContinueUnless Some(2L) == None
+        ///   Some(1) ContinueUnless None     == Some(1)
+        ///   None    ContinueUnless Some(2L) == None
+        ///   None    ContinueUnless None     == None
         /// ]]></code>
         [Pure]
-        public static Maybe<T> PassThruWhenNone<T, TOther>(
+        public static Maybe<T> ContinueUnless<T, TOther>(
             this Maybe<T> @this, Maybe<TOther> other)
         {
             return other.IsNone ? @this : Maybe<T>.None;
@@ -391,7 +384,8 @@ namespace Abc
             this Maybe<T> @this, Maybe<T> other)
         {
             return @this.IsNone ? other
-                : other.IsNone ? @this : other;
+                : other.IsNone ? @this
+                : other;
         }
 
         // RightProject() = flip LeftProject():
@@ -406,7 +400,7 @@ namespace Abc
         public static Maybe<T> RightProject<T>(
             this Maybe<T> @this, Maybe<T> other)
         {
-            return @this.IsNone ? other : (other.IsNone ? other : @this);
+            return !@this.IsNone && !other.IsNone ? @this : other;
         }
 
         // LeftProject() = flip RightProject():
@@ -421,7 +415,7 @@ namespace Abc
         public static Maybe<T> LeftProject<T>(
             this Maybe<T> @this, Maybe<T> other)
         {
-            return @this.IsNone ? @this : (other.IsNone ? @this : other);
+            return !@this.IsNone && !other.IsNone ? other : @this;
         }
     }
 
