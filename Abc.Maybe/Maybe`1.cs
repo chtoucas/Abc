@@ -718,7 +718,7 @@ namespace Abc
 
         /// <remarks>
         /// <para>
-        /// <see cref="ZipWith"/> generalizes <see cref="Select"/> to two maybe's,
+        /// <see cref="ZipWith"/> is <see cref="Select"/> with two maybe's,
         /// it is also a special case of <see cref="SelectMany"/>; see the
         /// comments there. Roughly, <see cref="ZipWith"/> unwraps two maybe's,
         /// then applies a zipper, and eventually wraps the result.
@@ -752,7 +752,7 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        // Conjunction; mnemotechnic "Q if P".
+        // Conjunction; mnemotechnic "Q if P", "P and then Q".
         /// <summary>
         /// Returns <paramref name="other"/> if the current instance is not
         /// empty; otherwise returns the empty maybe of type
@@ -762,10 +762,10 @@ namespace Abc
         /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
         /// binder <c>_ => other</c>.
         /// <code><![CDATA[
-        ///   Some(1) AND Some(2L) == Some(2L)
-        ///   Some(1) AND None     == None
-        ///   None    AND Some(2L) == None
-        ///   None    AND None     == None
+        ///   Some(1) ContinueWith Some(2L) == Some(2L)
+        ///   Some(1) ContinueWith None     == None
+        ///   None    ContinueWith Some(2L) == None
+        ///   None    ContinueWith None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
@@ -786,10 +786,10 @@ namespace Abc
         /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
         /// binder <c>_ => this</c>.
         /// <code><![CDATA[
-        ///   Some(1) AND Some(2L) == Some(1)
-        ///   Some(1) AND None     == None
-        ///   None    AND Some(2L) == None
-        ///   None    AND None     == None
+        ///   Some(1) PassThru Some(2L) == Some(1)
+        ///   Some(1) PassThru None     == None
+        ///   None    PassThru Some(2L) == None
+        ///   None    PassThru None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
@@ -805,10 +805,10 @@ namespace Abc
         /// This method can be though as an exclusive OR for maybe's, provided
         /// that an empty maybe is said to be false.
         /// <code><![CDATA[
-        ///   Some(1) XOR Some(2) == None
-        ///   Some(1) XOR None    == Some(1)
-        ///   None    XOR Some(2) == Some(2)
-        ///   None    XOR None    == None
+        ///   Some(1) XorElse Some(2) == None
+        ///   Some(1) XorElse None    == Some(1)
+        ///   None    XorElse Some(2) == Some(2)
+        ///   None    XorElse None    == None
         /// ]]></code>
         /// </remarks>
         [Pure]

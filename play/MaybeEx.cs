@@ -237,35 +237,49 @@ namespace Abc
         //   None     None      -> None
         // Below 0 = None, 1 = Some(1) and 2 = Some(2).
         // 0 is "false", 1 and 2 are "true".
+        //
         // Compare to the truth table at https://en.wikipedia.org/wiki/Bitwise_operation
         //   0000 -
-        //   0020 "ContinueWithIfNone"    NOT(<-)
-        //   0100 "PassThruWhenNone"      NOT(->) aka NIMPLY
-        //   0120 XorElse()               XOR
+        //   0020 ContinueWithIfNone()  NOT(<-)
+        //   0100 PassThruWhenNone()    NOT(->) aka NIMPLY
+        //   0120 XorElse()             XOR
         //
-        //   1000 PassThru()              AND
-        //   1020 "RightProjection"       "right projection"
-        //   1100 -                       left projection       <-- useless, ignore right
-        //   1120 OrElse()                OR
+        //   1000 PassThru()            AND
+        //   1020 "RightProject"        "right projection"
+        //   1100 -                     left projection       <-- useless, ignore right
+        //   1120 OrElse()              OR
         //
-        //   2000 ContinueWith()          AND
-        //   2020 -                       right projection      <-- useless, ignore left
-        //   2100 "LeftProjection"        "left projection"
-        //   2120 OrElseRTL()             "OR"
+        //   2000 ContinueWith()        AND
+        //   2020 -                     right projection      <-- useless, ignore left
+        //   2100 "LeftProject"         "left projection"
+        //   2120 OrElseRTL()           "OR"
+        //
+        // Overview: return type / pseudo-code
+        //   x.OrElse(y)                type x = y      x is some ? x : y
+        //   x.OrElseRTL(y)             type x = y      y is some ? y : x
+        //   x.XorElse(y)               type x = y      x is some ? (y is some ? none : x) : y
+        //   x.ContinueWith(y)          type y          x is some ? y : none
+        //   x.ContinueWithIfNone(y)    type y          x is none ? y : none
+        //   x.PassThru(y)              type x          y is some ? x : none
+        //   x.PassThruIfNone(y)        type x          y is none ? x : none
+        //
+        //   x.RightProject(y)          type x = y      x is some ? (y is some ? x : y) : y
+        //   x.LeftProject(y)           type x = y      x is some ? (y is some ? y : x) : x
+        //
         // Naming convention:
         // - ...IfNone() or ...IfSome(), the current instance is empty or not.
         // - ...WhenNone() or ...WhenSome(), the other maybe is empty or not.
-        // With that:
+        // that is:
         // - ContinueWith() is really ContinueWithIfSome()
         // - PassThru() is really PassThruWhenSome()
 
         // Converse nonimplication; mnemotechnic "not P but Q".
         // Like ContinueWith() but when @this is the empty maybe.
         /// <code><![CDATA[
-        ///   Some(1) NOT(<-) Some(2L) == None
-        ///   Some(1) NOT(<-) None     == None
-        ///   None    NOT(<-) Some(2L) == Some(2L)
-        ///   None    NOT(<-) None     == None
+        ///   Some(1) ContinueWithIfNone Some(2L) == None
+        ///   Some(1) ContinueWithIfNone None     == None
+        ///   None    ContinueWithIfNone Some(2L) == Some(2L)
+        ///   None    ContinueWithIfNone None     == None
         /// ]]></code>
         [Pure]
         public static Maybe<TResult> ContinueWithIfNone<T, TResult>(
@@ -275,22 +289,24 @@ namespace Abc
         // Nonimplication; mnemotechnic "P but not Q".
         // Like PassThru() but when "other" is the empty maybe.
         /// <code><![CDATA[
-        ///   Some(1) NOT(->) Some(2L) == None
-        ///   Some(1) NOT(->) None     == Some(1)
-        ///   None    NOT(->) Some(2L) == None
-        ///   None    NOT(->) None     == None
+        ///   Some(1) PassThruWhenNone Some(2L) == None
+        ///   Some(1) PassThruWhenNone None     == Some(1)
+        ///   None    PassThruWhenNone Some(2L) == None
+        ///   None    PassThruWhenNone None     == None
         /// ]]></code>
         [Pure]
         public static Maybe<T> PassThruWhenNone<T, TOther>(
             this Maybe<T> @this, Maybe<TOther> other)
             => other.IsNone ? @this : Maybe<T>.None;
 
-        // Reversed OrElse(): this.OrElseRTL(other) == other.OrElse(this).
+        // Conjunction.
+        // Flipped OrElse(): this.OrElseRTL(other) == other.OrElse(this).
+        // RTL = right-to-left.
         /// <code><![CDATA[
-        ///   Some(1) OR Some(2) == Some(2)
-        ///   Some(1) OR None    == Some(1)
-        ///   None    OR Some(2) == Some(2)
-        ///   None    OR None    == None
+        ///   Some(1) OrElseRTL Some(2) == Some(2)
+        ///   Some(1) OrElseRTL None    == Some(1)
+        ///   None    OrElseRTL Some(2) == Some(2)
+        ///   None    OrElseRTL None    == None
         /// ]]></code>
         [Pure]
         public static Maybe<T> OrElseRTL<T>(
@@ -298,27 +314,27 @@ namespace Abc
             => @this.IsNone ? other
                 : other.IsNone ? @this : other;
 
-        ///// <code><![CDATA[
-        /////   Some(1) R Some(2) == Some(1)
-        /////   Some(1) R None    == None
-        /////   None    R Some(2) == Some(2)
-        /////   None    R None    == None
-        ///// ]]></code>
-        //[Pure]
-        //public static Maybe<T> RightProjection<T>(
-        //    this Maybe<T> @this, Maybe<T> other)
-        //    => throw new NotImplementedException();
+        /// <code><![CDATA[
+        ///   Some(1) RightProject Some(2) == Some(1)
+        ///   Some(1) RightProject None    == None
+        ///   None    RightProject Some(2) == Some(2)
+        ///   None    RightProject None    == None
+        /// ]]></code>
+        [Pure]
+        public static Maybe<T> RightProject<T>(
+            this Maybe<T> @this, Maybe<T> other)
+            => @this.IsNone ? other : (other.IsNone ? other : @this);
 
-        ///// <code><![CDATA[
-        /////   Some(1) L Some(2) == Some(2)
-        /////   Some(1) L None    == Some(1)
-        /////   None    L Some(2) == None
-        /////   None    L None    == None
-        ///// ]]></code>
-        //[Pure]
-        //public static Maybe<T> LeftProjection<T>(
-        //    this Maybe<T> @this, Maybe<T> other)
-        //    => throw new NotImplementedException();
+        /// <code><![CDATA[
+        ///   Some(1) LeftProject Some(2) == Some(2)
+        ///   Some(1) LeftProject None    == Some(1)
+        ///   None    LeftProject Some(2) == None
+        ///   None    LeftProject None    == None
+        /// ]]></code>
+        [Pure]
+        public static Maybe<T> LeftProject<T>(
+            this Maybe<T> @this, Maybe<T> other)
+            => @this.IsNone ? @this : (other.IsNone ? @this : other);
     }
 
     // Extension methods for Maybe<T> where T is enumerable.

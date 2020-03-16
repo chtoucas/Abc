@@ -84,11 +84,37 @@ namespace Abc
             // None None -> None
             Assert.None(Ø.OrElseRTL(Ø));
 
-            // EsleRo() is OrElse() but reading from right to left.
+            // OrElseRTL() is OrElse() but reading from right to left.
             Assert.Some(2, Two.OrElse(One));
             Assert.Some(1, Ø.OrElse(One));
             Assert.Some(2, Two.OrElse(Ø));
             Assert.None(Ø.OrElse(Ø));
+        }
+
+        [Fact]
+        public static void RightProject()
+        {
+            // Some Some -> Some
+            Assert.Some(1, One.RightProject(Two));
+            // Some None -> None
+            Assert.None(One.RightProject(Ø));
+            // None Some -> Some
+            Assert.Some(2, Ø.RightProject(Two));
+            // None None -> None
+            Assert.None(Ø.RightProject(Ø));
+        }
+
+        [Fact]
+        public static void LeftProject()
+        {
+            // Some Some -> Some
+            Assert.Some(2, One.LeftProject(Two));
+            // Some None -> Some
+            Assert.Some(1, One.LeftProject(Ø));
+            // None Some -> None
+            Assert.None(Ø.LeftProject(Two));
+            // None None -> None
+            Assert.None(Ø.LeftProject(Ø));
         }
     }
 }
