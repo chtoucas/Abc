@@ -223,11 +223,6 @@ namespace Abc
     }
 
     // Gates, bools and bits. The analogy is very contrived.
-    // References:
-    // - Knuth vol. 4A
-    // - https://en.wikipedia.org/wiki/Logical_connective
-    // - https://en.wikipedia.org/wiki/Logic_gate
-    // - https://en.wikipedia.org/wiki/Bitwise_operation
     public partial class MaybeEx
     {
         // Possible combinations:
@@ -255,16 +250,16 @@ namespace Abc
         //   2120 OrElseRTL()           "OR"
         //
         // Overview: return type / pseudo-code
-        //   x.OrElse(y)                type x = y      x is some ? x : y
-        //   x.OrElseRTL(y)             type x = y      y is some ? y : x
-        //   x.XorElse(y)               type x = y      x is some ? (y is some ? none : x) : y
+        //   x.OrElse(y)                same types      x is some ? x : y
+        //   x.OrElseRTL(y)             same types      y is some ? y : x
+        //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
         //   x.ContinueWith(y)          type y          x is some ? y : none
         //   x.ContinueWithIfNone(y)    type y          x is none ? y : none
         //   x.PassThru(y)              type x          y is some ? x : none
         //   x.PassThruWhenNone(y)      type x          y is none ? x : none
         //
-        //   x.RightProject(y)          type x = y      x is some ? (y is some ? x : y) : y
-        //   x.LeftProject(y)           type x = y      x is some ? (y is some ? y : x) : x
+        //   x.RightProject(y)          same types      x is some ? (y is some ? x : y) : y
+        //   x.LeftProject(y)           same types      x is some ? (y is some ? y : x) : x
         //   x.Ignore(y)                type x          x
         //   x.Always(y)                type y          y
         //
@@ -282,6 +277,12 @@ namespace Abc
         // that is:
         // - ContinueWith() is really ContinueWithIfSome()
         // - PassThru() is really PassThruWhenSome()
+        //
+        // References:
+        // - Knuth vol. 4A
+        // - https://en.wikipedia.org/wiki/Logical_connective
+        // - https://en.wikipedia.org/wiki/Logic_gate
+        // - https://en.wikipedia.org/wiki/Bitwise_operation
 
 #pragma warning disable CA1801 // -Review unused parameters
         // Ignore() = flip Always():
@@ -295,7 +296,9 @@ namespace Abc
         [Pure]
         public static Maybe<T> Ignore<T, TOther>(
             this Maybe<T> @this, Maybe<TOther> other)
-            => @this;
+        {
+            return @this;
+        }
 #pragma warning restore CA1801
 
         // Always() = flip Ignore():
@@ -309,7 +312,36 @@ namespace Abc
         [Pure]
         public static Maybe<TResult> Always<T, TResult>(
             this Maybe<T> @this, Maybe<TResult> other)
-            => other;
+        {
+            return other;
+        }
+
+        // Conjunction; mnemotechnic "P if Q".
+        // PassThru() = flip ContinueWith():
+        //   this.PassThru(other) = other.ContinueWith(this)
+        /// <summary>
+        /// Returns the current instance if <paramref name="other"/> is not
+        /// empty; otherwise returns the empty maybe of type
+        /// <typeparamref name="TOther"/>.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
+        /// binder <c>_ => this</c>.
+        /// <code><![CDATA[
+        ///   Some(1) PassThru Some(2L) == Some(1)
+        ///   Some(1) PassThru None     == None
+        ///   None    PassThru Some(2L) == None
+        ///   None    PassThru None     == None
+        /// ]]></code>
+        /// </remarks>
+        // Compare to the nullable equiv w/ x an int? and y a long?:
+        //   (y.HasValue ? x : (int?)null).
+        [Pure]
+        public static Maybe<T> PassThru<T, TOther>(
+            this Maybe<T> @this, Maybe<TOther> other)
+        {
+            return other.IsNone ? Maybe<T>.None : @this;
+        }
 
         // Converse nonimplication; mnemotechnic "not P but Q".
         // Like ContinueWith() but when @this is the empty maybe.
@@ -324,7 +356,9 @@ namespace Abc
         [Pure]
         public static Maybe<TResult> ContinueWithIfNone<T, TResult>(
             this Maybe<T> @this, Maybe<TResult> other)
-            => @this.IsNone ? other : Maybe<TResult>.None;
+        {
+            return @this.IsNone ? other : Maybe<TResult>.None;
+        }
 
         // Nonimplication; mnemotechnic "P but not Q".
         // Like PassThru() but when "other" is the empty maybe.
@@ -339,7 +373,9 @@ namespace Abc
         [Pure]
         public static Maybe<T> PassThruWhenNone<T, TOther>(
             this Maybe<T> @this, Maybe<TOther> other)
-            => other.IsNone ? @this : Maybe<T>.None;
+        {
+            return other.IsNone ? @this : Maybe<T>.None;
+        }
 
         // Conjunction. RTL = right-to-left.
         // OrElseRTL() = flip OrElse():
@@ -353,8 +389,10 @@ namespace Abc
         [Pure]
         public static Maybe<T> OrElseRTL<T>(
             this Maybe<T> @this, Maybe<T> other)
-            => @this.IsNone ? other
+        {
+            return @this.IsNone ? other
                 : other.IsNone ? @this : other;
+        }
 
         // RightProject() = flip LeftProject():
         //   this.RightProject(other) == other.LeftProject(this).
@@ -367,7 +405,9 @@ namespace Abc
         [Pure]
         public static Maybe<T> RightProject<T>(
             this Maybe<T> @this, Maybe<T> other)
-            => @this.IsNone ? other : (other.IsNone ? other : @this);
+        {
+            return @this.IsNone ? other : (other.IsNone ? other : @this);
+        }
 
         // LeftProject() = flip RightProject():
         //   this.LeftProject(other) == other.RightProject(this).
@@ -380,7 +420,9 @@ namespace Abc
         [Pure]
         public static Maybe<T> LeftProject<T>(
             this Maybe<T> @this, Maybe<T> other)
-            => @this.IsNone ? @this : (other.IsNone ? @this : other);
+        {
+            return @this.IsNone ? @this : (other.IsNone ? @this : other);
+        }
     }
 
     // Extension methods for Maybe<T> where T is enumerable.

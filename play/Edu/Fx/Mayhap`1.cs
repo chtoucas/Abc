@@ -161,22 +161,22 @@ namespace Abc.Edu.Fx
             => !value._isSome;
 
         public static Mayhap<T> operator &(Mayhap<T> left, Mayhap<T> right)
-            => left.And(right);
+            => left.AndThen(right);
 
         public static Mayhap<T> operator |(Mayhap<T> left, Mayhap<T> right)
             => left.OrElse(right);
 
         public static Mayhap<T> operator ^(Mayhap<T> left, Mayhap<T> right)
-            => left.Xor(right);
+            => left.XorElse(right);
 
 #pragma warning restore CA2225
 
         // ContinueWith() rather than PassThru(): if this is "true", then we
         // "evaluate" other. Of course, this is not a real justification.
-        public Mayhap<T> And(Mayhap<T> other)
+        public Mayhap<T> AndThen(Mayhap<T> other)
             => _isSome ? other : None;
 
-        public Mayhap<T> Xor(Mayhap<T> other)
+        public Mayhap<T> XorElse(Mayhap<T> other)
             => _isSome ? other._isSome ? None : this
                 : other;
     }

@@ -81,8 +81,7 @@ namespace Abc
     /// - XorElse()             XOR gate
     /// - ZipWith()             cross join
     /// - Apply()
-    /// - ContinueWith()        "right" AND gate
-    /// - PassThru()            "left" AND gate
+    /// - ContinueWith()        AND gate
     /// - Skip()
     /// - Replicate()
     /// - Duplicate()
@@ -776,32 +775,6 @@ namespace Abc
         public Maybe<TResult> ContinueWith<TResult>(Maybe<TResult> other)
         {
             return _isSome ? other : Maybe<TResult>.None;
-        }
-
-        // Conjunction; mnemotechnic "P if Q".
-        // PassThru() = flip ContinueWith():
-        //   this.PassThru(other) = other.ContinueWith(this)
-        /// <summary>
-        /// Returns the current instance if <paramref name="other"/> is not
-        /// empty; otherwise returns the empty maybe of type
-        /// <typeparamref name="TOther"/>.
-        /// </summary>
-        /// <remarks>
-        /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
-        /// binder <c>_ => this</c>.
-        /// <code><![CDATA[
-        ///   Some(1) PassThru Some(2L) == Some(1)
-        ///   Some(1) PassThru None     == None
-        ///   None    PassThru Some(2L) == None
-        ///   None    PassThru None     == None
-        /// ]]></code>
-        /// </remarks>
-        // Compare to the nullable equiv w/ x an int? and y a long?:
-        //   (y.HasValue ? x : (int?)null).
-        [Pure]
-        public Maybe<T> PassThru<TOther>(Maybe<TOther> other)
-        {
-            return other._isSome ? this : None;
         }
 
         // Exclusive disjunction; mnemotechnic: "either P or Q, but not both".

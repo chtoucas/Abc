@@ -202,31 +202,6 @@ namespace Abc
             Assert.None(Ø.ContinueWith(TwoL));
             // None None -> None
             Assert.None(Ø.ContinueWith(ØL));
-
-            // ContinueWith() is PassThru() flipped.
-            Assert.Some(2L, TwoL.PassThru(One));
-            Assert.None(ØL.PassThru(One));
-            Assert.None(TwoL.PassThru(Ø));
-            Assert.None(ØL.PassThru(Ø));
-        }
-
-        [Fact]
-        public static void PassThru()
-        {
-            // Some Some -> Some
-            Assert.Some(1, One.PassThru(TwoL));
-            // Some None -> None
-            Assert.None(One.PassThru(ØL));
-            // None Some -> None
-            Assert.None(Ø.PassThru(TwoL));
-            // None None -> None
-            Assert.None(Ø.PassThru(ØL));
-
-            // PassThru() is ContinueWith() flipped.
-            Assert.Some(1, TwoL.ContinueWith(One));
-            Assert.None(ØL.ContinueWith(One));
-            Assert.None(TwoL.ContinueWith(Ø));
-            Assert.None(ØL.ContinueWith(Ø));
         }
 
         [Fact]
