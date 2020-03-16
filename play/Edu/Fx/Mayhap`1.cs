@@ -171,16 +171,14 @@ namespace Abc.Edu.Fx
 
 #pragma warning restore CA2225
 
-        // FIXME: AND = PassThru() or ContinueWith()?
-
-        // Applicative.PassThru().
+        // ContinueWith() rather than PassThru(): if this is "true", then we
+        // "evaluate" other. Of course, this is not a real justification.
         public Mayhap<T> And(Mayhap<T> other)
-            => other._isSome ? this : None;
+            => _isSome ? other : None;
 
         public Mayhap<T> Xor(Mayhap<T> other)
-            => _isSome
-                ? other._isSome ? None : this
-                : other._isSome ? other : None;
+            => _isSome ? other._isSome ? None : this
+                : other;
     }
 
     // Interface IEquatable<>.

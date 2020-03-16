@@ -12,6 +12,10 @@ namespace Abc
         public const string? NullNullString = null;
 
         private static readonly Maybe<int> Ø = Maybe<int>.None;
+        private static readonly Maybe<int> One = Maybe.Some(1);
+        private static readonly Maybe<int> Two = Maybe.Some(2);
+        private static readonly Maybe<long> ØL = Maybe<long>.None;
+        private static readonly Maybe<long> TwoL = Maybe.Some(2L);
     }
 
     public partial class MaybeTests
@@ -36,6 +40,49 @@ namespace Abc
             Assert.None(some.ReplaceWith(NullNullString));
             Assert.None(Ø.ReplaceWith(NullNullString));
 #nullable restore
+        }
+    }
+
+    // Gates, bools and bits.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void ContinueWithIfNone()
+        {
+            // Some Some -> None
+            Assert.None(One.ContinueWithIfNone(TwoL));
+            // Some None -> None
+            Assert.None(One.ContinueWithIfNone(ØL));
+            // None Some -> Some
+            Assert.Some(2L, Ø.ContinueWithIfNone(TwoL));
+            // None None -> None
+            Assert.None(Ø.ContinueWithIfNone(ØL));
+        }
+
+        [Fact]
+        public static void PassThruWhenNone()
+        {
+            // Some Some -> None
+            Assert.None(One.PassThruWhenNone(TwoL));
+            // Some None -> Some
+            Assert.Some(1, One.PassThruWhenNone(ØL));
+            // None Some -> None
+            Assert.None(Ø.PassThruWhenNone(TwoL));
+            // None None -> None
+            Assert.None(Ø.PassThruWhenNone(ØL));
+        }
+
+        [Fact]
+        public static void Otherwise()
+        {
+            // Some Some -> Some
+            Assert.Some(2, One.Otherwise(Two));
+            // Some None -> Some
+            Assert.Some(1, One.Otherwise(Ø));
+            // None Some -> Some
+            Assert.Some(2, Ø.Otherwise(Two));
+            // None None -> None
+            Assert.None(Ø.Otherwise(Ø));
         }
     }
 }

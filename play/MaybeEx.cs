@@ -222,8 +222,7 @@ namespace Abc
             => condition ? @this : Maybe<T>.None;
     }
 
-    // GATES, boolean & bitwise operations.
-    // The analogy with bools and bits is a bit contrived.
+    // Gates, bools and bits. The analogy is very contrived.
     // Convention:
     // - ...IfNone() or ...IfSome(), the current instance is empty or not.
     // - ...WhenNone() or ...WhenSome(), the other maybe is empty or not.
@@ -234,24 +233,13 @@ namespace Abc
     // - https://en.wikipedia.org/wiki/Bitwise_operation
     public partial class MaybeEx
     {
-        // Truth table / Gate / Notation / Method / Description
-        //   0000             0                             contradiction; falsehood; antilogy
-        //   0001   AND     x & y   PassThru()              conjunction; and
-        //   -      -       -       ContinueWith()             -
-        //   0010   NIMPLY  x & Y   PassThruWhenNone()      nonimplication; difference; but not
-        //   0011           x                               left projection
-        //   0100           X & y   ContinueWithIfNone()    converse nonimplication; not ... but
-        //   0101               y                           right projection
-        //   0110   XOR     x ^ y   XorElse()               exclusive disjunction; nonequivalence; xor
-        //   0111   OR      x | y   OrElse()                inclusive disjunction; or; and/or
-        //   -      -       -       Otherwise()             -
-        // Where X = not(x) and Y = not(y)
-        //
         // Possible combinations:
         //   Some(1)  Some(2L)  -> None, Some(1), Some(2L)
         //   Some(1)  None      -> None, Some(1)
         //   None     Some(2L)  -> None, Some(2L)
         //   None     None      -> None
+        // Below 0 = None, 1 = Some(1) and 2 = Some(2).
+        // 0 is "false", 1 and 2 are "true".
         // Compare to the truth table at https://en.wikipedia.org/wiki/Bitwise_operation
         //   0000 -
         //   0020 "ContinueWithIfNone"    NOT(<-)
