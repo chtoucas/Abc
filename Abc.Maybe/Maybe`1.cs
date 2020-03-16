@@ -752,8 +752,8 @@ namespace Abc
         }
 
         // Conjunction; mnemotechnic "Q if P", "P and then Q".
-        // ContinueWith() = flip PassThru():
-        //   this.ContinueWith(other) = other.PassThru(this)
+        // ContinueWith() = flip ContinueIf():
+        //   this.ContinueWith(other) = other.ContinueIf(this)
         /// <summary>
         /// Returns <paramref name="other"/> if the current instance is not
         /// empty; otherwise returns the empty maybe of type
