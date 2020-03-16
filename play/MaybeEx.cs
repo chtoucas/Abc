@@ -223,12 +223,9 @@ namespace Abc
     }
 
     // Gates, bools and bits. The analogy is very contrived.
-    // Convention:
-    // - ...IfNone() or ...IfSome(), the current instance is empty or not.
-    // - ...WhenNone() or ...WhenSome(), the other maybe is empty or not.
     // References:
     // - Knuth vol. 4A
-    // - https://en.wikipedia.org/wiki/Logical_connective (naming)
+    // - https://en.wikipedia.org/wiki/Logical_connective
     // - https://en.wikipedia.org/wiki/Logic_gate
     // - https://en.wikipedia.org/wiki/Bitwise_operation
     public partial class MaybeEx
@@ -255,10 +252,15 @@ namespace Abc
         //   2020 -                       right projection      <-- useless, ignore left
         //   2100 "LeftProjection"        "left projection"
         //   2120 "Otherwise"             "OR"
+        // Naming convention:
+        // - ...IfNone() or ...IfSome(), the current instance is empty or not.
+        // - ...WhenNone() or ...WhenSome(), the other maybe is empty or not.
+        // With that:
+        // - ContinueWith() is really ContinueWithIfSome()
+        // - PassThru() is really PassThruWhenSome()
 
-        // Converse nonimplication, "not P but Q".
+        // Converse nonimplication; mnemotechnic "not P but Q".
         // Like ContinueWith() but when @this is the empty maybe.
-        // ContinueWith() == ContinueWithIfSome().
         /// <code><![CDATA[
         ///   Some(1) NOT(<-) Some(2L) == None
         ///   Some(1) NOT(<-) None     == None
@@ -270,9 +272,8 @@ namespace Abc
             this Maybe<T> @this, Maybe<TResult> other)
             => @this.IsNone ? other : Maybe<TResult>.None;
 
-        // Nonimplication, "P but not Q".
+        // Nonimplication; mnemotechnic "P but not Q".
         // Like PassThru() but when "other" is the empty maybe.
-        // PassThru() == PassThruWhenSome().
         /// <code><![CDATA[
         ///   Some(1) NOT(->) Some(2L) == None
         ///   Some(1) NOT(->) None     == Some(1)

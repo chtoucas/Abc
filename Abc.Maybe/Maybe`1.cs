@@ -217,6 +217,7 @@ namespace Abc
             return _isSome ? binder(_value) : Maybe<TResult>.None;
         }
 
+        // Inclusive disjunction; mnemotechnic: "P otherwise Q".
         /// <remarks>
         /// Generalizes the null-coalescing operator (??).
         /// <code><![CDATA[
@@ -751,6 +752,7 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
+        // Conjunction; mnemotechnic "Q if P".
         /// <summary>
         /// Returns <paramref name="other"/> if the current instance is not
         /// empty; otherwise returns the empty maybe of type
@@ -774,6 +776,7 @@ namespace Abc
             return _isSome ? other : Maybe<TResult>.None;
         }
 
+        // Conjunction; mnemotechnic "P if Q".
         /// <summary>
         /// Returns the current instance if <paramref name="other"/> is not
         /// empty; otherwise returns the empty maybe of type
@@ -797,6 +800,7 @@ namespace Abc
             return other._isSome ? this : None;
         }
 
+        // Exclusive disjunction; mnemotechnic: "either P or Q, but not both".
         /// <remarks>
         /// This method can be though as an exclusive OR for maybe's, provided
         /// that an empty maybe is said to be false.
