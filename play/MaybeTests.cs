@@ -47,41 +47,32 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Ignore()
+        public static void OrElse()
         {
-            // Some Some -> Some
-            Assert.Some(1, One.Ignore(TwoL));
-            // Some None -> Some
-            Assert.Some(1, One.Ignore(ØL));
-            // None Some -> None
-            Assert.None(Ø.Ignore(TwoL));
-            // None None -> None
-            Assert.None(Ø.Ignore(ØL));
-
-            // Ignore() is Always() flipped.
-            Assert.Some(1, TwoL.Always(One));
-            Assert.Some(1, ØL.Always(One));
-            Assert.None(TwoL.Always(Ø));
-            Assert.None(ØL.Always(Ø));
+            // OrElse() is OrElseRTL() flipped.
+            Assert.Some(1, Two.OrElseRTL(One));
+            Assert.Some(1, Ø.OrElseRTL(One));
+            Assert.Some(2, Two.OrElseRTL(Ø));
+            Assert.None(Ø.OrElseRTL(Ø));
         }
 
         [Fact]
-        public static void Always()
+        public static void OrElseRTL()
         {
             // Some Some -> Some
-            Assert.Some(2L, One.Always(TwoL));
-            // Some None -> None
-            Assert.None(One.Always(ØL));
+            Assert.Some(2, One.OrElseRTL(Two));
+            // Some None -> Some
+            Assert.Some(1, One.OrElseRTL(Ø));
             // None Some -> Some
-            Assert.Some(2L, Ø.Always(TwoL));
+            Assert.Some(2, Ø.OrElseRTL(Two));
             // None None -> None
-            Assert.None(Ø.Always(ØL));
+            Assert.None(Ø.OrElseRTL(Ø));
 
-            // Always() is Ignore() flipped.
-            Assert.Some(2L, TwoL.Ignore(One));
-            Assert.None(ØL.Ignore(One));
-            Assert.Some(2L, TwoL.Ignore(Ø));
-            Assert.None(ØL.Ignore(Ø));
+            // OrElseRTL() is OrElse() flipped.
+            Assert.Some(2, Two.OrElse(One));
+            Assert.Some(1, Ø.OrElse(One));
+            Assert.Some(2, Two.OrElse(Ø));
+            Assert.None(Ø.OrElse(Ø));
         }
 
         [Fact]
@@ -123,35 +114,6 @@ namespace Abc
         }
 
         [Fact]
-        public static void OrElse()
-        {
-            // OrElse() is OrElseRTL() flipped.
-            Assert.Some(1, Two.OrElseRTL(One));
-            Assert.Some(1, Ø.OrElseRTL(One));
-            Assert.Some(2, Two.OrElseRTL(Ø));
-            Assert.None(Ø.OrElseRTL(Ø));
-        }
-
-        [Fact]
-        public static void OrElseRTL()
-        {
-            // Some Some -> Some
-            Assert.Some(2, One.OrElseRTL(Two));
-            // Some None -> Some
-            Assert.Some(1, One.OrElseRTL(Ø));
-            // None Some -> Some
-            Assert.Some(2, Ø.OrElseRTL(Two));
-            // None None -> None
-            Assert.None(Ø.OrElseRTL(Ø));
-
-            // OrElseRTL() is OrElse() flipped.
-            Assert.Some(2, Two.OrElse(One));
-            Assert.Some(1, Ø.OrElse(One));
-            Assert.Some(2, Two.OrElse(Ø));
-            Assert.None(Ø.OrElse(Ø));
-        }
-
-        [Fact]
         public static void RightProject()
         {
             // Some Some -> Some
@@ -162,6 +124,12 @@ namespace Abc
             Assert.Some(2, Ø.RightProject(Two));
             // None None -> None
             Assert.None(Ø.RightProject(Ø));
+
+            // RightProject() is LeftProject() flipped.
+            Assert.Some(1, Two.LeftProject(One));
+            Assert.None(Ø.LeftProject(One));
+            Assert.Some(2, Two.LeftProject(Ø));
+            Assert.None(Ø.LeftProject(Ø));
         }
 
         [Fact]
@@ -175,6 +143,50 @@ namespace Abc
             Assert.None(Ø.LeftProject(Two));
             // None None -> None
             Assert.None(Ø.LeftProject(Ø));
+
+            // LeftProject() is RightProject() flipped.
+            Assert.Some(2, Two.RightProject(One));
+            Assert.Some(1, Ø.RightProject(One));
+            Assert.None(Two.RightProject(Ø));
+            Assert.None(Ø.RightProject(Ø));
+        }
+
+        [Fact]
+        public static void Ignore()
+        {
+            // Some Some -> Some
+            Assert.Some(1, One.Ignore(TwoL));
+            // Some None -> Some
+            Assert.Some(1, One.Ignore(ØL));
+            // None Some -> None
+            Assert.None(Ø.Ignore(TwoL));
+            // None None -> None
+            Assert.None(Ø.Ignore(ØL));
+
+            // Ignore() is Always() flipped.
+            Assert.Some(1, TwoL.Always(One));
+            Assert.Some(1, ØL.Always(One));
+            Assert.None(TwoL.Always(Ø));
+            Assert.None(ØL.Always(Ø));
+        }
+
+        [Fact]
+        public static void Always()
+        {
+            // Some Some -> Some
+            Assert.Some(2L, One.Always(TwoL));
+            // Some None -> None
+            Assert.None(One.Always(ØL));
+            // None Some -> Some
+            Assert.Some(2L, Ø.Always(TwoL));
+            // None None -> None
+            Assert.None(Ø.Always(ØL));
+
+            // Always() is Ignore() flipped.
+            Assert.Some(2L, TwoL.Ignore(One));
+            Assert.None(ØL.Ignore(One));
+            Assert.Some(2L, TwoL.Ignore(Ø));
+            Assert.None(ØL.Ignore(Ø));
         }
     }
 }

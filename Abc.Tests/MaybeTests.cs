@@ -240,6 +240,12 @@ namespace Abc
             Assert.Some(2, Ø.XorElse(Two));
             // None None -> None
             Assert.None(Ø.XorElse(Ø));
+
+            // XorElse() flip to itself.
+            Assert.None(Two.XorElse(One));
+            Assert.Some(1, Ø.XorElse(One));
+            Assert.Some(2, Two.XorElse(Ø));
+            Assert.None(Ø.XorElse(Ø));
         }
 
         [Fact]

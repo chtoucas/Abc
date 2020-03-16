@@ -246,11 +246,11 @@ namespace Abc
         //
         //   1000 PassThru()            AND
         //   1020 "RightProject"        "right projection"
-        //   1100 Ignore()              left projection       <-- useless, ignore right
+        //   1100 Ignore()              left projection
         //   1120 OrElse()              OR
         //
         //   2000 ContinueWith()        AND
-        //   2020 Always()              right projection      <-- useless, ignore left
+        //   2020 Always()              right projection
         //   2100 "LeftProject"         "left projection"
         //   2120 OrElseRTL()           "OR"
         //
@@ -261,12 +261,20 @@ namespace Abc
         //   x.ContinueWith(y)          type y          x is some ? y : none
         //   x.ContinueWithIfNone(y)    type y          x is none ? y : none
         //   x.PassThru(y)              type x          y is some ? x : none
-        //   x.PassThruIfNone(y)        type x          y is none ? x : none
+        //   x.PassThruWhenNone(y)      type x          y is none ? x : none
         //
-        //   x.Ignore(y)                type x          x
-        //   x.Always(y)                type y          y
         //   x.RightProject(y)          type x = y      x is some ? (y is some ? x : y) : y
         //   x.LeftProject(y)           type x = y      x is some ? (y is some ? y : x) : x
+        //   x.Ignore(y)                type x          x
+        //   x.Always(y)                type y          y
+        //
+        // Method / flipped method
+        //               x.OrElse(y) == y.OrElseRTL(x)
+        //              x.XorElse(y) == y.XorElse(x)
+        //         x.ContinueWith(y) == y.PassThru(x)
+        //   x.ContinueWithIfNone(y) == y.PassThruWhenNone(x)
+        //         x.RightProject(y) == y.LeftProject(x)
+        //               x.Ignore(y) == y.Always(x)
         //
         // Naming convention:
         // - ...IfNone() or ...IfSome(), the current instance is empty or not.
@@ -348,6 +356,8 @@ namespace Abc
             => @this.IsNone ? other
                 : other.IsNone ? @this : other;
 
+        // RightProject() = flip LeftProject():
+        //   this.RightProject(other) == other.LeftProject(this).
         /// <code><![CDATA[
         ///   Some(1) RightProject Some(2) == Some(1)
         ///   Some(1) RightProject None    == None
@@ -359,6 +369,8 @@ namespace Abc
             this Maybe<T> @this, Maybe<T> other)
             => @this.IsNone ? other : (other.IsNone ? other : @this);
 
+        // LeftProject() = flip RightProject():
+        //   this.LeftProject(other) == other.RightProject(this).
         /// <code><![CDATA[
         ///   Some(1) LeftProject Some(2) == Some(2)
         ///   Some(1) LeftProject None    == Some(1)

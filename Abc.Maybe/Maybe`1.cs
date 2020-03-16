@@ -805,6 +805,8 @@ namespace Abc
         }
 
         // Exclusive disjunction; mnemotechnic: "either P or Q, but not both".
+        // XorElse() = flip XorElse():
+        //   this.XorElse(other) = other.XorElse(this)
         /// <remarks>
         /// <code><![CDATA[
         ///   Some(1) XorElse Some(2) == None
