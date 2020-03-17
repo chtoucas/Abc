@@ -80,7 +80,7 @@ namespace Abc
     /// - OrElse()              none-coalescing (OR gate)
     /// - XorElse()             either (XOR gate)
     /// - ZipWith()             cross join
-    /// - ContinueWith()        creates a continuation (AND gate)
+    /// - ContinueWith()        continuation (AND gate)
     /// - PassThruUnless()
     /// - Skip()
     /// - Replicate()
@@ -777,12 +777,16 @@ namespace Abc
             return _isSome ? other : Maybe<TResult>.None;
         }
 
-        // REVIEW: simpler name? DiscardWhen(), SkipWhen(), CancelWhen().
+        // REVIEW: simpler name? use something more affirmative than Unless().
+        // ZeroedWhen(), Discard, Skip, Cancel, None, Empty, Blank.
         // Nonimplication or abjunction; mnemotechnic "P but not Q".
         // Like PassThruWhen() but when "other" is the empty maybe.
         // PassThruUnless() = flip ContinueWithIfNone():
         //   this.PassThruUnless(other) = other.ContinueWithIfNone(this)
         // where ContinueWithIfNone() is defined in MaybeEx (play project).
+        /// <summary>
+        /// Removes the enclosed value if <paramref name="other"/> is empty.
+        /// </summary>
         /// <code><![CDATA[
         ///   Some(1) PassThruUnless Some(2L) == None
         ///   Some(1) PassThruUnless None     == Some(1)
@@ -813,6 +817,7 @@ namespace Abc
             => _isSome ? other._isSome ? None : this
                 : other;
 
+        // Void?
         [Pure]
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;

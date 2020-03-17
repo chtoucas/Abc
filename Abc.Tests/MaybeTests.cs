@@ -101,6 +101,133 @@ namespace Abc
             Assert.Some(2, Ø.OrElse(Two));
             // None None -> None
             Assert.None(Ø.OrElse(Ø));
+
+            Assert.Equal(One, One.OrElse(Two));
+            Assert.Equal(One, One.OrElse(Ø));
+            Assert.Equal(Two, Ø.OrElse(Two));
+            Assert.Equal(Ø, Ø.OrElse(Ø));
+        }
+    }
+
+    // Rules, sanity checks. A bit limited, maybe we could use fuzz testing.
+    public partial class MaybeTests
+    {
+        //
+        // Functor rules.
+        //
+
+        // First Functor Law: the identity map is a fixed point for Select.
+        //   fmap id  ==  id
+        [Fact]
+        public static void Functor_FirstLaw()
+        {
+            Assert.Equal(Ø, Ø.Select(x => x));
+            Assert.Equal(One, One.Select(x => x));
+        }
+
+        // Second Functor Law: Select preserves the composition operator.
+        //   fmap (f . g)  ==  fmap f . fmap g
+        [Fact]
+        public static void Functor_SecondLaw()
+        {
+            Func<int, long> g = x => 2L * x;
+            Func<long, string> f = x => $"{x}";
+
+            Assert.Equal(
+                Ø.Select(x => f(g(x))),
+                Ø.Select(g).Select(f));
+
+            Assert.Equal(
+                One.Select(x => f(g(x))),
+                One.Select(g).Select(f));
+        }
+
+        //
+        // Monoid rules.
+        // We use additive notations: + is OrElse(), zero is None.
+        // 1) zero + x = x
+        // 2) x + zero = x
+        // 3) x + (y + z) = (x + y) + z
+        // TODO: fourth law
+        // mconcat = foldr '(<>)' mempty
+        //
+
+        // First Monoid Law: None is a left identity for OrElse().
+        [Fact]
+        public static void OrElse_LeftIdentity()
+        {
+            Assert.Equal(Ø, Maybe<int>.None.OrElse(Ø));
+            Assert.Equal(One, Maybe<int>.None.OrElse(One));
+        }
+
+        // Second Monoid Law: None is a right identity for OrElse().
+        [Fact]
+        public static void OrElse_RightIdentity()
+        {
+            Assert.Equal(Ø, Ø.OrElse(Maybe<int>.None));
+            Assert.Equal(One, One.OrElse(Maybe<int>.None));
+        }
+
+        // Third Monoid Law: OrElse() is associative.
+        [Fact]
+        public static void OrElse_Associativity()
+        {
+            Assert.Equal(
+                Ø.OrElse(One.OrElse(Two)),
+                Ø.OrElse(One).OrElse(Two));
+
+            Assert.Equal(
+                One.OrElse(Two.OrElse(Ø)),
+                One.OrElse(Two).OrElse(Ø));
+
+            Assert.Equal(
+                Two.OrElse(Ø.OrElse(One)),
+                Two.OrElse(Ø).OrElse(One));
+        }
+
+        //
+        // MonadZero rules.
+        //
+
+        // MonadZero: None is a left zero for Bind().
+        //   mzero >>= f = mzero
+        [Fact]
+        public static void Bind_LeftZero()
+        {
+            Func<int, Maybe<int>> f = x => Maybe.Some(2 * x);
+
+            Assert.Equal(Maybe<int>.None, Maybe<int>.None.Bind(f));
+        }
+
+        // MonadMore: None is a right zero for Bind() or equivalently None is a
+        // right zero for ContinueWith().
+
+        // MonadMore: None is a right zero for ContinueWith(), implied by the
+        // definition of ContinueWith() and the MonadMore rule.
+
+        // MonadPlus: Bind() is right distributive over OrElse().
+
+        // MonadOr: Unit is a left zero for OrElse().
+
+        // Unit is a right zero for OrElse().
+
+        // ContinueWith() is associative, implied by the definition of
+        // ContinueWith() and the third monad law.
+        //   (m >> n) >> o = m >> (n >> o)
+        [Fact]
+        public static void ContinueWith_Associativity()
+        {
+            Assert.Equal(
+                Ø.ContinueWith(One.ContinueWith(Two)),
+                Ø.ContinueWith(One).ContinueWith(Two));
+
+            Assert.Equal(
+                One.ContinueWith(Two.ContinueWith(Ø)),
+                One.ContinueWith(Two).ContinueWith(Ø));
+
+            Assert.Equal(
+                Two.ContinueWith(Ø.ContinueWith(One)),
+                Two.ContinueWith(Ø).ContinueWith(One));
         }
     }
 
