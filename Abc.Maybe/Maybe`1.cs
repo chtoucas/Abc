@@ -106,7 +106,6 @@ namespace Abc
     /// - Do()
     /// - OnSome()
     /// - When()
-    /// - Unless()
     ///
     /// Async versions of the core methods.
     /// - BindAsync()           async binding

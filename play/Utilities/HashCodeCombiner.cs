@@ -5,6 +5,8 @@ namespace Abc.Utilities
     using System;
     using System.Diagnostics.Contracts;
 
+    // FIXME: use System.HashCode.
+
     /// <summary>
     /// Provides helper methods to combine hash codes.
     /// <para>This class cannot be inherited.</para>
