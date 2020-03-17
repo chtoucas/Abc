@@ -19,7 +19,8 @@ namespace Abc
                 Value = default!;
             }
 
-            public Success([DisallowNull] T value)
+            // FIXME: DisallowNull
+            public Success(T value)
             {
                 Value = value ?? throw new Anexn(nameof(value));
             }
@@ -34,6 +35,7 @@ namespace Abc
                 get => throw EF.Faillible_NoInnerException;
             }
 
+            [return: MaybeNull]
             public override T ValueOrRethrow()
                 => Value;
 
@@ -52,14 +54,16 @@ namespace Abc
             {
                 if (selector is null) { throw new Anexn(nameof(selector)); }
 
-                return new Faillible<TResult>.Success(selector(Value));
+                // NULL_FORGIVING
+                return new Faillible<TResult>.Success(selector(Value!));
             }
 
             public override Faillible<T> Where(Func<T, bool> predicate)
             {
                 if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
-                return predicate(Value) ? this : None;
+                // NULL_FORGIVING
+                return predicate(Value!) ? this : None;
             }
 
             public override Faillible<TResult> SelectMany<TMiddle, TResult>(
@@ -69,13 +73,15 @@ namespace Abc
                 if (selector is null) { throw new Anexn(nameof(selector)); }
                 if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
 
-                Faillible<TMiddle> middle = selector(Value);
+                // NULL_FORGIVING
+                Faillible<TMiddle> middle = selector(Value!);
                 if (middle is Faillible<TMiddle>.Exceptional err)
                 {
                     return err.WithGenericType<TResult>();
                 }
 
-                return Faillible.Succeed(resultSelector(Value, middle.Value));
+                // NULL_FORGIVING
+                return Faillible.Succeed(resultSelector(Value!, middle.Value!));
             }
 
             public override Faillible<TResult> Join<TInner, TKey, TResult>(
@@ -126,12 +132,14 @@ namespace Abc
             {
                 if (!inner.Threw)
                 {
-                    TKey outerKey = outerKeySelector(Value);
-                    TKey innerKey = innerKeySelector(inner.Value);
+                    // NULL_FORGIVING
+                    TKey outerKey = outerKeySelector(Value!);
+                    TKey innerKey = innerKeySelector(inner.Value!);
 
                     if (comparer.Equals(outerKey, innerKey))
                     {
-                        return Faillible.Succeed(resultSelector(Value, inner.Value));
+                        // NULL_FORGIVING
+                        return Faillible.Succeed(resultSelector(Value!, inner.Value!));
                     }
                 }
 
