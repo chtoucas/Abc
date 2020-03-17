@@ -215,7 +215,7 @@ namespace Abc.Edu.Fx
                 return Map(x => f(g(x)), mayhap)
                     == Map(f, Map(g, mayhap));
 #else
-                return mayhap.Select(_ => f(g(_)))
+                return mayhap.Select(x => f(g(x)))
                     == mayhap.Select(g).Select(f);
 #endif
             }
