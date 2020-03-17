@@ -20,7 +20,6 @@ Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T,
 Abc.Maybe<T>.OnSome(System.Action<T> action) -> void
 Abc.Maybe<T>.OrElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.OrElseAsync(System.Threading.Tasks.Task<Abc.Maybe<T>> other) -> System.Threading.Tasks.Task<Abc.Maybe<T>>
-Abc.Maybe<T>.PassThruUnless<TOther>(Abc.Maybe<TOther> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.Replicate() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 Abc.Maybe<T>.Replicate(int count) -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 Abc.Maybe<T>.Select<TResult>(System.Func<T, TResult> selector) -> Abc.Maybe<TResult>
@@ -43,6 +42,7 @@ Abc.Maybe<T>.Where(System.Func<T, bool> predicate) -> Abc.Maybe<T>
 Abc.Maybe<T>.XorElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.Yield() -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.Yield(int count) -> System.Collections.Generic.IEnumerable<T>
+Abc.Maybe<T>.ZeroOutWhen<TOther>(Abc.Maybe<TOther> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TOther, TResult> zipper) -> Abc.Maybe<TResult>
 Abc.Unit
 Abc.Unit.Equals(Abc.Unit other) -> bool

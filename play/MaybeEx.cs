@@ -236,7 +236,7 @@ namespace Abc
         // Compare to the truth table at https://en.wikipedia.org/wiki/Bitwise_operation
         //   0000 -
         //   0020 ContinueWithIfNone()  NOT(<-)
-        //   0100 PassThruUnless()      NOT(->) aka NIMPLY
+        //   0100 ZeroOutWhen()         NOT(->) aka NIMPLY
         //   0120 XorElse()             XOR
         //
         //   1000 PassThruWhen()        AND
@@ -256,7 +256,7 @@ namespace Abc
         //   x.ContinueWith(y)          type y          x is some ? y : none(y)
         //   x.ContinueWithIfNone(y)    type y          x is some ? none(y) : y
         //   x.PassThruWhen(y)          type x          y is some ? x : none(x)
-        //   x.PassThruUnless(y)        type x          y is some ? none(x) : x
+        //   x.ZeroOutWhen(y)           type x          y is some ? none(x) : x
         //   x.Ignore(y)                type x          x
         //   x.Always(y)                type y          y
         //
@@ -267,8 +267,8 @@ namespace Abc
         //               x.OrElse(y) == y.OrElseRTL(x)
         //              x.XorElse(y) == y.XorElse(x)
         //         x.ContinueWith(y) == y.PassThruWhen(x)
-        //       x.PassThruUnless(y) == y.ContinueWithIfNone(x)
-        // Methods not in main:
+        //          x.ZeroOutWhen(y) == y.ContinueWithIfNone(x)
+        // methods not in main:
         //             LeftAnd(x, y) == RightAnd(y, x)
         //               x.Ignore(y) == y.Always(x)
         //
@@ -311,6 +311,7 @@ namespace Abc
         }
 
         // Conjunction; mnemotechnic "P if Q".
+        // "@this" pass through when "other" is some.
         // PassThruWhen() = flip ContinueWith():
         //   this.PassThruWhen(other) = other.ContinueWith(this)
         /// <summary>
@@ -341,8 +342,8 @@ namespace Abc
 
         // Converse nonimplication; mnemotechnic "not P but Q".
         // Like ContinueWith() but when @this is the empty maybe.
-        // ContinueWithIfNone() = flip PassThruUnless():
-        //   this.ContinueWithIfNone(other) = other.PassThruUnless(this)
+        // ContinueWithIfNone() = flip ZeroOutWhen():
+        //   this.ContinueWithIfNone(other) = other.ZeroOutWhen(this)
         // Whereas ContinueWith() maps
         //   some(X) to some(Y), and none(X) to none(Y)
         // ContinueWithIfNone() maps

@@ -81,7 +81,7 @@ namespace Abc
     /// - XorElse()             either (XOR gate)
     /// - ZipWith()             cross join
     /// - ContinueWith()        continuation (AND gate)
-    /// - PassThruUnless()
+    /// - ZeroOutWhen()
     /// - Skip()
     /// - Replicate()
     /// - Duplicate()
@@ -217,6 +217,7 @@ namespace Abc
         }
 
         // Inclusive disjunction; mnemotechnic: "P otherwise Q".
+        // "Plus" operation for maybe's.
         /// <remarks>
         /// Generalizes the null-coalescing operator (??) to maybe's.
         /// <code><![CDATA[
@@ -751,7 +752,7 @@ namespace Abc
         // Conjunction; mnemotechnic "Q if P", "P and then Q".
         // ContinueWith() = flip PassThruWhen():
         //   this.ContinueWith(other) = other.PassThruWhen(this)
-        // where PassThruWhen() is defined in MaybeEx (play project).
+        // NB: PassThruWhen() is defined in MaybeEx (play project).
         /// <summary>
         /// Continues with <paramref name="other"/> if the current instance is
         /// not empty; otherwise returns the empty maybe of type
@@ -777,24 +778,30 @@ namespace Abc
             return _isSome ? other : Maybe<TResult>.None;
         }
 
-        // REVIEW: simpler name? use something more affirmative than Unless().
-        // ZeroedWhen(), Discard, Skip, Cancel, None, Empty, Blank.
-        // Nonimplication or abjunction; mnemotechnic "P but not Q".
+        // Nonimplication or abjunction; mnemotechnic "P but not Q",
+        // Kind of "Minus" for maybe's?
+        // ZeroOutWhen() = flip ContinueWithIfNone():
+        //   this.ZeroOutWhen(other) = other.ContinueWithIfNone(this)
         // Like PassThruWhen() but when "other" is the empty maybe.
-        // PassThruUnless() = flip ContinueWithIfNone():
-        //   this.PassThruUnless(other) = other.ContinueWithIfNone(this)
-        // where ContinueWithIfNone() is defined in MaybeEx (play project).
+        // NB: PassThruWhen() & ContinueWithIfNone() are defined in MaybeEx
+        // (play project).
+        // ZeroOutWhen() is PassThruUnless() but "unless" is always confusing,
+        // I prefer a more affirmative adverb.
+        // "this" pass through unless "other" is some.
+        // Other name considered: ZeroedWhen(), Zeroiz(s)eWhen(), ClearWhen().
+        // ClearWhen() could be a good name; see Array.Clear().
         /// <summary>
-        /// Removes the enclosed value if <paramref name="other"/> is empty.
+        /// Removes the enclosed value if <paramref name="other"/> is not empty;
+        /// otherwise returns the current instance as it.
         /// </summary>
         /// <code><![CDATA[
-        ///   Some(1) PassThruUnless Some(2L) == None
-        ///   Some(1) PassThruUnless None     == Some(1)
-        ///   None    PassThruUnless Some(2L) == None
-        ///   None    PassThruUnless None     == None
+        ///   Some(1) ZeroOutWhen Some(2L) == None
+        ///   Some(1) ZeroOutWhen None     == Some(1)
+        ///   None    ZeroOutWhen Some(2L) == None
+        ///   None    ZeroOutWhen None     == None
         /// ]]></code>
         [Pure]
-        public Maybe<T> PassThruUnless<TOther>(Maybe<TOther> other)
+        public Maybe<T> ZeroOutWhen<TOther>(Maybe<TOther> other)
         {
             return other._isSome ? Maybe<T>.None : this;
         }
@@ -817,7 +824,7 @@ namespace Abc
             => _isSome ? other._isSome ? None : this
                 : other;
 
-        // Void?
+        // REVIEW: name Void(), Discard()?
         [Pure]
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;

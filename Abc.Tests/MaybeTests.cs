@@ -13,6 +13,8 @@ namespace Abc
 
     public static partial class MaybeTests
     {
+        private static readonly Maybe<int> ZERO = Maybe<int>.None;
+
         private static readonly Maybe<int> Ø = Maybe<int>.None;
         private static readonly Maybe<int> One = Maybe.Some(1);
         private static readonly Maybe<int> Two = Maybe.Some(2);
@@ -156,16 +158,16 @@ namespace Abc
         [Fact]
         public static void OrElse_LeftIdentity()
         {
-            Assert.Equal(Ø, Maybe<int>.None.OrElse(Ø));
-            Assert.Equal(One, Maybe<int>.None.OrElse(One));
+            Assert.Equal(Ø, ZERO.OrElse(Ø));
+            Assert.Equal(One, ZERO.OrElse(One));
         }
 
         // Second Monoid Law: None is a right identity for OrElse().
         [Fact]
         public static void OrElse_RightIdentity()
         {
-            Assert.Equal(Ø, Ø.OrElse(Maybe<int>.None));
-            Assert.Equal(One, One.OrElse(Maybe<int>.None));
+            Assert.Equal(Ø, Ø.OrElse(ZERO));
+            Assert.Equal(One, One.OrElse(ZERO));
         }
 
         // Third Monoid Law: OrElse() is associative.
@@ -196,7 +198,7 @@ namespace Abc
         {
             Func<int, Maybe<int>> f = x => Maybe.Some(2 * x);
 
-            Assert.Equal(Maybe<int>.None, Maybe<int>.None.Bind(f));
+            Assert.Equal(ZERO, ZERO.Bind(f));
         }
 
         // MonadMore: None is a right zero for Bind() or equivalently None is a
@@ -332,16 +334,16 @@ namespace Abc
         }
 
         [Fact]
-        public static void PassThruUnless()
+        public static void ZeroOutWhen()
         {
             // Some Some -> None
-            Assert.None(One.PassThruUnless(TwoL));
+            Assert.None(One.ZeroOutWhen(TwoL));
             // Some None -> Some
-            Assert.Some(1, One.PassThruUnless(ØL));
+            Assert.Some(1, One.ZeroOutWhen(ØL));
             // None Some -> None
-            Assert.None(Ø.PassThruUnless(TwoL));
+            Assert.None(Ø.ZeroOutWhen(TwoL));
             // None None -> None
-            Assert.None(Ø.PassThruUnless(ØL));
+            Assert.None(Ø.ZeroOutWhen(ØL));
         }
 
 
