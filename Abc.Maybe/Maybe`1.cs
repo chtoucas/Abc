@@ -77,11 +77,11 @@ namespace Abc
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
     /// - GroupJoin()           LINQ group join
-    /// - OrElse()              none-coalescing (OR gate)
-    /// - XorElse()             either (XOR gate)
-    /// - ZipWith()             cross join
-    /// - ContinueWith()        continuation (AND gate)
+    /// - OrElse()              OR; none-coalescing
+    /// - AndThen()             AND
     /// - ZeroOutWhen()
+    /// - XorElse()             XOR
+    /// - ZipWith()             cross join
     /// - Skip()
     /// - Replicate()
     /// - Duplicate()
@@ -750,7 +750,6 @@ namespace Abc
         }
 
         // TODO: still bothered by the names.
-        // - ContinueWith() -> Then()
         // - ZeroOutWhen()  ->
         // - Skip()         -> Void(), Unit(), Discard()
         // In MaybeEx:
@@ -759,8 +758,8 @@ namespace Abc
         // Hummm, I guess that I got things wrong. See Fx.Mayhap.Applicative.
 
         // Conjunction; mnemotechnic "Q if P", "P and then Q".
-        // ContinueWith() = flip PassThruWhen():
-        //   this.ContinueWith(other) = other.PassThruWhen(this)
+        // AndThen() = flip PassThruWhen():
+        //   this.AndThen(other) = other.PassThruWhen(this)
         // NB: PassThruWhen() is defined in MaybeEx (play project).
         /// <summary>
         /// Continues with <paramref name="other"/> if the current instance is
@@ -768,13 +767,11 @@ namespace Abc
         /// <typeparamref name="TResult"/>.
         /// </summary>
         /// <remarks>
-        /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
-        /// binder <c>_ => other</c>.
         /// <code><![CDATA[
-        ///   Some(1) ContinueWith Some(2L) == Some(2L)
-        ///   Some(1) ContinueWith None     == None
-        ///   None    ContinueWith Some(2L) == None
-        ///   None    ContinueWith None     == None
+        ///   Some(1) AndThen Some(2L) == Some(2L)
+        ///   Some(1) AndThen None     == None
+        ///   None    AndThen Some(2L) == None
+        ///   None    AndThen None     == None
         /// ]]></code>
         /// This method can be though as an AND for maybe's, provided that an
         /// empty maybe is said to be false.
@@ -782,7 +779,7 @@ namespace Abc
         // Compare to the nullable equiv w/ x an int? and y a long?:
         //   (x.HasValue ? y : (long?)null).
         [Pure]
-        public Maybe<TResult> ContinueWith<TResult>(Maybe<TResult> other)
+        public Maybe<TResult> AndThen<TResult>(Maybe<TResult> other)
         {
             return _isSome ? other : Maybe<TResult>.None;
         }

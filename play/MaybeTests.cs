@@ -85,18 +85,18 @@ namespace Abc
         }
 
         [Fact]
-        public static void ContinueWith()
+        public static void AndThen()
         {
             // Some Some -> Some
-            Assert.Equal(TwoL, One.ContinueWith(TwoL));
+            Assert.Equal(TwoL, One.AndThen(TwoL));
             // Some None -> None
-            Assert.Equal(ØL, One.ContinueWith(ØL));
+            Assert.Equal(ØL, One.AndThen(ØL));
             // None Some -> None
-            Assert.Equal(ØL, Ø.ContinueWith(TwoL));
+            Assert.Equal(ØL, Ø.AndThen(TwoL));
             // None None -> None
-            Assert.Equal(ØL, Ø.ContinueWith(ØL));
+            Assert.Equal(ØL, Ø.AndThen(ØL));
 
-            // ContinueWith() is PassThruWhen() flipped.
+            // AndThen() is PassThruWhen() flipped.
             Assert.Equal(TwoL, TwoL.PassThruWhen(One));
             Assert.Equal(ØL, ØL.PassThruWhen(One));
             Assert.Equal(ØL, TwoL.PassThruWhen(Ø));
@@ -134,11 +134,11 @@ namespace Abc
             // None None -> None
             Assert.Equal(Ø, Ø.PassThruWhen(ØL));
 
-            // PassThruWhen() is ContinueWith() flipped.
-            Assert.Equal(One, TwoL.ContinueWith(One));
-            Assert.Equal(Ø, ØL.ContinueWith(One));
-            Assert.Equal(Ø, TwoL.ContinueWith(Ø));
-            Assert.Equal(Ø, ØL.ContinueWith(Ø));
+            // PassThruWhen() is AndThen() flipped.
+            Assert.Equal(One, TwoL.AndThen(One));
+            Assert.Equal(Ø, ØL.AndThen(One));
+            Assert.Equal(Ø, TwoL.AndThen(Ø));
+            Assert.Equal(Ø, ØL.AndThen(Ø));
         }
 
         [Fact]

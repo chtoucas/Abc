@@ -202,10 +202,10 @@ namespace Abc
         }
 
         // MonadMore: None is a right zero for Bind() or equivalently None is a
-        // right zero for ContinueWith().
+        // right zero for AndThen().
 
-        // MonadMore: None is a right zero for ContinueWith(), implied by the
-        // definition of ContinueWith() and the MonadMore rule.
+        // MonadMore: None is a right zero for AndThen(), implied by the
+        // definition of AndThen() and the MonadMore rule.
 
         // MonadPlus: Bind() is right distributive over OrElse().
 
@@ -213,23 +213,23 @@ namespace Abc
 
         // Unit is a right zero for OrElse().
 
-        // ContinueWith() is associative, implied by the definition of
-        // ContinueWith() and the third monad law.
+        // AndThen() is associative, implied by the definition of AndThen() and
+        // the third monad law.
         //   (m >> n) >> o = m >> (n >> o)
         [Fact]
-        public static void ContinueWith_Associativity()
+        public static void AndThen_Associativity()
         {
             Assert.Equal(
-                Ø.ContinueWith(One.ContinueWith(Two)),
-                Ø.ContinueWith(One).ContinueWith(Two));
+                Ø.AndThen(One.AndThen(Two)),
+                Ø.AndThen(One).AndThen(Two));
 
             Assert.Equal(
-                One.ContinueWith(Two.ContinueWith(Ø)),
-                One.ContinueWith(Two).ContinueWith(Ø));
+                One.AndThen(Two.AndThen(Ø)),
+                One.AndThen(Two).AndThen(Ø));
 
             Assert.Equal(
-                Two.ContinueWith(Ø.ContinueWith(One)),
-                Two.ContinueWith(Ø).ContinueWith(One));
+                Two.AndThen(Ø.AndThen(One)),
+                Two.AndThen(Ø).AndThen(One));
         }
     }
 
@@ -321,16 +321,16 @@ namespace Abc
         }
 
         [Fact]
-        public static void ContinueWith()
+        public static void AndThen()
         {
             // Some Some -> Some
-            Assert.Equal(TwoL, One.ContinueWith(TwoL));
+            Assert.Equal(TwoL, One.AndThen(TwoL));
             // Some None -> None
-            Assert.Equal(ØL, One.ContinueWith(ØL));
+            Assert.Equal(ØL, One.AndThen(ØL));
             // None Some -> None
-            Assert.Equal(ØL, Ø.ContinueWith(TwoL));
+            Assert.Equal(ØL, Ø.AndThen(TwoL));
             // None None -> None
-            Assert.Equal(ØL, Ø.ContinueWith(ØL));
+            Assert.Equal(ØL, Ø.AndThen(ØL));
         }
 
         [Fact]

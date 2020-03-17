@@ -141,7 +141,7 @@ namespace Abc
     public partial class MaybeEx
     {
         // Objectives: constraint TResult : notnull, prevent the creation of
-        // Maybe<TResult?>, alternative to ContinueWith() to avoid the creation
+        // Maybe<TResult?>, alternative to AndThen() to avoid the creation
         // of a Maybe when it is not strictly necessary.
         //
         // We should be able to write:
@@ -154,7 +154,7 @@ namespace Abc
         // We want to offer two versions of ReplaceWith(), one for classes and
         // another for structs, to make sure that the method returns a
         // Maybe<TResult> not a Maybe<TResult?>, but it causes some API problems,
-        // and since we already have ContinueWith(), it's better left off for now.
+        // and since we already have AndThen(), it's better left off for now.
         // Moreover it is just a Select(_ => other); we only bother because we
         // would like to avoid the creation of an unnecessary lambda.
         // Of course, if we don't mind about Maybe<TResult?> the obvious
@@ -163,13 +163,13 @@ namespace Abc
         // and Maybe.Of().
         //
         // Other point: we should write "where TResult : notnull", since when
-        // "other" is null we should rather use ContinueWith(), nervertheless,
+        // "other" is null we should rather use AndThen(), nervertheless,
         // whatever I try, I end up double-checking null's, in ReplaceWith()
         // and in the factory method --- that was another reason why we have
         // two versions of ReplaceWith().
         //
         // Simple solution: since IsNone is public, we do not really need to
-        // bother w/ ReplaceWith(), same thing with ContinueWith() in fact.
+        // bother w/ ReplaceWith(), same thing with AndThen() in fact.
 
 #if true
         /// <remarks>
@@ -182,7 +182,7 @@ namespace Abc
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long:
         //   (x.HasValue ? (long?)y : (long?)null).
-        // It does work with null but then one should really use ContinueWith().
+        // It does work with null but then one should really use AndThen().
         [Pure]
         public static Maybe<TResult> ReplaceWith<T, TResult>(
             this Maybe<T> @this, TResult value)
@@ -202,7 +202,7 @@ namespace Abc
         }
 
         // It works with null but then one should really use
-        // ContinueWith(Maybe<TResult>.None). We can't remove the nullable
+        // AndThen(Maybe<TResult>.None). We can't remove the nullable
         // in the param otherwise we would have two methods with the same
         // name.
         [Pure]
@@ -244,7 +244,7 @@ namespace Abc
         //   1100 Ignore()              left projection
         //   1120 OrElse()              OR
         //
-        //   2000 ContinueWith()        AND
+        //   2000 AndThen()             AND
         //   2020 Always()              right projection
         //   2100 RightAnd()            left projection
         //   2120 OrElseRTL()           OR
@@ -253,7 +253,7 @@ namespace Abc
         //   x.OrElse(y)                same types      x is some ? x : y
         //   x.OrElseRTL(y)             same types      y is some ? y : x
         //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
-        //   x.ContinueWith(y)          type y          x is some ? y : none(y)
+        //   x.AndThen(y)               type y          x is some ? y : none(y)
         //   x.ContinueWithIfNone(y)    type y          x is some ? none(y) : y
         //   x.PassThruWhen(y)          type x          y is some ? x : none(x)
         //   x.ZeroOutWhen(y)           type x          y is some ? none(x) : x
@@ -266,7 +266,7 @@ namespace Abc
         // Method / flipped method
         //               x.OrElse(y) == y.OrElseRTL(x)
         //              x.XorElse(y) == y.XorElse(x)
-        //         x.ContinueWith(y) == y.PassThruWhen(x)
+        //              x.AndThen(y) == y.PassThruWhen(x)
         //          x.ZeroOutWhen(y) == y.ContinueWithIfNone(x)
         // methods not in main:
         //             LeftAnd(x, y) == RightAnd(y, x)
@@ -312,16 +312,14 @@ namespace Abc
 
         // Conjunction; mnemotechnic "P if Q".
         // "@this" pass through when "other" is some.
-        // PassThruWhen() = flip ContinueWith():
-        //   this.PassThruWhen(other) = other.ContinueWith(this)
+        // PassThruWhen() = flip AndThen():
+        //   this.PassThruWhen(other) = other.AndThen(this)
         /// <summary>
         /// Returns the current instance if <paramref name="other"/> is not
         /// empty; otherwise returns the empty maybe of type
         /// <typeparamref name="TOther"/>.
         /// </summary>
         /// <remarks>
-        /// <see cref="ContinueWith"/> is <see cref="Bind"/> with a constant
-        /// binder <c>_ => this</c>.
         /// <code><![CDATA[
         ///   Some(1) PassThruWhen Some(2L) == Some(1)
         ///   Some(1) PassThruWhen None     == None
@@ -341,10 +339,10 @@ namespace Abc
         }
 
         // Converse nonimplication; mnemotechnic "not P but Q".
-        // Like ContinueWith() but when @this is the empty maybe.
+        // Like AndThen() but when @this is the empty maybe.
         // ContinueWithIfNone() = flip ZeroOutWhen():
         //   this.ContinueWithIfNone(other) = other.ZeroOutWhen(this)
-        // Whereas ContinueWith() maps
+        // Whereas AndThen() maps
         //   some(X) to some(Y), and none(X) to none(Y)
         // ContinueWithIfNone() maps
         //   some(X) to none(Y), and none(X) to some(Y)
