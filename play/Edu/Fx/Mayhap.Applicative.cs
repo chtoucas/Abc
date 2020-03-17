@@ -22,7 +22,7 @@ namespace Abc.Edu.Fx
     //
     // Standard API:
     // - *>         ext.ContinueWith()
-    // - <*         ext.PassThruWhen()
+    // - <*         ext.Ignore()
     // - <**>       ext.Apply()
     // - liftA      Mayhap.Lift()
     // - liftA3     Mayhap.Lift()
@@ -70,7 +70,7 @@ namespace Abc.Edu.Fx
             // realized. In an implementation with a boring (<$) but an optimizing
             // liftA2, it would likely be better to define (*>) using liftA2.
 
-            // REVIEW: Bind() is wrong, isn't it?
+            // FIXME: Bind() is wrong, isn't it?
 #if STRICT_HASKELL
             return Lift(Stubs<TSource, TResult>.Const2).Invoke(@this, other);
 #else
@@ -83,14 +83,14 @@ namespace Abc.Edu.Fx
         /// <para>Sequence actions, discarding the value of the second argument.
         /// </para>
         /// </summary>
-        public static Mayhap<TSource> PassThruWhen<TSource, TOther>(
+        public static Mayhap<TSource> Ignore<TSource, TOther>(
             this Mayhap<TSource> @this,
             Mayhap<TOther> other)
         {
             // (<*) :: f a -> f b -> f a
             // (<*) = liftA2 const
 
-            // REVIEW: Bind() is wrong, isn't it?
+            // FIXME: Bind() is wrong, isn't it?
 #if STRICT_HASKELL
             return Lift(Stubs<TSource, TOther>.Const1).Invoke(@this, other);
 #else
