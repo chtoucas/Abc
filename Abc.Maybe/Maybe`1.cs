@@ -38,6 +38,8 @@ namespace Abc
     //   https://docs.microsoft.com/en-gb/dotnet/csharp/tuples
     //   http://mustoverride.com/tuples_structs/
     //   https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/june/csharp-tuple-trouble-why-csharp-tuples-get-to-break-the-guidelines
+    //   https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/value-options
+    //   https://github.com/fsharp/fslang-design/blob/master/FSharp.Core-4.5.0.0/FS-1057-valueoption.md
 
     /// <summary>
     /// Represents an object that is either a single value of type
