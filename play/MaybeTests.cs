@@ -50,190 +50,190 @@ namespace Abc
         public static void OrElse()
         {
             // Some Some -> Some
-            Assert.Some(1, One.OrElse(Two));
+            Assert.Equal(One, One.OrElse(Two));
             // Some None -> Some
-            Assert.Some(1, One.OrElse(Ø));
+            Assert.Equal(One, One.OrElse(Ø));
             // None Some -> Some
-            Assert.Some(2, Ø.OrElse(Two));
+            Assert.Equal(Two, Ø.OrElse(Two));
             // None None -> None
-            Assert.None(Ø.OrElse(Ø));
+            Assert.Equal(Ø, Ø.OrElse(Ø));
 
             // OrElse() is OrElseRTL() flipped.
-            Assert.Some(1, Two.OrElseRTL(One));
-            Assert.Some(1, Ø.OrElseRTL(One));
-            Assert.Some(2, Two.OrElseRTL(Ø));
-            Assert.None(Ø.OrElseRTL(Ø));
+            Assert.Equal(One, Two.OrElseRTL(One));
+            Assert.Equal(One, Ø.OrElseRTL(One));
+            Assert.Equal(Two, Two.OrElseRTL(Ø));
+            Assert.Equal(Ø, Ø.OrElseRTL(Ø));
         }
 
         [Fact]
         public static void OrElseRTL()
         {
             // Some Some -> Some
-            Assert.Some(2, One.OrElseRTL(Two));
+            Assert.Equal(Two, One.OrElseRTL(Two));
             // Some None -> Some
-            Assert.Some(1, One.OrElseRTL(Ø));
+            Assert.Equal(One, One.OrElseRTL(Ø));
             // None Some -> Some
-            Assert.Some(2, Ø.OrElseRTL(Two));
+            Assert.Equal(Two, Ø.OrElseRTL(Two));
             // None None -> None
-            Assert.None(Ø.OrElseRTL(Ø));
+            Assert.Equal(Ø, Ø.OrElseRTL(Ø));
 
             // OrElseRTL() is OrElse() flipped.
-            Assert.Some(2, Two.OrElse(One));
-            Assert.Some(1, Ø.OrElse(One));
-            Assert.Some(2, Two.OrElse(Ø));
-            Assert.None(Ø.OrElse(Ø));
+            Assert.Equal(Two, Two.OrElse(One));
+            Assert.Equal(One, Ø.OrElse(One));
+            Assert.Equal(Two, Two.OrElse(Ø));
+            Assert.Equal(Ø, Ø.OrElse(Ø));
         }
 
         [Fact]
         public static void ContinueWith()
         {
             // Some Some -> Some
-            Assert.Some(2L, One.ContinueWith(TwoL));
+            Assert.Equal(TwoL, One.ContinueWith(TwoL));
             // Some None -> None
-            Assert.None(One.ContinueWith(ØL));
+            Assert.Equal(ØL, One.ContinueWith(ØL));
             // None Some -> None
-            Assert.None(Ø.ContinueWith(TwoL));
+            Assert.Equal(ØL, Ø.ContinueWith(TwoL));
             // None None -> None
-            Assert.None(Ø.ContinueWith(ØL));
+            Assert.Equal(ØL, Ø.ContinueWith(ØL));
 
             // ContinueWith() is PassThruWhen() flipped.
-            Assert.Some(2L, TwoL.PassThruWhen(One));
-            Assert.None(ØL.PassThruWhen(One));
-            Assert.None(TwoL.PassThruWhen(Ø));
-            Assert.None(ØL.PassThruWhen(Ø));
+            Assert.Equal(TwoL, TwoL.PassThruWhen(One));
+            Assert.Equal(ØL, ØL.PassThruWhen(One));
+            Assert.Equal(ØL, TwoL.PassThruWhen(Ø));
+            Assert.Equal(ØL, ØL.PassThruWhen(Ø));
         }
 
         [Fact]
         public static void ContinueWithIfNone()
         {
             // Some Some -> None
-            Assert.None(One.ContinueWithIfNone(TwoL));
+            Assert.Equal(ØL, One.ContinueWithIfNone(TwoL));
             // Some None -> None
-            Assert.None(One.ContinueWithIfNone(ØL));
+            Assert.Equal(ØL, One.ContinueWithIfNone(ØL));
             // None Some -> Some
-            Assert.Some(2L, Ø.ContinueWithIfNone(TwoL));
+            Assert.Equal(TwoL, Ø.ContinueWithIfNone(TwoL));
             // None None -> None
-            Assert.None(Ø.ContinueWithIfNone(ØL));
+            Assert.Equal(ØL, Ø.ContinueWithIfNone(ØL));
 
             // ContinueWithIfNone() is ZeroOutWhen() flipped.
-            Assert.None(TwoL.ZeroOutWhen(One));
-            Assert.None(ØL.ZeroOutWhen(One));
-            Assert.Some(2L, TwoL.ZeroOutWhen(Ø));
-            Assert.None(ØL.ZeroOutWhen(Ø));
+            Assert.Equal(ØL, TwoL.ZeroOutWhen(One));
+            Assert.Equal(ØL, ØL.ZeroOutWhen(One));
+            Assert.Equal(TwoL, TwoL.ZeroOutWhen(Ø));
+            Assert.Equal(ØL, ØL.ZeroOutWhen(Ø));
         }
 
         [Fact]
         public static void PassThruWhen()
         {
             // Some Some -> Some
-            Assert.Some(1, One.PassThruWhen(TwoL));
+            Assert.Equal(One, One.PassThruWhen(TwoL));
             // Some None -> None
-            Assert.None(One.PassThruWhen(ØL));
+            Assert.Equal(Ø, One.PassThruWhen(ØL));
             // None Some -> None
-            Assert.None(Ø.PassThruWhen(TwoL));
+            Assert.Equal(Ø, Ø.PassThruWhen(TwoL));
             // None None -> None
-            Assert.None(Ø.PassThruWhen(ØL));
+            Assert.Equal(Ø, Ø.PassThruWhen(ØL));
 
             // PassThruWhen() is ContinueWith() flipped.
-            Assert.Some(1, TwoL.ContinueWith(One));
-            Assert.None(ØL.ContinueWith(One));
-            Assert.None(TwoL.ContinueWith(Ø));
-            Assert.None(ØL.ContinueWith(Ø));
+            Assert.Equal(One, TwoL.ContinueWith(One));
+            Assert.Equal(Ø, ØL.ContinueWith(One));
+            Assert.Equal(Ø, TwoL.ContinueWith(Ø));
+            Assert.Equal(Ø, ØL.ContinueWith(Ø));
         }
 
         [Fact]
         public static void ZeroOutWhen()
         {
             // Some Some -> None
-            Assert.None(One.ZeroOutWhen(TwoL));
+            Assert.Equal(Ø, One.ZeroOutWhen(TwoL));
             // Some None -> Some
-            Assert.Some(1, One.ZeroOutWhen(ØL));
+            Assert.Equal(One, One.ZeroOutWhen(ØL));
             // None Some -> None
-            Assert.None(Ø.ZeroOutWhen(TwoL));
+            Assert.Equal(Ø, Ø.ZeroOutWhen(TwoL));
             // None None -> None
-            Assert.None(Ø.ZeroOutWhen(ØL));
+            Assert.Equal(Ø, Ø.ZeroOutWhen(ØL));
 
             // ZeroOutWhen() is ContinueWithIfNone() flipped.
-            Assert.None(TwoL.ContinueWithIfNone(One));
-            Assert.Some(1, ØL.ContinueWithIfNone(One));
-            Assert.None(TwoL.ContinueWithIfNone(Ø));
-            Assert.None(ØL.ContinueWithIfNone(Ø));
+            Assert.Equal(Ø, TwoL.ContinueWithIfNone(One));
+            Assert.Equal(One, ØL.ContinueWithIfNone(One));
+            Assert.Equal(Ø, TwoL.ContinueWithIfNone(Ø));
+            Assert.Equal(Ø, ØL.ContinueWithIfNone(Ø));
         }
 
         [Fact]
         public static void LeftAnd()
         {
             // Some Some -> Some
-            Assert.Some(1, MaybeEx.LeftAnd(One, Two));
+            Assert.Equal(One, MaybeEx.LeftAnd(One, Two));
             // Some None -> None
-            Assert.None(MaybeEx.LeftAnd(One, Ø));
+            Assert.Equal(Ø, MaybeEx.LeftAnd(One, Ø));
             // None Some -> Some
-            Assert.Some(2, MaybeEx.LeftAnd(Ø, Two));
+            Assert.Equal(Two, MaybeEx.LeftAnd(Ø, Two));
             // None None -> None
-            Assert.None(MaybeEx.LeftAnd(Ø, Ø));
+            Assert.Equal(Ø, MaybeEx.LeftAnd(Ø, Ø));
 
             // LeftAnd() is RightAnd() flipped.
-            Assert.Some(1, MaybeEx.RightAnd(Two, One));
-            Assert.None(MaybeEx.RightAnd(Ø, One));
-            Assert.Some(2, MaybeEx.RightAnd(Two, Ø));
-            Assert.None(MaybeEx.RightAnd(Ø, Ø));
+            Assert.Equal(One, MaybeEx.RightAnd(Two, One));
+            Assert.Equal(Ø, MaybeEx.RightAnd(Ø, One));
+            Assert.Equal(Two, MaybeEx.RightAnd(Two, Ø));
+            Assert.Equal(Ø, MaybeEx.RightAnd(Ø, Ø));
         }
 
         [Fact]
         public static void RightAnd()
         {
             // Some Some -> Some
-            Assert.Some(2, MaybeEx.RightAnd(One, Two));
+            Assert.Equal(Two, MaybeEx.RightAnd(One, Two));
             // Some None -> Some
-            Assert.Some(1, MaybeEx.RightAnd(One, Ø));
+            Assert.Equal(One, MaybeEx.RightAnd(One, Ø));
             // None Some -> None
-            Assert.None(MaybeEx.RightAnd(Ø, Two));
+            Assert.Equal(Ø, MaybeEx.RightAnd(Ø, Two));
             // None None -> None
-            Assert.None(MaybeEx.RightAnd(Ø, Ø));
+            Assert.Equal(Ø, MaybeEx.RightAnd(Ø, Ø));
 
             // RightAnd() is LeftAnd() flipped.
-            Assert.Some(2, MaybeEx.LeftAnd(Two, One));
-            Assert.Some(1, MaybeEx.LeftAnd(Ø, One));
-            Assert.None(MaybeEx.LeftAnd(Two, Ø));
-            Assert.None(MaybeEx.LeftAnd(Ø, Ø));
+            Assert.Equal(Two, MaybeEx.LeftAnd(Two, One));
+            Assert.Equal(One, MaybeEx.LeftAnd(Ø, One));
+            Assert.Equal(Ø, MaybeEx.LeftAnd(Two, Ø));
+            Assert.Equal(Ø, MaybeEx.LeftAnd(Ø, Ø));
         }
 
         [Fact]
         public static void Ignore()
         {
             // Some Some -> Some
-            Assert.Some(1, One.Ignore(TwoL));
+            Assert.Equal(One, One.Ignore(TwoL));
             // Some None -> Some
-            Assert.Some(1, One.Ignore(ØL));
+            Assert.Equal(One, One.Ignore(ØL));
             // None Some -> None
-            Assert.None(Ø.Ignore(TwoL));
+            Assert.Equal(Ø, Ø.Ignore(TwoL));
             // None None -> None
-            Assert.None(Ø.Ignore(ØL));
+            Assert.Equal(Ø, Ø.Ignore(ØL));
 
             // Ignore() is Always() flipped.
-            Assert.Some(1, TwoL.Always(One));
-            Assert.Some(1, ØL.Always(One));
-            Assert.None(TwoL.Always(Ø));
-            Assert.None(ØL.Always(Ø));
+            Assert.Equal(One, TwoL.Always(One));
+            Assert.Equal(One, ØL.Always(One));
+            Assert.Equal(Ø, TwoL.Always(Ø));
+            Assert.Equal(Ø, ØL.Always(Ø));
         }
 
         [Fact]
         public static void Always()
         {
             // Some Some -> Some
-            Assert.Some(2L, One.Always(TwoL));
+            Assert.Equal(TwoL, One.Always(TwoL));
             // Some None -> None
-            Assert.None(One.Always(ØL));
+            Assert.Equal(ØL, One.Always(ØL));
             // None Some -> Some
-            Assert.Some(2L, Ø.Always(TwoL));
+            Assert.Equal(TwoL, Ø.Always(TwoL));
             // None None -> None
-            Assert.None(Ø.Always(ØL));
+            Assert.Equal(ØL, Ø.Always(ØL));
 
             // Always() is Ignore() flipped.
-            Assert.Some(2L, TwoL.Ignore(One));
-            Assert.None(ØL.Ignore(One));
-            Assert.Some(2L, TwoL.Ignore(Ø));
-            Assert.None(ØL.Ignore(Ø));
+            Assert.Equal(TwoL, TwoL.Ignore(One));
+            Assert.Equal(ØL, ØL.Ignore(One));
+            Assert.Equal(TwoL, TwoL.Ignore(Ø));
+            Assert.Equal(ØL, ØL.Ignore(Ø));
         }
     }
 }

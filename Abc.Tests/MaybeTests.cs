@@ -95,6 +95,11 @@ namespace Abc
         [Fact]
         public static void OrElse()
         {
+            Assert.Equal(One, One.OrElse(Two));
+            Assert.Equal(One, One.OrElse(Ø));
+            Assert.Equal(Two, Ø.OrElse(Two));
+            Assert.Equal(Ø, Ø.OrElse(Ø));
+
             // Some Some -> Some
             Assert.Some(1, One.OrElse(Two));
             // Some None -> Some
@@ -103,11 +108,6 @@ namespace Abc
             Assert.Some(2, Ø.OrElse(Two));
             // None None -> None
             Assert.None(Ø.OrElse(Ø));
-
-            Assert.Equal(One, One.OrElse(Two));
-            Assert.Equal(One, One.OrElse(Ø));
-            Assert.Equal(Two, Ø.OrElse(Two));
-            Assert.Equal(Ø, Ø.OrElse(Ø));
         }
     }
 
@@ -324,26 +324,26 @@ namespace Abc
         public static void ContinueWith()
         {
             // Some Some -> Some
-            Assert.Some(2L, One.ContinueWith(TwoL));
+            Assert.Equal(TwoL, One.ContinueWith(TwoL));
             // Some None -> None
-            Assert.None(One.ContinueWith(ØL));
+            Assert.Equal(ØL, One.ContinueWith(ØL));
             // None Some -> None
-            Assert.None(Ø.ContinueWith(TwoL));
+            Assert.Equal(ØL, Ø.ContinueWith(TwoL));
             // None None -> None
-            Assert.None(Ø.ContinueWith(ØL));
+            Assert.Equal(ØL, Ø.ContinueWith(ØL));
         }
 
         [Fact]
         public static void ZeroOutWhen()
         {
             // Some Some -> None
-            Assert.None(One.ZeroOutWhen(TwoL));
+            Assert.Equal(Ø, One.ZeroOutWhen(TwoL));
             // Some None -> Some
-            Assert.Some(1, One.ZeroOutWhen(ØL));
+            Assert.Equal(One, One.ZeroOutWhen(ØL));
             // None Some -> None
-            Assert.None(Ø.ZeroOutWhen(TwoL));
+            Assert.Equal(Ø, Ø.ZeroOutWhen(TwoL));
             // None None -> None
-            Assert.None(Ø.ZeroOutWhen(ØL));
+            Assert.Equal(Ø, Ø.ZeroOutWhen(ØL));
         }
 
 
@@ -351,19 +351,19 @@ namespace Abc
         public static void XorElse()
         {
             // Some Some -> None
-            Assert.None(One.XorElse(Two));
+            Assert.Equal(Ø, One.XorElse(Two));
             // Some None -> Some
-            Assert.Some(1, One.XorElse(Ø));
+            Assert.Equal(One, One.XorElse(Ø));
             // None Some -> Some
-            Assert.Some(2, Ø.XorElse(Two));
+            Assert.Equal(Two, Ø.XorElse(Two));
             // None None -> None
-            Assert.None(Ø.XorElse(Ø));
+            Assert.Equal(Ø, Ø.XorElse(Ø));
 
             // XorElse() flips to itself.
-            Assert.None(Two.XorElse(One));
-            Assert.Some(1, Ø.XorElse(One));
-            Assert.Some(2, Two.XorElse(Ø));
-            Assert.None(Ø.XorElse(Ø));
+            Assert.Equal(Ø, Two.XorElse(One));
+            Assert.Equal(One, Ø.XorElse(One));
+            Assert.Equal(Two, Two.XorElse(Ø));
+            Assert.Equal(Ø, Ø.XorElse(Ø));
         }
 
         [Fact]
