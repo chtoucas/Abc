@@ -106,6 +106,23 @@ namespace Abc
             }
         }
 
+        // Reverse of When().
+        public static void Unless<T>(
+            this Maybe<T> @this, bool condition, Action<T>? onSome, Action? onNone)
+        {
+            if (!condition)
+            {
+                if (@this.TryGetValue(out T value))
+                {
+                    onSome?.Invoke(value);
+                }
+                else
+                {
+                    onNone?.Invoke();
+                }
+            }
+        }
+
         // Fluent versions? They are easy to add locally. For instance,
         //   @this.Do(caseSome, caseNone);
         //   return @this;

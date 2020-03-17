@@ -79,10 +79,10 @@ namespace Abc
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
     /// - GroupJoin()           LINQ group join
-    /// - OrElse()              OR; none-coalescing
-    /// - AndThen()             AND
+    /// - OrElse()              logical OR; none-coalescing
+    /// - AndThen()             logical AND
     /// - ZeroOutWhen()
-    /// - XorElse()             XOR
+    /// - XorElse()             logical XOR
     /// - ZipWith()             cross join
     /// - Skip()
     /// - Replicate()
@@ -403,22 +403,6 @@ namespace Abc
         public void When(bool condition, Action<T>? onSome, Action? onNone)
         {
             if (condition)
-            {
-                if (_isSome)
-                {
-                    onSome?.Invoke(_value);
-                }
-                else
-                {
-                    onNone?.Invoke();
-                }
-            }
-        }
-
-        // Reverse of When().
-        public void Unless(bool condition, Action<T>? onSome, Action? onNone)
-        {
-            if (!condition)
             {
                 if (_isSome)
                 {
@@ -754,7 +738,6 @@ namespace Abc
         // TODO: still bothered by the names.
         // - ZeroOutWhen()  -> Unless()
         //   It makes clear that it's a "logic" gate
-        //   but it "conflicts" with the other Unless()
         // - Skip()         -> Void(), Unit(), Discard()
         //
         // Hummm, I guess that I got things wrong. See Fx.Mayhap.Applicative.
@@ -914,8 +897,8 @@ namespace Abc
             => _isSome && EqualityComparer<T>.Default.Equals(_value, value);
     }
 
-    // REVIEW: the rules should be compatible with the one followed by for say
-    // a nullable int.
+    // REVIEW: the rules should be compatible with the one followed by nullable
+    // value types.
     // For the comparison operators <, >, <=, and >=, if one or both operands
     // are null, the result is false; otherwise, the contained values of
     // operands are compared. Do not assume that because a particular comparison
