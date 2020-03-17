@@ -346,7 +346,6 @@ namespace Abc
             Assert.Equal(Ø, Ø.ZeroOutWhen(ØL));
         }
 
-
         [Fact]
         public static void XorElse()
         {

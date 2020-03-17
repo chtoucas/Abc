@@ -67,9 +67,10 @@ namespace Abc.Edu.Fx
             // was strictly better, but now it depends on the functor.For a
             // functor supporting a sharing-enhancing (<$), this definition
             // may reduce allocation by preventing a1 from ever being fully
-            // realized.In an implementation with a boring (<$) but an optimizing
+            // realized. In an implementation with a boring (<$) but an optimizing
             // liftA2, it would likely be better to define (*>) using liftA2.
 
+            // REVIEW: Bind() is wrong, isn't it?
 #if STRICT_HASKELL
             return Lift(Stubs<TSource, TResult>.Const2).Invoke(@this, other);
 #else
@@ -89,6 +90,7 @@ namespace Abc.Edu.Fx
             // (<*) :: f a -> f b -> f a
             // (<*) = liftA2 const
 
+            // REVIEW: Bind() is wrong, isn't it?
 #if STRICT_HASKELL
             return Lift(Stubs<TSource, TOther>.Const1).Invoke(@this, other);
 #else

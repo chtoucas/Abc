@@ -749,6 +749,15 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
+        // TODO: still bothered by the names.
+        // - ContinueWith() -> Then()
+        // - ZeroOutWhen()  ->
+        // - Skip()         -> Void(), Unit(), Discard()
+        // In MaybeEx:
+        // - Always()       -> ContinueWith()
+        //
+        // Hummm, I guess that I got things wrong. See Fx.Mayhap.Applicative.
+
         // Conjunction; mnemotechnic "Q if P", "P and then Q".
         // ContinueWith() = flip PassThruWhen():
         //   this.ContinueWith(other) = other.PassThruWhen(this)
@@ -824,7 +833,6 @@ namespace Abc
             => _isSome ? other._isSome ? None : this
                 : other;
 
-        // REVIEW: name Void(), Discard()?
         [Pure]
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;

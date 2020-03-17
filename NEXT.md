@@ -10,7 +10,7 @@
 - string builder & math extensions
 
 Numerics:
-- port of hypercalc to .NET
+- port of hypercalc to .NET (WinUI)
 - big decimal
 - [Integer](https://en.wikipedia.org/wiki/Integer_(computer_science))
 - [Minifloat](https://en.wikipedia.org/wiki/Minifloat)
