@@ -750,10 +750,10 @@ namespace Abc
         }
 
         // TODO: still bothered by the names.
-        // - ZeroOutWhen()  ->
+        // - ZeroOutWhen()  -> Unless()
+        //   It makes clear that it's a "logic" gate
+        //   but it "conflicts" with the other Unless()
         // - Skip()         -> Void(), Unit(), Discard()
-        // In MaybeEx:
-        // - Always()       -> ContinueWith()
         //
         // Hummm, I guess that I got things wrong. See Fx.Mayhap.Applicative.
 

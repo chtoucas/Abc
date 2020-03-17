@@ -251,10 +251,10 @@ namespace Abc
         //
         // Overview: op / return type / pseudo-code
         //   x.OrElse(y)                same types      x is some ? x : y
-        //   x.OrElseRTL(y)             same types      y is some ? y : x
-        //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
         //   x.AndThen(y)               type y          x is some ? y : none(y)
+        //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
         //   x.ContinueWithIfNone(y)    type y          x is some ? none(y) : y
+        //   x.OrElseRTL(y)             same types      y is some ? y : x
         //   x.PassThruWhen(y)          type x          y is some ? x : none(x)
         //   x.ZeroOutWhen(y)           type x          y is some ? none(x) : x
         //   x.Ignore(y)                type x          x
