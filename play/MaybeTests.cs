@@ -211,23 +211,23 @@ namespace Abc
             Assert.Equal(Ø, Ø.Ignore(ØL));
 
             // Ignore() is Always() flipped.
-            Assert.Equal(One, TwoL.Always(One));
-            Assert.Equal(One, ØL.Always(One));
-            Assert.Equal(Ø, TwoL.Always(Ø));
-            Assert.Equal(Ø, ØL.Always(Ø));
+            Assert.Equal(One, TwoL.ContinueWith(One));
+            Assert.Equal(One, ØL.ContinueWith(One));
+            Assert.Equal(Ø, TwoL.ContinueWith(Ø));
+            Assert.Equal(Ø, ØL.ContinueWith(Ø));
         }
 
         [Fact]
-        public static void Always()
+        public static void ContinueWith()
         {
             // Some Some -> Some
-            Assert.Equal(TwoL, One.Always(TwoL));
+            Assert.Equal(TwoL, One.ContinueWith(TwoL));
             // Some None -> None
-            Assert.Equal(ØL, One.Always(ØL));
+            Assert.Equal(ØL, One.ContinueWith(ØL));
             // None Some -> Some
-            Assert.Equal(TwoL, Ø.Always(TwoL));
+            Assert.Equal(TwoL, Ø.ContinueWith(TwoL));
             // None None -> None
-            Assert.Equal(ØL, Ø.Always(ØL));
+            Assert.Equal(ØL, Ø.ContinueWith(ØL));
 
             // Always() is Ignore() flipped.
             Assert.Equal(TwoL, TwoL.Ignore(One));

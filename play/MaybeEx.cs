@@ -245,7 +245,7 @@ namespace Abc
         //   1120 OrElse()              OR
         //
         //   2000 AndThen()             AND
-        //   2020 Always()              right projection
+        //   2020 ContinueWith()        right projection
         //   2100 RightAnd()            left projection
         //   2120 OrElseRTL()           OR
         //
@@ -258,7 +258,7 @@ namespace Abc
         //   x.PassThruWhen(y)          type x          y is some ? x : none(x)
         //   x.ZeroOutWhen(y)           type x          y is some ? none(x) : x
         //   x.Ignore(y)                type x          x
-        //   x.Always(y)                type y          y
+        //   x.ContinueWith(y)          type y          y
         //
         //   LeftAnd(x, y)              same types      x is some && y is some ? x : y
         //   RightAnd(x, y)             same types      x is some && y is some ? y : x
@@ -270,7 +270,7 @@ namespace Abc
         //          x.ZeroOutWhen(y) == y.ContinueWithIfNone(x)
         // methods not in main:
         //             LeftAnd(x, y) == RightAnd(y, x)
-        //               x.Ignore(y) == y.Always(x)
+        //               x.Ignore(y) == y.ContinueWith(x)
         //
         // References:
         // - Knuth vol. 4A, chap. 7.1
@@ -279,8 +279,8 @@ namespace Abc
         // - https://en.wikipedia.org/wiki/Bitwise_operation
 
 #pragma warning disable CA1801 // -Review unused parameters
-        // Ignore() = flip Always():
-        //   this.Ignore(other) = other.Always(this)
+        // Ignore() = flip ContinueWith():
+        //   this.Ignore(other) = other.ContinueWith(this)
         /// <code><![CDATA[
         ///   Some(1) Ignore Some(2L) == Some(1)
         ///   Some(1) Ignore None     == Some(1)
@@ -295,16 +295,16 @@ namespace Abc
         }
 #pragma warning restore CA1801
 
-        // Always() = flip Ignore():
-        //   this.Always(other) = other.Ignore(this)
+        // ContinueWith() = flip Ignore():
+        //   this.ContinueWith(other) = other.Ignore(this)
         /// <code><![CDATA[
-        ///   Some(1) Always Some(2L) == Some(2L)
-        ///   Some(1) Always None     == None
-        ///   None    Always Some(2L) == Some(2L)
-        ///   None    Always None     == None
+        ///   Some(1) ContinueWith Some(2L) == Some(2L)
+        ///   Some(1) ContinueWith None     == None
+        ///   None    ContinueWith Some(2L) == Some(2L)
+        ///   None    ContinueWith None     == None
         /// ]]></code>
         [Pure]
-        public static Maybe<TResult> Always<T, TResult>(
+        public static Maybe<TResult> ContinueWith<T, TResult>(
             this Maybe<T> @this, Maybe<TResult> other)
         {
             return other;
@@ -353,10 +353,10 @@ namespace Abc
         ///   None    ContinueWithIfNone None     == None
         /// ]]></code>
         [Pure]
-        public static Maybe<TResult> ContinueWithIfNone<T,TResult>(
+        public static Maybe<TResult> ContinueWithIfNone<T, TResult>(
            this Maybe<T> @this, Maybe<TResult> other)
         {
-            return @this.IsNone? other: Maybe<TResult>.None;
+            return @this.IsNone ? other : Maybe<TResult>.None;
         }
 
         // Conjunction. RTL = right-to-left.
