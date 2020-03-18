@@ -87,11 +87,11 @@ namespace Abc
     /// - Where()               LINQ filter
     /// - Join()                LINQ join
     /// - GroupJoin()           LINQ group join
+    /// - ZipWith()             cross join
     /// - OrElse()              logical OR; none-coalescing
     /// - AndThen()             logical AND
-    /// - ZeroOutWhen()
     /// - XorElse()             logical XOR
-    /// - ZipWith()             cross join
+    /// - ZeroOutWhen()
     /// - Skip()
     /// - Replicate()
     /// - Duplicate()
@@ -190,6 +190,27 @@ namespace Abc
         public override string ToString()
             => _isSome ? $"Maybe({_value})" : "Maybe(None)";
 
+#pragma warning disable CA2225 // Operator overloads have named alternates
+
+        // Implicit conversion to Maybe<T> for equality comparison, very much
+        // like what we have will nullable values: (int?)1 == 1 works.
+        // Friendly name: Maybe.Of(value).
+        // NB: maybe = Some(x) == y is equivalent to maybe.Contains(y).
+        public static implicit operator Maybe<T>([AllowNull] T value)
+            => Maybe.Of(value);
+
+        // REVIEW: explicit conversion.
+        // Friendly name: value.ValueOrThrow().
+        // ??? exception or null ???
+        // with null, we can write maybe == null, which is odd for a struct
+        // but at the same time we can write Maybe<string> maybe = s where s is
+        // in fact "null".
+        [return: MaybeNull]
+        public static explicit operator T(Maybe<T> value)
+            => value._isSome ? value.Value : throw new InvalidCastException();
+
+#pragma warning restore CA2225
+
         /// <summary>
         /// Represents a debugger type proxy for <see cref="Maybe{T}"/>.
         /// </summary>
@@ -206,65 +227,12 @@ namespace Abc
         }
     }
 
-    // Operators, besides the equality and comparison operators.
-    // REVIEW: operators overloads, most certainly we will only keep T <-> Maybe<T>.
-    public partial struct Maybe<T>
-    {
-#pragma warning disable CA2225 // Operator overloads have named alternates
-
-        // Implicit conversion to Maybe<T> for equality comparison, very much
-        // like what we have will nullable values: (int?)1 == 1 works.
-        // Friendly name: Maybe.Of(value).
-        // NB: maybe = Some(x) == y is equivalent to maybe.Contains(y).
-        public static implicit operator Maybe<T>([AllowNull] T value)
-            => Maybe.Of(value);
-
-        // Friendly name: value.ValueOrThrow().
-        // ??? exception or null ???
-        // with null, we can write maybe == null, which is odd for a struct
-        // but at the same time we can write Maybe<string> maybe = s where s is
-        // in fact "null".
-        [return: MaybeNull]
-        public static explicit operator T(Maybe<T> value)
-            => value._isSome ? value.Value : throw new InvalidCastException();
-
-        //
-        // Boolean ops, we have OrElse() & co... They are not true boolean ops
-        // but we named them that way to emphasize the proximity w/ booleans.
-        // TODO: remove. The logical ops are then confusing, non-abelians,
-        // and I haven't even check associativity.
-
-        //// Friendly name: !value.IsNone.
-        //public static explicit operator bool(Maybe<T> value)
-        //    => value._isSome;
-
-        //internal bool ToBoolean()
-        //    => _isSome;
-
-        // Friendly name: !value.IsNone.
-        public static bool operator true(Maybe<T> value)
-            => value._isSome;
-
-        // Friendly name: value.IsNone.
-        public static bool operator false(Maybe<T> value)
-            => !value._isSome;
-
-        public static bool operator !(Maybe<T> value)
-            => !value._isSome;
-
-        public static Maybe<T> operator &(Maybe<T> left, Maybe<T> right)
-            => left.AndThen(right);
-
-        public static Maybe<T> operator |(Maybe<T> left, Maybe<T> right)
-            => left.OrElse(right);
-
-        public static Maybe<T> operator ^(Maybe<T> left, Maybe<T> right)
-            => left.XorElse(right);
-
-#pragma warning restore CA2225
-    }
-
-    // Core methods.
+    // Core monadic methods.
+    // - Maybe.Of() aka "return"
+    // - Bind()
+    // We could have chosen Select() and Maybe.Flatten(), aka "map" and "join",
+    // instead. Maybe is a MonadPlus (or better a MonadOr) too, so OrElse() is
+    // also part of the monadic methods.
     public partial struct Maybe<T>
     {
         /// <summary>
@@ -282,23 +250,6 @@ namespace Abc
 
             return _isSome ? binder(_value) : Maybe<TResult>.None;
         }
-
-        // Inclusive disjunction; mnemotechnic: "P otherwise Q".
-        // "Plus" operation for maybe's.
-        /// <remarks>
-        /// Generalizes the null-coalescing operator (??) to maybe's.
-        /// <code><![CDATA[
-        ///   Some(1) ?? Some(2) == Some(1)
-        ///   Some(1) ?? None    == Some(1)
-        ///   None    ?? Some(2) == Some(2)
-        ///   None    ?? None    == None
-        /// ]]></code>
-        /// This method can be though as an inclusive OR for maybe's, provided
-        /// that an empty maybe is said to be false.
-        /// </remarks>
-        [Pure]
-        public Maybe<T> OrElse(Maybe<T> other)
-            => _isSome ? this : other;
     }
 
     // Safe escapes.
@@ -756,14 +707,152 @@ namespace Abc
         }
     }
 
-    // Misc methods.
-    // Some can be built from Select() or Bind(), but we prefer not to since
-    // this forces us to use (unnecessary) lambda functions.
-    // Methods that are independent of Select()/Bind():
+    // Logical operations.
+    // Ops: we have OrElse() & co so it seems reasonnable to have ops too...
+    // They are not true boolean ops but we named them that way to emphasize
+    // the proximity w/ booleans.
+    // The methods are independent of Select()/Bind():
     // - AndThen()
     // - ZeroOutWhen()
     // - XorElse()
     // Maybe this can be done in conjunction w/ OrElse(), but I haven't check.
+    //
+    // TODO: still bothered by the names.
+    // - ZeroOutWhen()  -> Unless()
+    //   It makes clear that it's a "logic" gate
+    // - Skip()         -> Void(), Unit(), Discard()
+    // - the other And and Or.
+    //
+    // Hummm, I guess that I got things wrong. See Fx.Mayhap.Applicative.
+    // The logical ops are then confusing, non-abelians, and I haven't even
+    // check associativity.
+    public partial struct Maybe<T>
+    {
+#pragma warning disable CA2225 // Operator overloads have named alternates
+
+        //// Friendly name: !value.IsNone.
+        //public static explicit operator bool(Maybe<T> value)
+        //    => value._isSome;
+
+        //internal bool ToBoolean()
+        //    => _isSome;
+
+        // Friendly name: !value.IsNone.
+        public static bool operator true(Maybe<T> value)
+            => value._isSome;
+
+        // Friendly name: value.IsNone.
+        public static bool operator false(Maybe<T> value)
+            => !value._isSome;
+
+        public static bool operator !(Maybe<T> value)
+            => !value._isSome;
+
+        public static Maybe<T> operator &(Maybe<T> left, Maybe<T> right)
+            => left.AndThen(right);
+
+        public static Maybe<T> operator |(Maybe<T> left, Maybe<T> right)
+            => left.OrElse(right);
+
+        public static Maybe<T> operator ^(Maybe<T> left, Maybe<T> right)
+            => left.XorElse(right);
+
+#pragma warning restore CA2225
+
+        // Inclusive disjunction; mnemotechnic: "P otherwise Q".
+        // "Plus" operation for maybe's.
+        /// <remarks>
+        /// Generalizes the null-coalescing operator (??) to maybe's.
+        /// <code><![CDATA[
+        ///   Some(1) ?? Some(2) == Some(1)
+        ///   Some(1) ?? None    == Some(1)
+        ///   None    ?? Some(2) == Some(2)
+        ///   None    ?? None    == None
+        /// ]]></code>
+        /// This method can be though as an inclusive OR for maybe's, provided
+        /// that an empty maybe is said to be false.
+        /// </remarks>
+        [Pure]
+        public Maybe<T> OrElse(Maybe<T> other)
+            => _isSome ? this : other;
+
+        // Conjunction; mnemotechnic "Q if P", "P and then Q".
+        // AndThen() = flip PassThruWhen():
+        //   this.AndThen(other) = other.PassThruWhen(this)
+        // NB: PassThruWhen() is defined in MaybeEx (play project).
+        /// <summary>
+        /// Continues with <paramref name="other"/> if the current instance is
+        /// not empty; otherwise returns the empty maybe of type
+        /// <typeparamref name="TResult"/>.
+        /// </summary>
+        /// <remarks>
+        /// <code><![CDATA[
+        ///   Some(1) AndThen Some(2L) == Some(2L)
+        ///   Some(1) AndThen None     == None
+        ///   None    AndThen Some(2L) == None
+        ///   None    AndThen None     == None
+        /// ]]></code>
+        /// This method can be though as an AND for maybe's, provided that an
+        /// empty maybe is said to be false.
+        /// </remarks>
+        // Compare to the nullable equiv w/ x an int? and y a long?:
+        //   (x.HasValue ? y : (long?)null).
+        [Pure]
+        public Maybe<TResult> AndThen<TResult>(Maybe<TResult> other)
+        {
+            return _isSome ? other : Maybe<TResult>.None;
+        }
+
+        // Exclusive disjunction; mnemotechnic: "either P or Q, but not both".
+        // XorElse() = flip XorElse():
+        //   this.XorElse(other) = other.XorElse(this)
+        /// <remarks>
+        /// <code><![CDATA[
+        ///   Some(1) XorElse Some(2) == None
+        ///   Some(1) XorElse None    == Some(1)
+        ///   None    XorElse Some(2) == Some(2)
+        ///   None    XorElse None    == None
+        /// ]]></code>
+        /// This method can be though as an exclusive OR for maybe's, provided
+        /// that an empty maybe is said to be false.
+        /// </remarks>
+        [Pure]
+        public Maybe<T> XorElse(Maybe<T> other)
+            => _isSome ? other._isSome ? None : this
+                : other;
+
+        // Nonimplication or abjunction; mnemotechnic "P but not Q",
+        // Kind of "Minus" for maybe's?
+        // ZeroOutWhen() = flip ContinueWithIfNone():
+        //   this.ZeroOutWhen(other) = other.ContinueWithIfNone(this)
+        // Like PassThruWhen() but when "other" is the empty maybe.
+        // NB: PassThruWhen() & ContinueWithIfNone() are defined in MaybeEx
+        // (play project).
+        // ZeroOutWhen() is PassThruUnless() but "unless" is always confusing,
+        // I prefer a more affirmative adverb.
+        // "this" pass through unless "other" is some.
+        // Other name considered: ZeroedWhen(), Zeroiz(s)eWhen(), ClearWhen().
+        // ClearWhen() could be a good name; see Array.Clear().
+        /// <summary>
+        /// Removes the enclosed value if <paramref name="other"/> is not empty;
+        /// otherwise returns the current instance as it.
+        /// </summary>
+        /// <code><![CDATA[
+        ///   Some(1) ZeroOutWhen Some(2L) == None
+        ///   Some(1) ZeroOutWhen None     == Some(1)
+        ///   None    ZeroOutWhen Some(2L) == None
+        ///   None    ZeroOutWhen None     == None
+        /// ]]></code>
+        [Pure]
+        public Maybe<T> ZeroOutWhen<TOther>(Maybe<TOther> other)
+        {
+            return other._isSome ? Maybe<T>.None : this;
+        }
+    }
+
+    // Misc methods.
+    // Some can be built from Select() or Bind(), but we prefer not to since
+    // this forces us to use (unnecessary) lambda functions.
     public partial struct Maybe<T>
     {
         /// <remarks>
@@ -801,86 +890,6 @@ namespace Abc
                 ? Maybe.Of(zipper(_value, other._value))
                 : Maybe<TResult>.None;
         }
-
-        // TODO: still bothered by the names.
-        // - ZeroOutWhen()  -> Unless()
-        //   It makes clear that it's a "logic" gate
-        // - Skip()         -> Void(), Unit(), Discard()
-        //
-        // Hummm, I guess that I got things wrong. See Fx.Mayhap.Applicative.
-
-        // Conjunction; mnemotechnic "Q if P", "P and then Q".
-        // AndThen() = flip PassThruWhen():
-        //   this.AndThen(other) = other.PassThruWhen(this)
-        // NB: PassThruWhen() is defined in MaybeEx (play project).
-        /// <summary>
-        /// Continues with <paramref name="other"/> if the current instance is
-        /// not empty; otherwise returns the empty maybe of type
-        /// <typeparamref name="TResult"/>.
-        /// </summary>
-        /// <remarks>
-        /// <code><![CDATA[
-        ///   Some(1) AndThen Some(2L) == Some(2L)
-        ///   Some(1) AndThen None     == None
-        ///   None    AndThen Some(2L) == None
-        ///   None    AndThen None     == None
-        /// ]]></code>
-        /// This method can be though as an AND for maybe's, provided that an
-        /// empty maybe is said to be false.
-        /// </remarks>
-        // Compare to the nullable equiv w/ x an int? and y a long?:
-        //   (x.HasValue ? y : (long?)null).
-        [Pure]
-        public Maybe<TResult> AndThen<TResult>(Maybe<TResult> other)
-        {
-            return _isSome ? other : Maybe<TResult>.None;
-        }
-
-        // Nonimplication or abjunction; mnemotechnic "P but not Q",
-        // Kind of "Minus" for maybe's?
-        // ZeroOutWhen() = flip ContinueWithIfNone():
-        //   this.ZeroOutWhen(other) = other.ContinueWithIfNone(this)
-        // Like PassThruWhen() but when "other" is the empty maybe.
-        // NB: PassThruWhen() & ContinueWithIfNone() are defined in MaybeEx
-        // (play project).
-        // ZeroOutWhen() is PassThruUnless() but "unless" is always confusing,
-        // I prefer a more affirmative adverb.
-        // "this" pass through unless "other" is some.
-        // Other name considered: ZeroedWhen(), Zeroiz(s)eWhen(), ClearWhen().
-        // ClearWhen() could be a good name; see Array.Clear().
-        /// <summary>
-        /// Removes the enclosed value if <paramref name="other"/> is not empty;
-        /// otherwise returns the current instance as it.
-        /// </summary>
-        /// <code><![CDATA[
-        ///   Some(1) ZeroOutWhen Some(2L) == None
-        ///   Some(1) ZeroOutWhen None     == Some(1)
-        ///   None    ZeroOutWhen Some(2L) == None
-        ///   None    ZeroOutWhen None     == None
-        /// ]]></code>
-        [Pure]
-        public Maybe<T> ZeroOutWhen<TOther>(Maybe<TOther> other)
-        {
-            return other._isSome ? Maybe<T>.None : this;
-        }
-
-        // Exclusive disjunction; mnemotechnic: "either P or Q, but not both".
-        // XorElse() = flip XorElse():
-        //   this.XorElse(other) = other.XorElse(this)
-        /// <remarks>
-        /// <code><![CDATA[
-        ///   Some(1) XorElse Some(2) == None
-        ///   Some(1) XorElse None    == Some(1)
-        ///   None    XorElse Some(2) == Some(2)
-        ///   None    XorElse None    == None
-        /// ]]></code>
-        /// This method can be though as an exclusive OR for maybe's, provided
-        /// that an empty maybe is said to be false.
-        /// </remarks>
-        [Pure]
-        public Maybe<T> XorElse(Maybe<T> other)
-            => _isSome ? other._isSome ? None : this
-                : other;
 
         [Pure]
         public Maybe<Unit> Skip()

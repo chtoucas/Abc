@@ -80,11 +80,7 @@ namespace Abc
         {
             Assert.Some(Maybe.Some(1));
         }
-    }
 
-    // Operators.
-    public partial class MaybeTests
-    {
         [Fact]
         public static void ImplicitToMaybe()
         {
@@ -106,90 +102,6 @@ namespace Abc
 
             Assert.Throws<InvalidCastException>(() => (string)Maybe<string>.None);
         }
-
-        [Fact]
-        public static void BitwiseOr()
-        {
-            // Some Some -> Some
-            Assert.Equal(One, One | Two);
-            Assert.Equal(Two, Two | One);
-            // Some None -> Some
-            Assert.Equal(One, One | Ø);
-            // None Some -> Some
-            Assert.Equal(Two, Ø | Two);
-            // None None -> None
-            Assert.Equal(Ø, Ø | Ø);
-        }
-
-        [Fact]
-        public static void BitwiseAnd()
-        {
-            // Some Some -> Some
-            Assert.Equal(Two, One & Two);
-            Assert.Equal(One, Two & One);
-            // Some None -> None
-            Assert.Equal(Ø, One & Ø);
-            // None Some -> None
-            Assert.Equal(Ø, Ø & Two);
-            // None None -> None
-            Assert.Equal(Ø, Ø & Ø);
-        }
-
-        [Fact]
-        public static void ExclusiveOr()
-        {
-            // Some Some -> None
-            Assert.Equal(Ø, One ^ Two);
-            // Some None -> Some
-            Assert.Equal(One, One ^ Ø);
-            // None Some -> Some
-            Assert.Equal(Two, Ø ^ Two);
-            // None None -> None
-            Assert.Equal(Ø, Ø ^ Ø);
-
-            Assert.False(One ^ Two);
-            Assert.True(One ^ Ø);
-            Assert.True(Ø ^ Two);
-            Assert.False(Ø ^ Ø);
-        }
-
-        [Fact]
-        public static void LogicalOr()
-        {
-            // Some Some -> Some
-            Assert.Equal(One, One || Two);
-            Assert.Equal(Two, Two || One);      // non-abelian!
-            // Some None -> Some
-            Assert.Equal(One, One || Ø);
-            // None Some -> Some
-            Assert.Equal(Two, Ø || Two);
-            // None None -> None
-            Assert.Equal(Ø, Ø || Ø);
-
-            Assert.True(One || Two);
-            Assert.True(One || Ø);
-            Assert.True(Ø || Two);
-            Assert.False(Ø || Ø);
-        }
-
-        [Fact]
-        public static void LogicalAnd()
-        {
-            // Some Some -> Some
-            Assert.Equal(Two, One && Two);
-            Assert.Equal(One, Two && One);      // non-abelian!
-            // Some None -> None
-            Assert.Equal(Ø, One && Ø);
-            // None Some -> None
-            Assert.Equal(Ø, Ø && Two);
-            // None None -> None
-            Assert.Equal(Ø, Ø && Ø);
-
-            Assert.True(One && Two);
-            Assert.False(One && Ø);
-            Assert.False(Ø && Two);
-            Assert.False(Ø && Ø);
-        }
     }
 
     // Core methods.
@@ -200,19 +112,6 @@ namespace Abc
         {
             Assert.ThrowsArgNullEx("binder", () => Ø.Bind((Func<int, Maybe<string>>)null!));
             Assert.ThrowsArgNullEx("binder", () => One.Bind((Func<int, Maybe<string>>)null!));
-        }
-
-        [Fact]
-        public static void OrElse()
-        {
-            // Some Some -> Some
-            Assert.Equal(One, One.OrElse(Two));
-            // Some None -> Some
-            Assert.Equal(One, One.OrElse(Ø));
-            // None Some -> Some
-            Assert.Equal(Two, Ø.OrElse(Two));
-            // None None -> None
-            Assert.Equal(Ø, Ø.OrElse(Ø));
         }
     }
 
@@ -409,20 +308,20 @@ namespace Abc
         }
     }
 
-    // Misc methods.
+    // Logical operations.
     public partial class MaybeTests
     {
         [Fact]
-        public static void ZipWith()
+        public static void OrElse()
         {
             // Some Some -> Some
-            Assert.Some(3L, One.ZipWith(TwoL, (i, j) => i + j));
-            // Some None -> None
-            Assert.None(One.ZipWith(ØL, (i, j) => i + j));
-            // None Some -> None
-            Assert.None(Ø.ZipWith(TwoL, (i, j) => i + j));
+            Assert.Equal(One, One.OrElse(Two));
+            // Some None -> Some
+            Assert.Equal(One, One.OrElse(Ø));
+            // None Some -> Some
+            Assert.Equal(Two, Ø.OrElse(Two));
             // None None -> None
-            Assert.None(Ø.ZipWith(ØL, (i, j) => i + j));
+            Assert.Equal(Ø, Ø.OrElse(Ø));
         }
 
         [Fact]
@@ -436,19 +335,6 @@ namespace Abc
             Assert.Equal(ØL, Ø.AndThen(TwoL));
             // None None -> None
             Assert.Equal(ØL, Ø.AndThen(ØL));
-        }
-
-        [Fact]
-        public static void ZeroOutWhen()
-        {
-            // Some Some -> None
-            Assert.Equal(Ø, One.ZeroOutWhen(TwoL));
-            // Some None -> Some
-            Assert.Equal(One, One.ZeroOutWhen(ØL));
-            // None Some -> None
-            Assert.Equal(Ø, Ø.ZeroOutWhen(TwoL));
-            // None None -> None
-            Assert.Equal(Ø, Ø.ZeroOutWhen(ØL));
         }
 
         [Fact]
@@ -468,6 +354,120 @@ namespace Abc
             Assert.Equal(One, Ø.XorElse(One));
             Assert.Equal(Two, Two.XorElse(Ø));
             Assert.Equal(Ø, Ø.XorElse(Ø));
+        }
+
+        [Fact]
+        public static void ZeroOutWhen()
+        {
+            // Some Some -> None
+            Assert.Equal(Ø, One.ZeroOutWhen(TwoL));
+            // Some None -> Some
+            Assert.Equal(One, One.ZeroOutWhen(ØL));
+            // None Some -> None
+            Assert.Equal(Ø, Ø.ZeroOutWhen(TwoL));
+            // None None -> None
+            Assert.Equal(Ø, Ø.ZeroOutWhen(ØL));
+        }
+
+        [Fact]
+        public static void BitwiseOr()
+        {
+            // Some Some -> Some
+            Assert.Equal(One, One | Two);
+            Assert.Equal(Two, Two | One);
+            // Some None -> Some
+            Assert.Equal(One, One | Ø);
+            // None Some -> Some
+            Assert.Equal(Two, Ø | Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø | Ø);
+        }
+
+        [Fact]
+        public static void BitwiseAnd()
+        {
+            // Some Some -> Some
+            Assert.Equal(Two, One & Two);
+            Assert.Equal(One, Two & One);
+            // Some None -> None
+            Assert.Equal(Ø, One & Ø);
+            // None Some -> None
+            Assert.Equal(Ø, Ø & Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø & Ø);
+        }
+
+        [Fact]
+        public static void ExclusiveOr()
+        {
+            // Some Some -> None
+            Assert.Equal(Ø, One ^ Two);
+            // Some None -> Some
+            Assert.Equal(One, One ^ Ø);
+            // None Some -> Some
+            Assert.Equal(Two, Ø ^ Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø ^ Ø);
+
+            Assert.False(One ^ Two);
+            Assert.True(One ^ Ø);
+            Assert.True(Ø ^ Two);
+            Assert.False(Ø ^ Ø);
+        }
+
+        [Fact]
+        public static void LogicalOr()
+        {
+            // Some Some -> Some
+            Assert.Equal(One, One || Two);
+            Assert.Equal(Two, Two || One);      // non-abelian!
+            // Some None -> Some
+            Assert.Equal(One, One || Ø);
+            // None Some -> Some
+            Assert.Equal(Two, Ø || Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø || Ø);
+
+            Assert.True(One || Two);
+            Assert.True(One || Ø);
+            Assert.True(Ø || Two);
+            Assert.False(Ø || Ø);
+        }
+
+        [Fact]
+        public static void LogicalAnd()
+        {
+            // Some Some -> Some
+            Assert.Equal(Two, One && Two);
+            Assert.Equal(One, Two && One);      // non-abelian!
+            // Some None -> None
+            Assert.Equal(Ø, One && Ø);
+            // None Some -> None
+            Assert.Equal(Ø, Ø && Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø && Ø);
+
+            Assert.True(One && Two);
+            Assert.False(One && Ø);
+            Assert.False(Ø && Two);
+            Assert.False(Ø && Ø);
+        }
+    }
+
+    // Misc methods.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void ZipWith()
+        {
+            // Some Some -> Some
+            Assert.Some(3L, One.ZipWith(TwoL, (i, j) => i + j));
+            // Some None -> None
+            Assert.None(One.ZipWith(ØL, (i, j) => i + j));
+            // None Some -> None
+            Assert.None(Ø.ZipWith(TwoL, (i, j) => i + j));
+            // None None -> None
+            Assert.None(Ø.ZipWith(ØL, (i, j) => i + j));
         }
 
         [Fact]
