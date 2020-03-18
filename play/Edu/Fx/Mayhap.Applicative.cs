@@ -70,11 +70,10 @@ namespace Abc.Edu.Fx
             // realized. In an implementation with a boring (<$) but an optimizing
             // liftA2, it would likely be better to define (*>) using liftA2.
 
-            // FIXME: Bind() is wrong, isn't it?
 #if STRICT_HASKELL
             return Lift(Stubs<TSource, TResult>.Const2).Invoke(@this, other);
 #else
-            return @this.Bind(_ => other);
+            return other;
 #endif
         }
 
@@ -90,11 +89,10 @@ namespace Abc.Edu.Fx
             // (<*) :: f a -> f b -> f a
             // (<*) = liftA2 const
 
-            // FIXME: Bind() is wrong, isn't it?
 #if STRICT_HASKELL
             return Lift(Stubs<TSource, TOther>.Const1).Invoke(@this, other);
 #else
-            return other.Bind(_ => @this);
+            return @this;
 #endif
         }
 
