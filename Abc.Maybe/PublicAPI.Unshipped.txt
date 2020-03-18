@@ -135,12 +135,16 @@ static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T> this) -> T?
 static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T?> this) -> T?
 static Abc.Maybe.Use<TDisposable, TResult>(this Abc.Maybe<TDisposable> this, System.Func<TDisposable, Abc.Maybe<TResult>> binder) -> Abc.Maybe<TResult>
 static Abc.Maybe.Use<TDisposable, TResult>(this Abc.Maybe<TDisposable> this, System.Func<TDisposable, TResult> selector) -> Abc.Maybe<TResult>
+static Abc.Maybe<T>.explicit operator T(Abc.Maybe<T> value) -> T
+static Abc.Maybe<T>.implicit operator Abc.Maybe<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe<T>.operator !=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator <(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator <=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator ==(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
 static Abc.Maybe<T>.operator >=(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
+static Abc.Maybe<T>.operator false(Abc.Maybe<T> value) -> bool
+static Abc.Maybe<T>.operator true(Abc.Maybe<T> value) -> bool
 static Abc.Unit.operator !=(Abc.Unit left, Abc.Unit right) -> bool
 static Abc.Unit.operator !=(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator !=(System.ValueTuple left, Abc.Unit right) -> bool

@@ -1077,4 +1077,32 @@ namespace Abc
             return _isSome ? comparer.GetHashCode(_value!) : 0;
         }
     }
+
+    // More operators.
+    // REVIEW: operators overloads. Most certainly will be REMOVED.
+    public partial struct Maybe<T>
+    {
+#pragma warning disable CA2225 // Operator overloads have named alternates
+
+        // Boolean ops, since we have OrElse() & co...
+        // Friendly name: !value.IsNone.
+        public static bool operator true(Maybe<T> value)
+            => value._isSome;
+
+        // Friendly name: value.IsNone.
+        public static bool operator false(Maybe<T> value)
+            => !value._isSome;
+
+        // Implicit conversion to Maybe<T> for equality comparison?
+        // Friendly name: Maybe.Of(value).
+        public static implicit operator Maybe<T>(T value)
+            => Maybe.Of(value);
+
+        // Friendly name: value.ValueOrThrow().
+        public static explicit operator T(Maybe<T> value)
+            // TODO: exception.
+            => value._isSome ? value.Value : throw new InvalidCastException();
+
+#pragma warning restore CA2225
+    }
 }
