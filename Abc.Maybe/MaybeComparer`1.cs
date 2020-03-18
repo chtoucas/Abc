@@ -17,16 +17,16 @@ namespace Abc
 
         private MaybeComparer() { }
 
-        public int Compare(Maybe<T> x, Maybe<T> y)
-            => x.IsSome
-                ? y.IsSome ? Comparer<T>.Default.Compare(x.Value, y.Value) : 1
-                : y.IsSome ? -1 : 0;
+        public int Compare(Maybe<T> left, Maybe<T> right)
+            => left.IsSome
+                ? right.IsSome ? Comparer<T>.Default.Compare(left.Value, right.Value) : 1
+                : right.IsSome ? -1 : 0;
 
-        public int Compare(object? x, object? y)
-            => x is null ? y is null ? 0 : -1
-                : y is null ? 1
-                : x is Maybe<T> left && y is Maybe<T> right
-                    ? Compare(left, right)
+        public int Compare(object? left, object? right)
+            => left is null ? right is null ? 0 : -1
+                : right is null ? 1
+                : left is Maybe<T> first && right is Maybe<T> second
+                    ? Compare(first, second)
                     : throw EF.NotComparable;
     }
 }
