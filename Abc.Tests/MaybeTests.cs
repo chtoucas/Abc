@@ -513,6 +513,22 @@ namespace Abc
 
             Assert.Equal(0, count);
         }
+
+        [Fact]
+        public static void Contains()
+        {
+            Assert.False(One.Contains(0));
+            Assert.True(One.Contains(1));
+            Assert.False(One.Contains(2));
+
+            Assert.False(Ø.Contains(0));
+            Assert.False(Ø.Contains(1));
+            Assert.False(Ø.Contains(2));
+
+            Assert.True(Maybe.Of("XXX").Contains("XXX"));
+            // Default comparison does NOT ignore case.
+            Assert.False(Maybe.Of("XXX").Contains("xxx"));
+        }
     }
 
     // Comparison

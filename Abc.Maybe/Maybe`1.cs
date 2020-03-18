@@ -10,6 +10,7 @@ namespace Abc
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
     using Abc.Utilities;
@@ -214,6 +215,7 @@ namespace Abc
         // Implicit conversion to Maybe<T> for equality comparison, very much
         // like what we have will nullable values: (int?)1 == 1 works.
         // Friendly name: Maybe.Of(value).
+        // NB: maybe = Some(x) == y is equivalent to maybe.Contains(y).
         public static implicit operator Maybe<T>([AllowNull] T value)
             => Maybe.Of(value);
 
@@ -227,7 +229,8 @@ namespace Abc
             => value._isSome ? value.Value : throw new InvalidCastException();
 
         //
-        // Boolean ops, we have OrElse() & co... or sort of
+        // Boolean ops, we have OrElse() & co... They are not true boolean ops
+        // but we named them that way to emphasize the proximity w/ booleans.
         // TODO: remove. The logical ops are then confusing, non-abelians,
         // and I haven't even check associativity.
 
@@ -348,6 +351,8 @@ namespace Abc
         }
 
         [Pure]
+        // Code size = 31 bytes.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryGetValue([MaybeNullWhen(false)] out T value)
         {
             if (_isSome)
@@ -957,6 +962,14 @@ namespace Abc
         [Pure]
         public bool Contains(T value)
             => _isSome && EqualityComparer<T>.Default.Equals(_value, value);
+
+        [Pure]
+        public bool Contains(T value, IEqualityComparer<T> comparer)
+        {
+            if (comparer is null) { throw new Anexn(nameof(comparer)); }
+
+            return _isSome && comparer.Equals(_value, value);
+        }
     }
 
     // Interface IComparable<>.
@@ -1106,7 +1119,9 @@ namespace Abc
         /// </summary>
         [Pure]
         public bool Equals(Maybe<T> other)
-            => _isSome ? other.Contains(_value) : !other._isSome;
+            => _isSome
+                ? other._isSome && EqualityComparer<T>.Default.Equals(_value, other._value)
+                : !other._isSome;
 
         /// <inheritdoc />
         [Pure]
