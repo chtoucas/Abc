@@ -168,11 +168,11 @@ namespace Abc
         //
         // Compare to the truth table at https://en.wikipedia.org/wiki/Bitwise_operation
         //   0000 -
-        //   0020 ContinueWithIfNone()  NOT(<-)
-        //   0100 ZeroOutWhen()         NOT(->) aka NIMPLY
+        //   0020 UnlessRTL()           NOT(<-)
+        //   0100 Unless()              NOT(->) aka NIMPLY
         //   0120 XorElse()             XOR
         //
-        //   1000 PassThruWhen()        AND
+        //   1000 AndThenRTL()          AND
         //   1020 LeftAnd()             right projection
         //   1100 Ignore()              left projection
         //   1120 OrElse()              OR
@@ -186,10 +186,10 @@ namespace Abc
         //   x.OrElse(y)                same types      x is some ? x : y
         //   x.AndThen(y)               type y          x is some ? y : none(y)
         //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
-        //   x.ContinueWithIfNone(y)    type y          x is some ? none(y) : y
+        //   x.UnlessRTL(y)             type y          x is some ? none(y) : y
         //   x.OrElseRTL(y)             same types      y is some ? y : x
-        //   x.PassThruWhen(y)          type x          y is some ? x : none(x)
-        //   x.ZeroOutWhen(y)           type x          y is some ? none(x) : x
+        //   x.AndThenRTL(y)            type x          y is some ? x : none(x)
+        //   x.Unless(y)                type x          y is some ? none(x) : x
         //   x.Ignore(y)                type x          x
         //   x.ContinueWith(y)          type y          y
         //
@@ -199,8 +199,8 @@ namespace Abc
         // Method / flipped method
         //               x.OrElse(y) == y.OrElseRTL(x)
         //              x.XorElse(y) == y.XorElse(x)
-        //              x.AndThen(y) == y.PassThruWhen(x)
-        //          x.ZeroOutWhen(y) == y.ContinueWithIfNone(x)
+        //              x.AndThen(y) == y.AndThenRTL(x)
+        //               x.Unless(y) == y.UnlessRTL(x)
         // methods not in main:
         //             LeftAnd(x, y) == RightAnd(y, x)
         //               x.Ignore(y) == y.ContinueWith(x)
@@ -245,8 +245,6 @@ namespace Abc
 
         // Conjunction; mnemotechnic "P if Q".
         // "@this" pass through when "other" is some.
-        // PassThruWhen() = flip AndThen():
-        //   this.PassThruWhen(other) = other.AndThen(this)
         /// <summary>
         /// Returns the current instance if <paramref name="other"/> is not
         /// empty; otherwise returns the empty maybe of type
@@ -254,16 +252,16 @@ namespace Abc
         /// </summary>
         /// <remarks>
         /// <code><![CDATA[
-        ///   Some(1) PassThruWhen Some(2L) == Some(1)
-        ///   Some(1) PassThruWhen None     == None
-        ///   None    PassThruWhen Some(2L) == None
-        ///   None    PassThruWhen None     == None
+        ///   Some(1) AndThenRTL Some(2L) == Some(1)
+        ///   Some(1) AndThenRTL None     == None
+        ///   None    AndThenRTL Some(2L) == None
+        ///   None    AndThenRTL None     == None
         /// ]]></code>
         /// </remarks>
         // Compare to the nullable equiv w/ x an int? and y a long?:
         //   (y.HasValue ? x : (int?)null).
         [Pure]
-        public static Maybe<T> PassThruWhen<T, TOther>(
+        public static Maybe<T> AndThenRTL<T, TOther>(
             this Maybe<T> @this, Maybe<TOther> other)
         {
             // Using Bind():
@@ -273,28 +271,24 @@ namespace Abc
 
         // Converse nonimplication; mnemotechnic "not P but Q".
         // Like AndThen() but when @this is the empty maybe.
-        // ContinueWithIfNone() = flip ZeroOutWhen():
-        //   this.ContinueWithIfNone(other) = other.ZeroOutWhen(this)
         // Whereas AndThen() maps
         //   some(X) to some(Y), and none(X) to none(Y)
-        // ContinueWithIfNone() maps
+        // UnlessRTL() maps
         //   some(X) to none(Y), and none(X) to some(Y)
         /// <code><![CDATA[
-        ///   Some(1) ContinueWithIfNone Some(2L) == None
-        ///   Some(1) ContinueWithIfNone None     == None
-        ///   None    ContinueWithIfNone Some(2L) == Some(2L)
-        ///   None    ContinueWithIfNone None     == None
+        ///   Some(1) UnlessRTL Some(2L) == None
+        ///   Some(1) UnlessRTL None     == None
+        ///   None    UnlessRTL Some(2L) == Some(2L)
+        ///   None    UnlessRTL None     == None
         /// ]]></code>
         [Pure]
-        public static Maybe<TResult> ContinueWithIfNone<T, TResult>(
+        public static Maybe<TResult> UnlessRTL<T, TResult>(
            this Maybe<T> @this, Maybe<TResult> other)
         {
             return @this.IsNone ? other : Maybe<TResult>.None;
         }
 
         // Conjunction. RTL = right-to-left.
-        // OrElseRTL() = flip OrElse():
-        //   this.OrElseRTL(other) == other.OrElse(this).
         /// <code><![CDATA[
         ///   Some(1) OrElseRTL Some(2) == Some(2)
         ///   Some(1) OrElseRTL None    == Some(1)

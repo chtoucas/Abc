@@ -32,6 +32,7 @@ Abc.Maybe<T>.Switch<TResult>(System.Func<T, TResult> caseSome, TResult caseNone)
 Abc.Maybe<T>.SwitchAsync<TResult>(System.Func<T, System.Threading.Tasks.Task<TResult>> caseSome, System.Threading.Tasks.Task<TResult> caseNone) -> System.Threading.Tasks.Task<TResult>
 Abc.Maybe<T>.ToEnumerable() -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.TryGetValue(out T value) -> bool
+Abc.Maybe<T>.Unless<TOther>(Abc.Maybe<TOther> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.ValueOrDefault() -> T
 Abc.Maybe<T>.ValueOrElse(System.Func<T> valueFactory) -> T
 Abc.Maybe<T>.ValueOrElse(T other) -> T
@@ -42,7 +43,6 @@ Abc.Maybe<T>.Where(System.Func<T, bool> predicate) -> Abc.Maybe<T>
 Abc.Maybe<T>.XorElse(Abc.Maybe<T> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.Yield() -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.Yield(int count) -> System.Collections.Generic.IEnumerable<T>
-Abc.Maybe<T>.ZeroOutWhen<TOther>(Abc.Maybe<TOther> other) -> Abc.Maybe<T>
 Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TOther, TResult> zipper) -> Abc.Maybe<TResult>
 Abc.MaybeComparer<T>
 Abc.MaybeComparer<T>.Compare(Abc.Maybe<T> left, Abc.Maybe<T> right) -> int

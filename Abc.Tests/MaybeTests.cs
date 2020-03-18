@@ -357,16 +357,16 @@ namespace Abc
         }
 
         [Fact]
-        public static void ZeroOutWhen()
+        public static void Unless()
         {
             // Some Some -> None
-            Assert.Equal(Ø, One.ZeroOutWhen(TwoL));
+            Assert.Equal(Ø, One.Unless(TwoL));
             // Some None -> Some
-            Assert.Equal(One, One.ZeroOutWhen(ØL));
+            Assert.Equal(One, One.Unless(ØL));
             // None Some -> None
-            Assert.Equal(Ø, Ø.ZeroOutWhen(TwoL));
+            Assert.Equal(Ø, Ø.Unless(TwoL));
             // None None -> None
-            Assert.Equal(Ø, Ø.ZeroOutWhen(ØL));
+            Assert.Equal(Ø, Ø.Unless(ØL));
         }
 
         [Fact]
@@ -409,10 +409,10 @@ namespace Abc
             // None None -> None
             Assert.Equal(Ø, Ø ^ Ø);
 
-            Assert.False(One ^ Two);
-            Assert.True(One ^ Ø);
-            Assert.True(Ø ^ Two);
-            Assert.False(Ø ^ Ø);
+            Assert.IsFalse(One ^ Two);
+            Assert.IsTrue(One ^ Ø);
+            Assert.IsTrue(Ø ^ Two);
+            Assert.IsFalse(Ø ^ Ø);
         }
 
         [Fact]
@@ -428,10 +428,10 @@ namespace Abc
             // None None -> None
             Assert.Equal(Ø, Ø || Ø);
 
-            Assert.True(One || Two);
-            Assert.True(One || Ø);
-            Assert.True(Ø || Two);
-            Assert.False(Ø || Ø);
+            Assert.IsTrue(One || Two);
+            Assert.IsTrue(One || Ø);
+            Assert.IsTrue(Ø || Two);
+            Assert.IsFalse(Ø || Ø);
         }
 
         [Fact]
@@ -447,10 +447,10 @@ namespace Abc
             // None None -> None
             Assert.Equal(Ø, Ø && Ø);
 
-            Assert.True(One && Two);
-            Assert.False(One && Ø);
-            Assert.False(Ø && Two);
-            Assert.False(Ø && Ø);
+            Assert.IsTrue(One && Two);
+            Assert.IsFalse(One && Ø);
+            Assert.IsFalse(Ø && Two);
+            Assert.IsFalse(Ø && Ø);
         }
     }
 

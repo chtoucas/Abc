@@ -20,10 +20,12 @@ namespace Abc
             Equal(exp, maybe.Value);
         }
 
-        public static void True<T>(Maybe<T> maybe)
-            => True(maybe.IsSome);
+        // Converts to the boolean "true".
+        public static void IsTrue<T>(Maybe<T> maybe)
+            => True(maybe.ToBoolean());
 
-        public static void False<T>(Maybe<T> maybe)
-            => True(maybe.IsNone);
+        // Converts to the boolean "false".
+        public static void IsFalse<T>(Maybe<T> maybe)
+            => False(maybe.ToBoolean());
     }
 }

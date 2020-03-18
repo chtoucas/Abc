@@ -156,45 +156,45 @@ namespace Abc
             // None None -> None
             Assert.Equal(ØL, Ø.AndThen(ØL));
 
-            // AndThen() is PassThruWhen() flipped.
-            Assert.Equal(TwoL, TwoL.PassThruWhen(One));
-            Assert.Equal(ØL, ØL.PassThruWhen(One));
-            Assert.Equal(ØL, TwoL.PassThruWhen(Ø));
-            Assert.Equal(ØL, ØL.PassThruWhen(Ø));
+            // AndThen() is AndThenRTL() flipped.
+            Assert.Equal(TwoL, TwoL.AndThenRTL(One));
+            Assert.Equal(ØL, ØL.AndThenRTL(One));
+            Assert.Equal(ØL, TwoL.AndThenRTL(Ø));
+            Assert.Equal(ØL, ØL.AndThenRTL(Ø));
         }
 
         [Fact]
-        public static void ContinueWithIfNone()
+        public static void UnlessRTL()
         {
             // Some Some -> None
-            Assert.Equal(ØL, One.ContinueWithIfNone(TwoL));
+            Assert.Equal(ØL, One.UnlessRTL(TwoL));
             // Some None -> None
-            Assert.Equal(ØL, One.ContinueWithIfNone(ØL));
+            Assert.Equal(ØL, One.UnlessRTL(ØL));
             // None Some -> Some
-            Assert.Equal(TwoL, Ø.ContinueWithIfNone(TwoL));
+            Assert.Equal(TwoL, Ø.UnlessRTL(TwoL));
             // None None -> None
-            Assert.Equal(ØL, Ø.ContinueWithIfNone(ØL));
+            Assert.Equal(ØL, Ø.UnlessRTL(ØL));
 
-            // ContinueWithIfNone() is ZeroOutWhen() flipped.
-            Assert.Equal(ØL, TwoL.ZeroOutWhen(One));
-            Assert.Equal(ØL, ØL.ZeroOutWhen(One));
-            Assert.Equal(TwoL, TwoL.ZeroOutWhen(Ø));
-            Assert.Equal(ØL, ØL.ZeroOutWhen(Ø));
+            // UnlessRTL() is Unless() flipped.
+            Assert.Equal(ØL, TwoL.Unless(One));
+            Assert.Equal(ØL, ØL.Unless(One));
+            Assert.Equal(TwoL, TwoL.Unless(Ø));
+            Assert.Equal(ØL, ØL.Unless(Ø));
         }
 
         [Fact]
-        public static void PassThruWhen()
+        public static void AndThenRTL()
         {
             // Some Some -> Some
-            Assert.Equal(One, One.PassThruWhen(TwoL));
+            Assert.Equal(One, One.AndThenRTL(TwoL));
             // Some None -> None
-            Assert.Equal(Ø, One.PassThruWhen(ØL));
+            Assert.Equal(Ø, One.AndThenRTL(ØL));
             // None Some -> None
-            Assert.Equal(Ø, Ø.PassThruWhen(TwoL));
+            Assert.Equal(Ø, Ø.AndThenRTL(TwoL));
             // None None -> None
-            Assert.Equal(Ø, Ø.PassThruWhen(ØL));
+            Assert.Equal(Ø, Ø.AndThenRTL(ØL));
 
-            // PassThruWhen() is AndThen() flipped.
+            // AndThenRTL() is AndThen() flipped.
             Assert.Equal(One, TwoL.AndThen(One));
             Assert.Equal(Ø, ØL.AndThen(One));
             Assert.Equal(Ø, TwoL.AndThen(Ø));
@@ -202,22 +202,22 @@ namespace Abc
         }
 
         [Fact]
-        public static void ZeroOutWhen()
+        public static void Unless()
         {
             // Some Some -> None
-            Assert.Equal(Ø, One.ZeroOutWhen(TwoL));
+            Assert.Equal(Ø, One.Unless(TwoL));
             // Some None -> Some
-            Assert.Equal(One, One.ZeroOutWhen(ØL));
+            Assert.Equal(One, One.Unless(ØL));
             // None Some -> None
-            Assert.Equal(Ø, Ø.ZeroOutWhen(TwoL));
+            Assert.Equal(Ø, Ø.Unless(TwoL));
             // None None -> None
-            Assert.Equal(Ø, Ø.ZeroOutWhen(ØL));
+            Assert.Equal(Ø, Ø.Unless(ØL));
 
-            // ZeroOutWhen() is ContinueWithIfNone() flipped.
-            Assert.Equal(Ø, TwoL.ContinueWithIfNone(One));
-            Assert.Equal(One, ØL.ContinueWithIfNone(One));
-            Assert.Equal(Ø, TwoL.ContinueWithIfNone(Ø));
-            Assert.Equal(Ø, ØL.ContinueWithIfNone(Ø));
+            // Unless() is UnlessRTL() flipped.
+            Assert.Equal(Ø, TwoL.UnlessRTL(One));
+            Assert.Equal(One, ØL.UnlessRTL(One));
+            Assert.Equal(Ø, TwoL.UnlessRTL(Ø));
+            Assert.Equal(Ø, ØL.UnlessRTL(Ø));
         }
 
         [Fact]
