@@ -757,6 +757,11 @@ namespace Abc
         /// <remarks>
         /// Generalizes the null-coalescing operator (??) to maybe's.
         /// <code><![CDATA[
+        ///   Some(1) OrElse Some(2) == Some(1)
+        ///   Some(1) OrElse None    == Some(1)
+        ///   None    OrElse Some(2) == Some(2)
+        ///   None    OrElse None    == None
+        ///
         ///   Some(1) ?? Some(2) == Some(1)
         ///   Some(1) ?? None    == Some(1)
         ///   None    ?? Some(2) == Some(2)
@@ -814,7 +819,7 @@ namespace Abc
         // TODO: Unless() is is always confusing, I would prefer a more
         // affirmative adverb.
         // Nonimplication or abjunction; mnemotechnic "P but not Q",
-        // "@this" pass through when "other" is some.
+        // "@this" pass through unless "other" is some.
         // Kind of "Minus" for maybe's?
         // Like AndThenRTL() (from play) but when "other" is the empty maybe.
         // Other name considered: ZeroedWhen(), Zeroiz(s)eWhen(), ClearWhen().
