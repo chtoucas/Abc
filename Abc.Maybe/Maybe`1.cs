@@ -76,6 +76,7 @@ namespace Abc
     /// - equality == and !=
     /// - comparison <, >, <=, and >=
     /// - boolean true and false
+    /// - bitwise | and &, and logical ^
     /// - conversions from and to the underlying type T
     ///
     /// Instance methods where the result is another maybe.
@@ -205,12 +206,38 @@ namespace Abc
     }
 
     // Operators, besides the equality and comparison operators.
-    // REVIEW: operators overloads. Most certainly they will be REMOVED.
+    // REVIEW: operators overloads, most certainly we will only keep T <-> Maybe<T>.
     public partial struct Maybe<T>
     {
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
-        // Boolean ops, since we have OrElse() & co...
+        // Implicit conversion to Maybe<T> for equality comparison, very much
+        // like what we have will nullable values: (int?)1 == 1 works.
+        // Friendly name: Maybe.Of(value).
+        public static implicit operator Maybe<T>([AllowNull] T value)
+            => Maybe.Of(value);
+
+        // Friendly name: value.ValueOrThrow().
+        // ??? exception or null ???
+        // with null, we can write maybe == null, which is odd for a struct
+        // but at the same time we can write Maybe<string> maybe = s where s is
+        // in fact "null".
+        [return: MaybeNull]
+        public static explicit operator T(Maybe<T> value)
+            => value._isSome ? value.Value : throw new InvalidCastException();
+
+        //
+        // Boolean ops, we have OrElse() & co... or sort of
+        // TODO: remove. The logical ops are then confusing, non-abelians,
+        // and I haven't even check associativity.
+
+        //// Friendly name: !value.IsNone.
+        //public static explicit operator bool(Maybe<T> value)
+        //    => value._isSome;
+
+        //internal bool ToBoolean()
+        //    => _isSome;
+
         // Friendly name: !value.IsNone.
         public static bool operator true(Maybe<T> value)
             => value._isSome;
@@ -219,24 +246,17 @@ namespace Abc
         public static bool operator false(Maybe<T> value)
             => !value._isSome;
 
-        // Implicit conversion to Maybe<T> for equality comparison?
-        // Friendly name: Maybe.Of(value).
-        public static implicit operator Maybe<T>(T value)
-            => Maybe.Of(value);
+        public static bool operator !(Maybe<T> value)
+            => !value._isSome;
 
-        // Friendly name: value.ValueOrDefault().
-        // ??? exception or null ???
-        [return: MaybeNull]
-        public static explicit operator T(Maybe<T> value)
-            => value._isSome ? value.Value : default;
-
-        // If I remember well: when left is true, left && right == left & right.
         public static Maybe<T> operator &(Maybe<T> left, Maybe<T> right)
             => left.AndThen(right);
 
-        // If I remember well: when left is false, left || right == left | right.
         public static Maybe<T> operator |(Maybe<T> left, Maybe<T> right)
             => left.OrElse(right);
+
+        public static Maybe<T> operator ^(Maybe<T> left, Maybe<T> right)
+            => left.XorElse(right);
 
 #pragma warning restore CA2225
     }

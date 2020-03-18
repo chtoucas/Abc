@@ -19,5 +19,11 @@ namespace Abc
             True(maybe.IsSome);
             Equal(exp, maybe.Value);
         }
+
+        public static void True<T>(Maybe<T> maybe)
+            => True(maybe.IsSome);
+
+        public static void False<T>(Maybe<T> maybe)
+            => True(maybe.IsNone);
     }
 }

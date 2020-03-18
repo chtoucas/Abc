@@ -82,6 +82,116 @@ namespace Abc
         }
     }
 
+    // Operators.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void ImplicitToMaybe()
+        {
+            // Arrange
+            Maybe<string> maybe = NullString; // implicit cast of a null-string
+
+            // Act & Assert
+            Assert.Some(1, 1);      // the second 1 is implicit casted to Maybe<int>
+            Assert.None(maybe);
+
+            Assert.True(1 == One);
+            Assert.True(One == 1);
+        }
+
+        [Fact]
+        public static void ExplicitFromMaybe()
+        {
+            Assert.Equal(1, (int)One);
+
+            Assert.Throws<InvalidCastException>(() => (string)Maybe<string>.None);
+        }
+
+        [Fact]
+        public static void BitwiseOr()
+        {
+            // Some Some -> Some
+            Assert.Equal(One, One | Two);
+            Assert.Equal(Two, Two | One);
+            // Some None -> Some
+            Assert.Equal(One, One | Ø);
+            // None Some -> Some
+            Assert.Equal(Two, Ø | Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø | Ø);
+        }
+
+        [Fact]
+        public static void BitwiseAnd()
+        {
+            // Some Some -> Some
+            Assert.Equal(Two, One & Two);
+            Assert.Equal(One, Two & One);
+            // Some None -> None
+            Assert.Equal(Ø, One & Ø);
+            // None Some -> None
+            Assert.Equal(Ø, Ø & Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø & Ø);
+        }
+
+        [Fact]
+        public static void ExclusiveOr()
+        {
+            // Some Some -> None
+            Assert.Equal(Ø, One ^ Two);
+            // Some None -> Some
+            Assert.Equal(One, One ^ Ø);
+            // None Some -> Some
+            Assert.Equal(Two, Ø ^ Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø ^ Ø);
+
+            Assert.False(One ^ Two);
+            Assert.True(One ^ Ø);
+            Assert.True(Ø ^ Two);
+            Assert.False(Ø ^ Ø);
+        }
+
+        [Fact]
+        public static void LogicalOr()
+        {
+            // Some Some -> Some
+            Assert.Equal(One, One || Two);
+            Assert.Equal(Two, Two || One);      // non-abelian!
+            // Some None -> Some
+            Assert.Equal(One, One || Ø);
+            // None Some -> Some
+            Assert.Equal(Two, Ø || Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø || Ø);
+
+            Assert.True(One || Two);
+            Assert.True(One || Ø);
+            Assert.True(Ø || Two);
+            Assert.False(Ø || Ø);
+        }
+
+        [Fact]
+        public static void LogicalAnd()
+        {
+            // Some Some -> Some
+            Assert.Equal(Two, One && Two);
+            Assert.Equal(One, Two && One);      // non-abelian!
+            // Some None -> None
+            Assert.Equal(Ø, One && Ø);
+            // None Some -> None
+            Assert.Equal(Ø, Ø && Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø && Ø);
+
+            Assert.True(One && Two);
+            Assert.False(One && Ø);
+            Assert.False(Ø && Two);
+            Assert.False(Ø && Ø);
+        }
+    }
+
     // Core methods.
     public partial class MaybeTests
     {
@@ -95,19 +205,14 @@ namespace Abc
         [Fact]
         public static void OrElse()
         {
-            Assert.Equal(One, One.OrElse(Two));
-            Assert.Equal(One, One.OrElse(Ø));
-            Assert.Equal(Two, Ø.OrElse(Two));
-            Assert.Equal(Ø, Ø.OrElse(Ø));
-
             // Some Some -> Some
-            Assert.Some(1, One.OrElse(Two));
+            Assert.Equal(One, One.OrElse(Two));
             // Some None -> Some
-            Assert.Some(1, One.OrElse(Ø));
+            Assert.Equal(One, One.OrElse(Ø));
             // None Some -> Some
-            Assert.Some(2, Ø.OrElse(Two));
+            Assert.Equal(Two, Ø.OrElse(Two));
             // None None -> None
-            Assert.None(Ø.OrElse(Ø));
+            Assert.Equal(Ø, Ø.OrElse(Ø));
         }
     }
 
