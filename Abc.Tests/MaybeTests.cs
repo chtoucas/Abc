@@ -409,4 +409,38 @@ namespace Abc
             Assert.Equal(0, count);
         }
     }
+
+    // Comparison
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void Comparison_WithNone_ReturnFalse()
+        {
+            Assert.False(One < Ø);
+            Assert.False(One > Ø);
+            Assert.False(One <= Ø);
+            Assert.False(One >= Ø);
+
+            // The other way around.
+            Assert.False(Ø < One);
+            Assert.False(Ø > One);
+            Assert.False(Ø <= One);
+            Assert.False(Ø >= One);
+
+#pragma warning disable CS1718 // Comparison made to same variable
+            Assert.False(Ø < Ø);
+            Assert.False(Ø > Ø);
+            Assert.False(Ø <= Ø);
+            Assert.False(Ø >= Ø);
+#pragma warning restore CS1718
+        }
+
+        [Fact]
+        public static void CompareTo_WithNone()
+        {
+            Assert.Equal(1, One.CompareTo(Ø));
+            Assert.Equal(-1, Ø.CompareTo(One));
+            Assert.Equal(0, Ø.CompareTo(Ø));
+        }
+    }
 }

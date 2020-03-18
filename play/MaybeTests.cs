@@ -22,7 +22,7 @@ namespace Abc
 
     public partial class MaybeTests
     {
-        // Not a test for Maybe's but for null's.
+        // Not a test for Maybe's.
         // Comparison w/ null is weird.
         //   "For the comparison operators <, >, <=, and >=, if one or both
         //   operands are null, the result is false; otherwise, the contained
@@ -49,7 +49,9 @@ namespace Abc
             // Default comparer for nullable int.
             var comparer = Comparer<int?>.Default;
 
-            //
+            // If one of the operand is null, the comparison returns false.
+            // Important consequence: we can't say that "x >= y" is equivalent
+            // to "not(x < y)"...
             Assert.False(one < nil);    // false
             Assert.False(one > nil);    // false    "contradicts" Compare; see below
             Assert.False(one <= nil);   // false

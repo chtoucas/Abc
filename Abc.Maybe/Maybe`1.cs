@@ -897,39 +897,59 @@ namespace Abc
             => _isSome && EqualityComparer<T>.Default.Equals(_value, value);
     }
 
-    // REVIEW: the rules should be compatible with the one followed by nullable
-    // value types.
-
     // Interface IComparable<>.
+    // The comparison operators behave like the ones for nullable value types:
+    // if one of the operand is empty, return false, otherwise compare the
+    // values.
     public partial struct Maybe<T>
     {
         /// <summary>
         /// Compares the two specified instances to see if the left one is
         /// strictly less than the right one.
+        /// <para>Beware, if either operand is empy, return false.</para>
         /// </summary>
         public static bool operator <(Maybe<T> left, Maybe<T> right)
-            => left.CompareTo(right) < 0;
+            // Beware, this is NOT the same as
+            //   left.CompareTo(right) < 0;
+            => left._isSome && right._isSome
+                ? Comparer<T>.Default.Compare(left.Value, left.Value) < 0
+                : false;
 
         /// <summary>
         /// Compares the two specified instances to see if the left one is
         /// less than or equal to the right one.
+        /// <para>Beware, if either operand is empy, return false.</para>
         /// </summary>
         public static bool operator <=(Maybe<T> left, Maybe<T> right)
-            => left.CompareTo(right) <= 0;
+            // Beware, this is NOT the same as
+            //   left.CompareTo(right) <= 0;
+            => left._isSome && right._isSome
+                ? Comparer<T>.Default.Compare(left.Value, left.Value) <= 0
+                : false;
 
         /// <summary>
         /// Compares the two specified instances to see if the left one is
         /// strictly greater than the right one.
+        /// <para>Beware, if either operand is empy, return false.</para>
         /// </summary>
         public static bool operator >(Maybe<T> left, Maybe<T> right)
-            => left.CompareTo(right) > 0;
+            // Beware, this is NOT the same as
+            //   left.CompareTo(right) > 0;
+            => left._isSome && right._isSome
+                ? Comparer<T>.Default.Compare(left.Value, left.Value) > 0
+                : false;
 
         /// <summary>
         /// Compares the two specified instances to see if the left one is
         /// greater than or equal to the right one.
+        /// <para>Beware, if either operand is empy, return false.</para>
         /// </summary>
         public static bool operator >=(Maybe<T> left, Maybe<T> right)
-            => left.CompareTo(right) >= 0;
+            // Beware, this is NOT the same as
+            //   left.CompareTo(right) >= 0;
+            => left._isSome && right._isSome
+                ? Comparer<T>.Default.Compare(left.Value, left.Value) >= 0
+                : false;
 
         /// <summary>
         /// Compares this instance to a specified <see cref="Maybe{T}"/> object.

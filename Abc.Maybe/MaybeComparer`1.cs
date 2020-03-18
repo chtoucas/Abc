@@ -7,7 +7,10 @@ namespace Abc
 
     using EF = Abc.Utilities.ExceptionFactory;
 
-    // A total order for maybe's.
+    // A total order for maybe's. Identical to what Maybe<T>.Compare() does,
+    // but made available separately.
+    // The convention is that the empty maybe is strictly less than any other
+    // maybe.
     public sealed class MaybeComparer<T> : IComparer<Maybe<T>>, IComparer
     {
         public static readonly MaybeComparer<T> Default = new MaybeComparer<T>();
