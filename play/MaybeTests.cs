@@ -77,32 +77,6 @@ namespace Abc
         }
     }
 
-    // Misc methods.
-    public partial class MaybeTests
-    {
-        [Fact]
-        public static void ReplaceWith()
-        {
-            // Arrange
-            var some = Maybe.Unit;
-
-            // Act & Assert
-            Assert.Some("value", some.ReplaceWith("value"));
-            Assert.None(Ø.ReplaceWith("value"));
-
-            Assert.None(some.ReplaceWith(NullString));
-            Assert.None(Ø.ReplaceWith(NullString));
-
-#nullable disable
-            Assert.Some(2, some.ReplaceWith((int?)2));
-            Assert.None(Ø.ReplaceWith((int?)2));
-
-            Assert.None(some.ReplaceWith(NullNullString));
-            Assert.None(Ø.ReplaceWith(NullNullString));
-#nullable restore
-        }
-    }
-
     // Gates, bools and bits.
     public partial class MaybeTests
     {
@@ -237,6 +211,12 @@ namespace Abc
             Assert.Equal(Ø, MaybeEx.RightAnd(Ø, One));
             Assert.Equal(Two, MaybeEx.RightAnd(Two, Ø));
             Assert.Equal(Ø, MaybeEx.RightAnd(Ø, Ø));
+
+            // Logic behaviour.
+            Assert.IsTrue(MaybeEx.LeftAnd(One, Two));
+            Assert.IsFalse(MaybeEx.LeftAnd(One, Ø));
+            Assert.IsTrue(MaybeEx.LeftAnd(Ø, Two));
+            Assert.IsFalse(MaybeEx.LeftAnd(Ø, Ø));
         }
 
         [Fact]
@@ -256,6 +236,12 @@ namespace Abc
             Assert.Equal(One, MaybeEx.LeftAnd(Ø, One));
             Assert.Equal(Ø, MaybeEx.LeftAnd(Two, Ø));
             Assert.Equal(Ø, MaybeEx.LeftAnd(Ø, Ø));
+
+            // Logic behaviour.
+            Assert.IsTrue(MaybeEx.RightAnd(One, Two));
+            Assert.IsTrue(MaybeEx.RightAnd(One, Ø));
+            Assert.IsFalse(MaybeEx.RightAnd(Ø, Two));
+            Assert.IsFalse(MaybeEx.RightAnd(Ø, Ø));
         }
 
         [Fact]
@@ -294,6 +280,32 @@ namespace Abc
             Assert.Equal(ØL, ØL.Ignore(One));
             Assert.Equal(TwoL, TwoL.Ignore(Ø));
             Assert.Equal(ØL, ØL.Ignore(Ø));
+        }
+    }
+
+    // Misc methods.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void ReplaceWith()
+        {
+            // Arrange
+            var some = Maybe.Unit;
+
+            // Act & Assert
+            Assert.Some("value", some.ReplaceWith("value"));
+            Assert.None(Ø.ReplaceWith("value"));
+
+            Assert.None(some.ReplaceWith(NullString));
+            Assert.None(Ø.ReplaceWith(NullString));
+
+#nullable disable
+            Assert.Some(2, some.ReplaceWith((int?)2));
+            Assert.None(Ø.ReplaceWith((int?)2));
+
+            Assert.None(some.ReplaceWith(NullNullString));
+            Assert.None(Ø.ReplaceWith(NullNullString));
+#nullable restore
         }
     }
 }

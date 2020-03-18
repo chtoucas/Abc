@@ -416,7 +416,6 @@ namespace Abc
 
         // Enhanced versions of Do().
         // Beware, contrary to Do(), they do not throw for null actions.
-
         public void When(bool condition, Action<T>? onSome, Action? onNone)
         {
             if (condition)

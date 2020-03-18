@@ -187,9 +187,11 @@ namespace Abc
         //   x.AndThen(y)               type y          x is some ? y : none(y)
         //   x.XorElse(y)               same types      x is some ? (y is some ? none : x) : y
         //   x.UnlessRTL(y)             type y          x is some ? none(y) : y
+        //
         //   x.OrElseRTL(y)             same types      y is some ? y : x
         //   x.AndThenRTL(y)            type x          y is some ? x : none(x)
         //   x.Unless(y)                type x          y is some ? none(x) : x
+        //
         //   x.Ignore(y)                type x          x
         //   x.ContinueWith(y)          type y          y
         //
@@ -198,18 +200,14 @@ namespace Abc
         //
         // Method / flipped method
         //               x.OrElse(y) == y.OrElseRTL(x)
-        //              x.XorElse(y) == y.XorElse(x)
         //              x.AndThen(y) == y.AndThenRTL(x)
+        //              x.XorElse(y) == y.XorElse(x)
         //               x.Unless(y) == y.UnlessRTL(x)
         // methods not in main:
         //             LeftAnd(x, y) == RightAnd(y, x)
         //               x.Ignore(y) == y.ContinueWith(x)
         //
-        // References:
-        // - Knuth vol. 4A, chap. 7.1
-        // - https://en.wikipedia.org/wiki/Logical_connective
-        // - https://en.wikipedia.org/wiki/Logic_gate
-        // - https://en.wikipedia.org/wiki/Bitwise_operation
+        // References: Knuth vol. 4A, chap. 7.1
 
 #pragma warning disable CA1801 // -Review unused parameters
         // Ignore() = flip ContinueWith():
