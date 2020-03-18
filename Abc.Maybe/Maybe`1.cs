@@ -906,8 +906,16 @@ namespace Abc
         /// <summary>
         /// Compares the two specified instances to see if the left one is
         /// strictly less than the right one.
-        /// <para>Beware, if either operand is empy, return false.</para>
+        /// <para>Beware, if either operand is empty, this operator will return
+        /// false.</para>
         /// </summary>
+        /// <remarks>
+        /// <para>The weird behaviour with empty maybe's is the same one
+        /// implemented by nullables.</para>
+        /// <para>For proper sorting, one MUST use
+        /// <see cref="CompareTo(Maybe{T})"/> or <see cref="MaybeComparer{T}"/>
+        /// as they produce a consistent total ordering.</para>
+        /// </remarks>
         public static bool operator <(Maybe<T> left, Maybe<T> right)
             // Beware, this is NOT the same as
             //   left.CompareTo(right) < 0;
@@ -918,8 +926,16 @@ namespace Abc
         /// <summary>
         /// Compares the two specified instances to see if the left one is
         /// less than or equal to the right one.
-        /// <para>Beware, if either operand is empy, return false.</para>
+        /// <para>Beware, if either operand is empty, this operator will return
+        /// false.</para>
         /// </summary>
+        /// <remarks>
+        /// <para>The weird behaviour with empty maybe's is the same one
+        /// implemented by nullables.</para>
+        /// <para>For proper sorting, one MUST use
+        /// <see cref="CompareTo(Maybe{T})"/> or <see cref="MaybeComparer{T}"/>
+        /// as they produce a consistent total ordering.</para>
+        /// </remarks>
         public static bool operator <=(Maybe<T> left, Maybe<T> right)
             // Beware, this is NOT the same as
             //   left.CompareTo(right) <= 0;
@@ -930,8 +946,16 @@ namespace Abc
         /// <summary>
         /// Compares the two specified instances to see if the left one is
         /// strictly greater than the right one.
-        /// <para>Beware, if either operand is empy, return false.</para>
+        /// <para>Beware, if either operand is empty, this operator will return
+        /// false.</para>
         /// </summary>
+        /// <remarks>
+        /// <para>The weird behaviour with empty maybe's is the same one
+        /// implemented by nullables.</para>
+        /// <para>For proper sorting, one MUST use
+        /// <see cref="CompareTo(Maybe{T})"/> or <see cref="MaybeComparer{T}"/>
+        /// as they produce a consistent total ordering.</para>
+        /// </remarks>
         public static bool operator >(Maybe<T> left, Maybe<T> right)
             // Beware, this is NOT the same as
             //   left.CompareTo(right) > 0;
@@ -942,8 +966,16 @@ namespace Abc
         /// <summary>
         /// Compares the two specified instances to see if the left one is
         /// greater than or equal to the right one.
-        /// <para>Beware, if either operand is empy, return false.</para>
+        /// <para>Beware, if either operand is empty, this operator will return
+        /// false.</para>
         /// </summary>
+        /// <remarks>
+        /// <para>The weird behaviour with empty maybe's is the same one
+        /// implemented by nullables.</para>
+        /// <para>For proper sorting, one MUST use
+        /// <see cref="CompareTo(Maybe{T})"/> or <see cref="MaybeComparer{T}"/>
+        /// as they produce a consistent total ordering.</para>
+        /// </remarks>
         public static bool operator >=(Maybe<T> left, Maybe<T> right)
             // Beware, this is NOT the same as
             //   left.CompareTo(right) >= 0;
