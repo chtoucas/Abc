@@ -746,10 +746,8 @@ namespace Abc
         public static Maybe<T> operator ^(Maybe<T> left, Maybe<T> right)
             => left.XorElse(right);
 
-        //// Friendly name: !value.IsNone.
-        //public static explicit operator bool(Maybe<T> value)
-        //    => value._isSome;
-
+        // I know, this is just IsSome, but I want to emphasize the bool here.
+        [InternalForTesting]
         internal bool ToBoolean()
             => _isSome;
 
