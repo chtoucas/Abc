@@ -14,17 +14,17 @@ namespace Abc.Utilities
     /// </summary>
     internal static class ExceptionFactory
     {
-        [Pure]
-        public static InvalidOperationException Maybe_NoValue
-            => new InvalidOperationException("The object does not contain any value.");
+        public static readonly InvalidOperationException Maybe_NoValue
+            = new InvalidOperationException("The object does not contain any value.");
 
-        [Pure]
-        public static InvalidOperationException EmptySequence
-            => new InvalidOperationException("The sequence was empty.");
+        public static readonly InvalidOperationException EmptySequence
+            = new InvalidOperationException("The sequence was empty.");
 
-        [Pure]
-        public static NotSupportedException ReadOnlyCollection
-            => new NotSupportedException("The collection is read-only.");
+        public static readonly NotSupportedException ReadOnlyCollection
+            = new NotSupportedException("The collection is read-only.");
+
+        public static readonly ArgumentException NotComparable
+            = new ArgumentException("The objects can not be compared.");
 
         [Pure]
         [DebuggerStepThrough]

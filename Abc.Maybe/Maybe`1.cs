@@ -899,12 +899,6 @@ namespace Abc
 
     // REVIEW: the rules should be compatible with the one followed by nullable
     // value types.
-    // For the comparison operators <, >, <=, and >=, if one or both operands
-    // are null, the result is false; otherwise, the contained values of
-    // operands are compared. Do not assume that because a particular comparison
-    // (for example, <=) returns false, the opposite comparison (>) returns true.
-    // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/nullable-value-types#lifted-operators
-    // https://ericlippert.com/2015/08/31/nullable-comparisons-are-weird/
 
     // Interface IComparable<>.
     public partial struct Maybe<T>

@@ -7,8 +7,13 @@ namespace Abc
 
     using EF = Abc.Utilities.ExceptionFactory;
 
+    // A total order for maybe's.
     public sealed class MaybeComparer<T> : IComparer<Maybe<T>>, IComparer
     {
+        public static readonly MaybeComparer<T> Default = new MaybeComparer<T>();
+
+        private MaybeComparer() { }
+
         public int Compare(Maybe<T> x, Maybe<T> y)
             => x.IsSome
                 ? y.IsSome ? Comparer<T>.Default.Compare(x.Value, y.Value) : 1
@@ -19,7 +24,6 @@ namespace Abc
                 : y is null ? 1
                 : x is Maybe<T> left && y is Maybe<T> right
                     ? Compare(left, right)
-                    // FIXME:
-                    : throw EF.InvalidType(nameof(y), typeof(Maybe<>), y);
+                    : throw EF.NotComparable;
     }
 }

@@ -46,7 +46,6 @@ Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TO
 Abc.MaybeComparer<T>
 Abc.MaybeComparer<T>.Compare(Abc.Maybe<T> x, Abc.Maybe<T> y) -> int
 Abc.MaybeComparer<T>.Compare(object x, object y) -> int
-Abc.MaybeComparer<T>.MaybeComparer() -> void
 Abc.Unit
 Abc.Unit.Equals(Abc.Unit other) -> bool
 Abc.Unit.Equals(System.ValueTuple other) -> bool
@@ -151,4 +150,5 @@ static Abc.Unit.operator ==(System.ValueTuple left, Abc.Unit right) -> bool
 static readonly Abc.Maybe.Unit -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Maybe.Zero -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Maybe<T>.None -> Abc.Maybe<T>
+static readonly Abc.MaybeComparer<T>.Default -> Abc.MaybeComparer<T>
 static readonly Abc.Unit.Default -> Abc.Unit
