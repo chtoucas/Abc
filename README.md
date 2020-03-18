@@ -295,9 +295,6 @@ One can _indirectly_ create a maybe for a nullable (value or reference) type
 static factory methods do not permit it. If you end up having to manipulate for
 say a `Maybe<int?>`, there is a method `Squash()` to convert it to a `Maybe<int>`.
 
-NB: `Result<T>` could be a replacement for `Maybe<T>` for cases when we do want
-a reference type (work in progress and I am really not sure that I will keep it).
-
 #### API design
 - **DO NOT use `Maybe<T>` as a parameter in public APIs.**
 

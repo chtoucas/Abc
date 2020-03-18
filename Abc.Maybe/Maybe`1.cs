@@ -693,7 +693,8 @@ namespace Abc
     // Some can be built from Select() or Bind(), but we prefer not to since
     // this forces us to use (unnecessary) lambda functions.
     // Methods that are independent of Select()/Bind():
-    // - ContinueWithIfNone()
+    // - AndThen()
+    // - ZeroOutWhen()
     // - XorElse()
     // Maybe this can be done in conjunction w/ OrElse(), but I haven't check.
     public partial struct Maybe<T>
