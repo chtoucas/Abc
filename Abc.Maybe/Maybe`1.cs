@@ -936,7 +936,8 @@ namespace Abc
         // sequence.
         [Pure]
         public IEnumerable<T> ToEnumerable()
-            => _isSome ? Sequence.Singleton(_value) : Enumerable.Empty<T>();
+            // NULL_FORGIVING: when _isSome is true, _value is NOT null.
+            => _isSome ? Sequence.Singleton(_value!) : Enumerable.Empty<T>();
 
         // REVIEW: Yield() is not a good name (it's not the F# yield).
 

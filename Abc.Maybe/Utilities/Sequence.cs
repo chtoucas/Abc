@@ -2,8 +2,10 @@
 
 namespace Abc.Utilities
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using AoorException = System.ArgumentOutOfRangeException;
     using EF = ExceptionFactory;
@@ -17,7 +19,7 @@ namespace Abc.Utilities
         /// <summary>
         /// Generates a sequence that contains exactly one element.
         /// </summary>
-        public static IEnumerable<T> Singleton<T>(T element)
+        public static IEnumerable<T> Singleton<T>([DisallowNull] T element)
         {
             // We could write:
             //   return Enumerable.Repeat(element, 1);
@@ -39,9 +41,9 @@ namespace Abc.Utilities
 
         private sealed class SingletonList_<T> : IList<T>, IReadOnlyList<T>
         {
-            private readonly T _element;
+            [NotNull] private readonly T _element;
 
-            public SingletonList_(T element)
+            public SingletonList_([DisallowNull] T element)
             {
                 _element = element;
             }
@@ -73,10 +75,40 @@ namespace Abc.Utilities
 
             public IEnumerator<T> GetEnumerator()
             {
-                yield return _element;
+                // REVIEW: yield return _element;
+                return new Iterator_(this);
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            private sealed class Iterator_ : IEnumerator<T>
+            {
+                private readonly T _value;
+
+                private bool _done = false;
+
+                public Iterator_(SingletonList_<T> list)
+                {
+                    _value = list._element;
+                }
+
+                public T Current => _value;
+
+                object? IEnumerator.Current => _value;
+
+                public bool MoveNext()
+                {
+                    if (_done) { return false; }
+
+                    _done = true;
+                    return true;
+                }
+
+                public void Reset()
+                    => throw new NotSupportedException();
+
+                public void Dispose() { }
+            }
         }
     }
 }
