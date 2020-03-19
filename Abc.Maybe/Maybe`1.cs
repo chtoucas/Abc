@@ -76,8 +76,7 @@ namespace Abc
     /// Operators:
     /// - equality == and !=
     /// - comparison <, >, <=, and >=
-    /// - boolean true and false
-    /// - bitwise | and &, and logical ^
+    /// - bitwise logical |, & and ^ (and compound assignment |=, &= and ^=)
     /// - conversions from and to the underlying type T
     ///
     /// Instance methods where the result is another maybe.
@@ -88,7 +87,7 @@ namespace Abc
     /// - Join()                LINQ join
     /// - GroupJoin()           LINQ group join
     /// - ZipWith()             cross join
-    /// - OrElse()              logical OR; none-coalescing
+    /// - OrElse()              logical OR; "none"-coalescing
     /// - AndThen()             logical AND
     /// - XorElse()             logical XOR
     /// - Skip()
@@ -712,9 +711,9 @@ namespace Abc
     // - even if they are not true logical ops, we named the corresponding
     //   methods in a way that emphasizes the proximity w/ logical operations.
     // - most people won't even realize that they exist...
-    // We don't offer boolean logical operations. They can be confusing and
-    // don't have the expected properties. For instance, they are non-abelian,
-    // and I haven't even check associativity.
+    // We don't offer boolean logical operations. This would be confusing,
+    // moreover don't have the expected properties. For instance, they are
+    // non-abelian, and I haven't even check associativity.
     //
     // The methods are independent of Select()/Bind(). Maybe this can be done in
     // conjunction w/ OrElse(), but I haven't check this out.
@@ -733,11 +732,9 @@ namespace Abc
         // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
 #if false
 
-        // Friendly name: !value.IsNone.
         public static bool operator true(Maybe<T> value)
             => value._isSome;
 
-        // Friendly name: value.IsNone.
         public static bool operator false(Maybe<T> value)
             => !value._isSome;
 

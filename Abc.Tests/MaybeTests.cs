@@ -397,10 +397,10 @@ namespace Abc
             // None None -> None
             Assert.Equal(Ø, Ø ^ Ø);
 
-            Assert.IsFalse(One ^ Two);
-            Assert.IsTrue(One ^ Ø);
-            Assert.IsTrue(Ø ^ Two);
-            Assert.IsFalse(Ø ^ Ø);
+            Assert.LogicalFalse(One ^ Two);
+            Assert.LogicalTrue(One ^ Ø);
+            Assert.LogicalTrue(Ø ^ Two);
+            Assert.LogicalFalse(Ø ^ Ø);
         }
 
 #if false // We disabled all boolean logical operators.
@@ -418,10 +418,10 @@ namespace Abc
             // None None -> None
             Assert.Equal(Ø, Ø || Ø);
 
-            Assert.IsTrue(One || Two);
-            Assert.IsTrue(One || Ø);
-            Assert.IsTrue(Ø || Two);
-            Assert.IsFalse(Ø || Ø);
+            Assert.LogicalTrue(One || Two);
+            Assert.LogicalTrue(One || Ø);
+            Assert.LogicalTrue(Ø || Two);
+            Assert.LogicalFalse(Ø || Ø);
         }
 
         [Fact]
@@ -437,10 +437,10 @@ namespace Abc
             // None None -> None
             Assert.Equal(Ø, Ø && Ø);
 
-            Assert.IsTrue(One && Two);
-            Assert.IsFalse(One && Ø);
-            Assert.IsFalse(Ø && Two);
-            Assert.IsFalse(Ø && Ø);
+            Assert.LogicalTrue(One && Two);
+            Assert.LogicalFalse(One && Ø);
+            Assert.LogicalFalse(Ø && Two);
+            Assert.LogicalFalse(Ø && Ø);
         }
 
         [Fact]

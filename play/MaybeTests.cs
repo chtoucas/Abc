@@ -175,10 +175,10 @@ namespace Abc
             Assert.Equal(Ø, ØL.UnlessRTL(Ø));
 
             // Logic behaviour.
-            Assert.IsFalse(One.Unless(TwoL));
-            Assert.IsTrue(One.Unless(ØL));
-            Assert.IsFalse(Ø.Unless(TwoL));
-            Assert.IsFalse(Ø.Unless(ØL));
+            Assert.LogicalFalse(One.Unless(TwoL));
+            Assert.LogicalTrue(One.Unless(ØL));
+            Assert.LogicalFalse(Ø.Unless(TwoL));
+            Assert.LogicalFalse(Ø.Unless(ØL));
         }
 
         [Fact]
@@ -200,10 +200,10 @@ namespace Abc
             Assert.Equal(ØL, ØL.Unless(Ø));
 
             // Logic behaviour.
-            Assert.IsFalse(One.UnlessRTL(TwoL));
-            Assert.IsFalse(One.UnlessRTL(ØL));
-            Assert.IsTrue(Ø.UnlessRTL(TwoL));
-            Assert.IsFalse(Ø.UnlessRTL(ØL));
+            Assert.LogicalFalse(One.UnlessRTL(TwoL));
+            Assert.LogicalFalse(One.UnlessRTL(ØL));
+            Assert.LogicalTrue(Ø.UnlessRTL(TwoL));
+            Assert.LogicalFalse(Ø.UnlessRTL(ØL));
         }
 
         [Fact]
@@ -225,10 +225,10 @@ namespace Abc
             Assert.Equal(Ø, MaybeEx.RightAnd(Ø, Ø));
 
             // Logic behaviour.
-            Assert.IsTrue(MaybeEx.LeftAnd(One, Two));
-            Assert.IsFalse(MaybeEx.LeftAnd(One, Ø));
-            Assert.IsTrue(MaybeEx.LeftAnd(Ø, Two));
-            Assert.IsFalse(MaybeEx.LeftAnd(Ø, Ø));
+            Assert.LogicalTrue(MaybeEx.LeftAnd(One, Two));
+            Assert.LogicalFalse(MaybeEx.LeftAnd(One, Ø));
+            Assert.LogicalTrue(MaybeEx.LeftAnd(Ø, Two));
+            Assert.LogicalFalse(MaybeEx.LeftAnd(Ø, Ø));
         }
 
         [Fact]
@@ -250,10 +250,10 @@ namespace Abc
             Assert.Equal(Ø, MaybeEx.LeftAnd(Ø, Ø));
 
             // Logic behaviour.
-            Assert.IsTrue(MaybeEx.RightAnd(One, Two));
-            Assert.IsTrue(MaybeEx.RightAnd(One, Ø));
-            Assert.IsFalse(MaybeEx.RightAnd(Ø, Two));
-            Assert.IsFalse(MaybeEx.RightAnd(Ø, Ø));
+            Assert.LogicalTrue(MaybeEx.RightAnd(One, Two));
+            Assert.LogicalTrue(MaybeEx.RightAnd(One, Ø));
+            Assert.LogicalFalse(MaybeEx.RightAnd(Ø, Two));
+            Assert.LogicalFalse(MaybeEx.RightAnd(Ø, Ø));
         }
 
         [Fact]
@@ -275,10 +275,10 @@ namespace Abc
             Assert.Equal(Ø, ØL.ContinueWith(Ø));
 
             // Logic behaviour.
-            Assert.IsTrue(One.Ignore(TwoL));
-            Assert.IsTrue(One.Ignore(ØL));
-            Assert.IsFalse(Ø.Ignore(TwoL));
-            Assert.IsFalse(Ø.Ignore(ØL));
+            Assert.LogicalTrue(One.Ignore(TwoL));
+            Assert.LogicalTrue(One.Ignore(ØL));
+            Assert.LogicalFalse(Ø.Ignore(TwoL));
+            Assert.LogicalFalse(Ø.Ignore(ØL));
         }
 
         [Fact]
@@ -300,10 +300,10 @@ namespace Abc
             Assert.Equal(ØL, ØL.Ignore(Ø));
 
             // Logic behaviour.
-            Assert.IsTrue(One.ContinueWith(TwoL));
-            Assert.IsFalse(One.ContinueWith(ØL));
-            Assert.IsTrue(Ø.ContinueWith(TwoL));
-            Assert.IsFalse(Ø.ContinueWith(ØL));
+            Assert.LogicalTrue(One.ContinueWith(TwoL));
+            Assert.LogicalFalse(One.ContinueWith(ØL));
+            Assert.LogicalTrue(Ø.ContinueWith(TwoL));
+            Assert.LogicalFalse(Ø.ContinueWith(ØL));
         }
     }
 
