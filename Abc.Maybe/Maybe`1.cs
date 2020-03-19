@@ -711,9 +711,14 @@ namespace Abc
     // - even if they are not true logical ops, we named the corresponding
     //   methods in a way that emphasizes the proximity w/ logical operations.
     // - most people won't even realize that they exist...
+    //
     // We don't offer boolean logical operations. This would be confusing,
     // moreover don't have the expected properties. For instance, they are
     // non-abelian, and I haven't even check associativity.
+    // There is only one case where it could make sense, Maybe<bool>, but
+    // then it would be odd to have:
+    //   Some(false) && Some(true) -> Some(true)
+    // instead of Some(false).
     //
     // The methods are independent of Select()/Bind(). Maybe this can be done in
     // conjunction w/ OrElse(), but I haven't check this out.
@@ -729,10 +734,6 @@ namespace Abc
         //   x || y is evaluated as  true(x) ? x : (x | y)
         // but we don't really want to do it, don't we?
         // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
-        // There is only one case where it could make sense: Maybe<bool> but
-        // then it would be odd to have:
-        //   Some(false) && Some(true) -> Some(true)
-        // instead of Some(false).
         // See also the internal method ToBoolean() below.
 #if false // Only kept to be sure that I won't try it again... do NOT enable.
 
@@ -761,7 +762,7 @@ namespace Abc
         public static Maybe<T> operator ^(Maybe<T> left, Maybe<T> right)
             => left.XorElse(right);
 
-        // I know, this is just IsSome, but I want to emphasize the bool here.
+        // I know, this is just IsSome, but I wish to emphasize a boolean context.
         [InternalForTesting]
         internal bool ToBoolean()
             => _isSome;

@@ -77,7 +77,7 @@ namespace Abc
         }
     }
 
-    // "Bitwise" logical operations.
+    // Logical operations.
     public partial class MaybeTests
     {
         [Fact]
