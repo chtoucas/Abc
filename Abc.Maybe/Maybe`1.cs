@@ -403,6 +403,7 @@ namespace Abc
         /// If the current instance encloses a value, it executes
         /// <paramref name="action"/>.
         /// </summary>
+        /// <seealso cref="GetEnumerator"/>
         public void OnSome(Action<T> action)
         {
             if (_isSome)
@@ -734,6 +735,10 @@ namespace Abc
         //   x || y is evaluated as  true(x) ? x : (x | y)
         // but we don't really want to do it, don't we?
         // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
+        // Other logical op?
+        // The logical negation (!), it "should" return a Maybe<T>, but then
+        // what is the negation of None?
+        //   public static bool operator !(Maybe<T> value) => !value._isSome;
         // See also the internal method ToBoolean() below.
 #if false // Only kept to be sure that I won't try it again... do NOT enable.
 
@@ -741,11 +746,6 @@ namespace Abc
             => value._isSome;
 
         public static bool operator false(Maybe<T> value)
-            => !value._isSome;
-
-        // Logical negation.
-        // This "should" return a Maybe<T>, but then what is the negation of None?
-        public static bool operator !(Maybe<T> value)
             => !value._isSome;
 
 #endif
@@ -922,12 +922,18 @@ namespace Abc
     // Pattern.
     public partial struct Maybe<T>
     {
-        // REVIEW: now that we have TryGetValue(), do we need this method anymore?
-        // At the same time, since we have ToEnumerable(), it seems natural to
-        // have GetEnumerator() too.
+        // Supporting "foreach" is a bit odd but sometimes I prefer to write:
+        //   foreach (var x in maybe) {
+        //     action(x);
+        //   }
+        // rather than:
+        //   maybe.OnSome(action);
+        // It is less weird if we say that a maybe is a set (singleton or empty).
+        // See also TryGetValue().
         [Pure]
         public IEnumerator<T> GetEnumerator()
-            => ToEnumerable().GetEnumerator();
+            // NULL_FORGIVING: when _isSome is true, _value is NOT null.
+            => _isSome ? new ValueIterator<T>(_value!) : EmptyIterator<T>.Instance;
 
         /// <summary>
         /// Converts the current instance to <see cref="IEnumerable{T}"/>.
@@ -951,7 +957,8 @@ namespace Abc
         /// See also <seealso cref="Replicate()"/> and the comments there.
         [Pure]
         public IEnumerable<T> Yield()
-            => _isSome ? Sequence.Repeat(_value) : Enumerable.Empty<T>();
+            // NULL_FORGIVING: when _isSome is true, _value is NOT null.
+            => _isSome ? Sequence.Repeat(_value!) : Enumerable.Empty<T>();
 
         // See also Replicate() and the comments there.
         // Maybe<T> being a struct it is never equal to null, therefore

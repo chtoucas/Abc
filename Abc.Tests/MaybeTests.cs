@@ -368,6 +368,11 @@ namespace Abc
             Assert.Equal(Two, Ø | Two);
             // None None -> None
             Assert.Equal(Ø, Ø | Ø);
+
+            Assert.LogicalTrue(One | Two);
+            Assert.LogicalTrue(One | Ø);
+            Assert.LogicalTrue(Ø | Two);
+            Assert.LogicalFalse(Ø | Ø);
         }
 
         [Fact]
@@ -382,6 +387,11 @@ namespace Abc
             Assert.Equal(Ø, Ø & Two);
             // None None -> None
             Assert.Equal(Ø, Ø & Ø);
+
+            Assert.LogicalTrue(One & Two);
+            Assert.LogicalFalse(One & Ø);
+            Assert.LogicalFalse(Ø & Two);
+            Assert.LogicalFalse(Ø & Ø);
         }
 
         [Fact]
@@ -402,58 +412,6 @@ namespace Abc
             Assert.LogicalTrue(Ø ^ Two);
             Assert.LogicalFalse(Ø ^ Ø);
         }
-
-#if false // We disabled all boolean logical operators.
-
-        [Fact]
-        public static void LogicalOr()
-        {
-            // Some Some -> Some
-            Assert.Equal(One, One || Two);
-            Assert.Equal(Two, Two || One);      // non-abelian!
-            // Some None -> Some
-            Assert.Equal(One, One || Ø);
-            // None Some -> Some
-            Assert.Equal(Two, Ø || Two);
-            // None None -> None
-            Assert.Equal(Ø, Ø || Ø);
-
-            Assert.LogicalTrue(One || Two);
-            Assert.LogicalTrue(One || Ø);
-            Assert.LogicalTrue(Ø || Two);
-            Assert.LogicalFalse(Ø || Ø);
-        }
-
-        [Fact]
-        public static void LogicalAnd()
-        {
-            // Some Some -> Some
-            Assert.Equal(Two, One && Two);
-            Assert.Equal(One, Two && One);      // non-abelian!
-            // Some None -> None
-            Assert.Equal(Ø, One && Ø);
-            // None Some -> None
-            Assert.Equal(Ø, Ø && Two);
-            // None None -> None
-            Assert.Equal(Ø, Ø && Ø);
-
-            Assert.LogicalTrue(One && Two);
-            Assert.LogicalFalse(One && Ø);
-            Assert.LogicalFalse(Ø && Two);
-            Assert.LogicalFalse(Ø && Ø);
-        }
-
-        [Fact]
-        public static void LogicalNot()
-        {
-            Assert.True(!Ø);
-            Assert.True(!ØL);
-            Assert.False(!One);
-            Assert.False(!Two);
-            Assert.False(!TwoL);
-        }
-
-#endif
     }
 
     // Misc methods.

@@ -2,7 +2,6 @@
 
 namespace Abc.Utilities
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -25,13 +24,13 @@ namespace Abc.Utilities
             //   return Enumerable.Repeat(element, 1);
             // but then many LINQ operators are optimized for lists, and
             // Enumerable.Repeat() does not seem to produce one.
-            return new SingletonList_<T>(element);
+            return new Singleton_<T>(element);
         }
 
         /// <summary>
         /// Generates an infinite sequence of one repeated element.
         /// </summary>
-        public static IEnumerable<T> Repeat<T>(T element)
+        public static IEnumerable<T> Repeat<T>([DisallowNull] T element)
         {
             while (true)
             {
@@ -39,11 +38,14 @@ namespace Abc.Utilities
             }
         }
 
-        private sealed class SingletonList_<T> : IList<T>, IReadOnlyList<T>
+        /// <summary>
+        /// Represents a read-only singleton set.
+        /// </summary>
+        private sealed class Singleton_<T> : IList<T>, IReadOnlyList<T>
         {
             [NotNull] private readonly T _element;
 
-            public SingletonList_([DisallowNull] T element)
+            public Singleton_([DisallowNull] T element)
             {
                 _element = element;
             }
@@ -74,41 +76,9 @@ namespace Abc.Utilities
             public void RemoveAt(int index) => throw EF.ReadOnlyCollection;
 
             public IEnumerator<T> GetEnumerator()
-            {
-                // REVIEW: yield return _element;
-                return new Iterator_(this);
-            }
+                => new ValueIterator<T>(_element);
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-            private sealed class Iterator_ : IEnumerator<T>
-            {
-                private readonly T _value;
-
-                private bool _done = false;
-
-                public Iterator_(SingletonList_<T> list)
-                {
-                    _value = list._element;
-                }
-
-                public T Current => _value;
-
-                object? IEnumerator.Current => _value;
-
-                public bool MoveNext()
-                {
-                    if (_done) { return false; }
-
-                    _done = true;
-                    return true;
-                }
-
-                public void Reset()
-                    => throw new NotSupportedException();
-
-                public void Dispose() { }
-            }
         }
     }
 }
