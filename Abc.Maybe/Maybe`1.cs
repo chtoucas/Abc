@@ -730,7 +730,7 @@ namespace Abc
         // but we don't really want to do it, don't we?
         // See also the internal method ToBoolean() below.
         // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
-#if false
+#if false // Only kept here to be sure that I won't try again to add them...
 
         public static bool operator true(Maybe<T> value)
             => value._isSome;
@@ -739,6 +739,7 @@ namespace Abc
             => !value._isSome;
 
         // Logical negation.
+        // This "should" return a Maybe<T>, but then what is the negation of None?
         public static bool operator !(Maybe<T> value)
             => !value._isSome;
 

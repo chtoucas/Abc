@@ -5,7 +5,7 @@
 - [Developer Notes](#developer-notes)
 
 `Abc` features:
-- An option type for C#.
+- A rich option type for C#.
 - Utilities to write code in the ROP style (Railway Oriented Programming).
 
 Quick Start with `Maybe<T>`
