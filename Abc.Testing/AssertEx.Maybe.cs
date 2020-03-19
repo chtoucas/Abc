@@ -10,12 +10,8 @@ namespace Abc
         public static void Some<T>(Maybe<T> maybe)
             => False(maybe.IsNone);
 
-        // TODO: à améliorer.
         public static void Some<T>(T exp, Maybe<T> maybe)
         {
-            //False(maybe.IsNone);
-            //True(maybe.Contains(exp));
-
             True(maybe.IsSome);
             Equal(exp, maybe.Value);
         }

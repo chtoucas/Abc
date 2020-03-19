@@ -724,10 +724,13 @@ namespace Abc
     {
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
-        // Overloading true and false is necessary if we wish to support &&
-        // and ||, see
+        // Overloading true and false is necessary if we wish to support the
+        // boolean logical AND (&&) and OR (||),
+        //   x && y is evaluated as false(x) ? x : (x & y)
+        //   x || y is evaluated as  true(x) ? x : (x | y)
+        // but we don't really want to do it, don't we?
+        // See also the internal method ToBoolean() below.
         // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
-        // but we don't really want to do it.
 #if false
 
         // Friendly name: !value.IsNone.
@@ -744,15 +747,15 @@ namespace Abc
 
 #endif
 
-        // Boolean logical OR or bitwise logical OR.
+        // Bitwise logical OR.
         public static Maybe<T> operator |(Maybe<T> left, Maybe<T> right)
             => left.OrElse(right);
 
-        // Boolean logical AND or bitwise logical AND.
+        // Bitwise logical AND.
         public static Maybe<T> operator &(Maybe<T> left, Maybe<T> right)
             => left.AndThen(right);
 
-        // Boolean logical XOR or bitwise logical XOR.
+        // Bitwise logical XOR.
         public static Maybe<T> operator ^(Maybe<T> left, Maybe<T> right)
             => left.XorElse(right);
 

@@ -361,7 +361,7 @@ namespace Abc
         {
             // Some Some -> Some
             Assert.Equal(One, One | Two);
-            Assert.Equal(Two, Two | One);
+            Assert.Equal(Two, Two | One);   // non-abelian!
             // Some None -> Some
             Assert.Equal(One, One | Ø);
             // None Some -> Some
@@ -375,7 +375,7 @@ namespace Abc
         {
             // Some Some -> Some
             Assert.Equal(Two, One & Two);
-            Assert.Equal(One, Two & One);
+            Assert.Equal(One, Two & One);   // non-abelian!
             // Some None -> None
             Assert.Equal(Ø, One & Ø);
             // None Some -> None
@@ -389,6 +389,7 @@ namespace Abc
         {
             // Some Some -> None
             Assert.Equal(Ø, One ^ Two);
+            Assert.Equal(Ø, Two ^ One);     // abelian
             // Some None -> Some
             Assert.Equal(One, One ^ Ø);
             // None Some -> Some
@@ -402,7 +403,7 @@ namespace Abc
             Assert.IsFalse(Ø ^ Ø);
         }
 
-#if false // We disabled boolean logical operators.
+#if false // We disabled all boolean logical operators.
 
         [Fact]
         public static void LogicalOr()

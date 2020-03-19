@@ -253,7 +253,6 @@ namespace Abc
 
         // Nonimplication or abjunction; mnemotechnic "P but not Q",
         // "@this" pass through unless "other" is some.
-        // Kind of "Minus" for maybe's?
         // Like AndThenRTL() (from play) but when "other" is the empty maybe.
         // Unless() is is always confusing, I would have preferred a more
         // affirmative adverb.
