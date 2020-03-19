@@ -17,6 +17,7 @@ Quick Start with `Maybe<T>`
 - [Map and filter](#map-and-filter-the-enclosed-value-if-any)
 - [Safe escapes](#safely-extract-the-enclosed-value)
 - [Pattern matching](#pattern-matching-extract-and-map-the-enclosed-value-if-any)
+- [Iterator](#iterator)
 - [Side effects](#side-effects-do-something-with-the-enclosed-value-if-any)
 - [Binding](#binding)
 - [Query Expression Pattern](#query-expression-pattern)
@@ -192,6 +193,14 @@ q.Do(
 q.OnSome(x => Console.WriteLine($"Square root = {x}.");
 
 if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
+```
+
+### Iterator
+
+```csharp
+// "using" is not necessary here.
+var iter = maybe.GetEnumerator();
+var m = iter.MoveNext() ? caseSome(iter.Current) : caseNone();
 ```
 
 ```csharp
