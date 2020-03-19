@@ -308,7 +308,7 @@ namespace Abc
         }
     }
 
-    // Logical & "bitwise" operations.
+    // "Bitwise" logical operations.
     public partial class MaybeTests
     {
         [Fact]
@@ -402,6 +402,8 @@ namespace Abc
             Assert.IsFalse(Ø ^ Ø);
         }
 
+#if false // We disabled boolean logical operators.
+
         [Fact]
         public static void LogicalOr()
         {
@@ -439,6 +441,18 @@ namespace Abc
             Assert.IsFalse(Ø && Two);
             Assert.IsFalse(Ø && Ø);
         }
+
+        [Fact]
+        public static void LogicalNot()
+        {
+            Assert.True(!Ø);
+            Assert.True(!ØL);
+            Assert.False(!One);
+            Assert.False(!Two);
+            Assert.False(!TwoL);
+        }
+
+#endif
     }
 
     // Misc methods.

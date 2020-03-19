@@ -705,15 +705,17 @@ namespace Abc
         }
     }
 
-    // Logical & "bitwise" operations.
+    // "Bitwise" logical operations.
     // We have OrElse() & co, so it seems reasonnable to have the operators too.
-    // It is not pariculary recommended to have all the ops we can, it is even
+    // It is not particulary recommended to have all the ops we can, it is even
     // considered to be bad practice, but I wish to keep them for two reasons:
-    // - even if they are not true boolean ops, we named the corresponding
-    //   methods in a way that emphasizes the proximity w/ booleans.
-    // - most people won't realize that they even exist...
-    // Nevertheless they can be confusing, they are non-abelian, and I
-    // haven't even check associativity.
+    // - even if they are not true logical ops, we named the corresponding
+    //   methods in a way that emphasizes the proximity w/ logical operations.
+    // - most people won't even realize that they exist...
+    // We don't offer boolean logical operations. They can be confusing and
+    // don't have the expected properties. For instance, they are non-abelian,
+    // and I haven't even check associativity.
+    //
     // The methods are independent of Select()/Bind(). Maybe this can be done in
     // conjunction w/ OrElse(), but I haven't check this out.
     // References:
@@ -722,7 +724,11 @@ namespace Abc
     {
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
-        // true and false are necessary if we want to support && and ||.
+        // Overloading true and false is necessary if we wish to support &&
+        // and ||, see
+        // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
+        // but we don't really want to do it.
+#if false
 
         // Friendly name: !value.IsNone.
         public static bool operator true(Maybe<T> value)
@@ -735,6 +741,8 @@ namespace Abc
         // Logical negation.
         public static bool operator !(Maybe<T> value)
             => !value._isSome;
+
+#endif
 
         // Boolean logical OR or bitwise logical OR.
         public static Maybe<T> operator |(Maybe<T> left, Maybe<T> right)
