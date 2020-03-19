@@ -357,19 +357,6 @@ namespace Abc
         }
 
         [Fact]
-        public static void Unless()
-        {
-            // Some Some -> None
-            Assert.Equal(Ø, One.Unless(TwoL));
-            // Some None -> Some
-            Assert.Equal(One, One.Unless(ØL));
-            // None Some -> None
-            Assert.Equal(Ø, Ø.Unless(TwoL));
-            // None None -> None
-            Assert.Equal(Ø, Ø.Unless(ØL));
-        }
-
-        [Fact]
         public static void BitwiseOr()
         {
             // Some Some -> Some

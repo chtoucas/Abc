@@ -138,25 +138,6 @@ namespace Abc
         }
 
         [Fact]
-        public static void UnlessRTL()
-        {
-            // Some Some -> None
-            Assert.Equal(ØL, One.UnlessRTL(TwoL));
-            // Some None -> None
-            Assert.Equal(ØL, One.UnlessRTL(ØL));
-            // None Some -> Some
-            Assert.Equal(TwoL, Ø.UnlessRTL(TwoL));
-            // None None -> None
-            Assert.Equal(ØL, Ø.UnlessRTL(ØL));
-
-            // UnlessRTL() is Unless() flipped.
-            Assert.Equal(ØL, TwoL.Unless(One));
-            Assert.Equal(ØL, ØL.Unless(One));
-            Assert.Equal(TwoL, TwoL.Unless(Ø));
-            Assert.Equal(ØL, ØL.Unless(Ø));
-        }
-
-        [Fact]
         public static void AndThenRTL()
         {
             // Some Some -> Some
@@ -192,6 +173,37 @@ namespace Abc
             Assert.Equal(One, ØL.UnlessRTL(One));
             Assert.Equal(Ø, TwoL.UnlessRTL(Ø));
             Assert.Equal(Ø, ØL.UnlessRTL(Ø));
+
+            // Logic behaviour.
+            Assert.IsFalse(One.Unless(TwoL));
+            Assert.IsTrue(One.Unless(ØL));
+            Assert.IsFalse(Ø.Unless(TwoL));
+            Assert.IsFalse(Ø.Unless(ØL));
+        }
+
+        [Fact]
+        public static void UnlessRTL()
+        {
+            // Some Some -> None
+            Assert.Equal(ØL, One.UnlessRTL(TwoL));
+            // Some None -> None
+            Assert.Equal(ØL, One.UnlessRTL(ØL));
+            // None Some -> Some
+            Assert.Equal(TwoL, Ø.UnlessRTL(TwoL));
+            // None None -> None
+            Assert.Equal(ØL, Ø.UnlessRTL(ØL));
+
+            // UnlessRTL() is Unless() flipped.
+            Assert.Equal(ØL, TwoL.Unless(One));
+            Assert.Equal(ØL, ØL.Unless(One));
+            Assert.Equal(TwoL, TwoL.Unless(Ø));
+            Assert.Equal(ØL, ØL.Unless(Ø));
+
+            // Logic behaviour.
+            Assert.IsFalse(One.UnlessRTL(TwoL));
+            Assert.IsFalse(One.UnlessRTL(ØL));
+            Assert.IsTrue(Ø.UnlessRTL(TwoL));
+            Assert.IsFalse(Ø.UnlessRTL(ØL));
         }
 
         [Fact]
@@ -261,6 +273,12 @@ namespace Abc
             Assert.Equal(One, ØL.ContinueWith(One));
             Assert.Equal(Ø, TwoL.ContinueWith(Ø));
             Assert.Equal(Ø, ØL.ContinueWith(Ø));
+
+            // Logic behaviour.
+            Assert.IsTrue(One.Ignore(TwoL));
+            Assert.IsTrue(One.Ignore(ØL));
+            Assert.IsFalse(Ø.Ignore(TwoL));
+            Assert.IsFalse(Ø.Ignore(ØL));
         }
 
         [Fact]
@@ -280,6 +298,12 @@ namespace Abc
             Assert.Equal(ØL, ØL.Ignore(One));
             Assert.Equal(TwoL, TwoL.Ignore(Ø));
             Assert.Equal(ØL, ØL.Ignore(Ø));
+
+            // Logic behaviour.
+            Assert.IsTrue(One.ContinueWith(TwoL));
+            Assert.IsFalse(One.ContinueWith(ØL));
+            Assert.IsTrue(Ø.ContinueWith(TwoL));
+            Assert.IsFalse(Ø.ContinueWith(ØL));
         }
     }
 

@@ -14,6 +14,7 @@ namespace Abc.Edu.Fx
     // References:
     // - http://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html
     // - https://downloads.haskell.org/~ghc/latest/docs/html/libraries/base-4.13.0.0/Control-Monad.html
+    // - https://wiki.haskell.org/MonadPlus_reform_proposal
     //
     // Methods
     // -------

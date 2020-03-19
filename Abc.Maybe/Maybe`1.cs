@@ -91,7 +91,6 @@ namespace Abc
     /// - OrElse()              logical OR; none-coalescing
     /// - AndThen()             logical AND
     /// - XorElse()             logical XOR
-    /// - Unless()              logical Unless
     /// - Skip()
     /// - Replicate()
     /// - Duplicate()
@@ -715,12 +714,8 @@ namespace Abc
     // - most people won't realize that they even exist...
     // Nevertheless they can be confusing, they are non-abelian, and I
     // haven't even check associativity.
-    // The methods are independent of Select()/Bind():
-    // - AndThen()
-    // - XorElse()
-    // - Unless()
-    // Maybe this can be done in conjunction w/ OrElse(), but I haven't check
-    // this out.
+    // The methods are independent of Select()/Bind(). Maybe this can be done in
+    // conjunction w/ OrElse(), but I haven't check this out.
     public partial struct Maybe<T>
     {
 #pragma warning disable CA2225 // Operator overloads have named alternates
@@ -815,30 +810,6 @@ namespace Abc
         public Maybe<T> XorElse(Maybe<T> other)
             => _isSome ? other._isSome ? None : this
                 : other;
-
-        // TODO: Unless() is is always confusing, I would prefer a more
-        // affirmative adverb.
-        // Nonimplication or abjunction; mnemotechnic "P but not Q",
-        // "@this" pass through unless "other" is some.
-        // Kind of "Minus" for maybe's?
-        // Like AndThenRTL() (from play) but when "other" is the empty maybe.
-        // Other name considered: ZeroedWhen(), Zeroiz(s)eWhen(), ClearWhen().
-        // ClearWhen() could be a good name; see Array.Clear().
-        /// <summary>
-        /// Removes the enclosed value if <paramref name="other"/> is not empty;
-        /// otherwise returns the current instance as it.
-        /// </summary>
-        /// <code><![CDATA[
-        ///   Some(1) Unless Some(2L) == None
-        ///   Some(1) Unless None     == Some(1)
-        ///   None    Unless Some(2L) == None
-        ///   None    Unless None     == None
-        /// ]]></code>
-        [Pure]
-        public Maybe<T> Unless<TOther>(Maybe<TOther> other)
-        {
-            return other._isSome ? Maybe<T>.None : this;
-        }
     }
 
     // Misc methods.
