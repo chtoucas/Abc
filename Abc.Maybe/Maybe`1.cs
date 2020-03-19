@@ -928,13 +928,15 @@ namespace Abc
     // Pattern.
     public partial struct Maybe<T>
     {
-        // Supporting "foreach" is a bit odd but sometimes I prefer to write:
-        //   foreach (var x in maybe) {
-        //     action(x);
-        //   }
-        // rather than:
+        // Supporting "foreach" is a bit odd but sometimes rather than:
+        //   foreach (var x in maybe) { action(x); }
+        // I prefer to write:
         //   maybe.OnSome(action);
-        // It is less weird if we say that a maybe is a set (singleton or empty).
+        // or even better ("using" is not necessary here):
+        //   var iter = maybe.GetEnumerator();
+        //   if (iter.MoveNext()) { onSome(iter.Current); } else { onNone(); }
+        // It is less weird if we realize that a maybe is just a set (singleton
+        // or empty).
         // See also TryGetValue().
         [Pure]
         public IEnumerator<T> GetEnumerator()

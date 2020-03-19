@@ -183,7 +183,7 @@ string message = q.Switch(
 ### Side effects: do something with the enclosed value (if any)
 
 ```csharp
-Maybe<int> q = from x in maybe where x >= 0 select Math.Sqrt(x);
+Maybe<double> q = from x in maybe where x >= 0 select Math.Sqrt(x);
 
 q.Do(
     onSome: x  => Console.WriteLine($"Square root = {x}."),
@@ -192,6 +192,15 @@ q.Do(
 q.OnSome(x => Console.WriteLine($"Square root = {x}.");
 
 if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
+```
+
+```csharp
+// Instead of
+maybe.Do(onSome, onNone);
+
+// We can write instead ("using" is not necessary here):
+var iter = maybe.GetEnumerator();
+if (iter.MoveNext()) { onSome(iter.Current); } else { onNone(); }
 ```
 
 ### Binding
