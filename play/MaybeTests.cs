@@ -77,6 +77,7 @@ namespace Abc
         }
     }
 
+    // Logical & "bitwise" operations.
     // Gates, bools and bits.
     public partial class MaybeTests
     {

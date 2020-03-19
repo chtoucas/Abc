@@ -154,7 +154,7 @@ namespace Abc
         }
     }
 
-    // Logical operations.
+    // Logical & "bitwise" operations.
     // Gates, bools and bits.
     public partial class MaybeEx
     {

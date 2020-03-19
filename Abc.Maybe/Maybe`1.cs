@@ -705,8 +705,8 @@ namespace Abc
         }
     }
 
-    // Logical operations.
-    // Operators: we have OrElse() & co so it seems reasonnable to have them too.
+    // Logical & "bitwise" operations.
+    // We have OrElse() & co, so it seems reasonnable to have the operators too.
     // It is not pariculary recommended to have all the ops we can, it is even
     // considered to be bad practice, but I wish to keep them for two reasons:
     // - even if they are not true boolean ops, we named the corresponding
@@ -716,9 +716,13 @@ namespace Abc
     // haven't even check associativity.
     // The methods are independent of Select()/Bind(). Maybe this can be done in
     // conjunction w/ OrElse(), but I haven't check this out.
+    // References:
+    // - https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/boolean-logical-operators
     public partial struct Maybe<T>
     {
 #pragma warning disable CA2225 // Operator overloads have named alternates
+
+        // true and false are necessary if we want to support && and ||.
 
         // Friendly name: !value.IsNone.
         public static bool operator true(Maybe<T> value)
@@ -728,15 +732,19 @@ namespace Abc
         public static bool operator false(Maybe<T> value)
             => !value._isSome;
 
+        // Logical negation.
         public static bool operator !(Maybe<T> value)
             => !value._isSome;
 
-        public static Maybe<T> operator &(Maybe<T> left, Maybe<T> right)
-            => left.AndThen(right);
-
+        // Boolean logical OR or bitwise logical OR.
         public static Maybe<T> operator |(Maybe<T> left, Maybe<T> right)
             => left.OrElse(right);
 
+        // Boolean logical AND or bitwise logical AND.
+        public static Maybe<T> operator &(Maybe<T> left, Maybe<T> right)
+            => left.AndThen(right);
+
+        // Boolean logical XOR or bitwise logical XOR.
         public static Maybe<T> operator ^(Maybe<T> left, Maybe<T> right)
             => left.XorElse(right);
 
@@ -747,8 +755,6 @@ namespace Abc
 
 #pragma warning restore CA2225
 
-        // Inclusive disjunction; mnemotechnic: "P otherwise Q".
-        // "Plus" operation for maybe's.
         /// <remarks>
         /// Generalizes the null-coalescing operator (??) to maybe's.
         /// <code><![CDATA[
@@ -765,11 +771,13 @@ namespace Abc
         /// This method can be though as an inclusive OR for maybe's, provided
         /// that an empty maybe is said to be false.
         /// </remarks>
+        //
+        // Inclusive disjunction; mnemotechnic: "P otherwise Q".
+        // "Plus" operation for maybe's.
         [Pure]
         public Maybe<T> OrElse(Maybe<T> other)
             => _isSome ? this : other;
 
-        // Conjunction; mnemotechnic "Q if P", "P and then Q".
         /// <summary>
         /// Continues with <paramref name="other"/> if the current instance is
         /// not empty; otherwise returns the empty maybe of type
@@ -785,6 +793,8 @@ namespace Abc
         /// This method can be though as an AND for maybe's, provided that an
         /// empty maybe is said to be false.
         /// </remarks>
+        //
+        // Conjunction; mnemotechnic "Q if P", "P and then Q".
         // Compare to the nullable equiv w/ x an int? and y a long?:
         //   (x.HasValue ? y : (long?)null).
         [Pure]
