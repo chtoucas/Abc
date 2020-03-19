@@ -23,8 +23,8 @@ namespace Abc.Utilities
         private EmptyIterator() { }
 
         // No one should ever call these properties.
-        [MaybeNull] public T Current => default;
-        [MaybeNull] object IEnumerator.Current => default;
+        [ExcludeFromCodeCoverage] [MaybeNull] public T Current => default;
+        [ExcludeFromCodeCoverage] [MaybeNull] object IEnumerator.Current => default;
 
         public bool MoveNext() => false;
 
