@@ -911,7 +911,13 @@ namespace Abc
         /// </remarks>
         [Pure]
         public Maybe<IEnumerable<T>> Replicate()
-            => Select(Sequence.Repeat);
+        {
+            return Select(__selector);
+
+            static IEnumerable<T> __selector(T value)
+                // NULL_FORGIVING: Select() guarantees that _value won't be null.
+                => new NeverEndingIterator<T>(value!);
+        }
     }
 
     // Iterable but not IEnumerable<>.
@@ -933,7 +939,7 @@ namespace Abc
         [Pure]
         public IEnumerator<T> GetEnumerator()
             // NULL_FORGIVING: when _isSome is true, _value is NOT null.
-            => _isSome ? new ValueIterator<T>(_value!) : EmptyIterator<T>.Instance;
+            => _isSome ? new SingletonIterator<T>(_value!) : EmptyIterator<T>.Instance;
 
         /// <summary>
         /// Converts the current instance to <see cref="IEnumerable{T}"/>.
@@ -943,7 +949,7 @@ namespace Abc
         [Pure]
         public IEnumerable<T> ToEnumerable()
             // NULL_FORGIVING: when _isSome is true, _value is NOT null.
-            => _isSome ? Sequence.Singleton(_value!) : Enumerable.Empty<T>();
+            => _isSome ? new SingletonIterator<T>(_value!) : Enumerable.Empty<T>();
 
         // REVIEW: Yield() is not a good name (it's not the F# yield).
 
@@ -958,7 +964,7 @@ namespace Abc
         [Pure]
         public IEnumerable<T> Yield()
             // NULL_FORGIVING: when _isSome is true, _value is NOT null.
-            => _isSome ? Sequence.Repeat(_value!) : Enumerable.Empty<T>();
+            => _isSome ? new NeverEndingIterator<T>(_value!) : Enumerable.Empty<T>();
 
         // See also Replicate() and the comments there.
         // Maybe<T> being a struct it is never equal to null, therefore

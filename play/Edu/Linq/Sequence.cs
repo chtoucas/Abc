@@ -4,6 +4,7 @@ namespace Abc.Edu.Linq
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Abc.Utilities;
 
@@ -14,13 +15,21 @@ namespace Abc.Edu.Linq
     public static class Sequence
     {
         /// <summary>
+        /// Generates a sequence that contains exactly one element.
+        /// </summary>
+        public static IEnumerable<T> Return<T>(T element)
+        {
+            return Enumerable.Repeat(element, 1);
+        }
+
+        /// <summary>
         /// Generates an infinite sequence of one repeated value.
         /// </summary>
-        public static IEnumerable<T> Repeat<T>(T value)
+        public static IEnumerable<T> Repeat<T>(T element)
         {
             while (true)
             {
-                yield return value;
+                yield return element;
             }
         }
 
