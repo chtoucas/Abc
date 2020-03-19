@@ -455,23 +455,78 @@ namespace Abc
         [Fact]
         public static void GetEnumerator_Some()
         {
+            // Arrange
             var some = Maybe.Of("value");
             int count = 0;
 
-            foreach (string x in some) { count++; Assert.Equal("value", x); }
+            // Act & Assert
 
+            // First loop.
+            foreach (string x in some) { count++; Assert.Equal("value", x); }
+            Assert.Equal(1, count);
+            // Second loop (new iterator).
+            count = 0;
+            foreach (string x in some) { count++; Assert.Equal("value", x); }
+            Assert.Equal(1, count);
+
+            // Using an explicit iterator.
+            var iter = some.GetEnumerator();
+
+            // First loop.
+            count = 0;
+            while (iter.MoveNext()) { count++; }
+            Assert.Equal(1, count);
+            // Second loop: no call to Reset().
+            count = 0;
+            while (iter.MoveNext()) { count++; }
+            Assert.Equal(0, count);
+            // Third loop: call to Reset().
+            count = 0;
+            iter.Reset();
+            while (iter.MoveNext()) { count++; }
             Assert.Equal(1, count);
         }
 
         [Fact]
         public static void GetEnumerator_None()
         {
+            // Arrange
             var none = Maybe<string>.None;
             int count = 0;
 
-            foreach (string x in none) { count++; }
+            // Act & Assert
 
+            // First loop.
+            foreach (string x in none) { count++; }
             Assert.Equal(0, count);
+            // Second loop (new iterator).
+            foreach (string x in none) { count++; }
+            Assert.Equal(0, count);
+
+            // Using an explicit iterator.
+            var iter = none.GetEnumerator();
+
+            // First loop.
+            while (iter.MoveNext()) { count++; }
+            Assert.Equal(0, count);
+            // Second loop: no call to Reset().
+            while (iter.MoveNext()) { count++; }
+            Assert.Equal(0, count);
+            // Third loop: call to Reset().
+            iter.Reset();
+            while (iter.MoveNext()) { count++; }
+            Assert.Equal(0, count);
+        }
+
+        [Fact]
+        public static void Yield()
+        {
+            // Arrange
+            var some = Maybe.Of("value");
+            var none = Maybe<string>.None;
+            // Act & Assert
+            Assert.Equal(Enumerable.Repeat("value", 314), some.Yield(314));
+            Assert.Empty(none.Yield(314));
         }
 
         [Fact]
