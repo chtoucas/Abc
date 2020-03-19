@@ -728,9 +728,13 @@ namespace Abc
         //   x && y is evaluated as false(x) ? x : (x & y)
         //   x || y is evaluated as  true(x) ? x : (x | y)
         // but we don't really want to do it, don't we?
-        // See also the internal method ToBoolean() below.
         // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
-#if false // Only kept here to be sure that I won't try again to add them...
+        // There is only one case where it could make sense: Maybe<bool> but
+        // then it would be odd to have:
+        //   Some(false) && Some(true) -> Some(true)
+        // instead of Some(false).
+        // See also the internal method ToBoolean() below.
+#if false // Only kept to be sure that I won't try it again... do NOT enable.
 
         public static bool operator true(Maybe<T> value)
             => value._isSome;
