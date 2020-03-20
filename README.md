@@ -169,7 +169,7 @@ C# 8.0 will then complain if one tries to write `maybe.ValueOrElse(null)`.
 ### Pattern matching: extract and map the enclosed value (if any)
 
 ```csharp
-Maybe<int> q = from x in maybe where x >= 0 select Math.Sqrt(x);
+Maybe<double> q = from x in maybe where x >= 0 select Math.Sqrt(x);
 
 string message = q.Switch(
     caseSome: x  => $"Square root = {x}."),
@@ -197,7 +197,7 @@ if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 
 ### Iterator
 
-We provide three methods to convert a _ maybe_ to an enumerable,
+We provide three ways to convert a _maybe_ to an enumerable,
 ```csharp
 var q = maybe.ToEnumerable();
 var q = maybe.Yield(count);
@@ -220,6 +220,13 @@ foreach (var x in maybe.Yield()) {
 
 `GetEnumerator()` creates an iterator which is resettable and does not need to
 be disposed (`using` is not necessary).
+
+```csharp
+// One iteration or no loop at all.
+foreach (var x in maybe) {
+    // Do something with x (if any).
+}
+```
 
 ```csharp
 // Instead of
