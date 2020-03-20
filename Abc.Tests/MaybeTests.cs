@@ -524,9 +524,24 @@ namespace Abc
             // Arrange
             var some = Maybe.Of("value");
             var none = Maybe<string>.None;
+
             // Act & Assert
-            Assert.Equal(Enumerable.Repeat("value", 314), some.Yield(314));
-            Assert.Empty(none.Yield(314));
+            Assert.Equal(Enumerable.Repeat("value", 0), some.Yield(0));
+            Assert.Equal(Enumerable.Repeat("value", 1), some.Yield(1));
+            Assert.Equal(Enumerable.Repeat("value", 10), some.Yield(10));
+            Assert.Equal(Enumerable.Repeat("value", 100), some.Yield(100));
+            Assert.Equal(Enumerable.Repeat("value", 1000), some.Yield(1000));
+            Assert.Empty(none.Yield(0));
+            Assert.Empty(none.Yield(10));
+            Assert.Empty(none.Yield(100));
+            Assert.Empty(none.Yield(1000));
+
+            Assert.Equal(Enumerable.Repeat("value", 0), some.Yield().Take(0));
+            Assert.Equal(Enumerable.Repeat("value", 1), some.Yield().Take(1));
+            Assert.Equal(Enumerable.Repeat("value", 10), some.Yield().Take(10));
+            Assert.Equal(Enumerable.Repeat("value", 100), some.Yield().Take(100));
+            Assert.Equal(Enumerable.Repeat("value", 1000), some.Yield().Take(1000));
+            Assert.Empty(none.Yield());
         }
 
         [Fact]
@@ -546,7 +561,7 @@ namespace Abc
         }
     }
 
-    // Comparison
+    // Comparison.
     public partial class MaybeTests
     {
         [Fact]

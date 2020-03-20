@@ -197,8 +197,26 @@ if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 
 ### Iterator
 
+```
+// Finite loop.
+foreach (var x in maybe.Yield(count)) {
+    // Do something with x.
+}
+
+// Infinite loop.
+foreach (var x in maybe.Yield()) {
+    // Do something with x.
+}
+```
+
+`GetEnumerator()` creates an iterator which is resettable and does not need to
+be disposed (`using` is not necessary).
+
 ```csharp
-// "using" is not necessary here.
+// Instead of
+var m = maybe.Switch(caseSome, caseNone);
+
+// We can write
 var iter = maybe.GetEnumerator();
 var m = iter.MoveNext() ? caseSome(iter.Current) : caseNone();
 ```
@@ -207,7 +225,7 @@ var m = iter.MoveNext() ? caseSome(iter.Current) : caseNone();
 // Instead of
 maybe.Do(onSome, onNone);
 
-// We can write instead ("using" is not necessary here):
+// We can write
 var iter = maybe.GetEnumerator();
 if (iter.MoveNext()) { onSome(iter.Current); } else { onNone(); }
 ```
