@@ -6,7 +6,7 @@
     <!-- See explanations in Abc.csproj -->
     <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
 
-    <VersionPrefix>2.0.0-alpha.1</VersionPrefix>
+    <VersionPrefix>1.0.0-alpha.1</VersionPrefix>
     <PackageTags>option;maybe;LINQ</PackageTags>
   </PropertyGroup>
 

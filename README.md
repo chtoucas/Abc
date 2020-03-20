@@ -381,6 +381,12 @@ otherwise I would not have written this library. _Maybe_'s should be
 For reference types, a _maybe_ offers a better paradigm than a `null` to express
 the inability to return a meaningful result.
 
+Version History
+---------------
+
+v0.28.0 Still available on nuget.org under a different name (Narvalo.Fx).
+        Deprecated, broken, do not use it.
+
 Developer Notes
 ---------------
 
