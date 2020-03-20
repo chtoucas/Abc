@@ -23,14 +23,45 @@ namespace Abc
     }
 
     // Construction, properties.
+    // No need to test IsNone directly, see Assert.None() and Assert.Some().
     public partial class MaybeTests
     {
         [Fact]
         public static void Default()
         {
+            // The default value is empty.
             Assert.None(default(Maybe<Unit>));
             Assert.None(default(Maybe<int>));
             Assert.None(default(Maybe<string>));
+            Assert.None(default(Maybe<object>));
+        }
+
+        [Fact]
+        public static void None()
+        {
+            Assert.None(Maybe<Unit>.None);
+            Assert.None(Maybe<int>.None);
+            Assert.None(Maybe<int?>.None);
+            Assert.None(Maybe<string>.None);
+            Assert.None(Maybe<object>.None);
+
+            // None is the default value.
+            Assert.Equal(default, Maybe<Unit>.None);
+            Assert.Equal(default, Maybe<int>.None);
+            Assert.Equal(default, Maybe<int?>.None);
+            Assert.Equal(default, Maybe<string>.None);
+            Assert.Equal(default, Maybe<object>.None);
+
+            Assert.None(Maybe.None<Unit>());
+            Assert.None(Maybe.None<int>());
+            Assert.None(Maybe.None<string>());
+            Assert.None(Maybe.None<object>());
+
+            // Maybe.None<T>() simply returns Maybe<T>.None.
+            Assert.Equal(Maybe<Unit>.None, Maybe.None<Unit>());
+            Assert.Equal(Maybe<int>.None, Maybe.None<int>());
+            Assert.Equal(Maybe<string>.None, Maybe.None<string>());
+            Assert.Equal(Maybe<object>.None, Maybe.None<object>());
         }
 
         [Fact]
@@ -43,15 +74,6 @@ namespace Abc
         public static void Zero()
         {
             Assert.None(Maybe.Zero);
-        }
-
-        [Fact]
-        public static void IsNone()
-        {
-            Assert.True(Maybe<int>.None.IsNone);
-            Assert.True(Maybe<int?>.None.IsNone);
-            Assert.True(Maybe<string>.None.IsNone);
-            Assert.True(Maybe<string?>.None.IsNone);
         }
 
         [Fact]
@@ -79,6 +101,16 @@ namespace Abc
         public static void Some()
         {
             Assert.Some(Maybe.Some(1));
+        }
+
+        [Fact]
+        public static void SomeOrNone()
+        {
+            Assert.None(Maybe.SomeOrNone((int?)null));
+            Assert.Some(Maybe.SomeOrNone((int?)1));
+
+            Assert.None(Maybe.SomeOrNone((object)null!));
+            Assert.Some(Maybe.SomeOrNone(new object()));
         }
 
         [Fact]
@@ -283,6 +315,20 @@ namespace Abc
         }
 
         [Fact]
+        public static void SelectMany_InvalidSelector()
+        {
+            Assert.ThrowsArgNullEx("selector",
+                () => Ø.SelectMany((Func<int, Maybe<int>>)null!, (i, j) => i + j));
+            Assert.ThrowsArgNullEx("selector",
+                () => One.SelectMany((Func<int, Maybe<int>>)null!, (i, j) => i + j));
+
+            Assert.ThrowsArgNullEx("resultSelector",
+                () => Ø.SelectMany(_ => Ø, (Func<int, int, int>)null!));
+            Assert.ThrowsArgNullEx("resultSelector",
+                () => One.SelectMany(_ => One, (Func<int, int, int>)null!));
+        }
+
+        [Fact]
         public static void SelectMany()
         {
             // None.SelectMany(None) -> None
@@ -418,6 +464,15 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
+        public static void ZipWith_InvalidZipper()
+        {
+            Assert.ThrowsArgNullEx("zipper",
+                () => Ø.ZipWith(TwoL, (Func<int, long, long>)null!));
+            Assert.ThrowsArgNullEx("zipper",
+                () => One.ZipWith(TwoL, (Func<int, long, long>)null!));
+        }
+
+        [Fact]
         public static void ZipWith()
         {
             // Some Some -> Some
@@ -435,6 +490,13 @@ namespace Abc
         {
             Assert.Equal(Maybe.Zero, Ø.Skip());
             Assert.Equal(Maybe.Unit, One.Skip());
+        }
+
+        [Fact]
+        public static void Guard()
+        {
+            Assert.Equal(Maybe.Zero, Maybe.Guard(false));
+            Assert.Equal(Maybe.Unit, Maybe.Guard(true));
         }
     }
 
