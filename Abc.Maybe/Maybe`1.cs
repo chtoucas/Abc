@@ -137,7 +137,7 @@ namespace Abc
         /// Represents the enclosed value.
         /// <para>This field is read-only.</para>
         /// </summary>
-        private readonly T _value;
+        [MaybeNull] [AllowNull] private readonly T _value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Maybe{T}" /> struct
@@ -173,6 +173,7 @@ namespace Abc
         /// Gets the enclosed value.
         /// <para>You MUST check IsSome before calling this property.</para>
         /// </summary>
+        // REVIEW: [MaybeNull]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal T Value { get { Debug.Assert(_isSome); return _value; } }
 
@@ -221,7 +222,7 @@ namespace Abc
 
             public bool IsSome => _inner._isSome;
 
-            public T Value => _inner._value;
+            [MaybeNull] public T Value => _inner._value;
         }
     }
 
