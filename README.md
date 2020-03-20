@@ -197,17 +197,26 @@ if (q.IsNone) { Console.WriteLine("The input was strictly negative."); }
 
 ### Iterator
 
+We provide three methods to convert a _ maybe_ to an enumerable,
+```csharp
+var q = maybe.ToEnumerable();
+var q = maybe.Yield(count);
+var q = maybe.Yield();
 ```
-// Finite loop.
+
+```csharp
+// Finite loop ("count" iterations) or no loop at all.
 foreach (var x in maybe.Yield(count)) {
-    // Do something with x.
+    // Do something with x (if any).
 }
 
-// Infinite loop.
+// Infinite loop or no loop at all.
 foreach (var x in maybe.Yield()) {
-    // Do something with x.
+    // Do something with x (if any).
 }
 ```
+
+#### Supporting `foreach`.
 
 `GetEnumerator()` creates an iterator which is resettable and does not need to
 be disposed (`using` is not necessary).
