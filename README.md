@@ -222,12 +222,13 @@ foreach (var x in maybe.Yield()) {
 be disposed (`using` is not necessary).
 
 ```csharp
-// One iteration or no loop at all.
+// One iteration or no iteration at all.
 foreach (var x in maybe) {
     // Do something with x (if any).
 }
 ```
 
+Pattern matching using an iterator.
 ```csharp
 // Instead of
 var m = maybe.Switch(caseSome, caseNone);
@@ -237,6 +238,7 @@ var iter = maybe.GetEnumerator();
 var m = iter.MoveNext() ? caseSome(iter.Current) : caseNone();
 ```
 
+Side effects using an iterator.
 ```csharp
 // Instead of
 maybe.Do(onSome, onNone);

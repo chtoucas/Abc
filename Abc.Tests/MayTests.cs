@@ -25,7 +25,7 @@ namespace Abc
         [InlineData("One ")]
         [InlineData(" One")]
         [InlineData(" One ")]
-        // Alias.
+        // By alias.
         [InlineData("Alias1")]
         [InlineData("Alias1 ")]
         [InlineData(" Alias1")]
