@@ -65,16 +65,19 @@ namespace Abc
         }
 
         [Fact]
-        public static void Unit()
-        {
-            Assert.Some(Maybe.Unit);
-        }
+        public static void Unit() => Assert.Some(Maybe.Unit);
 
         [Fact]
-        public static void Zero()
-        {
-            Assert.None(Maybe.Zero);
-        }
+        public static void Zero() => Assert.None(Maybe.Zero);
+
+        [Fact]
+        public static void True() => Assert.Some(Maybe.True);
+
+        [Fact]
+        public static void False() => Assert.Some(Maybe.False);
+
+        [Fact]
+        public static void Unknown() => Assert.None(Maybe.Unknown);
 
         [Fact]
         public static void Of_Reference()
@@ -144,6 +147,13 @@ namespace Abc
         {
             Assert.ThrowsArgNullEx("binder", () => Ø.Bind((Func<int, Maybe<string>>)null!));
             Assert.ThrowsArgNullEx("binder", () => One.Bind((Func<int, Maybe<string>>)null!));
+        }
+
+        [Fact]
+        public static void Flatten()
+        {
+            Assert.Equal(Ø, Maybe.Some(Ø).Flatten());
+            Assert.Equal(One, Maybe.Some(One).Flatten());
         }
     }
 
@@ -699,6 +709,34 @@ namespace Abc
             Assert.Equal(1, One.CompareTo(Ø));
             Assert.Equal(-1, Ø.CompareTo(One));
             Assert.Equal(0, Ø.CompareTo(Ø));
+        }
+    }
+
+    // Extension methods for Maybe<T> where T is a struct.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void Squash()
+        {
+            // Arrange
+            var none = Ø.Select(x => (int?)x);
+            var one = One.Select(x => (int?)x);
+            // Act & Assert
+            Assert.Equal(Ø, none.Squash());
+            Assert.Equal(One, one.Squash());
+        }
+
+        [Fact]
+        public static void ToNullable()
+        {
+            // Arrange
+            var none = Ø.Select(x => (int?)x);
+            var one = One.Select(x => (int?)x);
+            // Act & Assert
+            Assert.Null(Ø.ToNullable());
+            Assert.Equal(1, One.ToNullable());
+            Assert.Null(none.ToNullable());
+            Assert.Equal(1, one.ToNullable());
         }
     }
 }
