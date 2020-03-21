@@ -129,45 +129,7 @@ namespace Abc
             => value is null ? Maybe<Maybe<T>>.None : new Maybe<Maybe<T>>(value);
     }
 
-    // Misc props/methods.
-    public partial class Maybe
-    {
-        /// <summary>
-        /// Represents the unit for the type <see cref="Maybe{Unit}"/>.
-        /// <para>This field is read-only.</para>
-        /// </summary>
-        public static readonly Maybe<Unit> Unit = Some(default(Unit));
-
-        /// <summary>
-        /// Represents the zero for <see cref="Maybe{Unit}.Bind"/>.
-        /// <para>This field is read-only.</para>
-        /// </summary>
-        public static readonly Maybe<Unit> Zero = Maybe<Unit>.None;
-
-        /// <summary>
-        /// Represents the true for the type <see cref="Maybe{Boolean}"/>.
-        /// <para>This field is read-only.</para>
-        /// </summary>
-        public static readonly Maybe<bool> True = Some(true);
-
-        /// <summary>
-        /// Represents the false for the type <see cref="Maybe{Boolean}"/>.
-        /// <para>This field is read-only.</para>
-        /// </summary>
-        public static readonly Maybe<bool> False = Some(false);
-
-        /// <summary>
-        /// Represents the unknown for the type <see cref="Maybe{Boolean}"/>.
-        /// <para>This field is read-only.</para>
-        /// </summary>
-        public static readonly Maybe<bool> Unknown = Maybe<bool>.None;
-
-        [Pure]
-        public static Maybe<Unit> Guard(bool condition)
-            => condition ? Unit : Zero;
-    }
-
-    // Extension methods for Maybe<T> where T is a struct.
+    // Helpers for Maybe<T> where T is a struct.
     public partial class Maybe
     {
         // Conversion from Maybe<T?> to  Maybe<T>.
@@ -197,10 +159,48 @@ namespace Abc
             => @this.IsSome ? @this.Value : (T?)null;
     }
 
-    // Extension methods for Maybe<bool>.
+    // Helpers for Maybe<Unit>.
+    public partial class Maybe
+    {
+        /// <summary>
+        /// Represents the unit for the type <see cref="Maybe{Unit}"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
+        public static readonly Maybe<Unit> Unit = Some(default(Unit));
+
+        /// <summary>
+        /// Represents the zero for <see cref="Maybe{Unit}.Bind"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
+        public static readonly Maybe<Unit> Zero = Maybe<Unit>.None;
+
+        [Pure]
+        public static Maybe<Unit> Guard(bool condition)
+            => condition ? Unit : Zero;
+    }
+
+    // Helpers for Maybe<bool>.
     // 3VL (three-valued logic) logical operations.
     public partial class Maybe
     {
+        /// <summary>
+        /// Represents the true for the type <see cref="Maybe{Boolean}"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
+        public static readonly Maybe<bool> True = Some(true);
+
+        /// <summary>
+        /// Represents the false for the type <see cref="Maybe{Boolean}"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
+        public static readonly Maybe<bool> False = Some(false);
+
+        /// <summary>
+        /// Represents the unknown for the type <see cref="Maybe{Boolean}"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
+        public static readonly Maybe<bool> Unknown = Maybe<bool>.None;
+
         public static Maybe<bool> Negate(this in Maybe<bool> @this)
         {
             return @this.IsSome ? Some(!@this.Value) : Unknown;
@@ -218,8 +218,7 @@ namespace Abc
             //       || None  = None
 
             // If one of the two values is "true", return True.
-            return
-                (@this.IsSome && @this.Value) || (other.IsSome && other.Value) ? True
+            return (@this.IsSome && @this.Value) || (other.IsSome && other.Value) ? True
                 : @this.IsSome && other.IsSome ? False
                 : Unknown;
         }
@@ -242,7 +241,7 @@ namespace Abc
         }
     }
 
-    // Extension methods for Maybe<IEnumerable<T>>.
+    // Helpers for Maybe<IEnumerable<T>>.
     public partial class Maybe
     {
         // Obtains the maybe of the empty sequence.
@@ -278,7 +277,7 @@ namespace Abc
         }
     }
 
-    // Extension methods for Maybe<T> where T is disposable.
+    // Helpers for Maybe<T> where T is disposable.
     public partial class Maybe
     {
         // Bind() with automatic resource cleanup.
@@ -307,7 +306,7 @@ namespace Abc
         }
     }
 
-    // Extension methods for functions in the Kleisli category.
+    // Helpers for functions in the Kleisli category.
     public partial class Maybe
     {
         /// <seealso cref="Maybe{T}.Bind"/>
@@ -414,7 +413,7 @@ namespace Abc
         }
     }
 
-    // Extension methods for Maybe<T> where T is a function.
+    // Helpers for Maybe<T> where T is a function.
     public partial class Maybe
     {
         #region Invoke()
