@@ -740,7 +740,7 @@ namespace Abc
         // The logical negation (!), it "should" return a Maybe<T>, but then
         // what is the negation of None?
         //   public static bool operator !(Maybe<T> value) => !value._isSome;
-        // See also the internal method ToBoolean() below.
+        // See also the internal method ToBoolean() below and 3VL for Maybe<bool>.
 #if false // Only kept to be sure that I won't try it again... do NOT enable.
 
         public static bool operator true(Maybe<T> value)
@@ -878,7 +878,10 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        // TODO: naming Void(), Unit(), Discard()?
+        // TODO: naming
+        // Skip() -> Void(), Unit(), Discard()?
+        // Duplicate() -> Square()
+
         [Pure]
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;
@@ -916,7 +919,7 @@ namespace Abc
             return Select(__selector);
 
             static IEnumerable<T> __selector(T value)
-                // NULL_FORGIVING: Select() guarantees that _value won't be null.
+                // NULL_FORGIVING: Select() guarantees that "value" won't be null.
                 => new NeverEndingIterator<T>(value!);
         }
     }

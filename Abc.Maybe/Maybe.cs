@@ -25,18 +25,6 @@ namespace Abc
     public partial class Maybe
     {
         /// <summary>
-        /// Represents the unit for the type <see cref="Maybe{T}"/>.
-        /// <para>This field is read-only.</para>
-        /// </summary>
-        public static readonly Maybe<Unit> Unit = new Maybe<Unit>(Abc.Unit.Default);
-
-        /// <summary>
-        /// Represents the zero for <see cref="Maybe{T}.Bind"/>.
-        /// <para>This field is read-only.</para>
-        /// </summary>
-        public static readonly Maybe<Unit> Zero = Maybe<Unit>.None;
-
-        /// <summary>
         /// Creates a new instance of the <see cref="Maybe{T}"/> struct from the
         /// specified nullable value.
         /// <para>DO NOT USE, only here to prevent the creation of maybe's for
@@ -124,6 +112,24 @@ namespace Abc
     // Misc methods.
     public partial class Maybe
     {
+        /// <summary>
+        /// Represents the unit for the type <see cref="Maybe{T}"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
+        public static readonly Maybe<Unit> Unit = new Maybe<Unit>(Abc.Unit.Default);
+
+        /// <summary>
+        /// Represents the zero for <see cref="Maybe{T}.Bind"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
+        public static readonly Maybe<Unit> Zero = Maybe<Unit>.None;
+
+        public static readonly Maybe<bool> True = Some(true);
+
+        public static readonly Maybe<bool> False = Some(false);
+
+        public static readonly Maybe<bool> Unknown = Maybe<bool>.None;
+
         [Pure]
         public static Maybe<Unit> Guard(bool condition)
             => condition ? Unit : Zero;

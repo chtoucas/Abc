@@ -152,7 +152,10 @@ static Abc.Unit.operator !=(System.ValueTuple left, Abc.Unit right) -> bool
 static Abc.Unit.operator ==(Abc.Unit left, Abc.Unit right) -> bool
 static Abc.Unit.operator ==(Abc.Unit left, System.ValueTuple right) -> bool
 static Abc.Unit.operator ==(System.ValueTuple left, Abc.Unit right) -> bool
+static readonly Abc.Maybe.False -> Abc.Maybe<bool>
+static readonly Abc.Maybe.True -> Abc.Maybe<bool>
 static readonly Abc.Maybe.Unit -> Abc.Maybe<Abc.Unit>
+static readonly Abc.Maybe.Unknown -> Abc.Maybe<bool>
 static readonly Abc.Maybe.Zero -> Abc.Maybe<Abc.Unit>
 static readonly Abc.Maybe<T>.None -> Abc.Maybe<T>
 static readonly Abc.MaybeComparer<T>.Default -> Abc.MaybeComparer<T>
