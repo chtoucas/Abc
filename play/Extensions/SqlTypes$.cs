@@ -14,6 +14,7 @@ namespace Abc.Extensions
     public static partial class SqlTypesX { }
 
     // TODO: warn that a SQL null is not the same as a CLR null.
+    // Check that 3VL for Maybe<bool> matches the behaviour of SqlBoolean.
 
     // CLR value types.
     public partial class SqlTypesX

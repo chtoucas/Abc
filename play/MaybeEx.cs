@@ -154,7 +154,7 @@ namespace Abc
         }
     }
 
-    // Logical operations.
+    // "Bitwise" logical operations.
     // Gates, bools and bits.
     public partial class MaybeEx
     {
@@ -354,6 +354,64 @@ namespace Abc
             this Maybe<T> @this, Maybe<TResult> other)
         {
             return other;
+        }
+    }
+
+    // Extension methods for Maybe<T> where T is a Boolean.
+    // 3VL logical operations (three-valued logic).
+    public partial class MaybeEx
+    {
+        public static Maybe<bool> Negate(this Maybe<bool> @this)
+        {
+            return @this.TryGetValue(out bool value) ? Maybe.Some(!value) : Maybe.Unknown;
+        }
+
+        // Compare to OrElse().
+        public static Maybe<bool> Or(this Maybe<bool> @this, Maybe<bool> other)
+        {
+            // true  || _     = true
+            // false || true  = true
+            //       || false = false
+            //       || None  = None
+            // None  || true  = true
+            //       || false = None
+            //       || None  = None
+
+            if (@this.TryGetValue(out bool left))
+            {
+                return left ? Maybe.True
+                    : other.TryGetValue(out bool right) ? Maybe.Some(right)
+                    : Maybe.Unknown;
+            }
+            else
+            {
+                return other.TryGetValue(out bool right) && right ? Maybe.True
+                    : Maybe.Unknown;
+            }
+        }
+
+        // Compare to AndElse().
+        public static Maybe<bool> And(this Maybe<bool> @this, Maybe<bool> other)
+        {
+            // true  && true  = true
+            //       && false = false
+            //       && None  = None
+            // false && _     = false
+            // None  && true  = None
+            //       && false = false
+            //       && None  = None
+
+            if (@this.TryGetValue(out bool left))
+            {
+                return left
+                    ? other.TryGetValue(out bool right) ? Maybe.Some(right) : Maybe.Unknown
+                    : Maybe.False;
+            }
+            else
+            {
+                return other.TryGetValue(out bool right) && !right ? Maybe.False
+                    : Maybe.Unknown;
+            }
         }
     }
 
