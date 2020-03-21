@@ -7,6 +7,7 @@ namespace Abc
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Runtime.CompilerServices;
 
     using Anexn = System.ArgumentNullException;
 
@@ -71,6 +72,9 @@ namespace Abc
         /// To obtain the empty maybe for an unconstrained type, use
         /// <see cref="Maybe{T}.None"/> instead.
         /// </remarks>
+        [Pure]
+        // Code size = 6 bytes.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Maybe<T> None<T>() where T : notnull
             => Maybe<T>.None;
 
@@ -79,6 +83,8 @@ namespace Abc
         /// specified value.
         /// </summary>
         [Pure]
+        // Code size = 7 bytes.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Maybe<T> Some<T>(T value) where T : struct
             => new Maybe<T>(value);
 
@@ -109,14 +115,14 @@ namespace Abc
             => value is null ? Maybe<T>.None : new Maybe<T>(value);
     }
 
-    // Misc methods.
+    // Misc props/methods.
     public partial class Maybe
     {
         /// <summary>
         /// Represents the unit for the type <see cref="Maybe{T}"/>.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Maybe<Unit> Unit = new Maybe<Unit>(Abc.Unit.Default);
+        public static readonly Maybe<Unit> Unit = Some(default(Unit));
 
         /// <summary>
         /// Represents the zero for <see cref="Maybe{T}.Bind"/>.
@@ -124,10 +130,22 @@ namespace Abc
         /// </summary>
         public static readonly Maybe<Unit> Zero = Maybe<Unit>.None;
 
+        /// <summary>
+        /// Represents the true for the type <see cref="Maybe{Boolean}"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
         public static readonly Maybe<bool> True = Some(true);
 
+        /// <summary>
+        /// Represents the false for the type <see cref="Maybe{Boolean}"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
         public static readonly Maybe<bool> False = Some(false);
 
+        /// <summary>
+        /// Represents the unknown for the type <see cref="Maybe{Boolean}"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
         public static readonly Maybe<bool> Unknown = Maybe<bool>.None;
 
         [Pure]
@@ -145,7 +163,7 @@ namespace Abc
         public static Maybe<T> Squash<T>(this in Maybe<T?> @this) where T : struct
             // NULL_FORGIVING: when IsSome is true, Value.HasValue is also true,
             // therefore we can safely access Value.Value.
-            => @this.IsSome ? new Maybe<T>(@this.Value!.Value) : Maybe<T>.None;
+            => @this.IsSome ? Some(@this.Value!.Value) : Maybe<T>.None;
 
         // Conversion from Maybe<T?> to T?.
         [Pure]
@@ -163,6 +181,64 @@ namespace Abc
         [Pure]
         public static T? ToNullable<T>(this in Maybe<T> @this) where T : struct
             => @this.IsSome ? @this.Value : (T?)null;
+    }
+
+    // Extension methods for Maybe<T> where T is a Boolean.
+    // 3VL (three-valued logic) logical operations.
+    public partial class Maybe
+    {
+        public static Maybe<bool> Negate(this Maybe<bool> @this)
+        {
+            return @this.IsSome ? Some(!@this.Value) : Unknown;
+        }
+
+        // Compare to OrElse().
+        public static Maybe<bool> Or(this Maybe<bool> @this, Maybe<bool> other)
+        {
+            // true  || _     = true
+            // false || true  = true
+            //       || false = false
+            //       || None  = None
+            // None  || true  = true
+            //       || false = None
+            //       || None  = None
+
+            if (@this.IsSome)
+            {
+                return @this.Value ? True
+                    : other.IsSome ? Some(other.Value)
+                    : Unknown;
+            }
+            else
+            {
+                return other.IsSome && other.Value ? True
+                    : Unknown;
+            }
+        }
+
+        // Compare to AndElse().
+        public static Maybe<bool> And(this Maybe<bool> @this, Maybe<bool> other)
+        {
+            // true  && true  = true
+            //       && false = false
+            //       && None  = None
+            // false && _     = false
+            // None  && true  = None
+            //       && false = false
+            //       && None  = None
+
+            if (@this.IsSome)
+            {
+                return @this.Value
+                    ? other.IsSome ? Some(other.Value) : Unknown
+                    : False;
+            }
+            else
+            {
+                return other.IsSome && !other.Value ? False
+                    : Unknown;
+            }
+        }
     }
 
     // Extension methods for Maybe<T> where T is enumerable.

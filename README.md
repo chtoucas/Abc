@@ -21,6 +21,7 @@ Quick Start with `Maybe<T>`
 - [Side effects](#side-effects-do-something-with-the-enclosed-value-if-any)
 - [Binding](#binding)
 - [Query Expression Pattern](#query-expression-pattern)
+- [Specialized types](#specialized-types)
 - [More](#more)
 - [Samples](#samples)
 
@@ -47,7 +48,7 @@ There are many other small differences. For instance, one can nest _maybe_'s
 (`Maybe<Maybe<T>>`) whereas one can't create an `int??`; `Nullable<Nullable<T>>`
 is not valid in C#.
 
-#### Use cases
+#### Use case scenarios
 
 (to be done: untaint data, validate, transform, filter, correctness,
 SQL `null`, may-parse pattern, command-line args, HTTP query params)
@@ -290,6 +291,10 @@ var q = from x in maybe1
         where x ^ 2 + y ^ 2 == z ^ 2
         select (x, y, z)
 ```
+
+### Specialized types
+
+(TODO: booleans and 3VL)
 
 ### More
 

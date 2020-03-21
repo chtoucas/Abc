@@ -102,6 +102,7 @@ static Abc.May.ParseUInt32(string value) -> Abc.Maybe<uint>
 static Abc.May.ParseUInt32(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<uint>
 static Abc.May.ParseUInt64(string value) -> Abc.Maybe<ulong>
 static Abc.May.ParseUInt64(string value, System.Globalization.NumberStyles style, System.IFormatProvider provider) -> Abc.Maybe<ulong>
+static Abc.Maybe.And(this Abc.Maybe<bool> this, Abc.Maybe<bool> other) -> Abc.Maybe<bool>
 static Abc.Maybe.Apply<T1, T2, T3, T4, T5, TResult>(this Abc.Maybe<System.Func<T1, T2, T3, T4, T5, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third, Abc.Maybe<T4> fourth, Abc.Maybe<T5> fifth) -> Abc.Maybe<TResult>
 static Abc.Maybe.Apply<T1, T2, T3, T4, TResult>(this Abc.Maybe<System.Func<T1, T2, T3, T4, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third, Abc.Maybe<T4> fourth) -> Abc.Maybe<TResult>
 static Abc.Maybe.Apply<T1, T2, T3, TResult>(this Abc.Maybe<System.Func<T1, T2, T3, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third) -> Abc.Maybe<TResult>
@@ -124,9 +125,11 @@ static Abc.Maybe.Lift<T1, T2, T3, T4, TResult>(this System.Func<T1, T2, T3, T4, 
 static Abc.Maybe.Lift<T1, T2, T3, TResult>(this System.Func<T1, T2, T3, TResult> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second, Abc.Maybe<T3> third) -> Abc.Maybe<TResult>
 static Abc.Maybe.Lift<T1, T2, TResult>(this System.Func<T1, T2, TResult> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second) -> Abc.Maybe<TResult>
 static Abc.Maybe.Lift<TSource, TResult>(this System.Func<TSource, TResult> this, Abc.Maybe<TSource> maybe) -> Abc.Maybe<TResult>
+static Abc.Maybe.Negate(this Abc.Maybe<bool> this) -> Abc.Maybe<bool>
 static Abc.Maybe.None<T>() -> Abc.Maybe<T>
 static Abc.Maybe.Of<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.Of<T>(T? value) -> Abc.Maybe<T>
+static Abc.Maybe.Or(this Abc.Maybe<bool> this, Abc.Maybe<bool> other) -> Abc.Maybe<bool>
 static Abc.Maybe.Some<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.SomeOrNone<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.SomeOrNone<T>(T? value) -> Abc.Maybe<T>

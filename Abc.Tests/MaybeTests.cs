@@ -460,6 +460,51 @@ namespace Abc
         }
     }
 
+    // 3VL logical operations.
+    // Extension methods for Maybe<bool>.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void Negate()
+        {
+            Assert.Some(false, Maybe.True.Negate());
+            Assert.Some(true, Maybe.False.Negate());
+            Assert.None(Maybe.Unknown.Negate());
+        }
+
+        [Fact]
+        public static void Or()
+        {
+            Assert.Some(true, Maybe.True.Or(Maybe.True));
+            Assert.Some(true, Maybe.True.Or(Maybe.False));
+            Assert.Some(true, Maybe.True.Or(Maybe.Unknown));
+
+            Assert.Some(true, Maybe.False.Or(Maybe.True));
+            Assert.Some(false, Maybe.False.Or(Maybe.False));
+            Assert.None(Maybe.False.Or(Maybe.Unknown));
+
+            Assert.Some(true, Maybe.Unknown.Or(Maybe.True));
+            Assert.None(Maybe.Unknown.Or(Maybe.False));
+            Assert.None(Maybe.Unknown.Or(Maybe.Unknown));
+        }
+
+        [Fact]
+        public static void And()
+        {
+            Assert.Some(true, Maybe.True.And(Maybe.True));
+            Assert.Some(false, Maybe.True.And(Maybe.False));
+            Assert.None(Maybe.True.And(Maybe.Unknown));
+
+            Assert.Some(false, Maybe.False.And(Maybe.True));
+            Assert.Some(false, Maybe.False.And(Maybe.False));
+            Assert.Some(false, Maybe.False.And(Maybe.Unknown));
+
+            Assert.None(Maybe.Unknown.And(Maybe.True));
+            Assert.Some(false, Maybe.Unknown.And(Maybe.False));
+            Assert.None(Maybe.Unknown.And(Maybe.Unknown));
+        }
+    }
+
     // Misc methods.
     public partial class MaybeTests
     {

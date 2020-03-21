@@ -771,7 +771,8 @@ namespace Abc
 #pragma warning restore CA2225
 
         /// <remarks>
-        /// Generalizes the null-coalescing operator (??) to maybe's.
+        /// Generalizes the null-coalescing operator (??) to maybe's, it returns
+        /// the first non-empty value (if any).
         /// <code><![CDATA[
         ///   Some(1) OrElse Some(2) == Some(1)
         ///   Some(1) OrElse None    == Some(1)
