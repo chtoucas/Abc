@@ -117,6 +117,16 @@ namespace Abc
         }
 
         [Fact]
+        public static void Square()
+        {
+            Assert.None(Maybe.Square((int?)null));
+            Assert.Some(Maybe.Square((int?)1));
+
+            Assert.None(Maybe.Square((object)null!));
+            Assert.Some(Maybe.Square(new object()));
+        }
+
+        [Fact]
         public static void ImplicitToMaybe()
         {
             // Arrange

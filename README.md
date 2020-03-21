@@ -50,7 +50,7 @@ is not valid in C#.
 
 #### Use case scenarios
 
-(to be done: untaint data, validate, transform, filter, correctness,
+(TODO: untaint data, validate, transform, filter, correctness,
 SQL `null`, may-parse pattern, command-line args, HTTP query params)
 
 ### Construct a _maybe_
@@ -221,6 +221,8 @@ foreach (var x in maybe.Yield()) {
 
 `GetEnumerator()` creates an iterator which is resettable and does not need to
 be disposed (`using` is not necessary).
+
+(TODO: perf when compared to `Switch` & `Do`)
 
 ```csharp
 // One iteration or no iteration at all.

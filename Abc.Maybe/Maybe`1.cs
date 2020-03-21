@@ -71,6 +71,7 @@ namespace Abc
     /// - Maybe.Some()          factory method for value types
     /// - Maybe.SomeOrNone()    factory method for nullable value or reference types
     /// - Maybe.Of()            unconstrained factory method
+    /// - Maybe.Square()
     /// - Maybe.Guard()
     ///
     /// Operators:
@@ -92,7 +93,6 @@ namespace Abc
     /// - XorElse()             logical XOR
     /// - Skip()
     /// - Replicate()
-    /// - Duplicate()
     ///
     /// Escape the maybe (no public access to the enclosed value if any,
     /// ie no property Value).
@@ -876,18 +876,11 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        // TODO: naming
-        // Skip() -> Void(), Unit(), Discard()?
-        // Duplicate() -> Square()
+        // TODO: naming Skip() -> Void(), Unit(), Discard()?
 
         [Pure]
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;
-
-        /// <seealso cref="Maybe.Flatten"/>
-        [Pure]
-        public Maybe<Maybe<T>> Duplicate()
-            => new Maybe<Maybe<T>>(this);
 
         /// <seealso cref="Yield(int)"/>
         /// <remarks>

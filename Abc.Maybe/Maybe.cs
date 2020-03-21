@@ -55,11 +55,9 @@ namespace Abc
         /// Removes one level of structure, projecting the bound value into the
         /// outer level.
         /// </summary>
-        /// <seealso cref="Maybe{T}.Duplicate"/>
         [Pure]
         public static Maybe<T> Flatten<T>(this in Maybe<Maybe<T>> @this)
             => @this.IsSome ? @this.Value : Maybe<T>.None;
-
     }
 
     // Factory methods.
@@ -93,8 +91,8 @@ namespace Abc
         /// specified nullable value.
         /// </summary>
         /// <remarks>
-        /// To create a maybe for an unconstrained type, please see
-        /// <see cref="Of{T}(T)"/>.
+        /// To create a maybe for an unconstrained type, use
+        /// <see cref="Of{T}(T)"/> instead.
         /// </remarks>
         [Pure]
         public static Maybe<T> SomeOrNone<T>(T? value) where T : struct
@@ -107,12 +105,28 @@ namespace Abc
         /// specified nullable value.
         /// </summary>
         /// <remarks>
-        /// To create a maybe for an unconstrained type, please see
-        /// <see cref="Of{T}(T)"/>.
+        /// To create a maybe for an unconstrained type, use
+        /// <see cref="Of{T}(T)"/> instead.
         /// </remarks>
         [Pure]
         public static Maybe<T> SomeOrNone<T>(T? value) where T : class
             => value is null ? Maybe<T>.None : new Maybe<T>(value);
+
+        /// <remarks>
+        /// To create a "square" for an unconstrained type T, use
+        /// <c>Some(Of(value))</c> instead.
+        /// </remarks>
+        [Pure]
+        public static Maybe<Maybe<T>> Square<T>(T? value) where T : struct
+            => value.HasValue ? new Maybe<Maybe<T>>(value.Value) : Maybe<Maybe<T>>.None;
+
+        /// <remarks>
+        /// To create a "square" for an unconstrained type T, use
+        /// <c>Some(Of(value))</c> instead.
+        /// </remarks>
+        [Pure]
+        public static Maybe<Maybe<T>> Square<T>(T? value) where T : class
+            => value is null ? Maybe<Maybe<T>>.None : new Maybe<Maybe<T>>(value);
     }
 
     // Misc props/methods.
