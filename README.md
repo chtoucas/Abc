@@ -1,12 +1,12 @@
 # Abécédaire
 
-- [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
-- [Usage Guidelines](#usage-guidelines)
-- [Developer Notes](#developer-notes)
-
 `Abc` features:
 - A rich option type for C#.
 - Utilities to write code in the ROP style (Railway Oriented Programming).
+
+- [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
+- [Usage Guidelines](#usage-guidelines)
+- [Developer Notes](#developer-notes)
 
 Quick Start with `Maybe<T>`
 ---------------------------
@@ -15,10 +15,10 @@ Quick Start with `Maybe<T>`
 - [Deconstruction](#deconstruct-a-maybe)
 - [Empty or not?](#check-whether-a-maybe-is-empty-or-not)
 - [Map and filter](#map-and-filter-the-enclosed-value-if-any)
-- [Safe escapes](#safely-extract-the-enclosed-value)
+- [Safe extraction](#safely-extract-the-enclosed-value)
 - [Pattern matching](#pattern-matching-extract-and-map-the-enclosed-value-if-any)
-- [Iterator](#iterator)
 - [Side effects](#side-effects-do-something-with-the-enclosed-value-if-any)
+- [Iterator](#iterator)
 - [Binding](#binding)
 - [Query Expression Pattern](#query-expression-pattern)
 - [Specialized types](#specialized-types)

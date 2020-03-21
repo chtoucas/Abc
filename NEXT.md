@@ -1,6 +1,7 @@
 # Future plans?
 
 [Narvalo.NET](https://github.com/chtoucas/Narvalo.NET)
+- utilities to write code in the ROP style (Railway Oriented Programming).
 - a fast Gregorian date type
 - country codes
 - currency codes
