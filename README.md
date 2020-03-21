@@ -1,8 +1,6 @@
 # Abécédaire
 
-`Abc` features:
-- A rich option type for C#.
-- Utilities to write code in the ROP style (Railway Oriented Programming).
+`Abc` features a rich option type for C#.
 
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
