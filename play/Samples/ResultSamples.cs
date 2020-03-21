@@ -13,7 +13,7 @@ namespace Abc.Samples
         {
             Result<int> r = pass ? Result.Some(1) : Result.None<int>();
 
-            return r.TryGetValue(out int value) ? "Failure." : $"{value}";
+            return r.TryGetValue(out int value) ? "Nothing." : $"{value}";
         }
 
         // Result POV.

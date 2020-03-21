@@ -31,11 +31,6 @@ namespace Abc
             => $"Ok({Value})";
 
         [Pure]
-        public override Maybe<T> ToMaybe()
-            // TODO: => new Maybe<T>(Value);
-            => Maybe.Of(Value);
-
-        [Pure]
         public override Result<T> OrElse(Result<T> other)
             => this;
     }

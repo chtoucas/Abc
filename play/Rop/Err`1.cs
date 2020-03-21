@@ -4,6 +4,8 @@ namespace Abc
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
@@ -12,6 +14,7 @@ namespace Abc
 
     // TODO: inner error (?) but more importantly aggregate errors.
 
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public sealed partial class Err<T> : Result<T>
     {
         internal static readonly Err<T> NoValue = new Err<T>();
@@ -36,16 +39,17 @@ namespace Abc
 
         public string Message { get; }
 
+        [ExcludeFromCodeCoverage]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        private string DebuggerDisplay => $"IsNone = {IsNone}";
+
         public override string ToString()
             => $"Err({Message})";
 
         [Pure]
         public Err<TOther> WithType<TOther>()
             => IsNone ? Err<TOther>.NoValue : new Err<TOther>(Message);
-
-        [Pure]
-        public override Maybe<T> ToMaybe()
-            => Maybe<T>.None;
 
         [Pure]
         public override Result<T> OrElse(Result<T> other)

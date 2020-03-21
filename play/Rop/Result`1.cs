@@ -11,8 +11,9 @@ namespace Abc
     using System.Runtime.CompilerServices;
 
     // Both an Option type and a Result type, but only a simple one where the
-    // error part is just a string. The main difference with a Maybe<T> is that
-    // we get the opportunity to describe the error.
+    // error part is just a string (this is the most common use case for a
+    // Result type). The main difference with a Maybe<T> is that we get the
+    // opportunity to describe the error.
     //
     // It is possible to construct a general Result type, an `Either<T, TError>`,
     // but I find it to be difficult to use due to the extra generic parameter
@@ -45,7 +46,7 @@ namespace Abc
         [EditorBrowsable(EditorBrowsableState.Never)]
         private string DebuggerDisplay => $"IsError = {IsError}";
 
-        [Pure] public abstract Maybe<T> ToMaybe();
+        //[Pure] public abstract Maybe<T> ToMaybe();
 
         [Pure]
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
