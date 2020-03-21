@@ -88,7 +88,7 @@ namespace Abc
         [Fact]
         public static void Some()
         {
-            Assert.Some(Maybe.Some(1));
+            Assert.Some(1, Maybe.Some(1));
         }
 
         [Fact]
@@ -98,17 +98,27 @@ namespace Abc
             Assert.Some(Maybe.SomeOrNone((int?)1));
 
             Assert.None(Maybe.SomeOrNone((object)null!));
-            Assert.Some(Maybe.SomeOrNone(new object()));
+
+            var obj = new object();
+            Assert.Some(obj, Maybe.SomeOrNone(obj));
         }
 
         [Fact]
         public static void Square()
         {
-            Assert.None(Maybe.Square((int?)null));
-            Assert.Some(Maybe.Square((int?)1));
+            Assert.Some(One, Maybe.Square(1));
+        }
 
-            Assert.None(Maybe.Square((object)null!));
-            Assert.Some(Maybe.Square(new object()));
+        [Fact]
+        public static void SquareOrNone()
+        {
+            Assert.None(Maybe.SquareOrNone((int?)null));
+            Assert.Some(One, Maybe.SquareOrNone((int?)1));
+
+            Assert.None(Maybe.SquareOrNone((object)null!));
+
+            var obj = new object();
+            Assert.Some(Maybe.Of(obj), Maybe.SquareOrNone(obj));
         }
 
         [Fact]

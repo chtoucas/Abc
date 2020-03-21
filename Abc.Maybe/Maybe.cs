@@ -112,12 +112,18 @@ namespace Abc
         public static Maybe<T> SomeOrNone<T>(T? value) where T : class
             => value is null ? Maybe<T>.None : new Maybe<T>(value);
 
+        [Pure]
+        // Code size = 12 bytes.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Maybe<Maybe<T>> Square<T>(T value) where T : struct
+            => new Maybe<Maybe<T>>(value);
+
         /// <remarks>
         /// To create a "square" for an unconstrained type T, use
         /// <c>Some(Of(value))</c> instead.
         /// </remarks>
         [Pure]
-        public static Maybe<Maybe<T>> Square<T>(T? value) where T : struct
+        public static Maybe<Maybe<T>> SquareOrNone<T>(T? value) where T : struct
             => value.HasValue ? new Maybe<Maybe<T>>(value.Value) : Maybe<Maybe<T>>.None;
 
         /// <remarks>
@@ -125,7 +131,7 @@ namespace Abc
         /// <c>Some(Of(value))</c> instead.
         /// </remarks>
         [Pure]
-        public static Maybe<Maybe<T>> Square<T>(T? value) where T : class
+        public static Maybe<Maybe<T>> SquareOrNone<T>(T? value) where T : class
             => value is null ? Maybe<Maybe<T>>.None : new Maybe<Maybe<T>>(value);
     }
 

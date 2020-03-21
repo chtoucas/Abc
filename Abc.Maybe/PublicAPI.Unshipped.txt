@@ -133,7 +133,8 @@ static Abc.Maybe.Some<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.SomeOrNone<T>(T value) -> Abc.Maybe<T>
 static Abc.Maybe.SomeOrNone<T>(T? value) -> Abc.Maybe<T>
 static Abc.Maybe.Square<T>(T value) -> Abc.Maybe<Abc.Maybe<T>>
-static Abc.Maybe.Square<T>(T? value) -> Abc.Maybe<Abc.Maybe<T>>
+static Abc.Maybe.SquareOrNone<T>(T value) -> Abc.Maybe<Abc.Maybe<T>>
+static Abc.Maybe.SquareOrNone<T>(T? value) -> Abc.Maybe<Abc.Maybe<T>>
 static Abc.Maybe.Squash<T>(this in Abc.Maybe<T?> this) -> Abc.Maybe<T>
 static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T> this) -> T?
 static Abc.Maybe.ToNullable<T>(this in Abc.Maybe<T?> this) -> T?
