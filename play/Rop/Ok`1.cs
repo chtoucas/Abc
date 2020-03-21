@@ -46,8 +46,7 @@ namespace Abc
         {
             if (selector is null) { throw new Anexn(nameof(selector)); }
 
-            // FIXME: null
-            return new Ok<TResult>(selector(Value)!);
+            return Result.Of(selector(Value));
         }
 
         [Pure]

@@ -13,6 +13,8 @@ namespace Abc.Extensions
     /// </summary>
     public static partial class SqlTypesX { }
 
+    // TODO: warn that a SQL null is not the same as a CLR null.
+
     // CLR value types.
     public partial class SqlTypesX
     {

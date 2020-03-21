@@ -14,6 +14,8 @@ namespace Abc
 
     public sealed partial class Err<T> : Result<T>
     {
+        internal static readonly Err<T> None_ = new Err<T>();
+
         internal Err()
         {
             Message = "No value";
@@ -39,7 +41,7 @@ namespace Abc
 
         [Pure]
         public Err<TOther> WithGenericType<TOther>()
-            => IsNone ? Err<TOther>.None : new Err<TOther>(Message);
+            => IsNone ? Err<TOther>.None_ : new Err<TOther>(Message);
 
         [Pure]
         public override Maybe<T> ToMaybe()

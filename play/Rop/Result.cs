@@ -22,27 +22,21 @@ namespace Abc
     {
         public static readonly Result<Unit> Unit = Some(default(Unit));
 
-        public static readonly Err<Unit> Zero = Abc.Err<Unit>.None;
+        public static readonly Result<Unit> Zero = Abc.Err<Unit>.None;
 
         [Pure]
         // Not actually obsolete, but clearly states that we shouldn't use it.
         [Obsolete("Use SomeOrNone() instead.")]
         public static Result<T> Of<T>(T? value) where T : struct
-        {
-            if (value.HasValue) { return new Ok<T>(value.Value); }
-            else { return Result<T>.None; }
-        }
+            => value.HasValue ? new Ok<T>(value.Value) : Result<T>.None;
 
         [Pure]
         public static Result<T> Of<T>([AllowNull] T value)
-        {
-            if (value is null) { return Result<T>.None; }
-            else { return new Ok<T>(value); }
-        }
+            => value is null ? Result<T>.None : new Ok<T>(value);
 
         // Unconstrained version: see Result<T>.None.
         [Pure]
-        public static Err<T> None<T>() where T : notnull
+        public static Result<T> None<T>() where T : notnull
             => Abc.Err<T>.None;
 
         [Pure]
@@ -51,25 +45,19 @@ namespace Abc
 
         [Pure]
         public static Result<T> SomeOrNone<T>(T? value) where T : struct
-        {
-            if (value.HasValue) { return new Ok<T>(value.Value); }
-            else { return Result<T>.None; }
-        }
+            => value.HasValue ? new Ok<T>(value.Value) : Result<T>.None;
 
         [Pure]
         public static Result<T> SomeOrNone<T>(T? value) where T : class
-        {
-            if (value is null) { return Result<T>.None; }
-            else { return new Ok<T>(value); }
-        }
+            => value is null ? Result<T>.None : new Ok<T>(value);
 
         [Pure]
-        public static Err<Unit> Err(string message)
+        public static Result<Unit> Err(string message)
             => new Err<Unit>(message);
 
         // Unconstrained version: new Err<T>(message).
         [Pure]
-        public static Err<T> Err<T>(string message) where T : notnull
+        public static Result<T> Err<T>(string message) where T : notnull
             => new Err<T>(message);
     }
 
@@ -101,6 +89,7 @@ namespace Abc
             where T : struct
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
+
             return Some(@this.Value.Value);
         }
 
@@ -109,6 +98,7 @@ namespace Abc
             where T : struct
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
+
             return @this.WithGenericType<T>();
         }
 

@@ -14,6 +14,12 @@ namespace Abc.Utilities
     internal static class ExceptionFactory
     {
         [Pure]
+        public static InvalidOperationException Bow_NoValue
+            => new InvalidOperationException(
+                "The object does not contain any value."
+                + $"{Environment.NewLine}You should have checked that the property IsSome is true.");
+
+        [Pure]
         public static InvalidOperationException Result_NoValue
             => new InvalidOperationException(
                 "The object does not contain any value."

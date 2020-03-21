@@ -26,7 +26,7 @@ namespace Abc
     // It don't recommend to use this type in a public API.
     public abstract partial class Result<T>
     {
-        public static readonly Err<T> None = new Err<T>();
+        public static readonly Result<T> None = new Err<T>();
 
         // Only two classes can extend this one (Err<T> and Ok<T>),
         // pattern matching is therefore unambiguous.
