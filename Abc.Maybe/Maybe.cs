@@ -183,17 +183,17 @@ namespace Abc
             => @this.IsSome ? @this.Value : (T?)null;
     }
 
-    // Extension methods for Maybe<T> where T is a Boolean.
+    // Extension methods for Maybe<bool>.
     // 3VL (three-valued logic) logical operations.
     public partial class Maybe
     {
-        public static Maybe<bool> Negate(this Maybe<bool> @this)
+        public static Maybe<bool> Negate(this in Maybe<bool> @this)
         {
             return @this.IsSome ? Some(!@this.Value) : Unknown;
         }
 
         // Compare to OrElse().
-        public static Maybe<bool> Or(this Maybe<bool> @this, Maybe<bool> other)
+        public static Maybe<bool> Or(this in Maybe<bool> @this, Maybe<bool> other)
         {
             // true  || _     = true
             // false || true  = true
@@ -211,7 +211,7 @@ namespace Abc
         }
 
         // Compare to AndElse().
-        public static Maybe<bool> And(this Maybe<bool> @this, Maybe<bool> other)
+        public static Maybe<bool> And(this in Maybe<bool> @this, Maybe<bool> other)
         {
             // true  && true  = true
             //       && false = false
@@ -228,7 +228,7 @@ namespace Abc
         }
     }
 
-    // Extension methods for Maybe<T> where T is enumerable.
+    // Extension methods for Maybe<IEnumerable<T>>.
     public partial class Maybe
     {
         // Obtains the maybe of the empty sequence.
