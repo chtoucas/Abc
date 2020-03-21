@@ -3,10 +3,8 @@
 namespace Abc
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
-    using System.Linq;
 
     using Anexn = System.ArgumentNullException;
 
@@ -40,7 +38,7 @@ namespace Abc
             => Abc.Err<T>.None;
 
         [Pure]
-        public static Ok<T> Some<T>(T value) where T : struct
+        public static Result<T> Some<T>(T value) where T : struct
             => new Ok<T>(value);
 
         [Pure]
@@ -72,8 +70,8 @@ namespace Abc
                 Ok<Ok<T>> ok => ok.Value,
                 // Return an Err<T>.
                 Ok<Err<T>> ok => ok.Value,
-                Err<Ok<T>> err => err.WithGenericType<T>(),
-                Err<Err<T>> err => err.WithGenericType<T>(),
+                Err<Ok<T>> err => err.WithType<T>(),
+                Err<Err<T>> err => err.WithType<T>(),
                 // Throw.
                 null => throw new Anexn(nameof(@this)),
                 _ => throw new InvalidOperationException()
@@ -90,7 +88,7 @@ namespace Abc
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
-            return Some(@this.Value.Value);
+            return new Ok<T>(@this.Value.Value);
         }
 
         [Pure]
@@ -99,7 +97,7 @@ namespace Abc
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
-            return @this.WithGenericType<T>();
+            return @this.WithType<T>();
         }
 
         [Pure]
@@ -109,24 +107,10 @@ namespace Abc
             return @this switch
             {
                 Ok<T?> ok => Some(ok.Value.Value),
-                Err<T?> err => err.WithGenericType<T>(),
+                Err<T?> err => err.WithType<T>(),
                 null => throw new Anexn(nameof(@this)),
                 _ => throw new InvalidOperationException()
             };
-        }
-    }
-
-    // Extension methods for Result<T> where T is enumerable.
-    public partial class Result
-    {
-        [Pure]
-        public static Result<IEnumerable<T>> EmptyEnumerable<T>()
-            => ResultEnumerable_<T>.Empty;
-
-        private static class ResultEnumerable_<T>
-        {
-            internal static readonly Result<IEnumerable<T>> Empty
-                = Of(Enumerable.Empty<T>());
         }
     }
 }

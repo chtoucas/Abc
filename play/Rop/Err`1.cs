@@ -14,7 +14,7 @@ namespace Abc
 
     public sealed partial class Err<T> : Result<T>
     {
-        internal static readonly Err<T> None_ = new Err<T>();
+        internal static readonly Err<T> NoValue = new Err<T>();
 
         internal Err()
         {
@@ -30,18 +30,18 @@ namespace Abc
 
         public override bool IsError => true;
 
-        public override T Value { [DoesNotReturn] get => throw EF.Result_NoValue; }
+        internal override T ValueIntern { [DoesNotReturn] get => throw EF.ControlFlow; }
 
         public bool IsNone { get; }
 
-        [NotNull] public string Message { get; }
+        public string Message { get; }
 
         public override string ToString()
             => $"Err({Message})";
 
         [Pure]
-        public Err<TOther> WithGenericType<TOther>()
-            => IsNone ? Err<TOther>.None_ : new Err<TOther>(Message);
+        public Err<TOther> WithType<TOther>()
+            => IsNone ? Err<TOther>.NoValue : new Err<TOther>(Message);
 
         [Pure]
         public override Maybe<T> ToMaybe()
@@ -58,7 +58,7 @@ namespace Abc
         [Pure]
         public override Result<TResult> Select<TResult>(Func<T, TResult> selector)
         {
-            return WithGenericType<TResult>();
+            return WithType<TResult>();
         }
 
         [Pure]
@@ -70,7 +70,7 @@ namespace Abc
             Func<T, Result<TMiddle>> selector,
             Func<T, TMiddle, TResult> resultSelector)
         {
-            return WithGenericType<TResult>();
+            return WithType<TResult>();
         }
 
         [Pure]
@@ -80,7 +80,7 @@ namespace Abc
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector)
         {
-            return WithGenericType<TResult>();
+            return WithType<TResult>();
         }
 
         [Pure]
@@ -91,7 +91,7 @@ namespace Abc
             Func<T, TInner, TResult> resultSelector,
             IEqualityComparer<TKey>? comparer)
         {
-            return WithGenericType<TResult>();
+            return WithType<TResult>();
         }
     }
 }

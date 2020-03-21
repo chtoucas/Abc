@@ -22,7 +22,9 @@ namespace Abc
 
         public override bool IsError => false;
 
-        [NotNull] public override T Value { get; }
+        [NotNull] public T Value { get; }
+
+        [NotNull] internal override T ValueIntern => Value;
 
         [Pure]
         public override string ToString()
@@ -54,8 +56,7 @@ namespace Abc
         {
             if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
-            if (predicate(Value)) { return this; }
-            else { return None; }
+            return predicate(Value) ? this : None;
         }
 
         [Pure]
@@ -67,9 +68,9 @@ namespace Abc
             if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
 
             Result<TMiddle> middle = selector(Value);
-            if (middle is Err<TMiddle> err) { return err.WithGenericType<TResult>(); }
+            if (middle is Err<TMiddle> err) { return err.WithType<TResult>(); }
 
-            return Result.Of(resultSelector(Value, middle.Value));
+            return Result.Of(resultSelector(Value, middle.ValueIntern));
         }
 
         [Pure]
@@ -124,11 +125,11 @@ namespace Abc
             if (!inner.IsError)
             {
                 TKey outerKey = outerKeySelector(Value);
-                TKey innerKey = innerKeySelector(inner.Value);
+                TKey innerKey = innerKeySelector(inner.ValueIntern);
 
                 if (comparer.Equals(outerKey, innerKey))
                 {
-                    return Result.Of(resultSelector(Value, inner.Value));
+                    return Result.Of(resultSelector(Value, inner.ValueIntern));
                 }
             }
 

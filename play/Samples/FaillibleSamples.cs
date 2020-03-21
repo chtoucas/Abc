@@ -16,15 +16,15 @@ namespace Abc.Samples
 
     public partial class FaillibleSamples
     {
-        public static int OkOrThrew1(bool ok)
+        public static int OkOrThrew1(bool pass)
         {
-            Faillible<int> exn = GetOkOrThrew(ok);
+            Faillible<int> exn = GetOkOrThrew(pass);
             return exn.ValueOrRethrow();
         }
 
-        public static string OkOrThrew2(bool ok)
+        public static string OkOrThrew2(bool pass)
         {
-            Faillible<int> exn = GetOkOrThrew(ok);
+            Faillible<int> exn = GetOkOrThrew(pass);
 
             if (exn.Threw)
             {
@@ -40,11 +40,11 @@ namespace Abc.Samples
             }
         }
 
-        public static Faillible<int> GetOkOrThrew(bool ok)
+        public static Faillible<int> GetOkOrThrew(bool pass)
         {
             try
             {
-                return Faillible.Succeed(mayThrow(ok));
+                return Faillible.Succeed(mayThrow(pass));
             }
             catch (DivideByZeroException ex)
             {

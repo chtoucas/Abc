@@ -13,17 +13,10 @@ namespace Abc.Utilities
     /// </summary>
     internal static class ExceptionFactory
     {
-        [Pure]
-        public static InvalidOperationException Bow_NoValue
+        public static InvalidOperationException ControlFlow
             => new InvalidOperationException(
-                "The object does not contain any value."
-                + $"{Environment.NewLine}You should have checked that the property IsSome is true.");
-
-        [Pure]
-        public static InvalidOperationException Result_NoValue
-            => new InvalidOperationException(
-                "The object does not contain any value."
-                + $"{Environment.NewLine}You should have checked that the property IsError is not true.");
+                "The flow of execution just reached a section of the code that should have been unreachable."
+                + $"{Environment.NewLine}Most certainly signals a coding error. Please report.");
 
         [Pure]
         public static InvalidOperationException Faillible_NoValue
