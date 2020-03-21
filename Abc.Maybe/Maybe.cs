@@ -119,13 +119,13 @@ namespace Abc
     public partial class Maybe
     {
         /// <summary>
-        /// Represents the unit for the type <see cref="Maybe{T}"/>.
+        /// Represents the unit for the type <see cref="Maybe{Unit}"/>.
         /// <para>This field is read-only.</para>
         /// </summary>
         public static readonly Maybe<Unit> Unit = Some(default(Unit));
 
         /// <summary>
-        /// Represents the zero for <see cref="Maybe{T}.Bind"/>.
+        /// Represents the zero for <see cref="Maybe{Unit}.Bind"/>.
         /// <para>This field is read-only.</para>
         /// </summary>
         public static readonly Maybe<Unit> Zero = Maybe<Unit>.None;
@@ -203,17 +203,11 @@ namespace Abc
             //       || false = None
             //       || None  = None
 
-            if (@this.IsSome)
-            {
-                return @this.Value ? True
-                    : other.IsSome ? Some(other.Value)
-                    : Unknown;
-            }
-            else
-            {
-                return other.IsSome && other.Value ? True
-                    : Unknown;
-            }
+            // If one of the two values is "true", return True.
+            return
+                (@this.IsSome && @this.Value) || (other.IsSome && other.Value) ? True
+                : @this.IsSome && other.IsSome ? False
+                : Unknown;
         }
 
         // Compare to AndElse().
@@ -227,17 +221,10 @@ namespace Abc
             //       && false = false
             //       && None  = None
 
-            if (@this.IsSome)
-            {
-                return @this.Value
-                    ? other.IsSome ? Some(other.Value) : Unknown
-                    : False;
-            }
-            else
-            {
-                return other.IsSome && !other.Value ? False
-                    : Unknown;
-            }
+            // If one of the two values is "false", return False.
+            return (@this.IsSome && !@this.Value) || (other.IsSome && !other.Value) ? False
+                : @this.IsSome && other.IsSome ? True
+                : Unknown;
         }
     }
 

@@ -736,11 +736,8 @@ namespace Abc
         //   x || y is evaluated as  true(x) ? x : (x | y)
         // but we don't really want to do it, don't we?
         // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/expressions#user-defined-conditional-logical-operators
-        // Other logical op?
-        // The logical negation (!), it "should" return a Maybe<T>, but then
-        // what is the negation of None?
-        //   public static bool operator !(Maybe<T> value) => !value._isSome;
-        // See also the internal method ToBoolean() below and 3VL for Maybe<bool>.
+        // See also the internal method ToBoolean() below.
+        // True boolean operations ony make sense with Maybe<bool>; see Maybe.
 #if false // Only kept to be sure that I won't try it again... do NOT enable.
 
         public static bool operator true(Maybe<T> value)
