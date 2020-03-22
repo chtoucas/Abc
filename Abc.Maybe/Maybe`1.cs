@@ -174,7 +174,7 @@ namespace Abc
         /// Gets the enclosed value.
         /// <para>You MUST check IsSome before calling this property.</para>
         /// </summary>
-        // REVIEW: [MaybeNull]
+        [MaybeNull]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal T Value { get { Debug.Assert(_isSome); return _value; } }
 
@@ -195,7 +195,7 @@ namespace Abc
         // Implicit conversion to Maybe<T> for equality comparison, very much
         // like what we have will nullable values: (int?)1 == 1 works.
         // Friendly name: Maybe.Of(value).
-        // NB: maybe = Some(x) == y is equivalent to maybe.Contains(y).
+        // NB: maybe (= Some(x)) == y is equivalent to maybe.Contains(y).
         public static implicit operator Maybe<T>([AllowNull] T value)
             => Maybe.Of(value);
 
@@ -205,9 +205,9 @@ namespace Abc
         // with null, we can write maybe == null, which is odd for a struct
         // but at the same time we can write Maybe<string> maybe = s where s is
         // in fact "null".
-        [return: MaybeNull]
+        //[return: MaybeNull]
         public static explicit operator T(Maybe<T> value)
-            => value._isSome ? value.Value : throw new InvalidCastException();
+            => value._isSome ? value._value : throw new InvalidCastException();
 
 #pragma warning restore CA2225
 
@@ -948,7 +948,7 @@ namespace Abc
             // NULL_FORGIVING: when _isSome is true, _value is NOT null.
             => _isSome ? new SingletonIterator<T>(_value!) : Enumerable.Empty<T>();
 
-        // REVIEW: Yield() is not a good name (it's not the F# yield).
+        // Beware, Yield() doesn't match the F# yield of computation expressions.
 
         // Yield break or yield return "count" times.
         /// See also <seealso cref="Replicate(int)"/> and the comments there.
@@ -1002,7 +1002,7 @@ namespace Abc
             // Beware, this is NOT the same as
             //   left.CompareTo(right) < 0;
             => left._isSome && right._isSome
-                ? Comparer<T>.Default.Compare(left.Value, left.Value) < 0
+                ? Comparer<T>.Default.Compare(left._value, left._value) < 0
                 : false;
 
         /// <summary>
@@ -1022,7 +1022,7 @@ namespace Abc
             // Beware, this is NOT the same as
             //   left.CompareTo(right) <= 0;
             => left._isSome && right._isSome
-                ? Comparer<T>.Default.Compare(left.Value, left.Value) <= 0
+                ? Comparer<T>.Default.Compare(left._value, left._value) <= 0
                 : false;
 
         /// <summary>
@@ -1042,7 +1042,7 @@ namespace Abc
             // Beware, this is NOT the same as
             //   left.CompareTo(right) > 0;
             => left._isSome && right._isSome
-                ? Comparer<T>.Default.Compare(left.Value, left.Value) > 0
+                ? Comparer<T>.Default.Compare(left._value, left._value) > 0
                 : false;
 
         /// <summary>
@@ -1062,7 +1062,7 @@ namespace Abc
             // Beware, this is NOT the same as
             //   left.CompareTo(right) >= 0;
             => left._isSome && right._isSome
-                ? Comparer<T>.Default.Compare(left.Value, left.Value) >= 0
+                ? Comparer<T>.Default.Compare(left._value, left._value) >= 0
                 : false;
 
         /// <summary>

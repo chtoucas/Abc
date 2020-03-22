@@ -187,6 +187,10 @@ namespace Abc
 
     // Helpers for Maybe<bool>.
     // 3VL (three-valued logic) logical operations.
+    // It makes Maybe<bool>.None and SQL null very similar but only for boolean
+    // logical operations, otherwise they may exhibit different behaviours.
+    // For instance, with SQL-92 (NULL = NULL) evaluates to false, whereas
+    // (Maybe<bool>.None == Maybe<bool>.None) evaluates to true.
     public partial class Maybe
     {
         /// <summary>
@@ -368,8 +372,9 @@ namespace Abc
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome
-                ? Of(@this(first.Value, second.Value))
+                ? Of(@this(first.Value!, second.Value!))
                 : Maybe<TResult>.None;
         }
 
@@ -382,8 +387,9 @@ namespace Abc
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome
-                ? Of(@this(first.Value, second.Value, third.Value))
+                ? Of(@this(first.Value!, second.Value!, third.Value!))
                 : Maybe<TResult>.None;
         }
 
@@ -397,8 +403,9 @@ namespace Abc
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome
-                ? Of(@this(first.Value, second.Value, third.Value, fourth.Value))
+                ? Of(@this(first.Value!, second.Value!, third.Value!, fourth.Value!))
                 : Maybe<TResult>.None;
         }
 
@@ -413,8 +420,9 @@ namespace Abc
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome && fifth.IsSome
-                ? Of(@this(first.Value, second.Value, third.Value, fourth.Value, fifth.Value))
+                ? Of(@this(first.Value!, second.Value!, third.Value!, fourth.Value!, fifth.Value!))
                 : Maybe<TResult>.None;
         }
     }
@@ -430,7 +438,8 @@ namespace Abc
             TSource value)
         {
             // return @this.Select(f => f(value));
-            return @this.IsSome ? Of(@this.Value(value)) : Maybe<TResult>.None;
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            return @this.IsSome ? Of(@this.Value!(value)) : Maybe<TResult>.None;
         }
 
         [Pure]
@@ -439,7 +448,8 @@ namespace Abc
             T1 first,
             T2 second)
         {
-            return @this.IsSome ? Of(@this.Value(first, second)) : Maybe<TResult>.None;
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            return @this.IsSome ? Of(@this.Value!(first, second)) : Maybe<TResult>.None;
         }
 
         [Pure]
@@ -449,7 +459,8 @@ namespace Abc
             T2 second,
             T3 third)
         {
-            return @this.IsSome ? Of(@this.Value(first, second, third))
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            return @this.IsSome ? Of(@this.Value!(first, second, third))
                 : Maybe<TResult>.None;
         }
 
@@ -461,7 +472,8 @@ namespace Abc
             T3 third,
             T4 fourth)
         {
-            return @this.IsSome ? Of(@this.Value(first, second, third, fourth))
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            return @this.IsSome ? Of(@this.Value!(first, second, third, fourth))
                 : Maybe<TResult>.None;
         }
 
@@ -474,7 +486,8 @@ namespace Abc
             T4 fourth,
             T5 fifth)
         {
-            return @this.IsSome ? Of(@this.Value(first, second, third, fourth, fifth))
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            return @this.IsSome ? Of(@this.Value!(first, second, third, fourth, fifth))
                 : Maybe<TResult>.None;
         }
 
@@ -488,7 +501,8 @@ namespace Abc
             Maybe<TSource> maybe)
         {
             // return @this.Bind(f => maybe.Select(f));
-            return @this.IsSome && maybe.IsSome ? Of(@this.Value(maybe.Value))
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            return @this.IsSome && maybe.IsSome ? Of(@this.Value!(maybe.Value!))
                 : Maybe<TResult>.None;
         }
 
@@ -498,8 +512,9 @@ namespace Abc
             Maybe<T1> first,
             Maybe<T2> second)
         {
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && @this.IsSome
-                ? Of(@this.Value(first.Value, second.Value))
+                ? Of(@this.Value!(first.Value!, second.Value!))
                 : Maybe<TResult>.None;
         }
 
@@ -510,8 +525,9 @@ namespace Abc
             Maybe<T2> second,
             Maybe<T3> third)
         {
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome && @this.IsSome
-                ? Of(@this.Value(first.Value, second.Value, third.Value))
+                ? Of(@this.Value!(first.Value!, second.Value!, third.Value!))
                 : Maybe<TResult>.None;
         }
 
@@ -523,8 +539,9 @@ namespace Abc
             Maybe<T3> third,
             Maybe<T4> fourth)
         {
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome && @this.IsSome
-                ? Of(@this.Value(first.Value, second.Value, third.Value, fourth.Value))
+                ? Of(@this.Value!(first.Value!, second.Value!, third.Value!, fourth.Value!))
                 : Maybe<TResult>.None;
         }
 
@@ -537,8 +554,9 @@ namespace Abc
             Maybe<T4> fourth,
             Maybe<T5> fifth)
         {
+            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome && fifth.IsSome && @this.IsSome
-                ? Of(@this.Value(first.Value, second.Value, third.Value, fourth.Value, fifth.Value))
+                ? Of(@this.Value!(first.Value!, second.Value!, third.Value!, fourth.Value!, fifth.Value!))
                 : Maybe<TResult>.None;
         }
 
