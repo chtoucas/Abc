@@ -28,8 +28,7 @@ namespace Abc
         //private static readonly Maybe<object> MObject = Maybe.SomeOrNone(new object());
     }
 
-    // Construction, properties.
-    // No need to test IsNone directly, see Assert.None() and Assert.Some().
+    // Construction & factories.
     public partial class MaybeTests
     {
         [Fact]
@@ -128,6 +127,17 @@ namespace Abc
         }
 
         [Fact]
+        public static void ToString_CurrentCulture()
+        {
+            var none = Maybe<int>.None;
+            Assert.Contains("None", none.ToString(), StringComparison.OrdinalIgnoreCase);
+
+            string value = "My Value";
+            var some = Maybe.Of(value);
+            Assert.Contains(value, some.ToString(), StringComparison.OrdinalIgnoreCase);
+        }
+
+        [Fact]
         public static void ImplicitToMaybe()
         {
             // Arrange
@@ -145,6 +155,7 @@ namespace Abc
         public static void ExplicitFromMaybe()
         {
             Assert.Equal(1, (int)One);
+            Assert.Equal(2L, (long)TwoL);
 
             Assert.Throws<InvalidCastException>(() => (string)Maybe<string>.None);
         }
@@ -165,6 +176,8 @@ namespace Abc
         {
             Assert.Equal(Ø, Maybe.Some(Ø).Flatten());
             Assert.Equal(One, Maybe.Some(One).Flatten());
+
+            Assert.Equal(Ø, Maybe<Maybe<int>>.None.Flatten());
         }
     }
 

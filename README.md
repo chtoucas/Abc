@@ -9,6 +9,7 @@
 Quick Start with `Maybe<T>`
 ---------------------------
 
+The basics.
 - [Construction](#construct-a-maybe)
 - [Deconstruction](#deconstruct-a-maybe)
 - [Empty or not?](#check-whether-a-maybe-is-empty-or-not)
@@ -16,6 +17,8 @@ Quick Start with `Maybe<T>`
 - [Safe extraction](#safely-extract-the-enclosed-value)
 - [Pattern matching](#pattern-matching-extract-and-map-the-enclosed-value-if-any)
 - [Side effects](#side-effects-do-something-with-the-enclosed-value-if-any)
+
+Going further.
 - [Iterator](#iterator)
 - [Binding](#binding)
 - [Query Expression Pattern](#query-expression-pattern)
@@ -296,7 +299,7 @@ var q = from x in maybe1
 
 ### Specialized types
 
-(TODO: booleans and 3VL)
+#### `Maybe<bool>` and 3VL
 
 ### More
 
