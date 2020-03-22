@@ -663,6 +663,7 @@ namespace Abc
     }
 
     // Async methods.
+    // NB: these async methods discard the context when they resume.
     public partial struct Maybe<T>
     {
         [Pure]

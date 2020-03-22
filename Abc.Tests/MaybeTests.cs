@@ -24,8 +24,6 @@ namespace Abc
         private static readonly Maybe<long> TwoL = Maybe.Some(2L);
 
         private static readonly Maybe<string> ValueT = Maybe.SomeOrNone("value");
-
-        //private static readonly Maybe<object> MObject = Maybe.SomeOrNone(new object());
     }
 
     // Construction & factories.
@@ -73,10 +71,17 @@ namespace Abc
         public static void Of_Reference()
         {
             Assert.None(Maybe.Of((string?)null));
-            Assert.None(Maybe.Of(NullString));
+            Assert.None(Maybe.Of((string)null!));
 
             Assert.Some("value", Maybe.Of("value"));
             Assert.Some("value", Maybe.Of((string?)"value"));
+
+            Assert.None(Maybe.Of((object?)null));
+            Assert.None(Maybe.Of((object)null!));
+
+            var @ref = new object();
+            Assert.Some(@ref, Maybe.Of(@ref));
+            Assert.Some(@ref, Maybe.Of((object?)@ref));
         }
 
         [Fact]
@@ -99,13 +104,14 @@ namespace Abc
         [Fact]
         public static void SomeOrNone()
         {
+            // Value type.
             Assert.None(Maybe.SomeOrNone((int?)null));
             Assert.Some(1, Maybe.SomeOrNone((int?)1));
 
+            // Reference type.
+            var @ref = new object();
             Assert.None(Maybe.SomeOrNone((object)null!));
-
-            var obj = new object();
-            Assert.Some(obj, Maybe.SomeOrNone(obj));
+            Assert.Some(@ref, Maybe.SomeOrNone(@ref));
         }
 
         [Fact]
@@ -117,13 +123,14 @@ namespace Abc
         [Fact]
         public static void SquareOrNone()
         {
+            // Value type.
             Assert.None(Maybe.SquareOrNone((int?)null));
             Assert.Some(One, Maybe.SquareOrNone((int?)1));
 
+            // Reference type.
+            var @ref = new object();
             Assert.None(Maybe.SquareOrNone((object)null!));
-
-            var obj = new object();
-            Assert.Some(Maybe.Of(obj), Maybe.SquareOrNone(obj));
+            Assert.Some(Maybe.Of(@ref), Maybe.SquareOrNone(@ref));
         }
 
         [Fact]
@@ -141,11 +148,11 @@ namespace Abc
         public static void ImplicitToMaybe()
         {
             // Arrange
-            Maybe<string> maybe = NullString; // implicit cast of a null-string
+            Maybe<string> none = NullString; // implicit cast of a null-string
 
             // Act & Assert
             Assert.Some(1, 1);      // the second 1 is implicit casted to Maybe<int>
-            Assert.None(maybe);
+            Assert.None(none);
 
             Assert.True(1 == One);
             Assert.True(One == 1);
@@ -203,10 +210,10 @@ namespace Abc
             Assert.True(ValueT.TryGetValue(out string? value));
             Assert.Equal("value", value);
 
-            var exp = new object();
-            var r = Maybe.SomeOrNone(exp);
-            Assert.True(r.TryGetValue(out object? obj));
-            Assert.Equal(exp, obj);
+            var @ref = new object();
+            var some = Maybe.SomeOrNone(@ref);
+            Assert.True(some.TryGetValue(out object? obj));
+            Assert.Equal(@ref, obj);
         }
 
         [Fact]
@@ -220,6 +227,57 @@ namespace Abc
             Assert.Equal(2, Two.ValueOrDefault());
             Assert.Equal(2L, TwoL.ValueOrDefault());
             Assert.Equal("value", ValueT.ValueOrDefault());
+
+            var @ref = new object();
+            var some = Maybe.SomeOrNone(@ref);
+            Assert.Equal(@ref, some.ValueOrDefault());
+        }
+
+        [Fact]
+        public static void ValueOrElse()
+        {
+            Assert.Equal(3, Ø.ValueOrElse(3));
+            Assert.Equal(3L, ØL.ValueOrElse(3L));
+            Assert.Equal("other", ØT.ValueOrElse("other"));
+
+            Assert.Equal(1, One.ValueOrElse(3));
+            Assert.Equal(2, Two.ValueOrElse(3));
+            Assert.Equal(2L, TwoL.ValueOrElse(3));
+            Assert.Equal("value", ValueT.ValueOrElse("other"));
+
+            var @ref = new object();
+            var some = Maybe.SomeOrNone(@ref);
+            var other = new object();
+            Assert.NotSame(@ref, other); // sanity check
+            Assert.Equal(@ref, some.ValueOrElse(other));
+        }
+
+        [Fact]
+        public static void ValueOrThrow()
+        {
+            Assert.Throws<InvalidOperationException>(() => Ø.ValueOrThrow());
+            Assert.Throws<InvalidOperationException>(() => ØL.ValueOrThrow());
+            Assert.Throws<InvalidOperationException>(() => ØT.ValueOrThrow());
+
+            Assert.Equal(1, One.ValueOrThrow());
+            Assert.Equal(2, Two.ValueOrThrow());
+            Assert.Equal(2L, TwoL.ValueOrThrow());
+            Assert.Equal("value", ValueT.ValueOrThrow());
+
+            var @ref = new object();
+            var some = Maybe.SomeOrNone(@ref);
+            Assert.Equal(@ref, some.ValueOrThrow());
+
+            Assert.Throws<NotSupportedException>(() => Ø.ValueOrThrow(new NotSupportedException()));
+            Assert.Throws<NotSupportedException>(() => ØL.ValueOrThrow(new NotSupportedException()));
+            Assert.Throws<NotSupportedException>(() => ØT.ValueOrThrow(new NotSupportedException()));
+
+            Assert.Equal(1, One.ValueOrThrow(new NotSupportedException()));
+            Assert.Equal(2, Two.ValueOrThrow(new NotSupportedException()));
+            Assert.Equal(2L, TwoL.ValueOrThrow(new NotSupportedException()));
+            Assert.Equal("value", ValueT.ValueOrThrow(new NotSupportedException()));
+
+            Assert.Equal(@ref, some.ValueOrThrow(new NotSupportedException()));
         }
     }
 
