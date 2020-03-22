@@ -26,6 +26,8 @@ Quick Start with `Maybe<T>`
 An option type, aka maybe type (a better fit for what we use it for), is like
 a box containing a value or no value at all.
 
+(TODO: improve what follows)
+
 It can help preventing null reference exceptions, but that's not the point, it
 really forces us to think about the outcome of a computation. What it is not is
 a general replacement for null references. Code quality should also improve since
@@ -376,7 +378,8 @@ otherwise I would not have written this library. _Maybe_'s should be
 - **AVOID using a _maybe_ if the object is expected to be long-lived.** (why not?)
 - **AVOID using a _maybe_ in hot code paths.**
 
-(struct could imply a ton of copying, what about LINQ (seq of _maybe_'s)?)
+(TODO: be less categorical, struct could imply a ton of copying, what about LINQ
+(seq of _maybe_'s)?)
 
 #### About the May-Parse pattern
 - **DO use the May-Parse pattern instead of the Try-Parse pattern for reference

@@ -72,6 +72,7 @@ namespace Abc
     /// - Maybe.SomeOrNone()    factory method for nullable value or reference types
     /// - Maybe.Of()            unconstrained factory method
     /// - Maybe.Square()
+    /// - Maybe.SquareOrNone()
     /// - Maybe.Guard()
     ///
     /// Operators:
@@ -876,8 +877,7 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        // TODO: naming Skip() -> Void(), Unit(), Discard()?
-
+        // FIXME: naming Skip() -> Void(), Unit(), Discard(), Erase()?
         [Pure]
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;
