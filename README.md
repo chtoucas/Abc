@@ -9,22 +9,21 @@
 Quick Start with `Maybe<T>`
 ---------------------------
 
-The basics.
-- [Construction](#construct-a-maybe)
-- [Deconstruction](#deconstruct-a-maybe)
-- [Empty or not?](#check-whether-a-maybe-is-empty-or-not)
-- [Map and filter](#map-and-filter-the-enclosed-value-if-any)
-- [Safe extraction](#safely-extract-the-enclosed-value)
-- [Pattern matching](#pattern-matching-extract-and-map-the-enclosed-value-if-any)
-- [Side effects](#side-effects-do-something-with-the-enclosed-value-if-any)
-
-Going further.
-- [Iterator](#iterator)
-- [Binding](#binding)
-- [Query Expression Pattern](#query-expression-pattern)
-- [Specialized types](#specialized-types)
-- [More](#more)
-- [Samples](#samples)
+- The basics.
+  * [Construction](#construct-a-maybe)
+  * [Deconstruction](#deconstruct-a-maybe)
+  * [Empty or not?](#check-whether-a-maybe-is-empty-or-not)
+  * [Map and filter](#map-and-filter-the-enclosed-value-if-any)
+  * [Safe extraction](#safely-extract-the-enclosed-value)
+  * [Pattern matching](#pattern-matching-extract-and-map-the-enclosed-value-if-any)
+  * [Side effects](#side-effects-do-something-with-the-enclosed-value-if-any)
+- Going further.
+  * [Iterator](#iterator)
+  * [Binding](#binding)
+  * [Query Expression Pattern](#query-expression-pattern)
+  * [Specialized types](#specialized-types)
+  * [More](#more)
+  * [Samples](#samples)
 
 An option type, aka maybe type (a better fit for what we use it for), is like
 a box containing a value or no value at all.
@@ -395,8 +394,8 @@ the inability to return a meaningful result.
 Version History
 ---------------
 
-v0.28.0 Still available on nuget.org under a different name (Narvalo.Fx).
-        Deprecated, broken, do not use it.
+0.28.0 Still available on nuget.org under a different name (Narvalo.Fx).
+       Deprecated, broken, do not use it.
 
 Developer Notes
 ---------------
@@ -413,7 +412,7 @@ Developer Notes
 
 - Target .NET Standard 2.1 too to be able to distribute a version with nullable
   annotations?
-- Tests & code coverage (OpenCover or Coverlet).
+- Tests & code coverage (coverlet).
 - XML comments with complete examples.
 - NuGet package.
 - Perf tool.
