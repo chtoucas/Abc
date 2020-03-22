@@ -138,7 +138,7 @@ namespace Abc
     // Helpers for Maybe<T> where T is a struct.
     public partial class Maybe
     {
-        // Conversion from Maybe<T?> to  Maybe<T>.
+        // Conversion from Maybe<T?> to Maybe<T>.
         // REVIEW: for ref types, Maybe<T?> is compiled to Maybe<T>, but in VS
         // or .NET Core?
         [Pure]

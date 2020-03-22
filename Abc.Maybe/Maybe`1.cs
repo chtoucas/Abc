@@ -35,6 +35,7 @@ namespace Abc
     // - Serializable? Binary serialization only.
     //   https://docs.microsoft.com/en-us/dotnet/standard/serialization/binary-serialization
     // - Set ops POV.
+    // - naming Skip() -> Void(), Unit(), Discard(), Erase(), Forget()?
     // - Struct really? Explain and compare to ValueTuple
     //   https://docs.microsoft.com/en-gb/dotnet/csharp/tuples
     //   http://mustoverride.com/tuples_structs/
@@ -95,7 +96,7 @@ namespace Abc
     /// - OrElse()              logical OR; "none"-coalescing
     /// - AndThen()             logical AND
     /// - XorElse()             logical XOR
-    /// - Skip()
+    /// - Skip()                discard the value
     ///
     /// Escape the maybe (no public access to the enclosed value if any,
     /// ie no property Value).
@@ -723,7 +724,7 @@ namespace Abc
     // There is only one case where it could make sense, Maybe<bool>, but
     // then it would be odd to have:
     //   Some(false) && Some(true) -> Some(true)
-    // instead of Some(false).
+    // instead of Some(false). The solution is 3VL (see Maybe).
     //
     // The methods are independent of Select()/Bind(). Maybe this can be done in
     // conjunction w/ OrElse(), but I haven't check this out.
@@ -879,7 +880,10 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        // FIXME: naming Skip() -> Void(), Unit(), Discard(), Erase(), Forget()?
+        /// <summary>
+        /// Discards the enclosed value while retaining the value of the property
+        /// <see cref="IsNone"/>.
+        /// </summary>
         [Pure]
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;

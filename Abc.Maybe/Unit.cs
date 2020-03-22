@@ -13,6 +13,7 @@ namespace Abc
     /// Defines a Unit type.
     /// <para><see cref="Unit"/> is an immutable struct.</para>
     /// </summary>
+    [Serializable]
     public readonly struct Unit : IEquatable<Unit>, IEquatable<ValueTuple>
     {
         /// <summary>
