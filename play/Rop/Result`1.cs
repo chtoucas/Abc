@@ -26,6 +26,8 @@ namespace Abc
     //
     // In situations where a Maybe<T> is not suitable, for instance when T is a
     // mutable reference type, one could use a Result<T> instead.
+    //
+    // REVIEW: is it really useful, Result<T> can be null.
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public abstract partial class Result<T>
     {
