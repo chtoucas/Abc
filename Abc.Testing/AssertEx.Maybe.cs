@@ -14,6 +14,7 @@ namespace Abc
         /// Verifies that <paramref name="maybe"/> is NOT empty.
         /// </summary>
         public static void Some<T>(Maybe<T> maybe)
+            // IsNone rather than IsSome because it is the public property.
             => False(maybe.IsNone);
 
         /// <summary>
@@ -21,10 +22,7 @@ namespace Abc
         /// <paramref name="exp"/>.
         /// </summary>
         public static void Some<T>(T exp, Maybe<T> maybe)
-        {
-            True(maybe.IsSome);
-            Equal(exp, maybe.Value);
-        }
+            => True(maybe.Contains(exp));
 
         /// <summary>
         /// Verifies that <paramref name="maybe"/> evaluates to true in a

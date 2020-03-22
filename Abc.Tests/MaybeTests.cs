@@ -13,13 +13,19 @@ namespace Abc
 
     public static partial class MaybeTests
     {
-        private static readonly Maybe<int> ZERO = Maybe<int>.None;
+        private static readonly Maybe<int> NONE = Maybe<int>.None;
 
         private static readonly Maybe<int> Ø = Maybe<int>.None;
+        private static readonly Maybe<long> ØL = Maybe<long>.None;
+        private static readonly Maybe<string> ØT = Maybe<string>.None;
+
         private static readonly Maybe<int> One = Maybe.Some(1);
         private static readonly Maybe<int> Two = Maybe.Some(2);
-        private static readonly Maybe<long> ØL = Maybe<long>.None;
         private static readonly Maybe<long> TwoL = Maybe.Some(2L);
+
+        private static readonly Maybe<string> ValueT = Maybe.SomeOrNone("value");
+
+        //private static readonly Maybe<object> MObject = Maybe.SomeOrNone(new object());
     }
 
     // Construction, properties.
@@ -70,18 +76,18 @@ namespace Abc
             Assert.None(Maybe.Of((string?)null));
             Assert.None(Maybe.Of(NullString));
 
-            Assert.Some(Maybe.Of("value"));
-            Assert.Some(Maybe.Of((string?)"value"));
+            Assert.Some("value", Maybe.Of("value"));
+            Assert.Some("value", Maybe.Of((string?)"value"));
         }
 
         [Fact]
         public static void Of_Value()
         {
-            Assert.Some(Maybe.Of(1));
+            Assert.Some(1, Maybe.Of(1));
 
 #pragma warning disable CS0618 // Type or member is obsolete
             Assert.None(Maybe.Of((int?)null));
-            Assert.Some(Maybe.Of((int?)1));
+            Assert.Some(1, Maybe.Of((int?)1));
 #pragma warning restore CS0618
         }
 
@@ -95,7 +101,7 @@ namespace Abc
         public static void SomeOrNone()
         {
             Assert.None(Maybe.SomeOrNone((int?)null));
-            Assert.Some(Maybe.SomeOrNone((int?)1));
+            Assert.Some(1, Maybe.SomeOrNone((int?)1));
 
             Assert.None(Maybe.SomeOrNone((object)null!));
 
@@ -162,125 +168,45 @@ namespace Abc
         }
     }
 
-    // Rules, sanity checks. A bit limited, maybe we could use fuzz testing.
+    // Safe escapes.
     public partial class MaybeTests
     {
-        //
-        // Functor rules.
-        //
-
-        // First Functor Law: the identity map is a fixed point for Select.
-        //   fmap id  ==  id
         [Fact]
-        public static void Functor_FirstLaw()
+        public static void TryGetValue()
         {
-            Assert.Equal(Ø, Ø.Select(x => x));
-            Assert.Equal(One, One.Select(x => x));
+            Assert.False(Ø.TryGetValue(out int _));
+            Assert.False(ØL.TryGetValue(out long _));
+            Assert.False(ØT.TryGetValue(out string _));
+
+            Assert.True(One.TryGetValue(out int one));
+            Assert.Equal(1, one);
+
+            Assert.True(Two.TryGetValue(out int two));
+            Assert.Equal(2, two);
+
+            Assert.True(TwoL.TryGetValue(out long twoL));
+            Assert.Equal(2L, twoL);
+
+            Assert.True(ValueT.TryGetValue(out string? value));
+            Assert.Equal("value", value);
+
+            var exp = new object();
+            var r = Maybe.SomeOrNone(exp);
+            Assert.True(r.TryGetValue(out object? obj));
+            Assert.Equal(exp, obj);
         }
 
-        // Second Functor Law: Select preserves the composition operator.
-        //   fmap (f . g)  ==  fmap f . fmap g
         [Fact]
-        public static void Functor_SecondLaw()
+        public static void ValueOrDefault()
         {
-            Func<int, long> g = x => 2L * x;
-            Func<long, string> f = x => $"{x}";
+            Assert.Equal(0, Ø.ValueOrDefault());
+            Assert.Equal(0L, ØL.ValueOrDefault());
+            Assert.Null(ØT.ValueOrDefault());
 
-            Assert.Equal(
-                Ø.Select(x => f(g(x))),
-                Ø.Select(g).Select(f));
-
-            Assert.Equal(
-                One.Select(x => f(g(x))),
-                One.Select(g).Select(f));
-        }
-
-        //
-        // Monoid rules.
-        // We use additive notations: + is OrElse(), zero is None.
-        // 1) zero + x = x
-        // 2) x + zero = x
-        // 3) x + (y + z) = (x + y) + z
-        // TODO: fourth law
-        // mconcat = foldr '(<>)' mempty
-        //
-
-        // First Monoid Law: None is a left identity for OrElse().
-        [Fact]
-        public static void OrElse_LeftIdentity()
-        {
-            Assert.Equal(Ø, ZERO.OrElse(Ø));
-            Assert.Equal(One, ZERO.OrElse(One));
-        }
-
-        // Second Monoid Law: None is a right identity for OrElse().
-        [Fact]
-        public static void OrElse_RightIdentity()
-        {
-            Assert.Equal(Ø, Ø.OrElse(ZERO));
-            Assert.Equal(One, One.OrElse(ZERO));
-        }
-
-        // Third Monoid Law: OrElse() is associative.
-        [Fact]
-        public static void OrElse_Associativity()
-        {
-            Assert.Equal(
-                Ø.OrElse(One.OrElse(Two)),
-                Ø.OrElse(One).OrElse(Two));
-
-            Assert.Equal(
-                One.OrElse(Two.OrElse(Ø)),
-                One.OrElse(Two).OrElse(Ø));
-
-            Assert.Equal(
-                Two.OrElse(Ø.OrElse(One)),
-                Two.OrElse(Ø).OrElse(One));
-        }
-
-        //
-        // MonadZero rules.
-        //
-
-        // MonadZero: None is a left zero for Bind().
-        //   mzero >>= f = mzero
-        [Fact]
-        public static void Bind_LeftZero()
-        {
-            Func<int, Maybe<int>> f = x => Maybe.Some(2 * x);
-
-            Assert.Equal(ZERO, ZERO.Bind(f));
-        }
-
-        // MonadMore: None is a right zero for Bind() or equivalently None is a
-        // right zero for AndThen().
-
-        // MonadMore: None is a right zero for AndThen(), implied by the
-        // definition of AndThen() and the MonadMore rule.
-
-        // MonadPlus: Bind() is right distributive over OrElse().
-
-        // MonadOr: Unit is a left zero for OrElse().
-
-        // Unit is a right zero for OrElse().
-
-        // AndThen() is associative, implied by the definition of AndThen() and
-        // the third monad law.
-        //   (m >> n) >> o = m >> (n >> o)
-        [Fact]
-        public static void AndThen_Associativity()
-        {
-            Assert.Equal(
-                Ø.AndThen(One.AndThen(Two)),
-                Ø.AndThen(One).AndThen(Two));
-
-            Assert.Equal(
-                One.AndThen(Two.AndThen(Ø)),
-                One.AndThen(Two).AndThen(Ø));
-
-            Assert.Equal(
-                Two.AndThen(Ø.AndThen(One)),
-                Two.AndThen(Ø).AndThen(One));
+            Assert.Equal(1, One.ValueOrDefault());
+            Assert.Equal(2, Two.ValueOrDefault());
+            Assert.Equal(2L, TwoL.ValueOrDefault());
+            Assert.Equal("value", ValueT.ValueOrDefault());
         }
     }
 
@@ -662,115 +588,6 @@ namespace Abc
             Assert.Equal(1, One.CompareTo(Ø));
             Assert.Equal(-1, Ø.CompareTo(One));
             Assert.Equal(0, Ø.CompareTo(Ø));
-        }
-    }
-
-    // Helpers for Maybe<T> where T is a struct.
-    public partial class MaybeTests
-    {
-        [Fact]
-        public static void Squash()
-        {
-            // Arrange
-            var none = Ø.Select(x => (int?)x);
-            var one = One.Select(x => (int?)x);
-            // Act & Assert
-            Assert.Equal(Ø, none.Squash());
-            Assert.Equal(One, one.Squash());
-        }
-
-        [Fact]
-        public static void ToNullable()
-        {
-            // Arrange
-            var none = Ø.Select(x => (int?)x);
-            var one = One.Select(x => (int?)x);
-            // Act & Assert
-            Assert.Null(Ø.ToNullable());
-            Assert.Equal(1, One.ToNullable());
-            Assert.Null(none.ToNullable());
-            Assert.Equal(1, one.ToNullable());
-        }
-    }
-
-    // Helpers for Maybe<Unit>.
-    public partial class MaybeTests
-    {
-        [Fact]
-        public static void Unit() => Assert.Some(Maybe.Unit);
-
-        [Fact]
-        public static void Zero() => Assert.None(Maybe.Zero);
-        [Fact]
-        public static void Guard()
-        {
-            Assert.Equal(Maybe.Zero, Maybe.Guard(false));
-            Assert.Equal(Maybe.Unit, Maybe.Guard(true));
-        }
-    }
-
-    // Helpers for Maybe<bool>.
-    public partial class MaybeTests
-    {
-        [Fact]
-        public static void True() => Assert.Some(Maybe.True);
-
-        [Fact]
-        public static void False() => Assert.Some(Maybe.False);
-
-        [Fact]
-        public static void Unknown() => Assert.None(Maybe.Unknown);
-
-        [Fact]
-        public static void Negate()
-        {
-            Assert.Some(false, Maybe.True.Negate());
-            Assert.Some(true, Maybe.False.Negate());
-            Assert.None(Maybe.Unknown.Negate());
-        }
-
-        [Fact]
-        public static void Or()
-        {
-            Assert.Some(true, Maybe.True.Or(Maybe.True));
-            Assert.Some(true, Maybe.True.Or(Maybe.False));
-            Assert.Some(true, Maybe.True.Or(Maybe.Unknown));
-
-            Assert.Some(true, Maybe.False.Or(Maybe.True));
-            Assert.Some(false, Maybe.False.Or(Maybe.False));
-            Assert.None(Maybe.False.Or(Maybe.Unknown));
-
-            Assert.Some(true, Maybe.Unknown.Or(Maybe.True));
-            Assert.None(Maybe.Unknown.Or(Maybe.False));
-            Assert.None(Maybe.Unknown.Or(Maybe.Unknown));
-        }
-
-        [Fact]
-        public static void And()
-        {
-            Assert.Some(true, Maybe.True.And(Maybe.True));
-            Assert.Some(false, Maybe.True.And(Maybe.False));
-            Assert.None(Maybe.True.And(Maybe.Unknown));
-
-            Assert.Some(false, Maybe.False.And(Maybe.True));
-            Assert.Some(false, Maybe.False.And(Maybe.False));
-            Assert.Some(false, Maybe.False.And(Maybe.Unknown));
-
-            Assert.None(Maybe.Unknown.And(Maybe.True));
-            Assert.Some(false, Maybe.Unknown.And(Maybe.False));
-            Assert.None(Maybe.Unknown.And(Maybe.Unknown));
-        }
-    }
-
-    // Helpers for Maybe<IEnumerable<T>>.
-    public partial class MaybeTests
-    {
-        [Fact]
-        public static void EmptyEnumerable()
-        {
-            // TODO: a better test whould not check the reference equality
-            // but the equality of both sequences.
-            Assert.Some(Enumerable.Empty<int>(), Maybe.EmptyEnumerable<int>());
         }
     }
 }
