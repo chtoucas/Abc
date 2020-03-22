@@ -234,6 +234,14 @@ namespace Abc
         }
 
         [Fact]
+        public static void ValueOrElse_InvalidException()
+        {
+            Assert.ThrowsArgNullEx("valueFactory", () => Ø.ValueOrElse(null!));
+            Assert.ThrowsArgNullEx("valueFactory", () => ØL.ValueOrElse(null!));
+            Assert.ThrowsArgNullEx("valueFactory", () => ØT.ValueOrElse((Func<string>)null!));
+        }
+
+        [Fact]
         public static void ValueOrElse()
         {
             Assert.Equal(3, Ø.ValueOrElse(3));
@@ -250,6 +258,25 @@ namespace Abc
             var other = new object();
             Assert.NotSame(@ref, other); // sanity check
             Assert.Equal(@ref, some.ValueOrElse(other));
+
+            Assert.Equal(3, Ø.ValueOrElse(() => 3));
+            Assert.Equal(3L, ØL.ValueOrElse(() => 3L));
+            Assert.Equal("other", ØT.ValueOrElse(() => "other"));
+
+            Assert.Equal(1, One.ValueOrElse(() => 3));
+            Assert.Equal(2, Two.ValueOrElse(() => 3));
+            Assert.Equal(2L, TwoL.ValueOrElse(() => 3));
+            Assert.Equal("value", ValueT.ValueOrElse(() => "other"));
+
+            Assert.Equal(@ref, some.ValueOrElse(() => other));
+        }
+
+        [Fact]
+        public static void ValueOrThrow_InvalidException()
+        {
+            Assert.ThrowsArgNullEx("exception", () => Ø.ValueOrThrow(null!));
+            Assert.ThrowsArgNullEx("exception", () => ØL.ValueOrThrow(null!));
+            Assert.ThrowsArgNullEx("exception", () => ØT.ValueOrThrow(null!));
         }
 
         [Fact]
