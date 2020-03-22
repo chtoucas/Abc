@@ -3,6 +3,7 @@
 namespace Abc
 {
     using System;
+    using System.Threading.Tasks;
 
     using Xunit;
 
@@ -39,6 +40,13 @@ namespace Abc
         {
             var ex = Throws<ArgumentNullException>(testCode);
             Equal(argName, ex.ParamName);
+        }
+
+        // Threw ArgumentNullException.
+        public static void ThrowsAsyncArgNullEx(string argName, Func<Task> testCode)
+        {
+            Task<ArgumentNullException> ex = ThrowsAsync<ArgumentNullException>(testCode);
+            Equal(argName, ex.Result.ParamName);
         }
     }
 }
