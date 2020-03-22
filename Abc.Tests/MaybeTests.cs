@@ -18,6 +18,7 @@ namespace Abc
         private static readonly Maybe<int> Ø = Maybe<int>.None;
         private static readonly Maybe<long> ØL = Maybe<long>.None;
         private static readonly Maybe<string> ØT = Maybe<string>.None;
+        private static readonly Maybe<object> ØR = Maybe<object>.None;
 
         private static readonly Maybe<int> One = Maybe.Some(1);
         private static readonly Maybe<int> Two = Maybe.Some(2);
@@ -192,20 +193,31 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
+        public static void Switch_InvalidArg()
+        {
+            Assert.ThrowsArgNullEx("caseNone", () => Ø.Switch(x => x, null!));
+            Assert.ThrowsArgNullEx("caseNone", () => ØT.Switch(x => x, (Func<string>)null!));
+            Assert.ThrowsArgNullEx("caseNone", () => ØR.Switch(x => x, null!));
+
+            var some = Maybe.SomeOrNone(new object());
+            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(null!, () => 1));
+            Assert.ThrowsArgNullEx("caseSome", () => ValueT.Switch(null!, () => 1));
+            Assert.ThrowsArgNullEx("caseSome", () => some.Switch(null!, () => 1));
+
+            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(null!, 1));
+            Assert.ThrowsArgNullEx("caseSome", () => ValueT.Switch(null!, 1));
+            Assert.ThrowsArgNullEx("caseSome", () => some.Switch(null!, 1));
+        }
+
+        [Fact]
         public static void TryGetValue()
         {
             Assert.False(Ø.TryGetValue(out int _));
-            Assert.False(ØL.TryGetValue(out long _));
             Assert.False(ØT.TryGetValue(out string _));
+            Assert.False(ØR.TryGetValue(out object _));
 
             Assert.True(One.TryGetValue(out int one));
             Assert.Equal(1, one);
-
-            Assert.True(Two.TryGetValue(out int two));
-            Assert.Equal(2, two);
-
-            Assert.True(TwoL.TryGetValue(out long twoL));
-            Assert.Equal(2L, twoL);
 
             Assert.True(ValueT.TryGetValue(out string? value));
             Assert.Equal("value", value);
@@ -220,12 +232,10 @@ namespace Abc
         public static void ValueOrDefault()
         {
             Assert.Equal(0, Ø.ValueOrDefault());
-            Assert.Equal(0L, ØL.ValueOrDefault());
             Assert.Null(ØT.ValueOrDefault());
+            Assert.Null(ØR.ValueOrDefault());
 
             Assert.Equal(1, One.ValueOrDefault());
-            Assert.Equal(2, Two.ValueOrDefault());
-            Assert.Equal(2L, TwoL.ValueOrDefault());
             Assert.Equal("value", ValueT.ValueOrDefault());
 
             var @ref = new object();
@@ -237,20 +247,17 @@ namespace Abc
         public static void ValueOrElse_InvalidException()
         {
             Assert.ThrowsArgNullEx("valueFactory", () => Ø.ValueOrElse(null!));
-            Assert.ThrowsArgNullEx("valueFactory", () => ØL.ValueOrElse(null!));
             Assert.ThrowsArgNullEx("valueFactory", () => ØT.ValueOrElse((Func<string>)null!));
+            Assert.ThrowsArgNullEx("valueFactory", () => ØR.ValueOrElse(null!));
         }
 
         [Fact]
         public static void ValueOrElse()
         {
             Assert.Equal(3, Ø.ValueOrElse(3));
-            Assert.Equal(3L, ØL.ValueOrElse(3L));
             Assert.Equal("other", ØT.ValueOrElse("other"));
 
             Assert.Equal(1, One.ValueOrElse(3));
-            Assert.Equal(2, Two.ValueOrElse(3));
-            Assert.Equal(2L, TwoL.ValueOrElse(3));
             Assert.Equal("value", ValueT.ValueOrElse("other"));
 
             var @ref = new object();
@@ -260,12 +267,9 @@ namespace Abc
             Assert.Equal(@ref, some.ValueOrElse(other));
 
             Assert.Equal(3, Ø.ValueOrElse(() => 3));
-            Assert.Equal(3L, ØL.ValueOrElse(() => 3L));
             Assert.Equal("other", ØT.ValueOrElse(() => "other"));
 
             Assert.Equal(1, One.ValueOrElse(() => 3));
-            Assert.Equal(2, Two.ValueOrElse(() => 3));
-            Assert.Equal(2L, TwoL.ValueOrElse(() => 3));
             Assert.Equal("value", ValueT.ValueOrElse(() => "other"));
 
             Assert.Equal(@ref, some.ValueOrElse(() => other));
@@ -275,20 +279,18 @@ namespace Abc
         public static void ValueOrThrow_InvalidException()
         {
             Assert.ThrowsArgNullEx("exception", () => Ø.ValueOrThrow(null!));
-            Assert.ThrowsArgNullEx("exception", () => ØL.ValueOrThrow(null!));
             Assert.ThrowsArgNullEx("exception", () => ØT.ValueOrThrow(null!));
+            Assert.ThrowsArgNullEx("exception", () => ØR.ValueOrThrow(null!));
         }
 
         [Fact]
         public static void ValueOrThrow()
         {
             Assert.Throws<InvalidOperationException>(() => Ø.ValueOrThrow());
-            Assert.Throws<InvalidOperationException>(() => ØL.ValueOrThrow());
             Assert.Throws<InvalidOperationException>(() => ØT.ValueOrThrow());
+            Assert.Throws<InvalidOperationException>(() => ØR.ValueOrThrow());
 
             Assert.Equal(1, One.ValueOrThrow());
-            Assert.Equal(2, Two.ValueOrThrow());
-            Assert.Equal(2L, TwoL.ValueOrThrow());
             Assert.Equal("value", ValueT.ValueOrThrow());
 
             var @ref = new object();
@@ -296,15 +298,39 @@ namespace Abc
             Assert.Equal(@ref, some.ValueOrThrow());
 
             Assert.Throws<NotSupportedException>(() => Ø.ValueOrThrow(new NotSupportedException()));
-            Assert.Throws<NotSupportedException>(() => ØL.ValueOrThrow(new NotSupportedException()));
             Assert.Throws<NotSupportedException>(() => ØT.ValueOrThrow(new NotSupportedException()));
+            Assert.Throws<NotSupportedException>(() => ØR.ValueOrThrow(new NotSupportedException()));
 
             Assert.Equal(1, One.ValueOrThrow(new NotSupportedException()));
-            Assert.Equal(2, Two.ValueOrThrow(new NotSupportedException()));
-            Assert.Equal(2L, TwoL.ValueOrThrow(new NotSupportedException()));
             Assert.Equal("value", ValueT.ValueOrThrow(new NotSupportedException()));
 
             Assert.Equal(@ref, some.ValueOrThrow(new NotSupportedException()));
+        }
+    }
+
+    // Side effects.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void Do_InvalidArg()
+        {
+            Assert.ThrowsArgNullEx("onNone", () => Ø.Do(_ => { }, null!));
+            Assert.ThrowsArgNullEx("onNone", () => ØT.Do(_ => { }, null!));
+            Assert.ThrowsArgNullEx("onNone", () => ØR.Do(_ => { }, null!));
+
+            var some = Maybe.SomeOrNone(new object());
+            Assert.ThrowsArgNullEx("onSome", () => One.Do(null!, () => { }));
+            Assert.ThrowsArgNullEx("onSome", () => ValueT.Do(null!, () => { }));
+            Assert.ThrowsArgNullEx("onSome", () => some.Do(null!, () => { }));
+        }
+
+        [Fact]
+        public static void OnSome_InvalidAction()
+        {
+            var some = Maybe.SomeOrNone(new object());
+            Assert.ThrowsArgNullEx("action", () => One.OnSome(null!));
+            Assert.ThrowsArgNullEx("action", () => ValueT.OnSome(null!));
+            Assert.ThrowsArgNullEx("action", () => some.OnSome(null!));
         }
     }
 
@@ -687,5 +713,10 @@ namespace Abc
             Assert.Equal(-1, Ø.CompareTo(One));
             Assert.Equal(0, Ø.CompareTo(Ø));
         }
+    }
+
+    // Equality.
+    public partial class MaybeTests
+    {
     }
 }
