@@ -187,12 +187,18 @@ namespace Abc
 
     // Helpers for Maybe<bool>.
     // 3VL (three-valued logic) logical operations.
-    // It makes Maybe<bool>.None and SQL null very similar but only for boolean
+    // It makes Maybe<bool>.None and SQL NULL very similar but only for boolean
     // logical operations, otherwise they may exhibit different behaviours.
     // For instance, with SQL-92 (NULL = NULL) evaluates to false, whereas
     // (Maybe<bool>.None == Maybe<bool>.None) evaluates to true.
     public partial class Maybe
     {
+        /// <summary>
+        /// Represents the unknown for the type <see cref="Maybe{Boolean}"/>.
+        /// <para>This field is read-only.</para>
+        /// </summary>
+        public static readonly Maybe<bool> Unknown = Maybe<bool>.None;
+
         /// <summary>
         /// Represents the true for the type <see cref="Maybe{Boolean}"/>.
         /// <para>This field is read-only.</para>
@@ -204,12 +210,6 @@ namespace Abc
         /// <para>This field is read-only.</para>
         /// </summary>
         public static readonly Maybe<bool> False = Some(false);
-
-        /// <summary>
-        /// Represents the unknown for the type <see cref="Maybe{Boolean}"/>.
-        /// <para>This field is read-only.</para>
-        /// </summary>
-        public static readonly Maybe<bool> Unknown = Maybe<bool>.None;
 
         public static Maybe<bool> Negate(this in Maybe<bool> @this)
         {

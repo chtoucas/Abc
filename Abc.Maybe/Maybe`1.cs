@@ -60,8 +60,11 @@ namespace Abc
     ///
     /// Static properties.
     /// - Maybe<T>.None         the empty maybe of type T
-    /// - Maybe.None            the empty maybe of type Unit
+    /// - Maybe.Zero            the empty maybe of type Unit
     /// - Maybe.Unit            the unit for Maybe<T>
+    /// - Maybe.Unknown         the empty maybe of type bool
+    /// - Maybe.True
+    /// - Maybe.False
     ///
     /// Instance properties.
     /// - IsNone                is this the empty maybe?
@@ -93,7 +96,6 @@ namespace Abc
     /// - AndThen()             logical AND
     /// - XorElse()             logical XOR
     /// - Skip()
-    /// - Replicate()
     ///
     /// Escape the maybe (no public access to the enclosed value if any,
     /// ie no property Value).
@@ -877,42 +879,10 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        // FIXME: naming Skip() -> Void(), Unit(), Discard(), Erase()?
+        // FIXME: naming Skip() -> Void(), Unit(), Discard(), Erase(), Forget()?
         [Pure]
         public Maybe<Unit> Skip()
             => _isSome ? Maybe.Unit : Maybe.Zero;
-
-        /// <seealso cref="Yield(int)"/>
-        /// <remarks>
-        /// The difference with <see cref="Yield(int)"/> is in the treatment of
-        /// an empty maybe. <see cref="Yield(int)"/> for an empty maybe returns
-        /// an empty sequence, whereas this method returns an empty maybe (no
-        /// sequence at all).
-        /// </remarks>
-        [Pure]
-        public Maybe<IEnumerable<T>> Replicate(int count)
-            // Identical to:
-            //   Select(x => Enumerable.Repeat(x, count));
-            => _isSome ? Maybe.Of(Enumerable.Repeat(_value, count))
-                : Maybe<IEnumerable<T>>.None;
-
-        // Beware, infinite loop!
-        /// <seealso cref="Yield()"/>
-        /// <remarks>
-        /// The difference with <see cref="Yield()"/> is in the treatment of
-        /// an empty maybe. <see cref="Yield()"/> for an empty maybe returns
-        /// an empty sequence, whereas this method returns an empty maybe (no
-        /// sequence at all).
-        /// </remarks>
-        [Pure]
-        public Maybe<IEnumerable<T>> Replicate()
-        {
-            return Select(__selector);
-
-            static IEnumerable<T> __selector(T value)
-                // NULL_FORGIVING: Select() guarantees that "value" won't be null.
-                => new NeverEndingIterator<T>(value!);
-        }
     }
 
     // Iterable but not IEnumerable<>.
@@ -951,13 +921,13 @@ namespace Abc
         // Beware, Yield() doesn't match the F# yield of computation expressions.
 
         // Yield break or yield return "count" times.
-        /// See also <seealso cref="Replicate(int)"/> and the comments there.
+        ///// See also <seealso cref="Replicate(int)"/> and the comments there.
         [Pure]
         public IEnumerable<T> Yield(int count)
             => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
         // Beware, infinite loop!
-        /// See also <seealso cref="Replicate()"/> and the comments there.
+        ///// See also <seealso cref="Replicate()"/> and the comments there.
         [Pure]
         public IEnumerable<T> Yield()
             // NULL_FORGIVING: when _isSome is true, _value is NOT null.

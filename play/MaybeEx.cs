@@ -441,6 +441,43 @@ namespace Abc
         [Pure]
         public static Maybe<T> Filter<T>(this Maybe<T> @this, bool condition)
             => condition ? @this : Maybe<T>.None;
+
+        /// <seealso cref="Maybe{T}.Yield(int)"/>
+        /// <remarks>
+        /// The difference with <see cref="Maybe{T}.Yield(int)"/> is in the treatment of
+        /// an empty maybe. <see cref="Maybe{T}.Yield(int)"/> for an empty maybe returns
+        /// an empty sequence, whereas this method returns an empty maybe (no
+        /// sequence at all).
+        /// </remarks>
+        [Pure]
+        public static Maybe<IEnumerable<T>> Replicate<T>(this Maybe<T> @this, int count)
+            //=> _isSome ? Maybe.Of(Enumerable.Repeat(_value, count))
+            //    : Maybe<IEnumerable<T>>.None;
+            => @this.Select(x => Enumerable.Repeat(x, count));
+
+        // Beware, infinite loop!
+        /// <seealso cref="Maybe{T}.Yield()"/>
+        /// <remarks>
+        /// The difference with <see cref="Maybe{T}.Yield()"/> is in the treatment of
+        /// an empty maybe. <see cref="Maybe{T}.Yield()"/> for an empty maybe returns
+        /// an empty sequence, whereas this method returns an empty maybe (no
+        /// sequence at all).
+        /// </remarks>
+        [Pure]
+        public static Maybe<IEnumerable<T>> Replicate<T>(this Maybe<T> @this)
+        {
+            return @this.Select(__selector);
+
+            static IEnumerable<T> __selector(T value)
+            {
+                //// NULL_FORGIVING: Select() guarantees that "value" won't be null.
+                //=> new NeverEndingIterator<T>(value!);
+                while (true)
+                {
+                    yield return value;
+                }
+            }
+        }
     }
 
     // Extension methods for Maybe<T> where T is enumerable.
