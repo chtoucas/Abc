@@ -977,7 +977,7 @@ namespace Abc
             // Beware, this is NOT the same as
             //   left.CompareTo(right) < 0;
             => left._isSome && right._isSome
-                ? Comparer<T>.Default.Compare(left._value, left._value) < 0
+                ? Comparer<T>.Default.Compare(left._value, right._value) < 0
                 : false;
 
         /// <summary>
@@ -997,7 +997,7 @@ namespace Abc
             // Beware, this is NOT the same as
             //   left.CompareTo(right) <= 0;
             => left._isSome && right._isSome
-                ? Comparer<T>.Default.Compare(left._value, left._value) <= 0
+                ? Comparer<T>.Default.Compare(left._value, right._value) <= 0
                 : false;
 
         /// <summary>
@@ -1017,7 +1017,7 @@ namespace Abc
             // Beware, this is NOT the same as
             //   left.CompareTo(right) > 0;
             => left._isSome && right._isSome
-                ? Comparer<T>.Default.Compare(left._value, left._value) > 0
+                ? Comparer<T>.Default.Compare(left._value, right._value) > 0
                 : false;
 
         /// <summary>
@@ -1037,7 +1037,7 @@ namespace Abc
             // Beware, this is NOT the same as
             //   left.CompareTo(right) >= 0;
             => left._isSome && right._isSome
-                ? Comparer<T>.Default.Compare(left._value, left._value) >= 0
+                ? Comparer<T>.Default.Compare(left._value, right._value) >= 0
                 : false;
 
         /// <summary>

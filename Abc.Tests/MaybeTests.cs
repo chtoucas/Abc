@@ -235,6 +235,66 @@ namespace Abc
         }
 
         [Fact]
+        public static void Switch_None()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            bool onNoneCalled = false;
+            // Act
+            int v = NoText.Switch(
+                x => { onSomeCalled = true; return x.Length; },
+                () => { onNoneCalled = true; return 0; });
+            // Assert
+            Assert.False(onSomeCalled);
+            Assert.True(onNoneCalled);
+            Assert.Equal(0, v);
+        }
+
+        [Fact]
+        public static void Switch_None_Const()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            // Act
+            int v = NoText.Switch(
+                x => { onSomeCalled = true; return x.Length; },
+                0);
+            // Assert
+            Assert.False(onSomeCalled);
+            Assert.Equal(0, v);
+        }
+
+        [Fact]
+        public static void Switch_Some()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            bool onNoneCalled = false;
+            // Act
+            int v = SomeText.Switch(
+                x => { onSomeCalled = true; return x.Length; },
+                () => { onNoneCalled = true; return 0; });
+            // Assert
+            Assert.True(onSomeCalled);
+            Assert.False(onNoneCalled);
+            Assert.Equal(4, v);
+        }
+
+        [Fact]
+        public static void Switch_Some_Const()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            // Act
+            int v = SomeText.Switch(
+                x => { onSomeCalled = true; return x.Length; },
+                0);
+            // Assert
+            Assert.True(onSomeCalled);
+            Assert.Equal(4, v);
+        }
+
+        [Fact]
         public static void TryGetValue()
         {
             Assert.False(Ø.TryGetValue(out int _));
@@ -822,6 +882,18 @@ namespace Abc
         }
 
         [Fact]
+        public static void Contains_InvalidArg()
+        {
+            Assert.ThrowsArgNullEx("comparer", () => Ø.Contains(1, null!));
+            Assert.ThrowsArgNullEx("comparer", () => NoText.Contains("xxx", null!));
+            Assert.ThrowsArgNullEx("comparer", () => NoUri.Contains(MyUri, null!));
+
+            Assert.ThrowsArgNullEx("comparer", () => One.Contains(1, null!));
+            Assert.ThrowsArgNullEx("comparer", () => SomeText.Contains(MyText, null!));
+            Assert.ThrowsArgNullEx("comparer", () => SomeUri.Contains(MyUri, null!));
+        }
+
+        [Fact]
         public static void Contains()
         {
             Assert.False(Ø.Contains(0));
@@ -848,11 +920,14 @@ namespace Abc
     }
 
     // Comparison.
+    // TODO: tests when T is not comparable.
     public partial class MaybeTests
     {
         [Fact]
-        public static void Comparison_WithNone_ReturnFalse()
+        public static void Comparison_WithNone()
         {
+            // The result is alwaays "false".
+
             Assert.False(One < Ø);
             Assert.False(One > Ø);
             Assert.False(One <= Ø);
@@ -864,12 +939,26 @@ namespace Abc
             Assert.False(Ø <= One);
             Assert.False(Ø >= One);
 
-#pragma warning disable CS1718 // Comparison made to same variable
-            Assert.False(Ø < Ø);
-            Assert.False(Ø > Ø);
-            Assert.False(Ø <= Ø);
-            Assert.False(Ø >= Ø);
-#pragma warning restore CS1718
+            Maybe<int> none = Ø;
+            Assert.False(Ø < none);
+            Assert.False(Ø > none);
+            Assert.False(Ø <= none);
+            Assert.False(Ø >= none);
+        }
+
+        [Fact]
+        public static void Comparison()
+        {
+            Assert.True(One < Two);
+            Assert.False(One > Two);
+            Assert.True(One <= Two);
+            Assert.False(One >= Two);
+
+            Maybe<int> one = One;
+            Assert.False(One < one);
+            Assert.False(One > one);
+            Assert.True(One <= one);
+            Assert.True(One >= one);
         }
 
         [Fact]
@@ -878,6 +967,14 @@ namespace Abc
             Assert.Equal(1, One.CompareTo(Ø));
             Assert.Equal(-1, Ø.CompareTo(One));
             Assert.Equal(0, Ø.CompareTo(Ø));
+        }
+
+        [Fact]
+        public static void CompareTo()
+        {
+            Assert.Equal(1, Two.CompareTo(One));
+            Assert.Equal(0, One.CompareTo(One));
+            Assert.Equal(-1, One.CompareTo(Two));
         }
     }
 
