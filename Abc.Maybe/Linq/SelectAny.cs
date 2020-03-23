@@ -7,6 +7,8 @@ namespace Abc.Linq
     using System.Diagnostics.Contracts;
     using System.Linq;
 
+    using Anexn = System.ArgumentNullException;
+
     // Projection: SelectAny (deferred).
     public static partial class Qperators
     {
@@ -15,6 +17,9 @@ namespace Abc.Linq
             this IEnumerable<TSource> source,
             Func<TSource, Maybe<TResult>> selector)
         {
+            if (source is null) { throw new Anexn(nameof(source)); }
+            if (selector is null) { throw new Anexn(nameof(selector)); }
+
             return from x in source
                    let result = selector(x)
                    where result.IsSome

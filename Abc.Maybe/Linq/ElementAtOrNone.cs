@@ -24,6 +24,7 @@ namespace Abc.Linq
         {
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
 
+            // REVIEW: throw.
             if (index < 0) { return Maybe<TSource>.None; }
 
             // Fast track.
