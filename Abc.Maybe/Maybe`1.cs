@@ -83,7 +83,7 @@ namespace Abc
     /// - equality == and !=
     /// - comparison <, >, <=, and >=
     /// - bitwise logical |, & and ^ (and compound assignment |=, &= and ^=)
-    /// - conversions from and to the underlying type T
+    /// - explicit conversion from and to the underlying type T
     ///
     /// Instance methods where the result is another maybe.
     /// - Bind()                unwrap then map to another maybe
@@ -193,14 +193,17 @@ namespace Abc
         public override string ToString()
             => _isSome ? $"Maybe({_value})" : "Maybe(None)";
 
-#pragma warning disable CA2225 // Operator overloads have named alternates
-
-        // Implicit conversion to Maybe<T> for equality comparison, very much
-        // like what we have will nullable values: (int?)1 == 1 works.
-        // Friendly name: Maybe.Of(value).
-        // NB: maybe (= Some(x)) == y is equivalent to maybe.Contains(y).
-        public static implicit operator Maybe<T>([AllowNull] T value)
-            => Maybe.Of(value);
+        // REVIEW: implicit conversion.
+        //// Implicit conversion: test ImplicitToMaybe, see Square() and
+        //// SquareOrNone() too.
+        ////
+        //// Friendly name: Maybe.Of(value).
+        //// Implicit conversion to Maybe<T> for equality comparison, very much
+        //// like what we have will nullable values: (int?)1 == 1 works.
+        //// NB: maybe (= Some(x)) == y is equivalent to maybe.Contains(y).
+        //[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Maybe.Of()")]
+        //public static implicit operator Maybe<T>([AllowNull] T value)
+        //    => Maybe.Of(value);
 
         // REVIEW: explicit conversion.
         // Friendly name: value.ValueOrThrow().
@@ -208,11 +211,9 @@ namespace Abc
         // with null, we can write maybe == null, which is odd for a struct
         // but at the same time we can write Maybe<string> maybe = s where s is
         // in fact "null".
-        //[return: MaybeNull]
+        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "ValueOrThrow()")]
         public static explicit operator T(Maybe<T> value)
-            => value._isSome ? value._value : throw new InvalidCastException();
-
-#pragma warning restore CA2225
+            => value._isSome ? value._value : throw EF.Maybe_Cast;
 
         /// <summary>
         /// Represents a debugger type proxy for <see cref="Maybe{T}"/>.
@@ -733,8 +734,6 @@ namespace Abc
     // - https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/boolean-logical-operators
     public partial struct Maybe<T>
     {
-#pragma warning disable CA2225 // Operator overloads have named alternates
-
         // Overloading true and false is necessary if we wish to support the
         // boolean logical AND (&&) and OR (||),
         //   x && y is evaluated as false(x) ? x : (x & y)
@@ -754,14 +753,17 @@ namespace Abc
 #endif
 
         // Bitwise logical OR.
+        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "OrElse()")]
         public static Maybe<T> operator |(Maybe<T> left, Maybe<T> right)
             => left.OrElse(right);
 
         // Bitwise logical AND.
+        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "AndThen()")]
         public static Maybe<T> operator &(Maybe<T> left, Maybe<T> right)
             => left.AndThen(right);
 
         // Bitwise logical XOR.
+        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "XorElse()")]
         public static Maybe<T> operator ^(Maybe<T> left, Maybe<T> right)
             => left.XorElse(right);
 
@@ -769,8 +771,6 @@ namespace Abc
         [InternalForTesting]
         internal bool ToBoolean()
             => _isSome;
-
-#pragma warning restore CA2225
 
         /// <remarks>
         /// Generalizes the null-coalescing operator (??) to maybe's, it returns

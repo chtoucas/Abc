@@ -23,6 +23,9 @@ namespace Abc.Utilities
         public static readonly NotSupportedException ReadOnlyCollection
             = new NotSupportedException("The collection is read-only.");
 
+        public static readonly InvalidCastException Maybe_Cast
+            = new InvalidCastException("The object does not contain any value.");
+
         public static readonly ArgumentException NotComparable
             = new ArgumentException("The objects can not be compared.");
 

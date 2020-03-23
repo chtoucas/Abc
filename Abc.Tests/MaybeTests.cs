@@ -12,7 +12,7 @@ namespace Abc
 
     using Assert = AssertEx;
 
-    // Tests at least w/ a value type and a reference type.
+    // Test at least w/ a value type and a reference type.
 
     public static partial class MaybeTests
     {
@@ -158,19 +158,19 @@ namespace Abc
             Assert.Contains(value, some.ToString(), StringComparison.OrdinalIgnoreCase);
         }
 
-        [Fact]
-        public static void ImplicitToMaybe()
-        {
-            // Arrange
-            Maybe<string> none = NullString; // implicit cast of a null-string
+        //[Fact]
+        //public static void ImplicitToMaybe()
+        //{
+        //    // Arrange
+        //    Maybe<string> none = NullString; // implicit cast of a null-string
 
-            // Act & Assert
-            Assert.Some(1, 1);      // the second 1 is implicit casted to Maybe<int>
-            Assert.None(none);
+        //    // Act & Assert
+        //    Assert.Some(1, 1);      // the second 1 is implicit casted to Maybe<int>
+        //    Assert.None(none);
 
-            Assert.True(1 == One);
-            Assert.True(One == 1);
-        }
+        //    Assert.True(1 == One);
+        //    Assert.True(One == 1);
+        //}
 
         [Fact]
         public static void ExplicitFromMaybe()
