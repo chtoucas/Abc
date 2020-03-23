@@ -12,20 +12,37 @@ namespace Abc
 
     using Assert = AssertEx;
 
+    // Tests at least w/ a value type and a reference type.
+
     public static partial class MaybeTests
     {
         private static readonly Maybe<int> NONE = Maybe<int>.None;
 
         private static readonly Maybe<int> Ø = Maybe<int>.None;
         private static readonly Maybe<long> ØL = Maybe<long>.None;
-        private static readonly Maybe<string> ØT = Maybe<string>.None;
-        private static readonly Maybe<object> ØR = Maybe<object>.None;
 
         private static readonly Maybe<int> One = Maybe.Some(1);
         private static readonly Maybe<int> Two = Maybe.Some(2);
         private static readonly Maybe<long> TwoL = Maybe.Some(2L);
 
-        private static readonly Maybe<string> ValueT = Maybe.SomeOrNone("value");
+        private static readonly string MyText;
+        private static readonly Maybe<string> NoText = Maybe<string>.None;
+        private static readonly Maybe<string> SomeText;
+
+        private static readonly Uri MyUri;
+        private static readonly Maybe<Uri> NoUri = Maybe<Uri>.None;
+        private static readonly Maybe<Uri> SomeUri;
+
+#pragma warning disable CA1810 // Initialize reference type static fields inline
+        static MaybeTests()
+        {
+            MyText = "text";
+            SomeText = Maybe.SomeOrNone(MyText);
+
+            MyUri = new Uri("http://www.narvalo.org");
+            SomeUri = Maybe.SomeOrNone(MyUri);
+        }
+#pragma warning restore CA1810
     }
 
     // Construction & factories.
@@ -38,6 +55,7 @@ namespace Abc
             Assert.None(default(Maybe<Unit>));
             Assert.None(default(Maybe<int>));
             Assert.None(default(Maybe<string>));
+            Assert.None(default(Maybe<Uri>));
             Assert.None(default(Maybe<object>));
         }
 
@@ -48,6 +66,7 @@ namespace Abc
             Assert.None(Maybe<int>.None);
             Assert.None(Maybe<int?>.None);
             Assert.None(Maybe<string>.None);
+            Assert.None(Maybe<Uri>.None);
             Assert.None(Maybe<object>.None);
 
             // None is the default value.
@@ -55,46 +74,39 @@ namespace Abc
             Assert.Equal(default, Maybe<int>.None);
             Assert.Equal(default, Maybe<int?>.None);
             Assert.Equal(default, Maybe<string>.None);
+            Assert.Equal(default, Maybe<Uri>.None);
             Assert.Equal(default, Maybe<object>.None);
 
+            // The int? version is not allowed here.
             Assert.None(Maybe.None<Unit>());
             Assert.None(Maybe.None<int>());
             Assert.None(Maybe.None<string>());
+            Assert.None(Maybe.None<Uri>());
             Assert.None(Maybe.None<object>());
 
             // Maybe.None<T>() simply returns Maybe<T>.None.
             Assert.Equal(Maybe<Unit>.None, Maybe.None<Unit>());
             Assert.Equal(Maybe<int>.None, Maybe.None<int>());
             Assert.Equal(Maybe<string>.None, Maybe.None<string>());
+            Assert.Equal(Maybe<Uri>.None, Maybe.None<Uri>());
             Assert.Equal(Maybe<object>.None, Maybe.None<object>());
         }
 
         [Fact]
-        public static void Of_Reference()
+        public static void Of()
         {
-            Assert.None(Maybe.Of((string?)null));
-            Assert.None(Maybe.Of((string)null!));
-
-            Assert.Some("value", Maybe.Of("value"));
-            Assert.Some("value", Maybe.Of((string?)"value"));
-
-            Assert.None(Maybe.Of((object?)null));
-            Assert.None(Maybe.Of((object)null!));
-
-            var @ref = new object();
-            Assert.Some(@ref, Maybe.Of(@ref));
-            Assert.Some(@ref, Maybe.Of((object?)@ref));
-        }
-
-        [Fact]
-        public static void Of_Value()
-        {
-            Assert.Some(1, Maybe.Of(1));
-
 #pragma warning disable CS0618 // Type or member is obsolete
             Assert.None(Maybe.Of((int?)null));
             Assert.Some(1, Maybe.Of((int?)1));
 #pragma warning restore CS0618
+
+            Assert.Some(1, Maybe.Of(1));
+
+            Assert.None(Maybe.Of((string)null!));
+            Assert.Some("value", Maybe.Of("value"));
+
+            Assert.None(Maybe.Of((Uri)null!));
+            Assert.Some(MyUri, Maybe.Of(MyUri));
         }
 
         [Fact]
@@ -106,14 +118,14 @@ namespace Abc
         [Fact]
         public static void SomeOrNone()
         {
-            // Value type.
             Assert.None(Maybe.SomeOrNone((int?)null));
             Assert.Some(1, Maybe.SomeOrNone((int?)1));
 
-            // Reference type.
-            var @ref = new object();
-            Assert.None(Maybe.SomeOrNone((object)null!));
-            Assert.Some(@ref, Maybe.SomeOrNone(@ref));
+            Assert.None(Maybe.SomeOrNone((string)null!));
+            Assert.Some("value", Maybe.SomeOrNone("value"));
+
+            Assert.None(Maybe.SomeOrNone((Uri)null!));
+            Assert.Some(MyUri, Maybe.SomeOrNone(MyUri));
         }
 
         [Fact]
@@ -125,14 +137,14 @@ namespace Abc
         [Fact]
         public static void SquareOrNone()
         {
-            // Value type.
             Assert.None(Maybe.SquareOrNone((int?)null));
             Assert.Some(One, Maybe.SquareOrNone((int?)1));
 
-            // Reference type.
-            var @ref = new object();
-            Assert.None(Maybe.SquareOrNone((object)null!));
-            Assert.Some(Maybe.Of(@ref), Maybe.SquareOrNone(@ref));
+            Assert.None(Maybe.SquareOrNone((string)null!));
+            Assert.Some(Maybe.Of("value"), Maybe.SquareOrNone("value"));
+
+            Assert.None(Maybe.SquareOrNone((Uri)null!));
+            Assert.Some(Maybe.Of(MyUri), Maybe.SquareOrNone(MyUri));
         }
 
         [Fact]
@@ -164,9 +176,12 @@ namespace Abc
         public static void ExplicitFromMaybe()
         {
             Assert.Equal(1, (int)One);
-            Assert.Equal(2L, (long)TwoL);
+            Assert.Equal(MyText, (string)SomeText);
+            Assert.Equal(MyUri, (Uri)SomeUri);
 
+            Assert.Throws<InvalidCastException>(() => (int)Maybe<int>.None);
             Assert.Throws<InvalidCastException>(() => (string)Maybe<string>.None);
+            Assert.Throws<InvalidCastException>(() => (Uri)Maybe<Uri>.None);
         }
     }
 
@@ -176,39 +191,29 @@ namespace Abc
         [Fact]
         public static void Bind_InvalidBinder()
         {
-            // Arrange
-            var @ref = new object();
-            var some = Maybe.SomeOrNone(@ref);
-
-            // Act & Assert
             Assert.ThrowsArgNullEx("binder", () => Ø.Bind((Func<int, Maybe<string>>)null!));
-            Assert.ThrowsArgNullEx("binder", () => ØT.Bind((Func<string, Maybe<string>>)null!));
-            Assert.ThrowsArgNullEx("binder", () => ØR.Bind((Func<object, Maybe<string>>)null!));
+            Assert.ThrowsArgNullEx("binder", () => NoText.Bind((Func<string, Maybe<string>>)null!));
+            Assert.ThrowsArgNullEx("binder", () => NoUri.Bind((Func<Uri, Maybe<string>>)null!));
 
             Assert.ThrowsArgNullEx("binder", () => One.Bind((Func<int, Maybe<string>>)null!));
-            Assert.ThrowsArgNullEx("binder", () => ValueT.Bind((Func<string, Maybe<string>>)null!));
-            Assert.ThrowsArgNullEx("binder", () => some.Bind((Func<object, Maybe<string>>)null!));
+            Assert.ThrowsArgNullEx("binder", () => SomeText.Bind((Func<string, Maybe<string>>)null!));
+            Assert.ThrowsArgNullEx("binder", () => SomeUri.Bind((Func<Uri, Maybe<string>>)null!));
         }
 
         [Fact]
         public static void Flatten()
         {
-            // Arrange
-            var @ref = new object();
-            var some = Maybe.SomeOrNone(@ref);
-
-            // Act & Assert
             Assert.Equal(Ø, Maybe.Some(Ø).Flatten());
-            Assert.Equal(ØT, Maybe.Some(ØT).Flatten());
-            Assert.Equal(ØR, Maybe.Some(ØR).Flatten());
+            Assert.Equal(NoText, Maybe.Some(NoText).Flatten());
+            Assert.Equal(NoUri, Maybe.Some(NoUri).Flatten());
 
             Assert.Equal(One, Maybe.Some(One).Flatten());
-            Assert.Equal(ValueT, Maybe.Some(ValueT).Flatten());
-            Assert.Equal(some, Maybe.Some(some).Flatten());
+            Assert.Equal(SomeText, Maybe.Some(SomeText).Flatten());
+            Assert.Equal(SomeUri, Maybe.Some(SomeUri).Flatten());
 
             Assert.Equal(Ø, Maybe<Maybe<int>>.None.Flatten());
-            Assert.Equal(ØT, Maybe<Maybe<string>>.None.Flatten());
-            Assert.Equal(ØR, Maybe<Maybe<object>>.None.Flatten());
+            Assert.Equal(NoText, Maybe<Maybe<string>>.None.Flatten());
+            Assert.Equal(NoUri, Maybe<Maybe<Uri>>.None.Flatten());
         }
     }
 
@@ -218,141 +223,114 @@ namespace Abc
         [Fact]
         public static void Switch_InvalidArg()
         {
-            // Arrange
-            var some = Maybe.SomeOrNone(new object());
-
-            // Act & Assert
             Assert.ThrowsArgNullEx("caseNone", () => Ø.Switch(x => x, null!));
-            Assert.ThrowsArgNullEx("caseNone", () => ØT.Switch(x => x, (Func<string>)null!));
-            Assert.ThrowsArgNullEx("caseNone", () => ØR.Switch(x => x, null!));
+            Assert.ThrowsArgNullEx("caseNone", () => NoText.Switch(x => x, (Func<string>)null!));
+            Assert.ThrowsArgNullEx("caseNone", () => NoUri.Switch(x => x, (Func<Uri>)null!));
 
             Assert.ThrowsArgNullEx("caseSome", () => One.Switch(null!, () => 1));
-            Assert.ThrowsArgNullEx("caseSome", () => ValueT.Switch(null!, () => 1));
-            Assert.ThrowsArgNullEx("caseSome", () => some.Switch(null!, () => 1));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(null!, () => 1));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(null!, () => 1));
 
             Assert.ThrowsArgNullEx("caseSome", () => One.Switch(null!, 1));
-            Assert.ThrowsArgNullEx("caseSome", () => ValueT.Switch(null!, 1));
-            Assert.ThrowsArgNullEx("caseSome", () => some.Switch(null!, 1));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(null!, 1));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(null!, 1));
         }
 
         [Fact]
         public static void TryGetValue()
         {
-            // Arrange
-            var @ref = new object();
-            var some = Maybe.SomeOrNone(@ref);
-
-            // Act & Assert
             Assert.False(Ø.TryGetValue(out int _));
-            Assert.False(ØT.TryGetValue(out string _));
-            Assert.False(ØR.TryGetValue(out object _));
+            Assert.False(NoText.TryGetValue(out string _));
+            Assert.False(NoUri.TryGetValue(out Uri _));
 
             Assert.True(One.TryGetValue(out int one));
             Assert.Equal(1, one);
 
-            Assert.True(ValueT.TryGetValue(out string? value));
-            Assert.Equal("value", value);
+            Assert.True(SomeText.TryGetValue(out string? value));
+            Assert.Equal(MyText, value);
 
-            Assert.True(some.TryGetValue(out object? obj));
-            Assert.Equal(@ref, obj);
+            Assert.True(SomeUri.TryGetValue(out Uri? obj));
+            Assert.Equal(MyUri, obj);
         }
 
         [Fact]
         public static void ValueOrDefault()
         {
-            // Arrange
-            var @ref = new object();
-            var some = Maybe.SomeOrNone(@ref);
-
-            // Act & Assert
             Assert.Equal(0, Ø.ValueOrDefault());
-            Assert.Null(ØT.ValueOrDefault());
-            Assert.Null(ØR.ValueOrDefault());
+            Assert.Null(NoText.ValueOrDefault());
+            Assert.Null(NoUri.ValueOrDefault());
 
             Assert.Equal(1, One.ValueOrDefault());
-            Assert.Equal("value", ValueT.ValueOrDefault());
-            Assert.Equal(@ref, some.ValueOrDefault());
+            Assert.Equal(MyText, SomeText.ValueOrDefault());
+            Assert.Equal(MyUri, SomeUri.ValueOrDefault());
         }
 
         [Fact]
         public static void ValueOrElse_InvalidException()
         {
-            // Arrange
-            var @ref = new object();
-            var some = Maybe.SomeOrNone(@ref);
-
-            // Act & Assert
             Assert.ThrowsArgNullEx("valueFactory", () => Ø.ValueOrElse(null!));
-            Assert.ThrowsArgNullEx("valueFactory", () => ØT.ValueOrElse((Func<string>)null!));
-            Assert.ThrowsArgNullEx("valueFactory", () => ØR.ValueOrElse(null!));
+            Assert.ThrowsArgNullEx("valueFactory", () => NoText.ValueOrElse((Func<string>)null!));
+            Assert.ThrowsArgNullEx("valueFactory", () => NoUri.ValueOrElse((Func<Uri>)null!));
 
             Assert.Equal(1, One.ValueOrElse(null!));
-            Assert.Equal("value", ValueT.ValueOrElse((Func<string>)null!));
-            Assert.Equal(@ref, some.ValueOrElse(null!));
+            Assert.Equal(MyText, SomeText.ValueOrElse((Func<string>)null!));
+            Assert.Equal(MyUri, SomeUri.ValueOrElse((Func<Uri>)null!));
         }
 
         [Fact]
         public static void ValueOrElse()
         {
             // Arrange
-            var @ref = new object();
-            var some = Maybe.SomeOrNone(@ref);
-            var other = new object();
-            Assert.NotSame(@ref, other); // sanity check
+            var otherUri = new Uri("https://source.dot.net/");
 
             // Act & Assert
             Assert.Equal(3, Ø.ValueOrElse(3));
-            Assert.Equal("other", ØT.ValueOrElse("other"));
-            Assert.Equal(other, ØR.ValueOrElse(other));
+            Assert.Equal("other", NoText.ValueOrElse("other"));
+            Assert.Equal(otherUri, NoUri.ValueOrElse(otherUri));
 
             Assert.Equal(1, One.ValueOrElse(3));
-            Assert.Equal("value", ValueT.ValueOrElse("other"));
-            Assert.Equal(@ref, some.ValueOrElse(other));
+            Assert.Equal(MyText, SomeText.ValueOrElse("other"));
+            Assert.Equal(MyUri, SomeUri.ValueOrElse(otherUri));
 
             // With a factory.
 
             Assert.Equal(3, Ø.ValueOrElse(() => 3));
-            Assert.Equal("other", ØT.ValueOrElse(() => "other"));
-            Assert.Equal(other, ØR.ValueOrElse(() => other));
+            Assert.Equal("other", NoText.ValueOrElse(() => "other"));
+            Assert.Equal(otherUri, NoUri.ValueOrElse(() => otherUri));
 
             Assert.Equal(1, One.ValueOrElse(() => 3));
-            Assert.Equal("value", ValueT.ValueOrElse(() => "other"));
-            Assert.Equal(@ref, some.ValueOrElse(() => other));
+            Assert.Equal(MyText, SomeText.ValueOrElse(() => "other"));
+            Assert.Equal(MyUri, SomeUri.ValueOrElse(() => otherUri));
         }
 
         [Fact]
         public static void ValueOrThrow_InvalidException()
         {
             Assert.ThrowsArgNullEx("exception", () => Ø.ValueOrThrow(null!));
-            Assert.ThrowsArgNullEx("exception", () => ØT.ValueOrThrow(null!));
-            Assert.ThrowsArgNullEx("exception", () => ØR.ValueOrThrow(null!));
+            Assert.ThrowsArgNullEx("exception", () => NoText.ValueOrThrow(null!));
+            Assert.ThrowsArgNullEx("exception", () => NoUri.ValueOrThrow(null!));
         }
 
         [Fact]
         public static void ValueOrThrow()
         {
-            // Arrange
-            var @ref = new object();
-            var some = Maybe.SomeOrNone(@ref);
-
-            // Act & Assert
             Assert.Throws<InvalidOperationException>(() => Ø.ValueOrThrow());
-            Assert.Throws<InvalidOperationException>(() => ØT.ValueOrThrow());
-            Assert.Throws<InvalidOperationException>(() => ØR.ValueOrThrow());
+            Assert.Throws<InvalidOperationException>(() => NoText.ValueOrThrow());
+            Assert.Throws<InvalidOperationException>(() => NoUri.ValueOrThrow());
 
             Assert.Equal(1, One.ValueOrThrow());
-            Assert.Equal("value", ValueT.ValueOrThrow());
-            Assert.Equal(@ref, some.ValueOrThrow());
+            Assert.Equal(MyText, SomeText.ValueOrThrow());
+            Assert.Equal(MyUri, SomeUri.ValueOrThrow());
 
             // With a custom exception.
 
             Assert.Throws<NotSupportedException>(() => Ø.ValueOrThrow(new NotSupportedException()));
-            Assert.Throws<NotSupportedException>(() => ØT.ValueOrThrow(new NotSupportedException()));
-            Assert.Throws<NotSupportedException>(() => ØR.ValueOrThrow(new NotSupportedException()));
+            Assert.Throws<NotSupportedException>(() => NoText.ValueOrThrow(new NotSupportedException()));
+            Assert.Throws<NotSupportedException>(() => NoUri.ValueOrThrow(new NotSupportedException()));
 
             Assert.Equal(1, One.ValueOrThrow(new NotSupportedException()));
-            Assert.Equal("value", ValueT.ValueOrThrow(new NotSupportedException()));
-            Assert.Equal(@ref, some.ValueOrThrow(new NotSupportedException()));
+            Assert.Equal(MyText, SomeText.ValueOrThrow(new NotSupportedException()));
+            Assert.Equal(MyUri, SomeUri.ValueOrThrow(new NotSupportedException()));
         }
     }
 
@@ -362,31 +340,21 @@ namespace Abc
         [Fact]
         public static void Do_InvalidArg()
         {
-            // Arrange
-            var @ref = new object();
-            var some = Maybe.SomeOrNone(@ref);
-
-            // Act & Assert
             Assert.ThrowsArgNullEx("onNone", () => Ø.Do(_ => { }, null!));
-            Assert.ThrowsArgNullEx("onNone", () => ØT.Do(_ => { }, null!));
-            Assert.ThrowsArgNullEx("onNone", () => ØR.Do(_ => { }, null!));
+            Assert.ThrowsArgNullEx("onNone", () => NoText.Do(_ => { }, null!));
+            Assert.ThrowsArgNullEx("onNone", () => NoUri.Do(_ => { }, null!));
 
             Assert.ThrowsArgNullEx("onSome", () => One.Do(null!, () => { }));
-            Assert.ThrowsArgNullEx("onSome", () => ValueT.Do(null!, () => { }));
-            Assert.ThrowsArgNullEx("onSome", () => some.Do(null!, () => { }));
+            Assert.ThrowsArgNullEx("onSome", () => SomeText.Do(null!, () => { }));
+            Assert.ThrowsArgNullEx("onSome", () => SomeUri.Do(null!, () => { }));
         }
 
         [Fact]
         public static void OnSome_InvalidAction()
         {
-            // Arrange
-            var @ref = new object();
-            var some = Maybe.SomeOrNone(@ref);
-
-            // Act & Assert
             Assert.ThrowsArgNullEx("action", () => One.OnSome(null!));
-            Assert.ThrowsArgNullEx("action", () => ValueT.OnSome(null!));
-            Assert.ThrowsArgNullEx("action", () => some.OnSome(null!));
+            Assert.ThrowsArgNullEx("action", () => SomeText.OnSome(null!));
+            Assert.ThrowsArgNullEx("action", () => SomeUri.OnSome(null!));
         }
     }
 
@@ -481,18 +449,13 @@ namespace Abc
         [Fact]
         public static void BindAsync_InvalidBinder()
         {
-            // Arrange
-            var @ref = new object();
-            var some = Maybe.SomeOrNone(@ref);
-
-            // Act & Assert
             Assert.ThrowsAsyncArgNullEx("binder", () => Ø.BindAsync((Func<int, Task<Maybe<string>>>)null!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => ØT.BindAsync((Func<string, Task<Maybe<string>>>)null!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => ØR.BindAsync((Func<object, Task<Maybe<string>>>)null!));
+            Assert.ThrowsAsyncArgNullEx("binder", () => NoText.BindAsync((Func<string, Task<Maybe<string>>>)null!));
+            Assert.ThrowsAsyncArgNullEx("binder", () => NoUri.BindAsync((Func<Uri, Task<Maybe<string>>>)null!));
 
             Assert.ThrowsAsyncArgNullEx("binder", () => One.BindAsync((Func<int, Task<Maybe<string>>>)null!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => ValueT.BindAsync((Func<string, Task<Maybe<string>>>)null!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => some.BindAsync((Func<object, Task<Maybe<string>>>)null!));
+            Assert.ThrowsAsyncArgNullEx("binder", () => SomeText.BindAsync((Func<string, Task<Maybe<string>>>)null!));
+            Assert.ThrowsAsyncArgNullEx("binder", () => SomeUri.BindAsync((Func<Uri, Task<Maybe<string>>>)null!));
         }
     }
 
