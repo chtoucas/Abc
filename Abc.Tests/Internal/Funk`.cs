@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 using Abc;
 
-internal static class Thunk<TResult>
+internal static class Funk<TResult>
     where TResult : notnull
 {
     public static readonly Func<TResult> Null = default!;
 }
 
-internal static class Thunk<T, TResult>
+internal static class Funk<T, TResult>
     where T : notnull
     where TResult : notnull
 {
@@ -26,7 +26,7 @@ internal static class Thunk<T, TResult>
 
 }
 
-internal static class Thunk<T1, T2, TResult>
+internal static class Funk<T1, T2, TResult>
     where T1 : notnull
     where T2 : notnull
     where TResult : notnull
