@@ -17,36 +17,41 @@ namespace Abc
         // Threw ArgumentException.
         public static void ThrowsArgEx(string argName, Action testCode)
         {
-            var ex = Throws<ArgumentException>(testCode);
+            ArgumentException ex = Throws<ArgumentException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
         // Threw ArgumentException.
         public static void ThrowsArgEx(string argName, Func<object> testCode)
         {
-            var ex = Throws<ArgumentException>(testCode);
+            ArgumentException ex = Throws<ArgumentException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
         // Threw ArgumentNullException.
         public static void ThrowsArgNullEx(string argName, Action testCode)
         {
-            var ex = Throws<ArgumentNullException>(testCode);
+            ArgumentNullException ex = Throws<ArgumentNullException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
         // Threw ArgumentNullException.
         public static void ThrowsArgNullEx(string argName, Func<object> testCode)
         {
-            var ex = Throws<ArgumentNullException>(testCode);
+            ArgumentNullException ex = Throws<ArgumentNullException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Threw ArgumentNullException.
-        public static void ThrowsAsyncArgNullEx(string argName, Func<Task> testCode)
+#pragma warning disable CA1034 // Nested types should not be visible
+        public static class Async
+#pragma warning restore CA1034
         {
-            Task<ArgumentNullException> ex = ThrowsAsync<ArgumentNullException>(testCode);
-            Equal(argName, ex.Result.ParamName);
+            // Threw ArgumentNullException.
+            public static void ThrowsArgNullEx(string argName, Func<Task> testCode)
+            {
+                Task<ArgumentNullException> ex = ThrowsAsync<ArgumentNullException>(testCode);
+                Equal(argName, ex.Result.ParamName);
+            }
         }
     }
 }
