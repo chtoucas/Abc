@@ -44,7 +44,8 @@ namespace Abc
 
         private sealed class AnyT
         {
-            public static readonly AnyT Any = new AnyT();
+            public static readonly AnyT Value = new AnyT();
+            public static readonly Task<AnyT> AsyncValue = Task.FromResult(new AnyT());
             private AnyT() { }
         }
 
@@ -213,13 +214,13 @@ namespace Abc
         [Fact]
         public static void Bind_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("binder", () => Ø.Bind(Funk<int, AnyT>.Kull));
-            Assert.ThrowsArgNullEx("binder", () => NoText.Bind(Funk<string, AnyT>.Kull));
-            Assert.ThrowsArgNullEx("binder", () => NoUri.Bind(Funk<Uri, AnyT>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => Ø.Bind(Kunc<int, AnyT>.Null));
+            Assert.ThrowsArgNullEx("binder", () => NoText.Bind(Kunc<string, AnyT>.Null));
+            Assert.ThrowsArgNullEx("binder", () => NoUri.Bind(Kunc<Uri, AnyT>.Null));
 
-            Assert.ThrowsArgNullEx("binder", () => One.Bind(Funk<int, AnyT>.Kull));
-            Assert.ThrowsArgNullEx("binder", () => SomeText.Bind(Funk<string, AnyT>.Kull));
-            Assert.ThrowsArgNullEx("binder", () => SomeUri.Bind(Funk<Uri, AnyT>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => One.Bind(Kunc<int, AnyT>.Null));
+            Assert.ThrowsArgNullEx("binder", () => SomeText.Bind(Kunc<string, AnyT>.Null));
+            Assert.ThrowsArgNullEx("binder", () => SomeUri.Bind(Kunc<Uri, AnyT>.Null));
         }
 
         [Fact]
@@ -253,9 +254,9 @@ namespace Abc
             Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(Funk<string, AnyT>.Null, Funk<AnyT>.Any));
             Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(Funk<Uri, AnyT>.Null, Funk<AnyT>.Any));
 
-            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Funk<int, AnyT>.Null, AnyT.Any));
-            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(Funk<string, AnyT>.Null, AnyT.Any));
-            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(Funk<Uri, AnyT>.Null, AnyT.Any));
+            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Funk<int, AnyT>.Null, AnyT.Value));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(Funk<string, AnyT>.Null, AnyT.Value));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(Funk<Uri, AnyT>.Null, AnyT.Value));
         }
 
         [Fact]
@@ -616,11 +617,11 @@ namespace Abc
         [Fact]
         public static void SelectMany_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("selector", () => Ø.SelectMany(Funk<int, AnyT1>.Kull, Funk<int, AnyT1, AnyT2>.Any));
-            Assert.ThrowsArgNullEx("selector", () => One.SelectMany(Funk<int, AnyT1>.Kull, Funk<int, AnyT1, AnyT2>.Any));
+            Assert.ThrowsArgNullEx("selector", () => Ø.SelectMany(Kunc<int, AnyT1>.Null, Funk<int, AnyT1, AnyT2>.Any));
+            Assert.ThrowsArgNullEx("selector", () => One.SelectMany(Kunc<int, AnyT1>.Null, Funk<int, AnyT1, AnyT2>.Any));
 
-            Assert.ThrowsArgNullEx("resultSelector", () => Ø.SelectMany(Funk<int, AnyT1>.Kany, Funk<int, AnyT1, AnyT2>.Null));
-            Assert.ThrowsArgNullEx("resultSelector", () => One.SelectMany(Funk<int, AnyT1>.Kany, Funk<int, AnyT1, AnyT2>.Null));
+            Assert.ThrowsArgNullEx("resultSelector", () => Ø.SelectMany(Kunc<int, AnyT1>.Any, Funk<int, AnyT1, AnyT2>.Null));
+            Assert.ThrowsArgNullEx("resultSelector", () => One.SelectMany(Kunc<int, AnyT1>.Any, Funk<int, AnyT1, AnyT2>.Null));
         }
 
         [Fact]
@@ -655,13 +656,13 @@ namespace Abc
         [Fact]
         public static void BindAsync_InvalidArg()
         {
-            Assert.Async.ThrowsArgNullEx("binder", () => Ø.BindAsync(Funk<int, AnyT>.KullAsync));
-            Assert.Async.ThrowsArgNullEx("binder", () => NoText.BindAsync(Funk<string, AnyT>.KullAsync));
-            Assert.Async.ThrowsArgNullEx("binder", () => NoUri.BindAsync(Funk<Uri, AnyT>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => Ø.BindAsync(Kunc<int, AnyT>.NullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => NoText.BindAsync(Kunc<string, AnyT>.NullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => NoUri.BindAsync(Kunc<Uri, AnyT>.NullAsync));
 
-            Assert.Async.ThrowsArgNullEx("binder", () => One.BindAsync(Funk<int, AnyT>.KullAsync));
-            Assert.Async.ThrowsArgNullEx("binder", () => SomeText.BindAsync(Funk<string, AnyT>.KullAsync));
-            Assert.Async.ThrowsArgNullEx("binder", () => SomeUri.BindAsync(Funk<Uri, AnyT>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => One.BindAsync(Kunc<int, AnyT>.NullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => SomeText.BindAsync(Kunc<string, AnyT>.NullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => SomeUri.BindAsync(Kunc<Uri, AnyT>.NullAsync));
         }
 
         [Fact]
@@ -681,13 +682,13 @@ namespace Abc
         [Fact]
         public static void SwitchAsync_InvalidArg()
         {
-            Assert.Async.ThrowsArgNullEx("caseNone", () => Ø.SwitchAsync(Task.FromResult, null!));
-            Assert.Async.ThrowsArgNullEx("caseNone", () => NoText.SwitchAsync(Task.FromResult, null!));
-            Assert.Async.ThrowsArgNullEx("caseNone", () => NoUri.SwitchAsync(Task.FromResult, null!));
+            Assert.Async.ThrowsArgNullEx("caseNone", () => Ø.SwitchAsync(Funk<int, AnyT>.AnyAsync, null!));
+            Assert.Async.ThrowsArgNullEx("caseNone", () => NoText.SwitchAsync(Funk<string, AnyT>.AnyAsync, null!));
+            Assert.Async.ThrowsArgNullEx("caseNone", () => NoUri.SwitchAsync(Funk<Uri, AnyT>.AnyAsync, null!));
 
-            Assert.Async.ThrowsArgNullEx("caseSome", () => One.SwitchAsync(null!, Task.FromResult(1)));
-            Assert.Async.ThrowsArgNullEx("caseSome", () => SomeText.SwitchAsync(null!, Task.FromResult(1)));
-            Assert.Async.ThrowsArgNullEx("caseSome", () => SomeUri.SwitchAsync(null!, Task.FromResult(1)));
+            Assert.Async.ThrowsArgNullEx("caseSome", () => One.SwitchAsync(Funk<int, AnyT>.NullAsync, AnyT.AsyncValue));
+            Assert.Async.ThrowsArgNullEx("caseSome", () => SomeText.SwitchAsync(Funk<string, AnyT>.NullAsync, AnyT.AsyncValue));
+            Assert.Async.ThrowsArgNullEx("caseSome", () => SomeUri.SwitchAsync(Funk<Uri, AnyT>.NullAsync, AnyT.AsyncValue));
         }
     }
 

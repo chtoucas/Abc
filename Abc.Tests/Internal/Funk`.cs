@@ -3,8 +3,6 @@
 using System;
 using System.Threading.Tasks;
 
-using Abc;
-
 internal static class Funk<TResult>
     where TResult : notnull
 {
@@ -23,12 +21,7 @@ internal static class Funk<T, TResult>
 
     public static readonly Func<T, Task<TResult>> NullAsync = default!;
 
-    // Kleisli null.
-    public static readonly Func<T, Maybe<TResult>> Kull = default!;
-
-    public static readonly Func<T, Maybe<TResult>> Kany = x => default;
-
-    public static readonly Func<T, Task<Maybe<TResult>>> KullAsync = default!;
+    public static readonly Func<T, Task<TResult>> AnyAsync = x => default!;
 
 }
 
@@ -41,6 +34,7 @@ internal static class Funk<T1, T2, TResult>
 
     public static readonly Func<T1, T2, TResult> Any = (x, y) => default!;
 
-    // Kleisli null.
-    public static readonly Func<T1, T2, Maybe<TResult>> Kull = default!;
+    public static readonly Func<T1, T2, Task<TResult>> NullAsync = default!;
+
+    public static readonly Func<T1, T2, Task<TResult>> AnyAsync = (x, y) => default!;
 }

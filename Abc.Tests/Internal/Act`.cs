@@ -10,6 +10,7 @@ internal static class Act
 }
 
 internal static class Act<T>
+    where T : notnull
 {
     public static readonly Action<T> Null = null!;
 
