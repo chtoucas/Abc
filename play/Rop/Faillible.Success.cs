@@ -15,7 +15,7 @@ namespace Abc
         {
             public Success()
             {
-                // NULL_FORGIVING
+                // BONSANG!
                 Value = default!;
             }
 
@@ -54,7 +54,7 @@ namespace Abc
             {
                 if (selector is null) { throw new Anexn(nameof(selector)); }
 
-                // NULL_FORGIVING
+                // BONSANG!
                 return new Faillible<TResult>.Success(selector(Value!));
             }
 
@@ -62,7 +62,7 @@ namespace Abc
             {
                 if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
-                // NULL_FORGIVING
+                // BONSANG!
                 return predicate(Value!) ? this : None;
             }
 
@@ -73,14 +73,14 @@ namespace Abc
                 if (selector is null) { throw new Anexn(nameof(selector)); }
                 if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
 
-                // NULL_FORGIVING
+                // BONSANG!
                 Faillible<TMiddle> middle = selector(Value!);
                 if (middle is Faillible<TMiddle>.Exceptional err)
                 {
                     return err.WithGenericType<TResult>();
                 }
 
-                // NULL_FORGIVING
+                // BONSANG!
                 return Faillible.Succeed(resultSelector(Value!, middle.Value!));
             }
 
@@ -132,13 +132,13 @@ namespace Abc
             {
                 if (!inner.Threw)
                 {
-                    // NULL_FORGIVING
+                    // BONSANG!
                     TKey outerKey = outerKeySelector(Value!);
                     TKey innerKey = innerKeySelector(inner.Value!);
 
                     if (comparer.Equals(outerKey, innerKey))
                     {
-                        // NULL_FORGIVING
+                        // BONSANG!
                         return Faillible.Succeed(resultSelector(Value!, inner.Value!));
                     }
                 }

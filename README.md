@@ -407,6 +407,7 @@ Developer Notes
   It might seem superfluous, but "ça ne mange pas de pain".
 - Add nullable annotations whenever necessary.
 - Seal classes unless they are designed with extensibility in mind.
+- Tag any use of the null-forgiving operator (!) with `BONSANG!`.
 
 ### TODOs
 

@@ -470,7 +470,7 @@ namespace Abc
 
             static IEnumerable<T> __selector(T value)
             {
-                //// NULL_FORGIVING: Select() guarantees that "value" won't be null.
+                //// BONSANG! Select() guarantees that "value" won't be null.
                 //=> new NeverEndingIterator<T>(value!);
                 while (true)
                 {

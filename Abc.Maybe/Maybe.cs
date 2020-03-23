@@ -141,7 +141,7 @@ namespace Abc
         // or .NET Core?
         [Pure]
         public static Maybe<T> Squash<T>(this in Maybe<T?> @this) where T : struct
-            // NULL_FORGIVING: when IsSome is true, Value.HasValue is also true,
+            // BONSANG! when IsSome is true, Value.HasValue is also true,
             // therefore we can safely access Value.Value.
             => @this.IsSome ? Some(@this.Value!.Value) : Maybe<T>.None;
 
@@ -370,7 +370,7 @@ namespace Abc
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome
                 ? Of(@this(first.Value!, second.Value!))
                 : Maybe<TResult>.None;
@@ -385,7 +385,7 @@ namespace Abc
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome
                 ? Of(@this(first.Value!, second.Value!, third.Value!))
                 : Maybe<TResult>.None;
@@ -401,7 +401,7 @@ namespace Abc
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome
                 ? Of(@this(first.Value!, second.Value!, third.Value!, fourth.Value!))
                 : Maybe<TResult>.None;
@@ -418,7 +418,7 @@ namespace Abc
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome && fifth.IsSome
                 ? Of(@this(first.Value!, second.Value!, third.Value!, fourth.Value!, fifth.Value!))
                 : Maybe<TResult>.None;
@@ -436,7 +436,7 @@ namespace Abc
             TSource value)
         {
             // return @this.Select(f => f(value));
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return @this.IsSome ? Of(@this.Value!(value)) : Maybe<TResult>.None;
         }
 
@@ -446,7 +446,7 @@ namespace Abc
             T1 first,
             T2 second)
         {
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return @this.IsSome ? Of(@this.Value!(first, second)) : Maybe<TResult>.None;
         }
 
@@ -457,7 +457,7 @@ namespace Abc
             T2 second,
             T3 third)
         {
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return @this.IsSome ? Of(@this.Value!(first, second, third))
                 : Maybe<TResult>.None;
         }
@@ -470,7 +470,7 @@ namespace Abc
             T3 third,
             T4 fourth)
         {
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return @this.IsSome ? Of(@this.Value!(first, second, third, fourth))
                 : Maybe<TResult>.None;
         }
@@ -484,7 +484,7 @@ namespace Abc
             T4 fourth,
             T5 fifth)
         {
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return @this.IsSome ? Of(@this.Value!(first, second, third, fourth, fifth))
                 : Maybe<TResult>.None;
         }
@@ -499,7 +499,7 @@ namespace Abc
             Maybe<TSource> maybe)
         {
             // return @this.Bind(f => maybe.Select(f));
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return @this.IsSome && maybe.IsSome ? Of(@this.Value!(maybe.Value!))
                 : Maybe<TResult>.None;
         }
@@ -510,7 +510,7 @@ namespace Abc
             Maybe<T1> first,
             Maybe<T2> second)
         {
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && @this.IsSome
                 ? Of(@this.Value!(first.Value!, second.Value!))
                 : Maybe<TResult>.None;
@@ -523,7 +523,7 @@ namespace Abc
             Maybe<T2> second,
             Maybe<T3> third)
         {
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome && @this.IsSome
                 ? Of(@this.Value!(first.Value!, second.Value!, third.Value!))
                 : Maybe<TResult>.None;
@@ -537,7 +537,7 @@ namespace Abc
             Maybe<T3> third,
             Maybe<T4> fourth)
         {
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome && @this.IsSome
                 ? Of(@this.Value!(first.Value!, second.Value!, third.Value!, fourth.Value!))
                 : Maybe<TResult>.None;
@@ -552,7 +552,7 @@ namespace Abc
             Maybe<T4> fourth,
             Maybe<T5> fifth)
         {
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             return first.IsSome && second.IsSome && third.IsSome && fourth.IsSome && fifth.IsSome && @this.IsSome
                 ? Of(@this.Value!(first.Value!, second.Value!, third.Value!, fourth.Value!, fifth.Value!))
                 : Maybe<TResult>.None;

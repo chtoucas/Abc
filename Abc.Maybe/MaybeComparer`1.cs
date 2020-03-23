@@ -18,7 +18,7 @@ namespace Abc
         private MaybeComparer() { }
 
         public int Compare(Maybe<T> left, Maybe<T> right)
-            // NULL_FORGIVING: when IsSome is true, Value is NOT null.
+            // BONSANG! When IsSome is true, Value is NOT null.
             => left.IsSome
                 ? right.IsSome ? Comparer<T>.Default.Compare(left.Value!, right.Value!) : 1
                 : right.IsSome ? -1 : 0;

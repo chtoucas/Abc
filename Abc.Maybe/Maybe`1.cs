@@ -910,7 +910,7 @@ namespace Abc
         // See also TryGetValue().
         [Pure]
         public IEnumerator<T> GetEnumerator()
-            // NULL_FORGIVING: when _isSome is true, _value is NOT null.
+            // BONSANG! When _isSome is true, _value is NOT null.
             => _isSome ? new SingletonIterator<T>(_value!) : EmptyIterator<T>.Instance;
 
         /// <summary>
@@ -920,7 +920,7 @@ namespace Abc
         // sequence.
         [Pure]
         public IEnumerable<T> ToEnumerable()
-            // NULL_FORGIVING: when _isSome is true, _value is NOT null.
+            // BONSANG! When _isSome is true, _value is NOT null.
             => _isSome ? new SingletonIterator<T>(_value!) : Enumerable.Empty<T>();
 
         // Beware, Yield() doesn't match the F# yield of computation expressions.
@@ -935,7 +935,7 @@ namespace Abc
         ///// See also <seealso cref="Replicate()"/> and the comments there.
         [Pure]
         public IEnumerable<T> Yield()
-            // NULL_FORGIVING: when _isSome is true, _value is NOT null.
+            // BONSANG! When _isSome is true, _value is NOT null.
             => _isSome ? new NeverEndingIterator<T>(_value!) : Enumerable.Empty<T>();
 
         // See also Replicate() and the comments there.
@@ -1132,7 +1132,7 @@ namespace Abc
         {
             if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
-            // NULL_FORGIVING: when _isSome is true, _value is NOT null.
+            // BONSANG! When _isSome is true, _value is NOT null.
             return _isSome ? comparer.GetHashCode(_value!) : 0;
         }
     }

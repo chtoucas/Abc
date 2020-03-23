@@ -21,8 +21,6 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
 
     <Nullable>enable</Nullable>
-    <!-- Enable the null-forgiving operator (!)? -->
-    <_EnableNullForgiving>true</_EnableNullForgiving>
 
     <!-- Analyzers by Microsoft -->
     <Features>$(Features);flow-analysis</Features>
@@ -47,7 +45,6 @@
 
     <!-- CONTRACTS_FULL for the attr Pure -->
     <DefineConstants>$(DefineConstants);TRACE;CONTRACTS_FULL</DefineConstants>
-    <DefineConstants Condition="'$(_EnableNullForgiving)'=='true'">$(DefineConstants);NULL_FORGIVING</DefineConstants>
   </PropertyGroup>
 
   <!-- DEBUG -->
