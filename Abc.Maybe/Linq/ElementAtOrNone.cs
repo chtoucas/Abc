@@ -7,6 +7,8 @@ namespace Abc.Linq
     using System.Diagnostics.Contracts;
     using System.Linq;
 
+    // REVIEW: TSource? and Maybe<TSource>.
+
     public static partial class Qperators
     {
         /// <summary>

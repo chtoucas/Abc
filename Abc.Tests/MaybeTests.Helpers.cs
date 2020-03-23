@@ -2,6 +2,7 @@
 
 namespace Abc
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using Xunit;
@@ -114,6 +115,15 @@ namespace Abc
             // TODO: a better test whould not check the reference equality
             // but the equality of both sequences.
             Assert.Some(Enumerable.Empty<int>(), Maybe.EmptyEnumerable<int>());
+        }
+
+        [Fact]
+        public static void CollectAny_Deferred()
+        {
+            IEnumerable<Maybe<int>> source = new ThrowingEnumerable<Maybe<int>>();
+
+            var q = Maybe.CollectAny(source);
+            Assert.ThrowsOnNext(q);
         }
     }
 }
