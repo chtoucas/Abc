@@ -9,6 +9,8 @@ internal static class Funk<TResult>
     where TResult : notnull
 {
     public static readonly Func<TResult> Null = default!;
+
+    public static readonly Func<TResult> Any = () => default!;
 }
 
 internal static class Funk<T, TResult>
@@ -17,10 +19,14 @@ internal static class Funk<T, TResult>
 {
     public static readonly Func<T, TResult> Null = default!;
 
+    public static readonly Func<T, TResult> Any = x => default!;
+
     public static readonly Func<T, Task<TResult>> NullAsync = default!;
 
     // Kleisli null.
     public static readonly Func<T, Maybe<TResult>> Kull = default!;
+
+    public static readonly Func<T, Maybe<TResult>> Kany = x => default;
 
     public static readonly Func<T, Task<Maybe<TResult>>> KullAsync = default!;
 
@@ -32,6 +38,8 @@ internal static class Funk<T1, T2, TResult>
     where TResult : notnull
 {
     public static readonly Func<T1, T2, TResult> Null = default!;
+
+    public static readonly Func<T1, T2, TResult> Any = (x, y) => default!;
 
     // Kleisli null.
     public static readonly Func<T1, T2, Maybe<TResult>> Kull = default!;

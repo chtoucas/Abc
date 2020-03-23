@@ -41,6 +41,30 @@ namespace Abc
             SomeUri = Maybe.SomeOrNone(MyUri);
         }
 #pragma warning restore CA1810
+
+        private sealed class AnyT
+        {
+            public static readonly AnyT Any = new AnyT();
+            private AnyT() { }
+        }
+
+        private sealed class AnyT1
+        {
+            public static readonly AnyT1 Any = new AnyT1();
+            private AnyT1() { }
+        }
+
+        private sealed class AnyT2
+        {
+            public static readonly AnyT2 Any = new AnyT2();
+            private AnyT2() { }
+        }
+
+        private sealed class AnyT3
+        {
+            public static readonly AnyT3 Any = new AnyT3();
+            private AnyT3() { }
+        }
     }
 
     // Construction & factories.
@@ -157,7 +181,7 @@ namespace Abc
         }
 
         //[Fact]
-        //public static void ImplicitToMaybe()
+        //public static void Implicit_ToMaybe()
         //{
         //    // Arrange
         //    Maybe<string> none = My.NullString; // implicit cast of a null-string
@@ -189,13 +213,13 @@ namespace Abc
         [Fact]
         public static void Bind_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("binder", () => Ø.Bind(Funk<int, string>.Kull));
-            Assert.ThrowsArgNullEx("binder", () => NoText.Bind(Funk<string, string>.Kull));
-            Assert.ThrowsArgNullEx("binder", () => NoUri.Bind(Funk<Uri, string>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => Ø.Bind(Funk<int, AnyT>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => NoText.Bind(Funk<string, AnyT>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => NoUri.Bind(Funk<Uri, AnyT>.Kull));
 
-            Assert.ThrowsArgNullEx("binder", () => One.Bind(Funk<int, string>.Kull));
-            Assert.ThrowsArgNullEx("binder", () => SomeText.Bind(Funk<string, string>.Kull));
-            Assert.ThrowsArgNullEx("binder", () => SomeUri.Bind(Funk<Uri, string>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => One.Bind(Funk<int, AnyT>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => SomeText.Bind(Funk<string, AnyT>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => SomeUri.Bind(Funk<Uri, AnyT>.Kull));
         }
 
         [Fact]
@@ -221,17 +245,17 @@ namespace Abc
         [Fact]
         public static void Switch_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("caseNone", () => Ø.Switch(x => x, Funk<int>.Null));
-            Assert.ThrowsArgNullEx("caseNone", () => NoText.Switch(x => x, Funk<string>.Null));
-            Assert.ThrowsArgNullEx("caseNone", () => NoUri.Switch(x => x, Funk<Uri>.Null));
+            Assert.ThrowsArgNullEx("caseNone", () => Ø.Switch(Funk<int, AnyT>.Any, Funk<AnyT>.Null));
+            Assert.ThrowsArgNullEx("caseNone", () => NoText.Switch(Funk<string, AnyT>.Any, Funk<AnyT>.Null));
+            Assert.ThrowsArgNullEx("caseNone", () => NoUri.Switch(Funk<Uri, AnyT>.Any, Funk<AnyT>.Null));
 
-            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Funk<int, int>.Null, () => 1));
-            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(Funk<string, int>.Null, () => 1));
-            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(Funk<Uri, int>.Null, () => 1));
+            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Funk<int, AnyT>.Null, Funk<AnyT>.Any));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(Funk<string, AnyT>.Null, Funk<AnyT>.Any));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(Funk<Uri, AnyT>.Null, Funk<AnyT>.Any));
 
-            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Funk<int, int>.Null, 1));
-            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(Funk<string, int>.Null, 1));
-            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(Funk<Uri, int>.Null, 1));
+            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Funk<int, AnyT>.Null, AnyT.Any));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(Funk<string, AnyT>.Null, AnyT.Any));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(Funk<Uri, AnyT>.Null, AnyT.Any));
         }
 
         [Fact]
@@ -550,8 +574,8 @@ namespace Abc
         [Fact]
         public static void Select_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("selector", () => Ø.Select(Funk<int, string>.Null));
-            Assert.ThrowsArgNullEx("selector", () => One.Select(Funk<int, string>.Null));
+            Assert.ThrowsArgNullEx("selector", () => Ø.Select(Funk<int, AnyT>.Null));
+            Assert.ThrowsArgNullEx("selector", () => One.Select(Funk<int, AnyT>.Null));
         }
 
         [Fact]
@@ -592,11 +616,11 @@ namespace Abc
         [Fact]
         public static void SelectMany_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("selector", () => Ø.SelectMany(Funk<int, int>.Kull, (i, j) => i + j));
-            Assert.ThrowsArgNullEx("selector", () => One.SelectMany(Funk<int, int>.Kull, (i, j) => i + j));
+            Assert.ThrowsArgNullEx("selector", () => Ø.SelectMany(Funk<int, AnyT1>.Kull, Funk<int, AnyT1, AnyT2>.Any));
+            Assert.ThrowsArgNullEx("selector", () => One.SelectMany(Funk<int, AnyT1>.Kull, Funk<int, AnyT1, AnyT2>.Any));
 
-            Assert.ThrowsArgNullEx("resultSelector", () => Ø.SelectMany(_ => Ø, Funk<int, int, int>.Null));
-            Assert.ThrowsArgNullEx("resultSelector", () => One.SelectMany(_ => One, Funk<int, int, int>.Null));
+            Assert.ThrowsArgNullEx("resultSelector", () => Ø.SelectMany(Funk<int, AnyT1>.Kany, Funk<int, AnyT1, AnyT2>.Null));
+            Assert.ThrowsArgNullEx("resultSelector", () => One.SelectMany(Funk<int, AnyT1>.Kany, Funk<int, AnyT1, AnyT2>.Null));
         }
 
         [Fact]
@@ -631,20 +655,20 @@ namespace Abc
         [Fact]
         public static void BindAsync_InvalidArg()
         {
-            Assert.Async.ThrowsArgNullEx("binder", () => Ø.BindAsync(Funk<int, string>.KullAsync));
-            Assert.Async.ThrowsArgNullEx("binder", () => NoText.BindAsync(Funk<string, string>.KullAsync));
-            Assert.Async.ThrowsArgNullEx("binder", () => NoUri.BindAsync(Funk<Uri, string>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => Ø.BindAsync(Funk<int, AnyT>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => NoText.BindAsync(Funk<string, AnyT>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => NoUri.BindAsync(Funk<Uri, AnyT>.KullAsync));
 
-            Assert.Async.ThrowsArgNullEx("binder", () => One.BindAsync(Funk<int, string>.KullAsync));
-            Assert.Async.ThrowsArgNullEx("binder", () => SomeText.BindAsync(Funk<string, string>.KullAsync));
-            Assert.Async.ThrowsArgNullEx("binder", () => SomeUri.BindAsync(Funk<Uri, string>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => One.BindAsync(Funk<int, AnyT>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => SomeText.BindAsync(Funk<string, AnyT>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => SomeUri.BindAsync(Funk<Uri, AnyT>.KullAsync));
         }
 
         [Fact]
         public static void SelectAsync_InvalidArg()
         {
-            Assert.Async.ThrowsArgNullEx("selector", () => Ø.SelectAsync(Funk<int, string>.NullAsync));
-            Assert.Async.ThrowsArgNullEx("selector", () => One.SelectAsync(Funk<int, string>.NullAsync));
+            Assert.Async.ThrowsArgNullEx("selector", () => Ø.SelectAsync(Funk<int, AnyT>.NullAsync));
+            Assert.Async.ThrowsArgNullEx("selector", () => One.SelectAsync(Funk<int, AnyT>.NullAsync));
         }
 
         [Fact]
@@ -779,8 +803,8 @@ namespace Abc
         [Fact]
         public static void ZipWith_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("zipper", () => Ø.ZipWith(TwoL, Funk<int, long, long>.Null));
-            Assert.ThrowsArgNullEx("zipper", () => One.ZipWith(TwoL, Funk<int, long, long>.Null));
+            Assert.ThrowsArgNullEx("zipper", () => Ø.ZipWith(TwoL, Funk<int, long, AnyT>.Null));
+            Assert.ThrowsArgNullEx("zipper", () => One.ZipWith(TwoL, Funk<int, long, AnyT>.Null));
         }
 
         [Fact]
