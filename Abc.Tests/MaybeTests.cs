@@ -593,14 +593,14 @@ namespace Abc
         public static void SelectMany_InvalidArg()
         {
             Assert.ThrowsArgNullEx("selector",
-                () => Ø.SelectMany((Func<int, Maybe<int>>)null!, (i, j) => i + j));
+                () => Ø.SelectMany(default(Func<int, Maybe<int>>)!, (i, j) => i + j));
             Assert.ThrowsArgNullEx("selector",
-                () => One.SelectMany((Func<int, Maybe<int>>)null!, (i, j) => i + j));
+                () => One.SelectMany(default(Func<int, Maybe<int>>)!, (i, j) => i + j));
 
             Assert.ThrowsArgNullEx("resultSelector",
-                () => Ø.SelectMany(_ => Ø, (Func<int, int, int>)null!));
+                () => Ø.SelectMany(_ => Ø, default(Func<int, int, int>)!));
             Assert.ThrowsArgNullEx("resultSelector",
-                () => One.SelectMany(_ => One, (Func<int, int, int>)null!));
+                () => One.SelectMany(_ => One, default(Func<int, int, int>)!));
         }
 
         [Fact]
@@ -635,13 +635,39 @@ namespace Abc
         [Fact]
         public static void BindAsync_InvalidArg()
         {
-            Assert.ThrowsAsyncArgNullEx("binder", () => Ø.BindAsync(default(Func<int, Task<Maybe<string>>>)!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => NoText.BindAsync(default(Func<string, Task<Maybe<string>>>)!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => NoUri.BindAsync(default(Func<Uri, Task<Maybe<string>>>)!));
+            Assert.Async.ThrowsArgNullEx("binder", () => Ø.BindAsync(default(Func<int, Task<Maybe<string>>>)!));
+            Assert.Async.ThrowsArgNullEx("binder", () => NoText.BindAsync(default(Func<string, Task<Maybe<string>>>)!));
+            Assert.Async.ThrowsArgNullEx("binder", () => NoUri.BindAsync(default(Func<Uri, Task<Maybe<string>>>)!));
 
-            Assert.ThrowsAsyncArgNullEx("binder", () => One.BindAsync(default(Func<int, Task<Maybe<string>>>)!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => SomeText.BindAsync(default(Func<string, Task<Maybe<string>>>)!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => SomeUri.BindAsync(default(Func<Uri, Task<Maybe<string>>>)!));
+            Assert.Async.ThrowsArgNullEx("binder", () => One.BindAsync(default(Func<int, Task<Maybe<string>>>)!));
+            Assert.Async.ThrowsArgNullEx("binder", () => SomeText.BindAsync(default(Func<string, Task<Maybe<string>>>)!));
+            Assert.Async.ThrowsArgNullEx("binder", () => SomeUri.BindAsync(default(Func<Uri, Task<Maybe<string>>>)!));
+        }
+
+        [Fact]
+        public static void SelectAsync_InvalidArg()
+        {
+            Assert.Async.ThrowsArgNullEx("selector", () => Ø.SelectAsync(default(Func<int, Task<string>>)!));
+            Assert.Async.ThrowsArgNullEx("selector", () => One.SelectAsync(default(Func<int, Task<string>>)!));
+        }
+
+        [Fact]
+        public static void OrElseAsync_InvalidArg()
+        {
+            Assert.Async.ThrowsArgNullEx("other", () => Ø.OrElseAsync(null!));
+            Assert.Async.ThrowsArgNullEx("other", () => One.OrElseAsync(null!));
+        }
+
+        [Fact]
+        public static void SwitchAsync_InvalidArg()
+        {
+            Assert.Async.ThrowsArgNullEx("caseNone", () => Ø.SwitchAsync(Task.FromResult, null!));
+            Assert.Async.ThrowsArgNullEx("caseNone", () => NoText.SwitchAsync(Task.FromResult, null!));
+            Assert.Async.ThrowsArgNullEx("caseNone", () => NoUri.SwitchAsync(Task.FromResult, null!));
+
+            Assert.Async.ThrowsArgNullEx("caseSome", () => One.SwitchAsync(null!, Task.FromResult(1)));
+            Assert.Async.ThrowsArgNullEx("caseSome", () => SomeText.SwitchAsync(null!, Task.FromResult(1)));
+            Assert.Async.ThrowsArgNullEx("caseSome", () => SomeUri.SwitchAsync(null!, Task.FromResult(1)));
         }
     }
 
@@ -903,6 +929,10 @@ namespace Abc
             Assert.False(One.Contains(0));
             Assert.True(One.Contains(1));
             Assert.False(One.Contains(2));
+
+            Assert.False(NoText.Contains("XXX"));
+            Assert.False(NoText.Contains("XXX", StringComparer.Ordinal));
+            Assert.False(NoText.Contains("XXX", StringComparer.OrdinalIgnoreCase));
 
             Assert.True(Maybe.SomeOrNone("XXX").Contains("XXX"));
             // Default comparison does NOT ignore case.
