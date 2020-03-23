@@ -7,6 +7,8 @@ internal static class My
     public const string NullString = null;
     public const string? NullNullString = null;
 
+    public static readonly Action Noop = () => { };
+
     public enum Enum012
     {
         Zero = 0,

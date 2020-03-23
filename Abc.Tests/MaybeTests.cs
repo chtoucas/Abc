@@ -171,7 +171,7 @@ namespace Abc
         //}
 
         [Fact]
-        public static void ExplicitFromMaybe()
+        public static void Explicit_FromMaybe()
         {
             Assert.Equal(1, (int)One);
             Assert.Equal(MyText, (string)SomeText);
@@ -189,13 +189,13 @@ namespace Abc
         [Fact]
         public static void Bind_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("binder", () => Ø.Bind(default(Func<int, Maybe<string>>)!));
-            Assert.ThrowsArgNullEx("binder", () => NoText.Bind(default(Func<string, Maybe<string>>)!));
-            Assert.ThrowsArgNullEx("binder", () => NoUri.Bind(default(Func<Uri, Maybe<string>>)!));
+            Assert.ThrowsArgNullEx("binder", () => Ø.Bind(Thunk<int, string>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => NoText.Bind(Thunk<string, string>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => NoUri.Bind(Thunk<Uri, string>.Kull));
 
-            Assert.ThrowsArgNullEx("binder", () => One.Bind(default(Func<int, Maybe<string>>)!));
-            Assert.ThrowsArgNullEx("binder", () => SomeText.Bind(default(Func<string, Maybe<string>>)!));
-            Assert.ThrowsArgNullEx("binder", () => SomeUri.Bind(default(Func<Uri, Maybe<string>>)!));
+            Assert.ThrowsArgNullEx("binder", () => One.Bind(Thunk<int, string>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => SomeText.Bind(Thunk<string, string>.Kull));
+            Assert.ThrowsArgNullEx("binder", () => SomeUri.Bind(Thunk<Uri, string>.Kull));
         }
 
         [Fact]
@@ -221,17 +221,17 @@ namespace Abc
         [Fact]
         public static void Switch_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("caseNone", () => Ø.Switch(x => x, null!));
-            Assert.ThrowsArgNullEx("caseNone", () => NoText.Switch(x => x, default(Func<string>)!));
-            Assert.ThrowsArgNullEx("caseNone", () => NoUri.Switch(x => x, default(Func<Uri>)!));
+            Assert.ThrowsArgNullEx("caseNone", () => Ø.Switch(x => x, Thunk<int>.Null));
+            Assert.ThrowsArgNullEx("caseNone", () => NoText.Switch(x => x, Thunk<string>.Null));
+            Assert.ThrowsArgNullEx("caseNone", () => NoUri.Switch(x => x, Thunk<Uri>.Null));
 
-            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(null!, () => 1));
-            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(null!, () => 1));
-            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(null!, () => 1));
+            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Thunk<int, int>.Null, () => 1));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(Thunk<string, int>.Null, () => 1));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(Thunk<Uri, int>.Null, () => 1));
 
-            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(null!, 1));
-            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(null!, 1));
-            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(null!, 1));
+            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Thunk<int, int>.Null, 1));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(Thunk<string, int>.Null, 1));
+            Assert.ThrowsArgNullEx("caseSome", () => SomeUri.Switch(Thunk<Uri, int>.Null, 1));
         }
 
         [Fact]
@@ -326,13 +326,13 @@ namespace Abc
         [Fact]
         public static void ValueOrElse_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("valueFactory", () => Ø.ValueOrElse(null!));
-            Assert.ThrowsArgNullEx("valueFactory", () => NoText.ValueOrElse(default(Func<string>)!));
-            Assert.ThrowsArgNullEx("valueFactory", () => NoUri.ValueOrElse(default(Func<Uri>)!));
+            Assert.ThrowsArgNullEx("valueFactory", () => Ø.ValueOrElse(Thunk<int>.Null));
+            Assert.ThrowsArgNullEx("valueFactory", () => NoText.ValueOrElse(Thunk<string>.Null));
+            Assert.ThrowsArgNullEx("valueFactory", () => NoUri.ValueOrElse(Thunk<Uri>.Null));
 
-            Assert.Equal(1, One.ValueOrElse(null!));
-            Assert.Equal(MyText, SomeText.ValueOrElse((Func<string>)null!));
-            Assert.Equal(MyUri, SomeUri.ValueOrElse((Func<Uri>)null!));
+            Assert.Equal(1, One.ValueOrElse(Thunk<int>.Null));
+            Assert.Equal(MyText, SomeText.ValueOrElse(Thunk<string>.Null));
+            Assert.Equal(MyUri, SomeUri.ValueOrElse(Thunk<Uri>.Null));
         }
 
         [Fact]
@@ -398,13 +398,13 @@ namespace Abc
         [Fact]
         public static void Do_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("onNone", () => Ø.Do(_ => { }, null!));
-            Assert.ThrowsArgNullEx("onNone", () => NoText.Do(_ => { }, null!));
-            Assert.ThrowsArgNullEx("onNone", () => NoUri.Do(_ => { }, null!));
+            Assert.ThrowsArgNullEx("onNone", () => Ø.Do(Act<int>.Noop, Act.Null));
+            Assert.ThrowsArgNullEx("onNone", () => NoText.Do(Act<string>.Noop, Act.Null));
+            Assert.ThrowsArgNullEx("onNone", () => NoUri.Do(Act<Uri>.Noop, Act.Null));
 
-            Assert.ThrowsArgNullEx("onSome", () => One.Do(null!, () => { }));
-            Assert.ThrowsArgNullEx("onSome", () => SomeText.Do(null!, () => { }));
-            Assert.ThrowsArgNullEx("onSome", () => SomeUri.Do(null!, () => { }));
+            Assert.ThrowsArgNullEx("onSome", () => One.Do(Act<int>.Null, Act.Noop));
+            Assert.ThrowsArgNullEx("onSome", () => SomeText.Do(Act<string>.Null, Act.Noop));
+            Assert.ThrowsArgNullEx("onSome", () => SomeUri.Do(Act<Uri>.Null, Act.Noop));
         }
 
         [Fact]
@@ -436,9 +436,9 @@ namespace Abc
         [Fact]
         public static void OnSome_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("action", () => One.OnSome(null!));
-            Assert.ThrowsArgNullEx("action", () => SomeText.OnSome(null!));
-            Assert.ThrowsArgNullEx("action", () => SomeUri.OnSome(null!));
+            Assert.ThrowsArgNullEx("action", () => One.OnSome(Act<int>.Null));
+            Assert.ThrowsArgNullEx("action", () => SomeText.OnSome(Act<string>.Null));
+            Assert.ThrowsArgNullEx("action", () => SomeUri.OnSome(Act<Uri>.Null));
         }
 
         [Fact]
@@ -550,8 +550,8 @@ namespace Abc
         [Fact]
         public static void Select_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("selector", () => Ø.Select(default(Func<int, string>)!));
-            Assert.ThrowsArgNullEx("selector", () => One.Select(default(Func<int, string>)!));
+            Assert.ThrowsArgNullEx("selector", () => Ø.Select(Thunk<int, string>.Null));
+            Assert.ThrowsArgNullEx("selector", () => One.Select(Thunk<int, string>.Null));
         }
 
         [Fact]
@@ -592,15 +592,11 @@ namespace Abc
         [Fact]
         public static void SelectMany_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("selector",
-                () => Ø.SelectMany(default(Func<int, Maybe<int>>)!, (i, j) => i + j));
-            Assert.ThrowsArgNullEx("selector",
-                () => One.SelectMany(default(Func<int, Maybe<int>>)!, (i, j) => i + j));
+            Assert.ThrowsArgNullEx("selector", () => Ø.SelectMany(Thunk<int, int>.Kull, (i, j) => i + j));
+            Assert.ThrowsArgNullEx("selector", () => One.SelectMany(Thunk<int, int>.Kull, (i, j) => i + j));
 
-            Assert.ThrowsArgNullEx("resultSelector",
-                () => Ø.SelectMany(_ => Ø, default(Func<int, int, int>)!));
-            Assert.ThrowsArgNullEx("resultSelector",
-                () => One.SelectMany(_ => One, default(Func<int, int, int>)!));
+            Assert.ThrowsArgNullEx("resultSelector", () => Ø.SelectMany(_ => Ø, Thunk<int, int, int>.Null));
+            Assert.ThrowsArgNullEx("resultSelector", () => One.SelectMany(_ => One, Thunk<int, int, int>.Null));
         }
 
         [Fact]
@@ -635,20 +631,20 @@ namespace Abc
         [Fact]
         public static void BindAsync_InvalidArg()
         {
-            Assert.Async.ThrowsArgNullEx("binder", () => Ø.BindAsync(default(Func<int, Task<Maybe<string>>>)!));
-            Assert.Async.ThrowsArgNullEx("binder", () => NoText.BindAsync(default(Func<string, Task<Maybe<string>>>)!));
-            Assert.Async.ThrowsArgNullEx("binder", () => NoUri.BindAsync(default(Func<Uri, Task<Maybe<string>>>)!));
+            Assert.Async.ThrowsArgNullEx("binder", () => Ø.BindAsync(Thunk<int, string>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => NoText.BindAsync(Thunk<string, string>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => NoUri.BindAsync(Thunk<Uri, string>.KullAsync));
 
-            Assert.Async.ThrowsArgNullEx("binder", () => One.BindAsync(default(Func<int, Task<Maybe<string>>>)!));
-            Assert.Async.ThrowsArgNullEx("binder", () => SomeText.BindAsync(default(Func<string, Task<Maybe<string>>>)!));
-            Assert.Async.ThrowsArgNullEx("binder", () => SomeUri.BindAsync(default(Func<Uri, Task<Maybe<string>>>)!));
+            Assert.Async.ThrowsArgNullEx("binder", () => One.BindAsync(Thunk<int, string>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => SomeText.BindAsync(Thunk<string, string>.KullAsync));
+            Assert.Async.ThrowsArgNullEx("binder", () => SomeUri.BindAsync(Thunk<Uri, string>.KullAsync));
         }
 
         [Fact]
         public static void SelectAsync_InvalidArg()
         {
-            Assert.Async.ThrowsArgNullEx("selector", () => Ø.SelectAsync(default(Func<int, Task<string>>)!));
-            Assert.Async.ThrowsArgNullEx("selector", () => One.SelectAsync(default(Func<int, Task<string>>)!));
+            Assert.Async.ThrowsArgNullEx("selector", () => Ø.SelectAsync(Thunk<int, string>.NullAsync));
+            Assert.Async.ThrowsArgNullEx("selector", () => One.SelectAsync(Thunk<int, string>.NullAsync));
         }
 
         [Fact]
@@ -783,10 +779,8 @@ namespace Abc
         [Fact]
         public static void ZipWith_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("zipper",
-                () => Ø.ZipWith(TwoL, default(Func<int, long, long>)!));
-            Assert.ThrowsArgNullEx("zipper",
-                () => One.ZipWith(TwoL, default(Func<int, long, long>)!));
+            Assert.ThrowsArgNullEx("zipper", () => Ø.ZipWith(TwoL, Thunk<int, long, long>.Null));
+            Assert.ThrowsArgNullEx("zipper", () => One.ZipWith(TwoL, Thunk<int, long, long>.Null));
         }
 
         [Fact]
