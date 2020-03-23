@@ -64,7 +64,7 @@ namespace Abc.Tests
             => Assert.Equal(0, Unit.Default.GetHashCode());
 
         [Fact]
-        public static void AsString()
+        public static void ToString_CurrentCulture()
             => Assert.Equal("()", Unit.Default.ToString());
     }
 }

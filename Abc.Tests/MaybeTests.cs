@@ -979,6 +979,11 @@ namespace Abc
     }
 
     // Comparison.
+    //
+    // Expected algebraic properties.
+    //   1) Reflexivity
+    //   2) Anti-symmetry
+    //   3) Transitivity
     // TODO: tests when T is not comparable.
     public partial class MaybeTests
     {
@@ -1038,7 +1043,89 @@ namespace Abc
     }
 
     // Equality.
+    //
+    // Expected algebraic properties.
+    //   1) Reflexivity
+    //   2) Symmetry
+    //   3) Transitivity
+    // TODO: more equality tests.
     public partial class MaybeTests
     {
+        [Fact]
+        public static void Equality_ValueType()
+        {
+            // Arrange
+            var ord = Maybe.Some(1);
+            var same = Maybe.Some(1);
+            var notSame = Maybe.Some(2);
+
+            // Act & Assert
+            Assert.True(ord == same);
+            Assert.True(same == ord);
+            Assert.False(ord == notSame);
+            Assert.False(notSame == ord);
+
+            Assert.False(ord != same);
+            Assert.False(same != ord);
+            Assert.True(ord != notSame);
+            Assert.True(notSame != ord);
+
+            Assert.True(ord.Equals(ord));
+            Assert.True(ord.Equals(same));
+            Assert.True(same.Equals(ord));
+            Assert.False(ord.Equals(notSame));
+            Assert.False(notSame.Equals(ord));
+
+            Assert.True(ord.Equals((object)same));
+            Assert.False(ord.Equals((object)notSame));
+
+            Assert.False(ord.Equals(new object()));
+        }
+
+        [Fact]
+        public static void Equality_ReferenceType()
+        {
+            // Arrange
+            var ord = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
+            var same = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
+            var notSame = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
+
+            // Act & Assert
+            Assert.True(ord == same);
+            Assert.True(same == ord);
+            Assert.False(ord == notSame);
+            Assert.False(notSame == ord);
+
+            Assert.False(ord != same);
+            Assert.False(same != ord);
+            Assert.True(ord != notSame);
+            Assert.True(notSame != ord);
+
+            Assert.True(ord.Equals(ord));
+            Assert.True(ord.Equals(same));
+            Assert.True(same.Equals(ord));
+            Assert.False(ord.Equals(notSame));
+            Assert.False(notSame.Equals(ord));
+
+            Assert.True(ord.Equals((object)same));
+            Assert.False(ord.Equals((object)notSame));
+
+            Assert.False(ord.Equals(new object()));
+        }
+
+        [Fact]
+        public static void HashCode()
+        {
+            Assert.Equal(0, Ø.GetHashCode());
+            Assert.Equal(0, ØL.GetHashCode());
+            Assert.Equal(0, NoText.GetHashCode());
+            Assert.Equal(0, NoUri.GetHashCode());
+
+            Assert.Equal(1.GetHashCode(), One.GetHashCode());
+            Assert.Equal(2.GetHashCode(), Two.GetHashCode());
+            Assert.Equal(2L.GetHashCode(), TwoL.GetHashCode());
+            Assert.Equal(MyText.GetHashCode(StringComparison.Ordinal), SomeText.GetHashCode());
+            Assert.Equal(MyUri.GetHashCode(), SomeUri.GetHashCode());
+        }
     }
 }
