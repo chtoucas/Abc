@@ -8,8 +8,6 @@ namespace Abc
 
     using Xunit;
 
-    using static global::My;
-
     using Assert = AssertEx;
 
     // Test at least w/ a value type and a reference type.
@@ -162,7 +160,7 @@ namespace Abc
         //public static void ImplicitToMaybe()
         //{
         //    // Arrange
-        //    Maybe<string> none = NullString; // implicit cast of a null-string
+        //    Maybe<string> none = My.NullString; // implicit cast of a null-string
 
         //    // Act & Assert
         //    Assert.Some(1, 1);      // the second 1 is implicit casted to Maybe<int>

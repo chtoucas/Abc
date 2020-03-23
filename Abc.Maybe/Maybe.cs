@@ -114,7 +114,7 @@ namespace Abc
 
         [Pure]
         public static Maybe<Maybe<T>> Square<T>(T value) where T : struct
-            => new Maybe<Maybe<T>>(Some(value));
+            => new Maybe<Maybe<T>>(new Maybe<T>(value));
 
         /// <remarks>
         /// To create a "square" for an unconstrained type T, use
@@ -122,7 +122,7 @@ namespace Abc
         /// </remarks>
         [Pure]
         public static Maybe<Maybe<T>> SquareOrNone<T>(T? value) where T : struct
-            => value.HasValue ? new Maybe<Maybe<T>>(Some(value.Value)) : Maybe<Maybe<T>>.None;
+            => value.HasValue ? new Maybe<Maybe<T>>(new Maybe<T>(value.Value)) : Maybe<Maybe<T>>.None;
 
         /// <remarks>
         /// To create a "square" for an unconstrained type T, use

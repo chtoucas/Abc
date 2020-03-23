@@ -194,13 +194,13 @@ namespace Abc
             => _isSome ? $"Maybe({_value})" : "Maybe(None)";
 
         // REVIEW: implicit conversion.
-        //// Implicit conversion: test ImplicitToMaybe, see Square() and
-        //// SquareOrNone() too.
-        ////
-        //// Friendly name: Maybe.Of(value).
-        //// Implicit conversion to Maybe<T> for equality comparison, very much
-        //// like what we have will nullable values: (int?)1 == 1 works.
-        //// NB: maybe (= Some(x)) == y is equivalent to maybe.Contains(y).
+        // Implicit conversion: test ImplicitToMaybe, see Square() and
+        // SquareOrNone() too.
+        //
+        // Friendly name: Maybe.Of(value).
+        // Implicit conversion to Maybe<T> for equality comparison, very much
+        // like what we have will nullable values: (int?)1 == 1 works.
+        // NB: maybe (= Some(x)) == y is equivalent to maybe.Contains(y).
         //[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Maybe.Of()")]
         //public static implicit operator Maybe<T>([AllowNull] T value)
         //    => Maybe.Of(value);
@@ -213,7 +213,7 @@ namespace Abc
         // in fact "null".
         [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "ValueOrThrow()")]
         public static explicit operator T(Maybe<T> value)
-            => value._isSome ? value._value : throw EF.Maybe_Cast;
+            => value._isSome ? value._value : throw EF.FromMaybe_NoValue;
 
         /// <summary>
         /// Represents a debugger type proxy for <see cref="Maybe{T}"/>.

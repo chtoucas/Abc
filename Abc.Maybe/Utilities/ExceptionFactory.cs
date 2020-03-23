@@ -14,17 +14,11 @@ namespace Abc.Utilities
     /// </summary>
     internal static class ExceptionFactory
     {
-        public static readonly InvalidOperationException Maybe_NoValue
-            = new InvalidOperationException("The object does not contain any value.");
-
         public static readonly InvalidOperationException EmptySequence
             = new InvalidOperationException("The sequence was empty.");
 
         public static readonly NotSupportedException ReadOnlyCollection
             = new NotSupportedException("The collection is read-only.");
-
-        public static readonly InvalidCastException Maybe_Cast
-            = new InvalidCastException("The object does not contain any value.");
 
         public static readonly ArgumentException NotComparable
             = new ArgumentException("The objects can not be compared.");
@@ -36,5 +30,11 @@ namespace Abc.Utilities
             => new ArgumentException(
                 $"The object should be of type {expected} but it is of type {obj.GetType()}.",
                 paramName);
+
+        public static readonly InvalidOperationException Maybe_NoValue
+            = new InvalidOperationException("The object does not contain any value.");
+
+        public static readonly InvalidCastException FromMaybe_NoValue
+            = new InvalidCastException("The object does not contain any value.");
     }
 }
