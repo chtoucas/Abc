@@ -103,7 +103,7 @@ namespace Abc
             Assert.Some(1, Maybe.Of(1));
 
             Assert.None(Maybe.Of((string)null!));
-            Assert.Some("value", Maybe.Of("value"));
+            Assert.Some(MyText, Maybe.Of(MyText));
 
             Assert.None(Maybe.Of((Uri)null!));
             Assert.Some(MyUri, Maybe.Of(MyUri));
@@ -122,7 +122,7 @@ namespace Abc
             Assert.Some(1, Maybe.SomeOrNone((int?)1));
 
             Assert.None(Maybe.SomeOrNone((string)null!));
-            Assert.Some("value", Maybe.SomeOrNone("value"));
+            Assert.Some(MyText, Maybe.SomeOrNone(MyText));
 
             Assert.None(Maybe.SomeOrNone((Uri)null!));
             Assert.Some(MyUri, Maybe.SomeOrNone(MyUri));
@@ -141,7 +141,7 @@ namespace Abc
             Assert.Some(One, Maybe.SquareOrNone((int?)1));
 
             Assert.None(Maybe.SquareOrNone((string)null!));
-            Assert.Some(Maybe.Of("value"), Maybe.SquareOrNone("value"));
+            Assert.Some(Maybe.Of(MyText), Maybe.SquareOrNone(MyText));
 
             Assert.None(Maybe.SquareOrNone((Uri)null!));
             Assert.Some(Maybe.Of(MyUri), Maybe.SquareOrNone(MyUri));
@@ -189,7 +189,7 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Bind_InvalidBinder()
+        public static void Bind_InvalidArg()
         {
             Assert.ThrowsArgNullEx("binder", () => Ø.Bind((Func<int, Maybe<string>>)null!));
             Assert.ThrowsArgNullEx("binder", () => NoText.Bind((Func<string, Maybe<string>>)null!));
@@ -246,11 +246,11 @@ namespace Abc
             Assert.True(One.TryGetValue(out int one));
             Assert.Equal(1, one);
 
-            Assert.True(SomeText.TryGetValue(out string? value));
-            Assert.Equal(MyText, value);
+            Assert.True(SomeText.TryGetValue(out string? text));
+            Assert.Equal(MyText, text);
 
-            Assert.True(SomeUri.TryGetValue(out Uri? obj));
-            Assert.Equal(MyUri, obj);
+            Assert.True(SomeUri.TryGetValue(out Uri? uri));
+            Assert.Equal(MyUri, uri);
         }
 
         [Fact]
@@ -266,7 +266,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void ValueOrElse_InvalidException()
+        public static void ValueOrElse_InvalidArg()
         {
             Assert.ThrowsArgNullEx("valueFactory", () => Ø.ValueOrElse(null!));
             Assert.ThrowsArgNullEx("valueFactory", () => NoText.ValueOrElse((Func<string>)null!));
@@ -304,7 +304,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void ValueOrThrow_InvalidException()
+        public static void ValueOrThrow_InvalidArg()
         {
             Assert.ThrowsArgNullEx("exception", () => Ø.ValueOrThrow(null!));
             Assert.ThrowsArgNullEx("exception", () => NoText.ValueOrThrow(null!));
@@ -350,7 +350,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void OnSome_InvalidAction()
+        public static void OnSome_InvalidArg()
         {
             Assert.ThrowsArgNullEx("action", () => One.OnSome(null!));
             Assert.ThrowsArgNullEx("action", () => SomeText.OnSome(null!));
@@ -362,7 +362,7 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Select_InvalidSelector()
+        public static void Select_InvalidArg()
         {
             Assert.ThrowsArgNullEx("selector", () => Ø.Select((Func<int, string>)null!));
             Assert.ThrowsArgNullEx("selector", () => One.Select((Func<int, string>)null!));
@@ -379,7 +379,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void Where_InvalidPredicate()
+        public static void Where_InvalidArg()
         {
             Assert.ThrowsArgNullEx("predicate", () => Ø.Where(null!));
             Assert.ThrowsArgNullEx("predicate", () => One.Where(null!));
@@ -404,7 +404,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void SelectMany_InvalidSelector()
+        public static void SelectMany_InvalidArg()
         {
             Assert.ThrowsArgNullEx("selector",
                 () => Ø.SelectMany((Func<int, Maybe<int>>)null!, (i, j) => i + j));
@@ -447,7 +447,7 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void BindAsync_InvalidBinder()
+        public static void BindAsync_InvalidArg()
         {
             Assert.ThrowsAsyncArgNullEx("binder", () => Ø.BindAsync((Func<int, Task<Maybe<string>>>)null!));
             Assert.ThrowsAsyncArgNullEx("binder", () => NoText.BindAsync((Func<string, Task<Maybe<string>>>)null!));
@@ -569,7 +569,7 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void ZipWith_InvalidZipper()
+        public static void ZipWith_InvalidArg()
         {
             Assert.ThrowsArgNullEx("zipper",
                 () => Ø.ZipWith(TwoL, (Func<int, long, long>)null!));
