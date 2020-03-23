@@ -189,13 +189,13 @@ namespace Abc
         [Fact]
         public static void Bind_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("binder", () => Ø.Bind((Func<int, Maybe<string>>)null!));
-            Assert.ThrowsArgNullEx("binder", () => NoText.Bind((Func<string, Maybe<string>>)null!));
-            Assert.ThrowsArgNullEx("binder", () => NoUri.Bind((Func<Uri, Maybe<string>>)null!));
+            Assert.ThrowsArgNullEx("binder", () => Ø.Bind(default(Func<int, Maybe<string>>)!));
+            Assert.ThrowsArgNullEx("binder", () => NoText.Bind(default(Func<string, Maybe<string>>)!));
+            Assert.ThrowsArgNullEx("binder", () => NoUri.Bind(default(Func<Uri, Maybe<string>>)!));
 
-            Assert.ThrowsArgNullEx("binder", () => One.Bind((Func<int, Maybe<string>>)null!));
-            Assert.ThrowsArgNullEx("binder", () => SomeText.Bind((Func<string, Maybe<string>>)null!));
-            Assert.ThrowsArgNullEx("binder", () => SomeUri.Bind((Func<Uri, Maybe<string>>)null!));
+            Assert.ThrowsArgNullEx("binder", () => One.Bind(default(Func<int, Maybe<string>>)!));
+            Assert.ThrowsArgNullEx("binder", () => SomeText.Bind(default(Func<string, Maybe<string>>)!));
+            Assert.ThrowsArgNullEx("binder", () => SomeUri.Bind(default(Func<Uri, Maybe<string>>)!));
         }
 
         [Fact]
@@ -222,8 +222,8 @@ namespace Abc
         public static void Switch_InvalidArg()
         {
             Assert.ThrowsArgNullEx("caseNone", () => Ø.Switch(x => x, null!));
-            Assert.ThrowsArgNullEx("caseNone", () => NoText.Switch(x => x, (Func<string>)null!));
-            Assert.ThrowsArgNullEx("caseNone", () => NoUri.Switch(x => x, (Func<Uri>)null!));
+            Assert.ThrowsArgNullEx("caseNone", () => NoText.Switch(x => x, default(Func<string>)!));
+            Assert.ThrowsArgNullEx("caseNone", () => NoUri.Switch(x => x, default(Func<Uri>)!));
 
             Assert.ThrowsArgNullEx("caseSome", () => One.Switch(null!, () => 1));
             Assert.ThrowsArgNullEx("caseSome", () => SomeText.Switch(null!, () => 1));
@@ -267,8 +267,8 @@ namespace Abc
         public static void ValueOrElse_InvalidArg()
         {
             Assert.ThrowsArgNullEx("valueFactory", () => Ø.ValueOrElse(null!));
-            Assert.ThrowsArgNullEx("valueFactory", () => NoText.ValueOrElse((Func<string>)null!));
-            Assert.ThrowsArgNullEx("valueFactory", () => NoUri.ValueOrElse((Func<Uri>)null!));
+            Assert.ThrowsArgNullEx("valueFactory", () => NoText.ValueOrElse(default(Func<string>)!));
+            Assert.ThrowsArgNullEx("valueFactory", () => NoUri.ValueOrElse(default(Func<Uri>)!));
 
             Assert.Equal(1, One.ValueOrElse(null!));
             Assert.Equal(MyText, SomeText.ValueOrElse((Func<string>)null!));
@@ -348,11 +348,139 @@ namespace Abc
         }
 
         [Fact]
+        public static void Do_None()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            bool onNoneCalled = false;
+            // Act
+            NoText.Do(_ => { onSomeCalled = true; }, () => { onNoneCalled = true; });
+            // Assert
+            Assert.False(onSomeCalled);
+            Assert.True(onNoneCalled);
+        }
+
+        [Fact]
+        public static void Do_Some()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            bool onNoneCalled = false;
+            // Act
+            SomeText.Do(_ => { onSomeCalled = true; }, () => { onNoneCalled = true; });
+            // Assert
+            Assert.True(onSomeCalled);
+            Assert.False(onNoneCalled);
+        }
+
+        [Fact]
         public static void OnSome_InvalidArg()
         {
             Assert.ThrowsArgNullEx("action", () => One.OnSome(null!));
             Assert.ThrowsArgNullEx("action", () => SomeText.OnSome(null!));
             Assert.ThrowsArgNullEx("action", () => SomeUri.OnSome(null!));
+        }
+
+        [Fact]
+        public static void OnSome_None()
+        {
+            // Arrange
+            bool wasCalled = false;
+            // Act
+            NoText.OnSome(_ => { wasCalled = true; });
+            // Assert
+            Assert.False(wasCalled);
+        }
+
+        [Fact]
+        public static void OnSome_Some()
+        {
+            // Arrange
+            bool wasCalled = false;
+            // Act
+            SomeText.OnSome(_ => { wasCalled = true; });
+            // Assert
+            Assert.True(wasCalled);
+        }
+
+        [Fact]
+        public static void When_False_None()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            bool onNoneCalled = false;
+            // Act
+            NoText.When(false, _ => { onSomeCalled = true; }, () => { onNoneCalled = true; });
+            NoText.When(false, null, () => { onNoneCalled = true; });
+            NoText.When(false, _ => { onSomeCalled = true; }, null);
+            NoText.When(false, null, null);
+            // Assert
+            Assert.False(onSomeCalled);
+            Assert.False(onNoneCalled);
+        }
+
+        [Fact]
+        public static void When_False_Some()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            bool onNoneCalled = false;
+            // Act
+            SomeText.When(false, _ => { onSomeCalled = true; }, () => { onNoneCalled = true; });
+            SomeText.When(false, null, () => { onNoneCalled = true; });
+            SomeText.When(false, _ => { onSomeCalled = true; }, null);
+            SomeText.When(false, null, null);
+            // Assert
+            Assert.False(onSomeCalled);
+            Assert.False(onNoneCalled);
+        }
+
+        [Fact]
+        public static void When_True_None()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            bool onNoneCalled = false;
+
+            // Act & Assert
+            NoText.When(true, _ => { onSomeCalled = true; }, () => { onNoneCalled = true; });
+            Assert.False(onSomeCalled);
+            Assert.True(onNoneCalled);
+
+            onSomeCalled = false;
+            NoText.When(true, _ => { onSomeCalled = true; }, null);
+            Assert.False(onSomeCalled);
+
+            onNoneCalled = false;
+            NoText.When(true, null, () => { onNoneCalled = true; });
+            Assert.True(onNoneCalled);
+
+            // Does not throw.
+            NoText.When(true, null, null);
+        }
+
+        [Fact]
+        public static void When_True_Some()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            bool onNoneCalled = false;
+
+            // Act & Assert
+            SomeText.When(true, _ => { onSomeCalled = true; }, () => { onNoneCalled = true; });
+            Assert.True(onSomeCalled);
+            Assert.False(onNoneCalled);
+
+            onSomeCalled = false;
+            SomeText.When(true, _ => { onSomeCalled = true; }, null);
+            Assert.True(onSomeCalled);
+
+            onNoneCalled = false;
+            SomeText.When(true, null, () => { onNoneCalled = true; });
+            Assert.False(onNoneCalled);
+
+            // Does not throw.
+            SomeText.When(true, null, null);
         }
     }
 
@@ -362,8 +490,8 @@ namespace Abc
         [Fact]
         public static void Select_InvalidArg()
         {
-            Assert.ThrowsArgNullEx("selector", () => Ø.Select((Func<int, string>)null!));
-            Assert.ThrowsArgNullEx("selector", () => One.Select((Func<int, string>)null!));
+            Assert.ThrowsArgNullEx("selector", () => Ø.Select(default(Func<int, string>)!));
+            Assert.ThrowsArgNullEx("selector", () => One.Select(default(Func<int, string>)!));
         }
 
         [Fact]
@@ -447,13 +575,13 @@ namespace Abc
         [Fact]
         public static void BindAsync_InvalidArg()
         {
-            Assert.ThrowsAsyncArgNullEx("binder", () => Ø.BindAsync((Func<int, Task<Maybe<string>>>)null!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => NoText.BindAsync((Func<string, Task<Maybe<string>>>)null!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => NoUri.BindAsync((Func<Uri, Task<Maybe<string>>>)null!));
+            Assert.ThrowsAsyncArgNullEx("binder", () => Ø.BindAsync(default(Func<int, Task<Maybe<string>>>)!));
+            Assert.ThrowsAsyncArgNullEx("binder", () => NoText.BindAsync(default(Func<string, Task<Maybe<string>>>)!));
+            Assert.ThrowsAsyncArgNullEx("binder", () => NoUri.BindAsync(default(Func<Uri, Task<Maybe<string>>>)!));
 
-            Assert.ThrowsAsyncArgNullEx("binder", () => One.BindAsync((Func<int, Task<Maybe<string>>>)null!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => SomeText.BindAsync((Func<string, Task<Maybe<string>>>)null!));
-            Assert.ThrowsAsyncArgNullEx("binder", () => SomeUri.BindAsync((Func<Uri, Task<Maybe<string>>>)null!));
+            Assert.ThrowsAsyncArgNullEx("binder", () => One.BindAsync(default(Func<int, Task<Maybe<string>>>)!));
+            Assert.ThrowsAsyncArgNullEx("binder", () => SomeText.BindAsync(default(Func<string, Task<Maybe<string>>>)!));
+            Assert.ThrowsAsyncArgNullEx("binder", () => SomeUri.BindAsync(default(Func<Uri, Task<Maybe<string>>>)!));
         }
     }
 
@@ -570,9 +698,9 @@ namespace Abc
         public static void ZipWith_InvalidArg()
         {
             Assert.ThrowsArgNullEx("zipper",
-                () => Ø.ZipWith(TwoL, (Func<int, long, long>)null!));
+                () => Ø.ZipWith(TwoL, default(Func<int, long, long>)!));
             Assert.ThrowsArgNullEx("zipper",
-                () => One.ZipWith(TwoL, (Func<int, long, long>)null!));
+                () => One.ZipWith(TwoL, default(Func<int, long, long>)!));
         }
 
         [Fact]
