@@ -139,10 +139,10 @@ namespace Abc
             Assert.Some(One, Maybe.SquareOrNone((int?)1));
 
             Assert.None(Maybe.SquareOrNone((string)null!));
-            Assert.Some(Maybe.Of(MyText), Maybe.SquareOrNone(MyText));
+            Assert.Some(Maybe.SomeOrNone(MyText), Maybe.SquareOrNone(MyText));
 
             Assert.None(Maybe.SquareOrNone((Uri)null!));
-            Assert.Some(Maybe.Of(MyUri), Maybe.SquareOrNone(MyUri));
+            Assert.Some(Maybe.SomeOrNone(MyUri), Maybe.SquareOrNone(MyUri));
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace Abc
             Assert.Contains("None", none.ToString(), StringComparison.OrdinalIgnoreCase);
 
             string value = "My Value";
-            var some = Maybe.Of(value);
+            var some = Maybe.SomeOrNone(value);
             Assert.Contains(value, some.ToString(), StringComparison.OrdinalIgnoreCase);
         }
 
@@ -602,33 +602,28 @@ namespace Abc
         [Fact]
         public static void ToEnumerable()
         {
-            // Arrange
-            var some = Maybe.Of("value");
-            var none = Maybe<string>.None;
-            // Act & Assert
-            Assert.Equal(Enumerable.Repeat("value", 1), some.ToEnumerable());
-            Assert.Empty(none.ToEnumerable());
+            Assert.Equal(Enumerable.Repeat(MyText, 1), SomeText.ToEnumerable());
+            Assert.Empty(NoText.ToEnumerable());
         }
 
         [Fact]
         public static void GetEnumerator_Some()
         {
             // Arrange
-            var some = Maybe.Of("value");
             int count = 0;
 
             // Act & Assert
 
             // First loop.
-            foreach (string x in some) { count++; Assert.Equal("value", x); }
+            foreach (string x in SomeText) { count++; Assert.Equal(MyText, x); }
             Assert.Equal(1, count);
             // Second loop (new iterator).
             count = 0;
-            foreach (string x in some) { count++; Assert.Equal("value", x); }
+            foreach (string x in SomeText) { count++; Assert.Equal(MyText, x); }
             Assert.Equal(1, count);
 
             // Using an explicit iterator.
-            var iter = some.GetEnumerator();
+            var iter = SomeText.GetEnumerator();
 
             // First loop.
             count = 0;
@@ -649,20 +644,19 @@ namespace Abc
         public static void GetEnumerator_None()
         {
             // Arrange
-            var none = Maybe<string>.None;
             int count = 0;
 
             // Act & Assert
 
             // First loop.
-            foreach (string x in none) { count++; }
+            foreach (string x in NoText) { count++; }
             Assert.Equal(0, count);
             // Second loop (new iterator).
-            foreach (string x in none) { count++; }
+            foreach (string x in NoText) { count++; }
             Assert.Equal(0, count);
 
             // Using an explicit iterator.
-            var iter = none.GetEnumerator();
+            var iter = NoText.GetEnumerator();
 
             // First loop.
             while (iter.MoveNext()) { count++; }
@@ -679,43 +673,49 @@ namespace Abc
         [Fact]
         public static void Yield()
         {
-            // Arrange
-            var some = Maybe.Of("value");
-            var none = Maybe<string>.None;
+            Assert.Empty(NoText.Yield(0));
+            Assert.Empty(NoText.Yield(10));
+            Assert.Empty(NoText.Yield(100));
+            Assert.Empty(NoText.Yield(1000));
 
-            // Act & Assert
-            Assert.Equal(Enumerable.Repeat("value", 0), some.Yield(0));
-            Assert.Equal(Enumerable.Repeat("value", 1), some.Yield(1));
-            Assert.Equal(Enumerable.Repeat("value", 10), some.Yield(10));
-            Assert.Equal(Enumerable.Repeat("value", 100), some.Yield(100));
-            Assert.Equal(Enumerable.Repeat("value", 1000), some.Yield(1000));
-            Assert.Empty(none.Yield(0));
-            Assert.Empty(none.Yield(10));
-            Assert.Empty(none.Yield(100));
-            Assert.Empty(none.Yield(1000));
+            Assert.Equal(Enumerable.Repeat(MyText, 0), SomeText.Yield(0));
+            Assert.Equal(Enumerable.Repeat(MyText, 1), SomeText.Yield(1));
+            Assert.Equal(Enumerable.Repeat(MyText, 10), SomeText.Yield(10));
+            Assert.Equal(Enumerable.Repeat(MyText, 100), SomeText.Yield(100));
+            Assert.Equal(Enumerable.Repeat(MyText, 1000), SomeText.Yield(1000));
 
-            Assert.Equal(Enumerable.Repeat("value", 0), some.Yield().Take(0));
-            Assert.Equal(Enumerable.Repeat("value", 1), some.Yield().Take(1));
-            Assert.Equal(Enumerable.Repeat("value", 10), some.Yield().Take(10));
-            Assert.Equal(Enumerable.Repeat("value", 100), some.Yield().Take(100));
-            Assert.Equal(Enumerable.Repeat("value", 1000), some.Yield().Take(1000));
-            Assert.Empty(none.Yield());
+            Assert.Empty(NoText.Yield());
+
+            Assert.Equal(Enumerable.Repeat(MyText, 0), SomeText.Yield().Take(0));
+            Assert.Equal(Enumerable.Repeat(MyText, 1), SomeText.Yield().Take(1));
+            Assert.Equal(Enumerable.Repeat(MyText, 10), SomeText.Yield().Take(10));
+            Assert.Equal(Enumerable.Repeat(MyText, 100), SomeText.Yield().Take(100));
+            Assert.Equal(Enumerable.Repeat(MyText, 1000), SomeText.Yield().Take(1000));
         }
 
         [Fact]
         public static void Contains()
         {
-            Assert.False(One.Contains(0));
-            Assert.True(One.Contains(1));
-            Assert.False(One.Contains(2));
-
             Assert.False(Ø.Contains(0));
             Assert.False(Ø.Contains(1));
             Assert.False(Ø.Contains(2));
 
-            Assert.True(Maybe.Of("XXX").Contains("XXX"));
+            Assert.False(One.Contains(0));
+            Assert.True(One.Contains(1));
+            Assert.False(One.Contains(2));
+
+            Assert.True(Maybe.SomeOrNone("XXX").Contains("XXX"));
             // Default comparison does NOT ignore case.
-            Assert.False(Maybe.Of("XXX").Contains("xxx"));
+            Assert.False(Maybe.SomeOrNone("XXX").Contains("xxx"));
+            Assert.False(Maybe.SomeOrNone("XXX").Contains("yyy"));
+
+            Assert.True(Maybe.SomeOrNone("XXX").Contains("XXX", StringComparer.Ordinal));
+            Assert.False(Maybe.SomeOrNone("XXX").Contains("xxx", StringComparer.Ordinal));
+            Assert.False(Maybe.SomeOrNone("XXX").Contains("yyy", StringComparer.Ordinal));
+
+            Assert.True(Maybe.SomeOrNone("XXX").Contains("XXX", StringComparer.OrdinalIgnoreCase));
+            Assert.True(Maybe.SomeOrNone("XXX").Contains("xxx", StringComparer.OrdinalIgnoreCase));
+            Assert.False(Maybe.SomeOrNone("XXX").Contains("yyy", StringComparer.OrdinalIgnoreCase));
         }
     }
 
