@@ -986,7 +986,6 @@ namespace Abc
     //   1) Reflexivity
     //   2) Anti-symmetry
     //   3) Transitivity
-    // TODO: tests when T is not comparable.
     public partial class MaybeTests
     {
         [Fact]
@@ -1121,7 +1120,6 @@ namespace Abc
     //   1) Reflexivity
     //   2) Symmetry
     //   3) Transitivity
-    // TODO: more equality tests.
     public partial class MaybeTests
     {
         [Fact]
@@ -1152,6 +1150,7 @@ namespace Abc
             Assert.True(none.Equals((object)same));
             Assert.False(none.Equals((object)notSame));
 
+            Assert.False(none.Equals(null));
             Assert.False(none.Equals(new object()));
         }
 
@@ -1183,6 +1182,7 @@ namespace Abc
             Assert.True(some.Equals((object)same));
             Assert.False(some.Equals((object)notSame));
 
+            Assert.False(some.Equals(null));
             Assert.False(some.Equals(new object()));
         }
 
@@ -1214,6 +1214,7 @@ namespace Abc
             Assert.True(none.Equals((object)same));
             Assert.False(none.Equals((object)notSame));
 
+            Assert.False(none.Equals(null));
             Assert.False(none.Equals(new object()));
         }
 
@@ -1245,6 +1246,7 @@ namespace Abc
             Assert.True(some.Equals((object)same));
             Assert.False(some.Equals((object)notSame));
 
+            Assert.False(some.Equals(null));
             Assert.False(some.Equals(new object()));
         }
 
@@ -1255,6 +1257,78 @@ namespace Abc
             IStructuralEquatable one = One;
             // Act & Assert
             Assert.ThrowsArgNullEx("comparer", () => one.Equals(One, null!));
+        }
+
+        [Fact]
+        public static void StructuralEquatable_None_ValueType()
+        {
+            // Arrange
+            IStructuralEquatable none = Maybe<int>.None;
+            var same = Maybe<int>.None;
+            var notSame = Maybe.Some(2);
+            var cmp = EqualityComparer<int>.Default;
+
+            // Act & Assert
+            Assert.False(none.Equals(null, cmp));
+            Assert.False(none.Equals(new object(), cmp));
+
+            Assert.True(none.Equals(none, cmp));
+            Assert.True(none.Equals(same, cmp));
+            Assert.False(none.Equals(notSame, cmp));
+        }
+
+        [Fact]
+        public static void StructuralEquatable_Some_ValueType()
+        {
+            // Arrange
+            IStructuralEquatable some = Maybe.Some(1);
+            var same = Maybe.Some(1);
+            var notSame = Maybe.Some(2);
+            var cmp = EqualityComparer<int>.Default;
+
+            // Act & Assert
+            Assert.False(some.Equals(null, cmp));
+            Assert.False(some.Equals(new object(), cmp));
+
+            Assert.True(some.Equals(some, cmp));
+            Assert.True(some.Equals(same, cmp));
+            Assert.False(some.Equals(notSame, cmp));
+        }
+
+        [Fact]
+        public static void StructuralEquatable_None_ReferenceType()
+        {
+            // Arrange
+            IStructuralEquatable none = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
+            var same = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
+            var notSame = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
+            var cmp = EqualityComparer<Uri>.Default;
+
+            // Act & Assert
+            Assert.False(none.Equals(null, cmp));
+            Assert.False(none.Equals(new object(), cmp));
+
+            Assert.True(none.Equals(none, cmp));
+            Assert.True(none.Equals(same, cmp));
+            Assert.False(none.Equals(notSame, cmp));
+        }
+
+        [Fact]
+        public static void StructuralEquatable_Some_ReferenceType()
+        {
+            // Arrange
+            IStructuralEquatable some = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
+            var same = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
+            var notSame = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
+            var cmp = EqualityComparer<Uri>.Default;
+
+            // Act & Assert
+            Assert.False(some.Equals(null, cmp));
+            Assert.False(some.Equals(new object(), cmp));
+
+            Assert.True(some.Equals(some, cmp));
+            Assert.True(some.Equals(same, cmp));
+            Assert.False(some.Equals(notSame, cmp));
         }
 
         [Fact]
@@ -1273,12 +1347,34 @@ namespace Abc
         }
 
         [Fact]
-        public static void HashCode_InvalidArg()
+        public static void StructuralEquatable_GetHashCode_InvalidArg()
         {
             // Arrange
             IStructuralEquatable one = One;
             // Act & Assert
             Assert.ThrowsArgNullEx("comparer", () => one.GetHashCode(null!));
+        }
+
+        [Fact]
+        public static void StructuralEquatable_GetHashCode()
+        {
+            // Arrange
+            var icmp = EqualityComparer<int>.Default;
+            var lcmp = EqualityComparer<long>.Default;
+            var scmp = EqualityComparer<string>.Default;
+            var ucmp = EqualityComparer<Uri>.Default;
+
+            // Act & Assert
+            Assert.Equal(0, ((IStructuralEquatable)Ø).GetHashCode(icmp));
+            Assert.Equal(0, ((IStructuralEquatable)ØL).GetHashCode(icmp));
+            Assert.Equal(0, ((IStructuralEquatable)NoText).GetHashCode(scmp));
+            Assert.Equal(0, ((IStructuralEquatable)NoUri).GetHashCode(ucmp));
+
+            Assert.Equal(icmp.GetHashCode(1), ((IStructuralEquatable)One).GetHashCode(icmp));
+            Assert.Equal(icmp.GetHashCode(2), ((IStructuralEquatable)Two).GetHashCode(icmp));
+            Assert.Equal(lcmp.GetHashCode(2L), ((IStructuralEquatable)TwoL).GetHashCode(lcmp));
+            Assert.Equal(scmp.GetHashCode(MyText), ((IStructuralEquatable)SomeText).GetHashCode(scmp));
+            Assert.Equal(ucmp.GetHashCode(MyUri), ((IStructuralEquatable)SomeUri).GetHashCode(ucmp));
         }
     }
 }
