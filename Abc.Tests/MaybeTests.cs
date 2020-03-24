@@ -3,6 +3,7 @@
 namespace Abc
 {
     using System;
+    using System.Collections;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -1036,9 +1037,70 @@ namespace Abc
         [Fact]
         public static void CompareTo()
         {
+            // With None
+            Assert.Equal(1, One.CompareTo(Ø));
+            Assert.Equal(-1, Ø.CompareTo(One));
+            Assert.Equal(0, Ø.CompareTo(Ø));
+            // Without None
             Assert.Equal(1, Two.CompareTo(One));
             Assert.Equal(0, One.CompareTo(One));
             Assert.Equal(-1, One.CompareTo(Two));
+        }
+
+        [Fact]
+        public static void Comparable()
+        {
+            // Arrange
+            IComparable none = Ø;
+            IComparable one = One;
+            IComparable two = Two;
+
+            // Act & Assert
+            Assert.Equal(1, none.CompareTo(null));
+            Assert.Equal(1, one.CompareTo(null));
+
+            Assert.ThrowsArgEx("obj", () => none.CompareTo(new object()));
+            Assert.ThrowsArgEx("obj", () => one.CompareTo(new object()));
+
+            // With None
+            Assert.Equal(1, one.CompareTo(none));
+            Assert.Equal(-1, none.CompareTo(one));
+            Assert.Equal(0, none.CompareTo(none));
+
+            // Without None
+            Assert.Equal(1, two.CompareTo(one));
+            Assert.Equal(0, one.CompareTo(one));
+            Assert.Equal(-1, one.CompareTo(two));
+        }
+
+        [Fact]
+        public static void StructuralComparable()
+        {
+            // Arrange
+            var cmp = MaybeComparer<int>.Default;
+            IStructuralComparable none = Ø;
+            IStructuralComparable one = One;
+            IStructuralComparable two = Two;
+
+            // Act & Assert
+            Assert.Equal(1, none.CompareTo(null, cmp));
+            Assert.Equal(1, one.CompareTo(null, cmp));
+
+            Assert.ThrowsArgEx("other", () => none.CompareTo(new object(), cmp));
+            Assert.ThrowsArgEx("other", () => one.CompareTo(new object(), cmp));
+
+            Assert.ThrowsArgNullEx("comparer", () => none.CompareTo(one, null!));
+            Assert.ThrowsArgNullEx("comparer", () => one.CompareTo(none, null!));
+
+            // With None
+            Assert.Equal(1, one.CompareTo(none, cmp));
+            Assert.Equal(-1, none.CompareTo(one, cmp));
+            Assert.Equal(0, none.CompareTo(none, cmp));
+
+            // Without None
+            Assert.Equal(1, two.CompareTo(one, cmp));
+            Assert.Equal(0, one.CompareTo(one, cmp));
+            Assert.Equal(-1, one.CompareTo(two, cmp));
         }
     }
 

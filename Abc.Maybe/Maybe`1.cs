@@ -1072,9 +1072,12 @@ namespace Abc
             }
             if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
-            return _isSome
-                ? maybe._isSome ? comparer.Compare(_value, maybe._value) : 1
-                : maybe._isSome ? -1 : 0;
+            // FIXME:
+            //return _isSome
+            //    ? maybe._isSome ? comparer.Compare(_value, maybe._value) : 1
+            //    : maybe._isSome ? -1 : 0;
+
+            return comparer.Compare(this, maybe);
         }
     }
 
