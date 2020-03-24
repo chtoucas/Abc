@@ -4,6 +4,7 @@ namespace Abc
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -1074,33 +1075,43 @@ namespace Abc
         }
 
         [Fact]
+        public static void StructuralComparable_InvalidArg()
+        {
+            // Arrange
+            IStructuralComparable none = Ø;
+            IStructuralComparable one = One;
+            // Act & Assert
+            Assert.ThrowsArgNullEx("comparer", () => one.CompareTo(One, null!));
+            Assert.ThrowsArgNullEx("comparer", () => none.CompareTo(One, null!));
+        }
+
+        [Fact]
         public static void StructuralComparable()
         {
             // Arrange
-            var cmp = MaybeComparer<int>.Default;
+            // TODO: StructuralComparable, see comments in Maybe<>.
+            //var cmp = MaybeComparer<int>.Default;
+            var cmp = Comparer<int>.Default;
             IStructuralComparable none = Ø;
             IStructuralComparable one = One;
             IStructuralComparable two = Two;
 
             // Act & Assert
-            Assert.Equal(1, none.CompareTo(null, cmp));
-            Assert.Equal(1, one.CompareTo(null, cmp));
-
             Assert.ThrowsArgEx("other", () => none.CompareTo(new object(), cmp));
             Assert.ThrowsArgEx("other", () => one.CompareTo(new object(), cmp));
 
-            Assert.ThrowsArgNullEx("comparer", () => none.CompareTo(one, null!));
-            Assert.ThrowsArgNullEx("comparer", () => one.CompareTo(none, null!));
+            Assert.Equal(1, none.CompareTo(null, cmp));
+            Assert.Equal(1, one.CompareTo(null, cmp));
 
             // With None
-            Assert.Equal(1, one.CompareTo(none, cmp));
-            Assert.Equal(-1, none.CompareTo(one, cmp));
-            Assert.Equal(0, none.CompareTo(none, cmp));
+            Assert.Equal(1, one.CompareTo(Ø, cmp));
+            Assert.Equal(-1, none.CompareTo(One, cmp));
+            Assert.Equal(0, none.CompareTo(Ø, cmp));
 
             // Without None
-            Assert.Equal(1, two.CompareTo(one, cmp));
-            Assert.Equal(0, one.CompareTo(one, cmp));
-            Assert.Equal(-1, one.CompareTo(two, cmp));
+            Assert.Equal(1, two.CompareTo(One, cmp));
+            Assert.Equal(0, one.CompareTo(One, cmp));
+            Assert.Equal(-1, one.CompareTo(Two, cmp));
         }
     }
 
@@ -1114,65 +1125,136 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Equality_ValueType()
+        public static void Equality_None_ValueType()
         {
             // Arrange
-            var ord = Maybe.Some(1);
+            var none = Maybe<int>.None;
+            var same = Maybe<int>.None;
+            var notSame = Maybe.Some(2);
+
+            // Act & Assert
+            Assert.True(none == same);
+            Assert.True(same == none);
+            Assert.False(none == notSame);
+            Assert.False(notSame == none);
+
+            Assert.False(none != same);
+            Assert.False(same != none);
+            Assert.True(none != notSame);
+            Assert.True(notSame != none);
+
+            Assert.True(none.Equals(none));
+            Assert.True(none.Equals(same));
+            Assert.True(same.Equals(none));
+            Assert.False(none.Equals(notSame));
+            Assert.False(notSame.Equals(none));
+
+            Assert.True(none.Equals((object)same));
+            Assert.False(none.Equals((object)notSame));
+
+            Assert.False(none.Equals(new object()));
+        }
+
+        [Fact]
+        public static void Equality_Some_ValueType()
+        {
+            // Arrange
+            var some = Maybe.Some(1);
             var same = Maybe.Some(1);
             var notSame = Maybe.Some(2);
 
             // Act & Assert
-            Assert.True(ord == same);
-            Assert.True(same == ord);
-            Assert.False(ord == notSame);
-            Assert.False(notSame == ord);
+            Assert.True(some == same);
+            Assert.True(same == some);
+            Assert.False(some == notSame);
+            Assert.False(notSame == some);
 
-            Assert.False(ord != same);
-            Assert.False(same != ord);
-            Assert.True(ord != notSame);
-            Assert.True(notSame != ord);
+            Assert.False(some != same);
+            Assert.False(same != some);
+            Assert.True(some != notSame);
+            Assert.True(notSame != some);
 
-            Assert.True(ord.Equals(ord));
-            Assert.True(ord.Equals(same));
-            Assert.True(same.Equals(ord));
-            Assert.False(ord.Equals(notSame));
-            Assert.False(notSame.Equals(ord));
+            Assert.True(some.Equals(some));
+            Assert.True(some.Equals(same));
+            Assert.True(same.Equals(some));
+            Assert.False(some.Equals(notSame));
+            Assert.False(notSame.Equals(some));
 
-            Assert.True(ord.Equals((object)same));
-            Assert.False(ord.Equals((object)notSame));
+            Assert.True(some.Equals((object)same));
+            Assert.False(some.Equals((object)notSame));
 
-            Assert.False(ord.Equals(new object()));
+            Assert.False(some.Equals(new object()));
         }
 
         [Fact]
-        public static void Equality_ReferenceType()
+        public static void Equality_None_ReferenceType()
         {
             // Arrange
-            var ord = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
+            var none = Maybe<Uri>.None;
+            var same = Maybe<Uri>.None;
+            var notSame = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
+
+            // Act & Assert
+            Assert.True(none == same);
+            Assert.True(same == none);
+            Assert.False(none == notSame);
+            Assert.False(notSame == none);
+
+            Assert.False(none != same);
+            Assert.False(same != none);
+            Assert.True(none != notSame);
+            Assert.True(notSame != none);
+
+            Assert.True(none.Equals(none));
+            Assert.True(none.Equals(same));
+            Assert.True(same.Equals(none));
+            Assert.False(none.Equals(notSame));
+            Assert.False(notSame.Equals(none));
+
+            Assert.True(none.Equals((object)same));
+            Assert.False(none.Equals((object)notSame));
+
+            Assert.False(none.Equals(new object()));
+        }
+
+        [Fact]
+        public static void Equality_Some_ReferenceType()
+        {
+            // Arrange
+            var some = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
             var same = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
             var notSame = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
 
             // Act & Assert
-            Assert.True(ord == same);
-            Assert.True(same == ord);
-            Assert.False(ord == notSame);
-            Assert.False(notSame == ord);
+            Assert.True(some == same);
+            Assert.True(same == some);
+            Assert.False(some == notSame);
+            Assert.False(notSame == some);
 
-            Assert.False(ord != same);
-            Assert.False(same != ord);
-            Assert.True(ord != notSame);
-            Assert.True(notSame != ord);
+            Assert.False(some != same);
+            Assert.False(same != some);
+            Assert.True(some != notSame);
+            Assert.True(notSame != some);
 
-            Assert.True(ord.Equals(ord));
-            Assert.True(ord.Equals(same));
-            Assert.True(same.Equals(ord));
-            Assert.False(ord.Equals(notSame));
-            Assert.False(notSame.Equals(ord));
+            Assert.True(some.Equals(some));
+            Assert.True(some.Equals(same));
+            Assert.True(same.Equals(some));
+            Assert.False(some.Equals(notSame));
+            Assert.False(notSame.Equals(some));
 
-            Assert.True(ord.Equals((object)same));
-            Assert.False(ord.Equals((object)notSame));
+            Assert.True(some.Equals((object)same));
+            Assert.False(some.Equals((object)notSame));
 
-            Assert.False(ord.Equals(new object()));
+            Assert.False(some.Equals(new object()));
+        }
+
+        [Fact]
+        public static void StructuralEquatable_InvalidArg()
+        {
+            // Arrange
+            IStructuralEquatable one = One;
+            // Act & Assert
+            Assert.ThrowsArgNullEx("comparer", () => one.Equals(One, null!));
         }
 
         [Fact]
@@ -1188,6 +1270,15 @@ namespace Abc
             Assert.Equal(2L.GetHashCode(), TwoL.GetHashCode());
             Assert.Equal(MyText.GetHashCode(StringComparison.Ordinal), SomeText.GetHashCode());
             Assert.Equal(MyUri.GetHashCode(), SomeUri.GetHashCode());
+        }
+
+        [Fact]
+        public static void HashCode_InvalidArg()
+        {
+            // Arrange
+            IStructuralEquatable one = One;
+            // Act & Assert
+            Assert.ThrowsArgNullEx("comparer", () => one.GetHashCode(null!));
         }
     }
 }

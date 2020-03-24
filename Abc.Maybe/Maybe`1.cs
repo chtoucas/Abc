@@ -1065,19 +1065,24 @@ namespace Abc
 
         int IStructuralComparable.CompareTo(object? other, IComparer comparer)
         {
+            if (comparer is null) { throw new Anexn(nameof(comparer)); }
+
             if (other is null) { return 1; }
             if (!(other is Maybe<T> maybe))
             {
                 throw EF.InvalidType(nameof(other), typeof(Maybe<>), other);
             }
-            if (comparer is null) { throw new Anexn(nameof(comparer)); }
 
-            // FIXME:
-            //return _isSome
-            //    ? maybe._isSome ? comparer.Compare(_value, maybe._value) : 1
-            //    : maybe._isSome ? -1 : 0;
+            // TODO: at start, I wrote:
+            return _isSome
+                ? maybe._isSome ? comparer.Compare(_value, maybe._value) : 1
+                : maybe._isSome ? -1 : 0;
+            // but it works w/ a "comparer" for T not for Maybe<T>.
+            // Is it the right thing to do?
+            // DO NOT FORGET TO UPDATE MaybeTests.StructuralComparable().
 
-            return comparer.Compare(this, maybe);
+            // Other option:
+            //return comparer.Compare(this, maybe);
         }
     }
 
@@ -1117,8 +1122,9 @@ namespace Abc
         [Pure]
         bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer)
         {
-            if (other is null || !(other is Maybe<T> maybe)) { return false; }
             if (comparer is null) { throw new Anexn(nameof(comparer)); }
+
+            if (other is null || !(other is Maybe<T> maybe)) { return false; }
 
             return _isSome ? maybe._isSome && comparer.Equals(_value, maybe._value)
                 : !maybe._isSome;
