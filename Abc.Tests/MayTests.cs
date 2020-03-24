@@ -281,7 +281,7 @@ namespace Abc
         }
     }
 
-    // ParseEnum.
+    // ParseEnum().
     public partial class MayTests
     {
         [Theory]
@@ -408,5 +408,24 @@ namespace Abc
             Assert.None(May.ParseEnum<Enum012>(value, ignoreCase: false));
             Assert.None(May.ParseEnum<Enum012>(value, ignoreCase: true));
         }
+    }
+
+    // ParseDateTime() & ParseDateTimeExactly().
+    public partial class MayTests
+    {
+        [Fact]
+        public static void ParseDateTime_None()
+        {
+            Assert.None(May.ParseDateTime(null));
+            Assert.None(May.ParseDateTime("XXX"));
+
+            Assert.None(May.ParseDateTime(null, CultureInfo.CurrentCulture, DateTimeStyles.None));
+            Assert.None(May.ParseDateTime("XXX", CultureInfo.CurrentCulture, DateTimeStyles.None));
+        }
+    }
+
+    // CreateUri().
+    public partial class MayTests
+    {
     }
 }
