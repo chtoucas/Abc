@@ -6,6 +6,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+
 using Xunit;
 
 // Adapted from https://github.com/dotnet/corefx/blob/master/src/System.Linq/tests/TestExtensions.cs

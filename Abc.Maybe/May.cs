@@ -56,54 +56,6 @@ namespace Abc
 
         /// <summary>
         /// Attemps to convert the string representation of a number to its
-        /// <see cref="Decimal"/> equivalent.
-        /// </summary>
-        [Pure]
-        public static Maybe<decimal> ParseDecimal(string? value)
-        {
-            return Decimal.TryParse(value, out decimal result)
-                ? Maybe.Some(result) : Maybe<decimal>.None;
-        }
-
-        /// <summary>
-        /// Attemps to convert the string representation of a number to its
-        /// <see cref="Decimal"/> equivalent using the specified style and
-        /// culture-specific format.
-        /// </summary>
-        [Pure]
-        public static Maybe<decimal> ParseDecimal(
-            string? value, NumberStyles style, IFormatProvider? provider)
-        {
-            return Decimal.TryParse(value, style, provider, out decimal result)
-                ? Maybe.Some(result) : Maybe<decimal>.None;
-        }
-
-        /// <summary>
-        /// Attemps to convert the string representation of a number to its
-        /// <see cref="Double"/> equivalent.
-        /// </summary>
-        [Pure]
-        public static Maybe<double> ParseDouble(string? value)
-        {
-            return Double.TryParse(value, out double result)
-                ? Maybe.Some(result) : Maybe<double>.None;
-        }
-
-        /// <summary>
-        /// Attemps to convert the string representation of a number to its
-        /// <see cref="Double"/> equivalent using the specified style and
-        /// culture-specific format.
-        /// </summary>
-        [Pure]
-        public static Maybe<double> ParseDouble(
-            string? value, NumberStyles style, IFormatProvider? provider)
-        {
-            return Double.TryParse(value, style, provider, out double result)
-                ? Maybe.Some(result) : Maybe<double>.None;
-        }
-
-        /// <summary>
-        /// Attemps to convert the string representation of a number to its
         /// <see cref="Int16"/> equivalent.
         /// </summary>
         [Pure]
@@ -196,6 +148,54 @@ namespace Abc
         {
             return Single.TryParse(value, style, provider, out float result)
                 ? Maybe.Some(result) : Maybe<float>.None;
+        }
+
+        /// <summary>
+        /// Attemps to convert the string representation of a number to its
+        /// <see cref="Double"/> equivalent.
+        /// </summary>
+        [Pure]
+        public static Maybe<double> ParseDouble(string? value)
+        {
+            return Double.TryParse(value, out double result)
+                ? Maybe.Some(result) : Maybe<double>.None;
+        }
+
+        /// <summary>
+        /// Attemps to convert the string representation of a number to its
+        /// <see cref="Double"/> equivalent using the specified style and
+        /// culture-specific format.
+        /// </summary>
+        [Pure]
+        public static Maybe<double> ParseDouble(
+            string? value, NumberStyles style, IFormatProvider? provider)
+        {
+            return Double.TryParse(value, style, provider, out double result)
+                ? Maybe.Some(result) : Maybe<double>.None;
+        }
+
+        /// <summary>
+        /// Attemps to convert the string representation of a number to its
+        /// <see cref="Decimal"/> equivalent.
+        /// </summary>
+        [Pure]
+        public static Maybe<decimal> ParseDecimal(string? value)
+        {
+            return Decimal.TryParse(value, out decimal result)
+                ? Maybe.Some(result) : Maybe<decimal>.None;
+        }
+
+        /// <summary>
+        /// Attemps to convert the string representation of a number to its
+        /// <see cref="Decimal"/> equivalent using the specified style and
+        /// culture-specific format.
+        /// </summary>
+        [Pure]
+        public static Maybe<decimal> ParseDecimal(
+            string? value, NumberStyles style, IFormatProvider? provider)
+        {
+            return Decimal.TryParse(value, style, provider, out decimal result)
+                ? Maybe.Some(result) : Maybe<decimal>.None;
         }
 
         /// <summary>
