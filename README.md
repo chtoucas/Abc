@@ -417,3 +417,4 @@ Developer Notes
 - XML comments with complete examples.
 - NuGet package.
 - Perf tool.
+- Optimize LINQ ops.
