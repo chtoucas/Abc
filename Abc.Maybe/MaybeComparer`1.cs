@@ -28,6 +28,6 @@ namespace Abc
                 : right is null ? 1
                 : left is Maybe<T> first && right is Maybe<T> second
                     ? Compare(first, second)
-                    : throw EF.NotComparable;
+                    : throw EF.MaybeComparer_InvalidType;
     }
 }

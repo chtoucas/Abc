@@ -20,9 +20,6 @@ namespace Abc.Utilities
         public static readonly NotSupportedException ReadOnlyCollection
             = new NotSupportedException("The collection is read-only.");
 
-        public static readonly ArgumentException NotComparable
-            = new ArgumentException("The objects can not be compared.");
-
         [Pure]
         [DebuggerStepThrough]
         public static ArgumentException InvalidType(
@@ -30,6 +27,9 @@ namespace Abc.Utilities
             => new ArgumentException(
                 $"The object should be of type {expected} but it is of type {obj.GetType()}.",
                 paramName);
+
+        public static readonly ArgumentException MaybeComparer_InvalidType
+            = new ArgumentException("Type of argument is not comparatible with MaybeComparer<T>.");
 
         public static readonly InvalidOperationException Maybe_NoValue
             = new InvalidOperationException("The object does not contain any value.");
