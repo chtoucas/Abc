@@ -17,12 +17,12 @@ namespace Abc.Linq
     public sealed class LastOrNoneTests : QperatorsTests
     {
         [Fact]
-        public static void LastOrNone_InvalidArg()
+        public static void InvalidArg()
         {
-            Assert.ThrowsArgNullEx("source", () => Qperators.LastOrNone(Null));
+            Assert.ThrowsArgNullEx("source", () => Null.LastOrNone());
 
-            Assert.ThrowsArgNullEx("source", () => Qperators.LastOrNone(Null, Funk<int, bool>.Any));
-            Assert.ThrowsArgNullEx("predicate", () => Qperators.LastOrNone(NotNull, Funk<int, bool>.Null));
+            Assert.ThrowsArgNullEx("source", () => Null.LastOrNone(Funk<int, bool>.Any));
+            Assert.ThrowsArgNullEx("predicate", () => NotNull.LastOrNone(Funk<int, bool>.Null));
         }
 
         [Fact(DisplayName = "LastOrNone() for int's returns the same result when called repeatedly.")]

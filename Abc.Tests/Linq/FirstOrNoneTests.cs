@@ -17,12 +17,12 @@ namespace Abc.Linq
     public sealed class FirstOrNoneTests : QperatorsTests
     {
         [Fact]
-        public static void FirstOrNone_InvalidArg()
+        public static void InvalidArg()
         {
-            Assert.ThrowsArgNullEx("source", () => Qperators.FirstOrNone(Null));
+            Assert.ThrowsArgNullEx("source", () => Null.FirstOrNone());
 
-            Assert.ThrowsArgNullEx("source", () => Qperators.FirstOrNone(Null, Funk<int, bool>.Any));
-            Assert.ThrowsArgNullEx("predicate", () => Qperators.FirstOrNone(NotNull, Funk<int, bool>.Null));
+            Assert.ThrowsArgNullEx("source", () => Null.FirstOrNone(Funk<int, bool>.Any));
+            Assert.ThrowsArgNullEx("predicate", () => NotNull.FirstOrNone(Funk<int, bool>.Null));
         }
 
         [Fact(DisplayName = "FirstOrNone() for int's returns the same result when called repeatedly.")]

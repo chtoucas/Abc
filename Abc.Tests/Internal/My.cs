@@ -7,8 +7,6 @@ internal static class My
     public const string NullString = null;
     public const string? NullNullString = null;
 
-    public static readonly Action Noop = () => { };
-
     public enum Enum012
     {
         Zero = 0,
@@ -26,5 +24,17 @@ internal static class My
         Four = 1 << 2,
         OneTwo = One | Two,
         OneTwoFour = One | Two | Four
+    }
+
+    public sealed class Disposable : IDisposable
+    {
+        public Disposable() { }
+
+        public bool WasDisposed { get; private set; }
+
+        public void Dispose()
+        {
+            WasDisposed = true;
+        }
     }
 }

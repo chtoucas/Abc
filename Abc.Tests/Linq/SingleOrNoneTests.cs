@@ -17,12 +17,12 @@ namespace Abc.Linq
     public sealed class SingleOrNoneTests : QperatorsTests
     {
         [Fact]
-        public static void SingleOrNone_InvalidArg()
+        public static void InvalidArg()
         {
-            Assert.ThrowsArgNullEx("source", () => Qperators.SingleOrNone(Null));
+            Assert.ThrowsArgNullEx("source", () => Null.SingleOrNone());
 
-            Assert.ThrowsArgNullEx("source", () => Qperators.SingleOrNone(Null, Funk<int, bool>.Any));
-            Assert.ThrowsArgNullEx("predicate", () => Qperators.SingleOrNone(NotNull, Funk<int, bool>.Null));
+            Assert.ThrowsArgNullEx("source", () => Null.SingleOrNone(Funk<int, bool>.Any));
+            Assert.ThrowsArgNullEx("predicate", () => NotNull.SingleOrNone(Funk<int, bool>.Null));
         }
 
         [Fact(DisplayName = "SingleOrNone() for int's returns the same result when called repeatedly.")]

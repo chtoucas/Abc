@@ -2,6 +2,7 @@
 
 namespace Abc
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -125,5 +126,59 @@ namespace Abc
             var q = Maybe.CollectAny(source);
             Assert.ThrowsOnNext(q);
         }
+    }
+
+    // Helpers for Maybe<T> where T is disposable.
+    public partial class MaybeTests
+    {
+#pragma warning disable CA2000 // Dispose objects before losing scope
+
+        [Fact]
+        public static void Use_InvalidArg()
+        {
+            // Arrange
+            var source = Maybe.Of(new My.Disposable());
+            // Act & Assert
+            Assert.ThrowsArgNullEx("binder", () => source.Use(default(Func<My.Disposable, Maybe<int>>)!));
+            Assert.ThrowsArgNullEx("selector", () => source.Use(default(Func<My.Disposable, int>)!));
+        }
+
+        [Fact]
+        public static void Use_Bind()
+        {
+            // Arrange
+            var obj = new My.Disposable();
+            var source = Maybe.Of(obj);
+            // Act
+            Maybe<int> result = source.Use(_ => Maybe.Some(1));
+            // Assert
+            Assert.Some(1, result);
+            Assert.True(obj.WasDisposed);
+        }
+
+        [Fact]
+        public static void Use_Select()
+        {
+            // Arrange
+            var obj = new My.Disposable();
+            var source = Maybe.Of(obj);
+            // Act
+            Maybe<int> result = source.Use(_ => 1);
+            // Assert
+            Assert.Some(1, result);
+            Assert.True(obj.WasDisposed);
+        }
+
+#pragma warning restore CA2000
+    }
+
+    // Lift.
+    public partial class MaybeTests
+    {
+    }
+
+    // Helpers for Maybe<T> where T is a function.
+    public partial class MaybeTests
+    {
     }
 }

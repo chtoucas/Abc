@@ -12,14 +12,14 @@ namespace Abc.Linq
     public sealed class WhereAnyTests : QperatorsTests
     {
         [Fact]
-        public static void WhereAny_InvalidArg()
+        public static void InvalidArg()
         {
-            Assert.ThrowsArgNullEx("source", () => Qperators.WhereAny(Null, Kunc<int, bool>.Any));
-            Assert.ThrowsArgNullEx("predicate", () => Qperators.WhereAny(NotNull, Kunc<int, bool>.Null));
+            Assert.ThrowsArgNullEx("source", () => Null.WhereAny(Kunc<int, bool>.Any));
+            Assert.ThrowsArgNullEx("predicate", () => NotNull.WhereAny(Kunc<int, bool>.Null));
         }
 
         [Fact]
-        public static void WhereAny_Deferred()
+        public static void Deferred()
         {
             bool notCalled = true;
             Func<Maybe<bool>> fun = () => { notCalled = false; return Maybe.Of(true); };

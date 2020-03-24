@@ -16,9 +16,9 @@ namespace Abc.Linq
     public sealed class ElementAtOrNoneTests : QperatorsTests
     {
         [Fact]
-        public static void ElementAtOrNone_InvalidArg()
+        public static void InvalidArg()
         {
-            Assert.ThrowsArgNullEx("source", () => Qperators.ElementAtOrNone(Null, 1));
+            Assert.ThrowsArgNullEx("source", () => Null.ElementAtOrNone(1));
         }
 
         [Fact(DisplayName = "ElementAtOrNone() for int's returns the same result when called repeatedly.")]

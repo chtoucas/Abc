@@ -15,6 +15,7 @@ namespace Abc
     // - playing with the modifier "in". Currently only added to ext methods for
     //   Maybe<T> where T is a struct.
     // - Maybe<IEnumerable>; see CollectAny().
+    // - IDisposable extensions? CA2000
 
     /// <summary>
     /// Provides static helpers and extension methods for <see cref="Maybe{T}"/>.

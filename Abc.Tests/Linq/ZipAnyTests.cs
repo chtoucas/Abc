@@ -9,11 +9,11 @@ namespace Abc.Linq
     public sealed class ZipAnyTests : QperatorsTests
     {
         [Fact]
-        public static void ZipAny_InvalidArg()
+        public static void InvalidArg()
         {
-            Assert.ThrowsArgNullEx("first", () => Qperators.ZipAny(Null, NotNull, Kunc<int, int, int>.Any));
-            Assert.ThrowsArgNullEx("second", () => Qperators.ZipAny(NotNull, Null, Kunc<int, int, int>.Any));
-            Assert.ThrowsArgNullEx("resultSelector", () => Qperators.ZipAny(NotNull, NotNull, Kunc<int, int, int>.Null));
+            Assert.ThrowsArgNullEx("first", () => Null.ZipAny(NotNull, Kunc<int, int, int>.Any));
+            Assert.ThrowsArgNullEx("second", () => NotNull.ZipAny(Null, Kunc<int, int, int>.Any));
+            Assert.ThrowsArgNullEx("resultSelector", () => NotNull.ZipAny(NotNull, Kunc<int, int, int>.Null));
         }
     }
 }

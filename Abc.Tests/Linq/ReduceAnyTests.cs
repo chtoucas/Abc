@@ -9,14 +9,14 @@ namespace Abc.Linq
     public sealed class ReduceAnyTests : QperatorsTests
     {
         [Fact]
-        public static void ReduceAny_InvalidArg()
+        public static void InvalidArg()
         {
-            Assert.ThrowsArgNullEx("source", () => Qperators.ReduceAny(Null, Kunc<int, int, int>.Any));
-            Assert.ThrowsArgNullEx("accumulator", () => Qperators.ReduceAny(NotNull, Kunc<int, int, int>.Null));
+            Assert.ThrowsArgNullEx("source", () => Null.ReduceAny(Kunc<int, int, int>.Any));
+            Assert.ThrowsArgNullEx("accumulator", () => NotNull.ReduceAny(Kunc<int, int, int>.Null));
 
-            Assert.ThrowsArgNullEx("source", () => Qperators.ReduceAny(Null, Kunc<int, int, int>.Any, Funk<Maybe<int>, bool>.Any));
-            Assert.ThrowsArgNullEx("accumulator", () => Qperators.ReduceAny(NotNull, Kunc<int, int, int>.Null, Funk<Maybe<int>, bool>.Any));
-            Assert.ThrowsArgNullEx("predicate", () => Qperators.ReduceAny(NotNull, Kunc<int, int, int>.Any, Funk<Maybe<int>, bool>.Null));
+            Assert.ThrowsArgNullEx("source", () => Null.ReduceAny(Kunc<int, int, int>.Any, Funk<Maybe<int>, bool>.Any));
+            Assert.ThrowsArgNullEx("accumulator", () => NotNull.ReduceAny(Kunc<int, int, int>.Null, Funk<Maybe<int>, bool>.Any));
+            Assert.ThrowsArgNullEx("predicate", () => NotNull.ReduceAny(Kunc<int, int, int>.Any, Funk<Maybe<int>, bool>.Null));
         }
     }
 }
