@@ -5,6 +5,8 @@ namespace Abc.Linq
     using System.Collections.Generic;
     using System.Linq;
 
+    // Partly inspired by
+    // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Linq/tests/EnumerableTests.cs
     public abstract class QperatorsTests
     {
         protected QperatorsTests() { }

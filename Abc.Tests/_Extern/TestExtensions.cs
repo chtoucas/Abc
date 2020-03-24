@@ -2,24 +2,28 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-#pragma warning disable
+// Adapted from
+// https://github.com/dotnet/runtime/blob/master/src/libraries/System.Linq/tests/TestExtensions.cs
+// Changes tagged w/ PATCHED.
 
 using System.Collections;
 using System.Collections.Generic;
 
 using Xunit;
 
-// Adapted from https://github.com/dotnet/corefx/blob/master/src/System.Linq/tests/TestExtensions.cs
-
 namespace System.Linq.Tests
 {
     public static class TestExtensions
     {
-        public static IEnumerable<T> RunOnce<T>(this IEnumerable<T> source) =>
-            source == null ? null : (source as IList<T>)?.RunOnce() ?? new RunOnceEnumerable<T>(source);
+        // PATCHED.
+        public static IEnumerable<T> RunOnce<T>(this IEnumerable<T> source)
+            => source == null ? throw new ArgumentNullException(nameof(source))
+                : (source as IList<T>)?.RunOnce() ?? new RunOnceEnumerable<T>(source);
 
+        // PATCHED.
         public static IEnumerable<T> RunOnce<T>(this IList<T> source)
-            => source == null ? null : new RunOnceList<T>(source);
+            => source == null ? throw new ArgumentNullException(nameof(source))
+                : new RunOnceList<T>(source);
 
         private class RunOnceEnumerable<T> : IEnumerable<T>
         {
@@ -52,9 +56,11 @@ namespace System.Linq.Tests
                 _called.Add(-1);
             }
 
+            // PATCHED.
             private void AssertIndex(int index)
             {
-                Assert.False(_called.Contains(-1));
+                //Assert.False(_called.Contains(-1));
+                Assert.DoesNotContain(-1, _called);
                 Assert.True(_called.Add(index));
             }
 

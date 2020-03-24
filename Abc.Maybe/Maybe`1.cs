@@ -1052,6 +1052,7 @@ namespace Abc
                 ? other._isSome ? Comparer<T>.Default.Compare(_value, other._value) : 1
                 : other._isSome ? -1 : 0;
 
+        /// <inheritdoc />
         int IComparable.CompareTo(object? obj)
         {
             if (obj is null) { return 1; }
@@ -1063,6 +1064,7 @@ namespace Abc
             return CompareTo(maybe);
         }
 
+        /// <inheritdoc />
         int IStructuralComparable.CompareTo(object? other, IComparer comparer)
         {
             if (comparer is null) { throw new Anexn(nameof(comparer)); }
@@ -1073,16 +1075,16 @@ namespace Abc
                 throw EF.InvalidType(nameof(other), typeof(Maybe<>), other);
             }
 
-            // TODO: at start, I wrote:
+            // NB: the comparer is for T not for Maybe<T>, in particular it is
+            // not meant to be used with MaybeComparer<T>.Default.
+            // REVIEW: should we make it work with a comparer w/ Maybe<T>.
+            //   return comparer.Compare(this, maybe);
+            // Should we esnure that MaybeComparer<T> works with T?
+            // DO NOT FORGET TO UPDATE MaybeTests.StructuralComparable().
+            // Same thing w/ IStructuralEquatable.
             return _isSome
                 ? maybe._isSome ? comparer.Compare(_value, maybe._value) : 1
                 : maybe._isSome ? -1 : 0;
-            // but it works w/ a "comparer" for T not for Maybe<T>.
-            // Is it the right thing to do?
-            // DO NOT FORGET TO UPDATE MaybeTests.StructuralComparable().
-
-            // Other option:
-            //return comparer.Compare(this, maybe);
         }
     }
 

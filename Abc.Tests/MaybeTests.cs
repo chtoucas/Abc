@@ -1088,8 +1088,6 @@ namespace Abc
         public static void StructuralComparable()
         {
             // Arrange
-            // TODO: StructuralComparable, see comments in Maybe<>.
-            //var cmp = MaybeComparer<int>.Default;
             var cmp = Comparer<int>.Default;
             IStructuralComparable none = Ø;
             IStructuralComparable one = One;
