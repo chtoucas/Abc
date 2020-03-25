@@ -11,6 +11,11 @@ namespace Abc
     // Rules, sanity checks.
     // REVIEW: A bit limited, we could use fuzz testing.
 
+    public partial class MaybeTests
+    {
+        private static readonly Maybe<int> NONE = Maybe<int>.None;
+    }
+
     // Functor rules.
     public partial class MaybeTests
     {

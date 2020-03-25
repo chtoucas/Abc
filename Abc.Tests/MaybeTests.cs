@@ -14,8 +14,6 @@ namespace Abc
 
     public static partial class MaybeTests
     {
-        private static readonly Maybe<int> NONE = Maybe<int>.None;
-
         private static readonly Maybe<int> Ø = Maybe<int>.None;
         private static readonly Maybe<long> ØL = Maybe<long>.None;
 
@@ -62,7 +60,7 @@ namespace Abc
         }
     }
 
-    // Construction & factories.
+    // Factories, simple methods.
     public partial class MaybeTests
     {
         [Fact]
@@ -90,7 +88,7 @@ namespace Abc
         [Fact]
         public static void NoneT_IsNone()
         {
-            // NB: int? is not allowed here.
+            // NB: int? is not permitted here.
             Assert.None(Maybe.None<Unit>());
             Assert.None(Maybe.None<int>());
             Assert.None(Maybe.None<string>());
@@ -227,7 +225,7 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Bind_NullArg()
+        public static void Bind_NullBinder()
         {
             Assert.ThrowsArgNullEx("binder", () => Ø.Bind(Kunc<int, AnyT>.Null));
             Assert.ThrowsArgNullEx("binder", () => One.Bind(Kunc<int, AnyT>.Null));
@@ -388,13 +386,13 @@ namespace Abc
         }
 
         [Fact]
-        public static void ValueOrElse_None_NullArg_Throws()
+        public static void ValueOrElse_None_NullFactory_Throws()
         {
             Assert.ThrowsArgNullEx("valueFactory", () => Ø.ValueOrElse(Funk<int>.Null));
         }
 
         [Fact]
-        public static void ValueOrElse_Some_NullArg_DoesNotThrow()
+        public static void ValueOrElse_Some_NullFactory_DoesNotThrow()
         {
             Assert.Equal(1, One.ValueOrElse(Funk<int>.Null));
             Assert.Equal(MyText, SomeText.ValueOrElse(Funk<string>.Null));
@@ -446,7 +444,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void ValueOrThrow_NullArg()
+        public static void ValueOrThrow_NullException()
         {
             Assert.ThrowsArgNullEx("exception", () => Ø.ValueOrThrow(null!));
         }
@@ -488,10 +486,27 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Do_InvalidArg()
+        public static void Do_None_NullOnNone_Throws()
         {
             Assert.ThrowsArgNullEx("onNone", () => Ø.Do(Act<int>.Noop, Act.Null));
+        }
+
+        [Fact]
+        public static void Do_None_NullOnSome_DoesNotThrow()
+        {
+            Ø.Do(Act<int>.Null, Act.Noop);
+        }
+
+        [Fact]
+        public static void Do_Some_NullOnSome_Throws()
+        {
             Assert.ThrowsArgNullEx("onSome", () => One.Do(Act<int>.Null, Act.Noop));
+        }
+
+        [Fact]
+        public static void Do_Some_NullOnNone_DoesNotThrow()
+        {
+            One.Do(Act<int>.Noop, Act.Null);
         }
 
         [Fact]
@@ -521,7 +536,13 @@ namespace Abc
         }
 
         [Fact]
-        public static void OnSome_InvalidArg()
+        public static void OnSome_None_NullAction_DoesNotThrow()
+        {
+            Ø.OnSome(Act<int>.Null);
+        }
+
+        [Fact]
+        public static void OnSome_Some_NullAction_Throws()
         {
             Assert.ThrowsArgNullEx("action", () => One.OnSome(Act<int>.Null));
         }
@@ -549,7 +570,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void When_False_None()
+        public static void When_None_WithFalse()
         {
             // Arrange
             bool onSomeCalled = false;
@@ -565,7 +586,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void When_False_Some()
+        public static void When_Some_WithFalse()
         {
             // Arrange
             bool onSomeCalled = false;
@@ -581,7 +602,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void When_True_None()
+        public static void When_None_WithTrue()
         {
             // Arrange
             bool onSomeCalled = false;
@@ -605,7 +626,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void When_True_Some()
+        public static void When_Some_WithTrue()
         {
             // Arrange
             bool onSomeCalled = false;
@@ -633,26 +654,40 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Select_InvalidArg()
+        public static void Select_None_NullSelector()
         {
             Assert.ThrowsArgNullEx("selector", () => Ø.Select(Funk<int, AnyT>.Null));
+        }
+
+        [Fact]
+        public static void Select_Some_NullSelector()
+        {
             Assert.ThrowsArgNullEx("selector", () => One.Select(Funk<int, AnyT>.Null));
         }
 
         [Fact]
-        public static void Select()
+        public static void Select_None()
         {
             Assert.None(Ø.Select(x => x));
             Assert.None(from x in Ø select x);
+        }
 
+        [Fact]
+        public static void Select_Some()
+        {
             Assert.Some(2, One.Select(x => 2 * x));
             Assert.Some(2, from x in One select 2 * x);
         }
 
         [Fact]
-        public static void Where_InvalidArg()
+        public static void Where_None_NullPredicate()
         {
             Assert.ThrowsArgNullEx("predicate", () => Ø.Where(null!));
+        }
+
+        [Fact]
+        public static void Where_Some_NullPredicate()
+        {
             Assert.ThrowsArgNullEx("predicate", () => One.Where(null!));
         }
 
@@ -1331,7 +1366,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void StructuralEquatable_InvalidArg()
+        public static void Equals_StructuralEquatable_NullComparer()
         {
             // Arrange
             IStructuralEquatable one = One;
@@ -1340,7 +1375,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void StructuralEquatable_None_ValueType()
+        public static void Equals_StructuralEquatable_None_ValueType()
         {
             // Arrange
             IStructuralEquatable none = Maybe<int>.None;
@@ -1358,7 +1393,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void StructuralEquatable_Some_ValueType()
+        public static void Equals_StructuralEquatable_Some_ValueType()
         {
             // Arrange
             IStructuralEquatable some = Maybe.Some(1);
@@ -1376,7 +1411,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void StructuralEquatable_None_ReferenceType()
+        public static void Equals_StructuralEquatable_None_ReferenceType()
         {
             // Arrange
             IStructuralEquatable none = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
@@ -1394,7 +1429,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void StructuralEquatable_Some_ReferenceType()
+        public static void Equals_StructuralEquatable_Some_ReferenceType()
         {
             // Arrange
             IStructuralEquatable some = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
@@ -1412,13 +1447,17 @@ namespace Abc
         }
 
         [Fact]
-        public static void HashCode()
+        public static void GetHashCode_None()
         {
             Assert.Equal(0, Ø.GetHashCode());
             Assert.Equal(0, ØL.GetHashCode());
             Assert.Equal(0, NoText.GetHashCode());
             Assert.Equal(0, NoUri.GetHashCode());
+        }
 
+        [Fact]
+        public static void GetHashCode_Some()
+        {
             Assert.Equal(1.GetHashCode(), One.GetHashCode());
             Assert.Equal(2.GetHashCode(), Two.GetHashCode());
             Assert.Equal(2L.GetHashCode(), TwoL.GetHashCode());
@@ -1427,7 +1466,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void StructuralEquatable_GetHashCode_InvalidArg()
+        public static void GetHashCode_StructuralEquatable_NullComparer()
         {
             // Arrange
             IStructuralEquatable one = One;
@@ -1436,20 +1475,29 @@ namespace Abc
         }
 
         [Fact]
-        public static void StructuralEquatable_GetHashCode()
+        public static void GetHashCode_StructuralEquatable_None()
         {
             // Arrange
             var icmp = EqualityComparer<int>.Default;
             var lcmp = EqualityComparer<long>.Default;
             var scmp = EqualityComparer<string>.Default;
             var ucmp = EqualityComparer<Uri>.Default;
-
             // Act & Assert
             Assert.Equal(0, ((IStructuralEquatable)Ø).GetHashCode(icmp));
-            Assert.Equal(0, ((IStructuralEquatable)ØL).GetHashCode(icmp));
+            Assert.Equal(0, ((IStructuralEquatable)ØL).GetHashCode(lcmp));
             Assert.Equal(0, ((IStructuralEquatable)NoText).GetHashCode(scmp));
             Assert.Equal(0, ((IStructuralEquatable)NoUri).GetHashCode(ucmp));
+        }
 
+        [Fact]
+        public static void GetHashCode_StructuralEquatable_Some()
+        {
+            // Arrange
+            var icmp = EqualityComparer<int>.Default;
+            var lcmp = EqualityComparer<long>.Default;
+            var scmp = EqualityComparer<string>.Default;
+            var ucmp = EqualityComparer<Uri>.Default;
+            // Act & Assert
             Assert.Equal(icmp.GetHashCode(1), ((IStructuralEquatable)One).GetHashCode(icmp));
             Assert.Equal(icmp.GetHashCode(2), ((IStructuralEquatable)Two).GetHashCode(icmp));
             Assert.Equal(lcmp.GetHashCode(2L), ((IStructuralEquatable)TwoL).GetHashCode(lcmp));
