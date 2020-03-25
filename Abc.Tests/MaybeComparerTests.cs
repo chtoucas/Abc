@@ -108,5 +108,34 @@ namespace Abc
             Assert.True(cmp.Equals(some, same));
             Assert.False(cmp.Equals(some, notSame));
         }
+
+        [Fact]
+        public static void GetHashCode_None()
+        {
+            Assert.Equal(0, MaybeComparer<int>.Default.GetHashCode(Maybe<int>.None));
+            Assert.Equal(0, MaybeComparer<long>.Default.GetHashCode(Maybe<long>.None));
+            Assert.Equal(0, MaybeComparer<string>.Default.GetHashCode(Maybe<string>.None));
+            Assert.Equal(0, MaybeComparer<Uri>.Default.GetHashCode(Maybe<Uri>.None));
+        }
+
+        [Fact]
+        public static void GetHashCode_Some()
+        {
+            // Arrange
+            var icmp = MaybeComparer<int>.Default;
+            var lcmp = MaybeComparer<long>.Default;
+            var scmp = MaybeComparer<string>.Default;
+            var ucmp = MaybeComparer<Uri>.Default;
+            var text = "text";
+            var someText = Maybe.SomeOrNone(text);
+            var uri = new Uri("http://www.narvalo.org");
+            var someUri = Maybe.SomeOrNone(uri);
+            // Act & Assert
+            Assert.Equal(1.GetHashCode(), icmp.GetHashCode(Maybe.Some(1)));
+            Assert.Equal(2.GetHashCode(), icmp.GetHashCode(Maybe.Some(2)));
+            Assert.Equal(2L.GetHashCode(), lcmp.GetHashCode(Maybe.Some(2L)));
+            Assert.Equal(text.GetHashCode(StringComparison.Ordinal), scmp.GetHashCode(someText));
+            Assert.Equal(uri.GetHashCode(), ucmp.GetHashCode(someUri));
+        }
     }
 }
