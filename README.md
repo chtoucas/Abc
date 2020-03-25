@@ -1,5 +1,3 @@
-![Code Coverage](coverage.svg)
-
 # Abécédaire
 
 `Abc` features a rich option type for C#.
@@ -7,6 +5,8 @@
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
 - [Developer Notes](#developer-notes)
+
+![Code Coverage](coverage.svg)
 
 Quick Start with `Maybe<T>`
 ---------------------------
@@ -122,7 +122,7 @@ bool b = none.Contains("value")       // == false
 bool b = none.Contains("other")       // == false
 ```
 
-### Map and filter the enclosed value (if any)
+### Map and filter the enclosed value
 
 ```csharp
 var some = Maybe.Some(4);
@@ -171,7 +171,7 @@ this:
 ```
 C# 8.0 will then complain if one tries to write `maybe.ValueOrElse(null)`.
 
-### Pattern matching: extract and map the enclosed value (if any)
+### Pattern matching: extract and map the enclosed value
 
 ```csharp
 Maybe<double> q = from x in maybe where x >= 0 select Math.Sqrt(x);
@@ -186,7 +186,7 @@ string message = q.Switch(
     caseNone: "The input was strictly negative.");
 ```
 
-### Side effects: do something with the enclosed value (if any)
+### Side effects: do something with the enclosed value
 
 ```csharp
 Maybe<double> q = from x in maybe where x >= 0 select Math.Sqrt(x);
