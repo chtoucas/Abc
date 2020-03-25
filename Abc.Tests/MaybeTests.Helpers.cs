@@ -119,6 +119,12 @@ namespace Abc
         }
 
         [Fact]
+        public static void CollectAny_NullSource()
+        {
+            Assert.ThrowsArgNullEx("source", () => Maybe.CollectAny(default(IEnumerable<Maybe<int>>)!));
+        }
+
+        [Fact]
         public static void CollectAny_Deferred()
         {
             IEnumerable<Maybe<int>> source = new ThrowingEnumerable<Maybe<int>>();
@@ -126,13 +132,19 @@ namespace Abc
             var q = Maybe.CollectAny(source);
             Assert.ThrowsOnNext(q);
         }
+
+        [Fact]
+        public static void CollectAny()
+        {
+            Assert.Empty(Maybe.CollectAny(Enumerable.Empty<Maybe<int>>()));
+        }
     }
 
     // Helpers for functions in the Kleisli category.
     public partial class MaybeTests
     {
         [Fact]
-        public static void Kleisli_Invoke_NullThis()
+        public static void Invoke_NullThis()
         {
             // Arrange
             Func<AnyT, Maybe<AnyResult>> f = null!;
@@ -141,7 +153,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void Kleisli_Invoke_WithNone()
+        public static void Invoke_WithNone()
         {
             // Arrange
             Func<AnyT, Maybe<AnyResult>> f = x => AnyResult.Some;
@@ -150,7 +162,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void Kleisli_Invoke_WithSome()
+        public static void Invoke_WithSome()
         {
             // Arrange
             Func<AnyT1, Maybe<AnyResult>> f = x => AnyResult.Some;
