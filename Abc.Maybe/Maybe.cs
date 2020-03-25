@@ -59,6 +59,12 @@ namespace Abc
         [Pure]
         public static Maybe<T> Flatten<T>(this in Maybe<Maybe<T>> @this)
             => @this.IsSome ? @this.Value : Maybe<T>.None;
+
+        // REVIEW: Flatten() w/ NRT.
+        [Pure]
+        public static Maybe<T> Flatten<T>(this in Maybe<Maybe<T?>> @this)
+            where T : struct
+            => @this.IsSome ? @this.Value.Squash() : Maybe<T>.None;
     }
 
     // Factory methods.
