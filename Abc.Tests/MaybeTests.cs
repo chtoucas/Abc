@@ -47,6 +47,12 @@ namespace Abc
 
             public static Maybe<AnyT> None => Maybe<AnyT>.None;
             public static Maybe<AnyT> Some => Maybe.SomeOrNone(Value);
+
+            public static (AnyT Any, Maybe<AnyT> Some) New()
+            {
+                var any = new AnyT();
+                return (any, Maybe.SomeOrNone(any));
+            }
         }
 
         // This one is a singleton.
@@ -113,6 +119,7 @@ namespace Abc
             Assert.Equal(default, Maybe<int?>.None);
             Assert.Equal(default, Maybe<string>.None);
             Assert.Equal(default, Maybe<Uri>.None);
+            Assert.Equal(default, Maybe<AnyT>.None);
             Assert.Equal(default, Maybe<object>.None);
         }
 
@@ -124,6 +131,7 @@ namespace Abc
             Assert.None(Maybe<int?>.None);
             Assert.None(Maybe<string>.None);
             Assert.None(Maybe<Uri>.None);
+            Assert.None(Maybe<AnyT>.None);
             Assert.None(Maybe<object>.None);
         }
 
@@ -135,6 +143,7 @@ namespace Abc
             Assert.None(Maybe.None<int>());
             Assert.None(Maybe.None<string>());
             Assert.None(Maybe.None<Uri>());
+            Assert.None(Maybe.None<AnyT>());
             Assert.None(Maybe.None<object>());
         }
 
@@ -146,6 +155,7 @@ namespace Abc
             Assert.Equal(Maybe<int>.None, Maybe.None<int>());
             Assert.Equal(Maybe<string>.None, Maybe.None<string>());
             Assert.Equal(Maybe<Uri>.None, Maybe.None<Uri>());
+            Assert.Equal(Maybe<AnyT>.None, Maybe.None<AnyT>());
             Assert.Equal(Maybe<object>.None, Maybe.None<object>());
         }
 
@@ -168,6 +178,10 @@ namespace Abc
 
             Assert.None(Maybe.Of((Uri?)null));
             Assert.Some(MyUri, Maybe.Of(MyUri));
+
+            var any = new AnyT();
+            Assert.None(Maybe.Of((AnyT?)null));
+            Assert.Some(any, Maybe.Of(any));
         }
 
         [Fact]
@@ -191,6 +205,10 @@ namespace Abc
 
             Assert.None(Maybe.SomeOrNone((Uri?)null));
             Assert.Some(MyUri, Maybe.SomeOrNone(MyUri));
+
+            var any = new AnyT();
+            Assert.None(Maybe.SomeOrNone((AnyT?)null));
+            Assert.Some(any, Maybe.SomeOrNone(any));
         }
 
         [Fact]
@@ -214,6 +232,10 @@ namespace Abc
 
             Assert.None(Maybe.SquareOrNone((Uri?)null));
             Assert.Some(Maybe.SomeOrNone(MyUri), Maybe.SquareOrNone(MyUri));
+
+            var any = new AnyT();
+            Assert.None(Maybe.SquareOrNone((AnyT?)null));
+            Assert.Some(Maybe.SomeOrNone(any), Maybe.SquareOrNone(any));
         }
     }
 
@@ -242,6 +264,7 @@ namespace Abc
             Assert.Throws<InvalidCastException>(() => (int)Ø);
             Assert.Throws<InvalidCastException>(() => (string)NoText);
             Assert.Throws<InvalidCastException>(() => (Uri)NoUri);
+            Assert.Throws<InvalidCastException>(() => (AnyT)AnyT.None);
         }
 
         [Fact]
@@ -250,6 +273,9 @@ namespace Abc
             Assert.Equal(1, (int)One);
             Assert.Equal(MyText, (string)SomeText);
             Assert.Equal(MyUri, (Uri)SomeUri);
+
+            var (any, some) = AnyT.New();
+            Assert.Equal(any, (AnyT)some);
         }
 
         //[Fact]
@@ -273,21 +299,22 @@ namespace Abc
         [Fact]
         public static void Bind_None_NullBinder()
         {
-            Assert.ThrowsArgNullEx("binder", () => Ø.Bind(Kunc<int, AnyT>.Null));
+            Assert.ThrowsArgNullEx("binder", () => Ø.Bind(Kunc<int, AnyResult>.Null));
         }
 
         [Fact]
         public static void Bind_Some_NullBinder()
         {
-            Assert.ThrowsArgNullEx("binder", () => One.Bind(Kunc<int, AnyT>.Null));
+            Assert.ThrowsArgNullEx("binder", () => One.Bind(Kunc<int, AnyResult>.Null));
         }
 
         [Fact]
         public static void Bind_None()
         {
-            Assert.None(Ø.Bind(x => AnyT.Some));
-            Assert.None(NoText.Bind(x => AnyT.Some));
-            Assert.None(NoUri.Bind(x => AnyT.Some));
+            Assert.None(Ø.Bind(x => AnyResult.Some));
+            Assert.None(NoText.Bind(x => AnyResult.Some));
+            Assert.None(NoUri.Bind(x => AnyResult.Some));
+            Assert.None(AnyT.None.Bind(x => AnyResult.Some));
         }
 
         [Fact]
@@ -296,10 +323,12 @@ namespace Abc
             Assert.Some(AnyResult.Value, One.Bind(x => AnyResult.Some));
             Assert.Some(AnyResult.Value, SomeText.Bind(x => AnyResult.Some));
             Assert.Some(AnyResult.Value, SomeUri.Bind(x => AnyResult.Some));
+            Assert.Some(AnyResult.Value, AnyT.Some.Bind(x => AnyResult.Some));
 
             Assert.None(One.Bind(x => AnyResult.None));
             Assert.None(SomeText.Bind(x => AnyResult.None));
             Assert.None(SomeUri.Bind(x => AnyResult.None));
+            Assert.None(AnyT.Some.Bind(x => AnyResult.None));
         }
 
         [Fact]
@@ -308,6 +337,7 @@ namespace Abc
             Assert.Equal(Ø, Maybe<Maybe<int>>.None.Flatten());
             Assert.Equal(NoText, Maybe<Maybe<string>>.None.Flatten());
             Assert.Equal(NoUri, Maybe<Maybe<Uri>>.None.Flatten());
+            Assert.Equal(AnyT.None, Maybe<Maybe<AnyT>>.None.Flatten());
         }
 
         [Fact]
@@ -322,6 +352,7 @@ namespace Abc
             Assert.Equal(Ø, Maybe.Some(Ø).Flatten());
             Assert.Equal(NoText, Maybe.Some(NoText).Flatten());
             Assert.Equal(NoUri, Maybe.Some(NoUri).Flatten());
+            Assert.Equal(AnyT.None, Maybe.Some(AnyT.None).Flatten());
         }
 
         [Fact]
@@ -330,6 +361,9 @@ namespace Abc
             Assert.Equal(One, Maybe.Some(One).Flatten());
             Assert.Equal(SomeText, Maybe.Some(SomeText).Flatten());
             Assert.Equal(SomeUri, Maybe.Some(SomeUri).Flatten());
+
+            var some = AnyT.Some;
+            Assert.Equal(some, Maybe.Some(some).Flatten());
         }
     }
 
@@ -431,6 +465,7 @@ namespace Abc
             Assert.False(Ø.TryGetValue(out int _));
             Assert.False(NoText.TryGetValue(out string _));
             Assert.False(NoUri.TryGetValue(out Uri _));
+            Assert.False(AnyT.None.TryGetValue(out AnyT _));
         }
 
         [Fact]
@@ -444,6 +479,10 @@ namespace Abc
 
             Assert.True(SomeUri.TryGetValue(out Uri? uri));
             Assert.Equal(MyUri, uri);
+
+            var (any, some) = AnyT.New();
+            Assert.True(some.TryGetValue(out AnyT? value));
+            Assert.Equal(any, value);
         }
 
         [Fact]
@@ -452,6 +491,7 @@ namespace Abc
             Assert.Equal(0, Ø.ValueOrDefault());
             Assert.Null(NoText.ValueOrDefault());
             Assert.Null(NoUri.ValueOrDefault());
+            Assert.Null(AnyT.None.ValueOrDefault());
         }
 
         [Fact]
@@ -460,6 +500,9 @@ namespace Abc
             Assert.Equal(1, One.ValueOrDefault());
             Assert.Equal(MyText, SomeText.ValueOrDefault());
             Assert.Equal(MyUri, SomeUri.ValueOrDefault());
+
+            var (any, some) = AnyT.New();
+            Assert.Equal(any, some.ValueOrDefault());
         }
 
         [Fact]
@@ -474,50 +517,61 @@ namespace Abc
             Assert.Equal(1, One.ValueOrElse(Funk<int>.Null));
             Assert.Equal(MyText, SomeText.ValueOrElse(Funk<string>.Null));
             Assert.Equal(MyUri, SomeUri.ValueOrElse(Funk<Uri>.Null));
+
+            var (any, some) = AnyT.New();
+            Assert.Equal(any, some.ValueOrElse(Funk<AnyT>.Null));
         }
 
         [Fact]
         public static void ValueOrElse_None()
         {
-            // Arrange
-            var otherUri = new Uri("https://source.dot.net/");
-            // Act & Assert
             Assert.Equal(3, Ø.ValueOrElse(3));
             Assert.Equal("other", NoText.ValueOrElse("other"));
+
+            var otherUri = new Uri("https://source.dot.net/");
             Assert.Equal(otherUri, NoUri.ValueOrElse(otherUri));
+
+            var otherAny = new AnyT();
+            Assert.Equal(otherAny, AnyT.None.ValueOrElse(otherAny));
         }
 
         [Fact]
         public static void ValueOrElse_None_WithFactory()
         {
-            // Arrange
-            var otherUri = new Uri("https://source.dot.net/");
-            // Act & Assert
             Assert.Equal(3, Ø.ValueOrElse(() => 3));
             Assert.Equal("other", NoText.ValueOrElse(() => "other"));
+
+            var otherUri = new Uri("https://source.dot.net/");
             Assert.Equal(otherUri, NoUri.ValueOrElse(() => otherUri));
+
+            var otherAny = new AnyT();
+            Assert.Equal(otherAny, AnyT.None.ValueOrElse(() => otherAny));
         }
 
         [Fact]
         public static void ValueOrElse_Some()
         {
-            // Arrange
-            var otherUri = new Uri("https://source.dot.net/");
-            // Act & Assert
             Assert.Equal(1, One.ValueOrElse(3));
             Assert.Equal(MyText, SomeText.ValueOrElse("other"));
+
+            var otherUri = new Uri("https://source.dot.net/");
             Assert.Equal(MyUri, SomeUri.ValueOrElse(otherUri));
+
+            var (any, some) = AnyT.New();
+            Assert.Equal(any, some.ValueOrElse(new AnyT()));
         }
 
         [Fact]
         public static void ValueOrElse_Some_WithFactory()
         {
-            // Arrange
-            var otherUri = new Uri("https://source.dot.net/");
-            // Act & Assert
             Assert.Equal(1, One.ValueOrElse(() => 3));
             Assert.Equal(MyText, SomeText.ValueOrElse(() => "other"));
+
+            var otherUri = new Uri("https://source.dot.net/");
             Assert.Equal(MyUri, SomeUri.ValueOrElse(() => otherUri));
+
+            var (any, some) = AnyT.New();
+            Assert.Equal(any, some.ValueOrElse(() => new AnyT()));
         }
 
         [Fact]
@@ -532,6 +586,7 @@ namespace Abc
             Assert.Throws<InvalidOperationException>(() => Ø.ValueOrThrow());
             Assert.Throws<InvalidOperationException>(() => NoText.ValueOrThrow());
             Assert.Throws<InvalidOperationException>(() => NoUri.ValueOrThrow());
+            Assert.Throws<InvalidOperationException>(() => AnyT.None.ValueOrThrow());
         }
 
         [Fact]
@@ -540,6 +595,7 @@ namespace Abc
             Assert.Throws<NotSupportedException>(() => Ø.ValueOrThrow(new NotSupportedException()));
             Assert.Throws<NotSupportedException>(() => NoText.ValueOrThrow(new NotSupportedException()));
             Assert.Throws<NotSupportedException>(() => NoUri.ValueOrThrow(new NotSupportedException()));
+            Assert.Throws<NotSupportedException>(() => AnyT.None.ValueOrThrow(new NotSupportedException()));
         }
 
         [Fact]
@@ -548,6 +604,9 @@ namespace Abc
             Assert.Equal(1, One.ValueOrThrow());
             Assert.Equal(MyText, SomeText.ValueOrThrow());
             Assert.Equal(MyUri, SomeUri.ValueOrThrow());
+
+            var (any, some) = AnyT.New();
+            Assert.Equal(any, some.ValueOrThrow());
         }
 
         [Fact]
@@ -556,6 +615,9 @@ namespace Abc
             Assert.Equal(1, One.ValueOrThrow(new NotSupportedException()));
             Assert.Equal(MyText, SomeText.ValueOrThrow(new NotSupportedException()));
             Assert.Equal(MyUri, SomeUri.ValueOrThrow(new NotSupportedException()));
+
+            var (any, some) = AnyT.New();
+            Assert.Equal(any, some.ValueOrThrow(new NotSupportedException()));
         }
     }
 
@@ -1664,6 +1726,7 @@ namespace Abc
             Assert.Equal(0, ØL.GetHashCode());
             Assert.Equal(0, NoText.GetHashCode());
             Assert.Equal(0, NoUri.GetHashCode());
+            Assert.Equal(0, AnyT.None.GetHashCode());
         }
 
         [Fact]
@@ -1674,6 +1737,9 @@ namespace Abc
             Assert.Equal(2L.GetHashCode(), TwoL.GetHashCode());
             Assert.Equal(MyText.GetHashCode(StringComparison.Ordinal), SomeText.GetHashCode());
             Assert.Equal(MyUri.GetHashCode(), SomeUri.GetHashCode());
+
+            var (any, some) = AnyT.New();
+            Assert.Equal(any.GetHashCode(), some.GetHashCode());
         }
 
         [Fact]
@@ -1693,11 +1759,13 @@ namespace Abc
             var lcmp = EqualityComparer<long>.Default;
             var scmp = EqualityComparer<string>.Default;
             var ucmp = EqualityComparer<Uri>.Default;
+            var acmp = EqualityComparer<AnyT>.Default;
             // Act & Assert
             Assert.Equal(0, ((IStructuralEquatable)Ø).GetHashCode(icmp));
             Assert.Equal(0, ((IStructuralEquatable)ØL).GetHashCode(lcmp));
             Assert.Equal(0, ((IStructuralEquatable)NoText).GetHashCode(scmp));
             Assert.Equal(0, ((IStructuralEquatable)NoUri).GetHashCode(ucmp));
+            Assert.Equal(0, ((IStructuralEquatable)AnyT.None).GetHashCode(acmp));
         }
 
         [Fact]
@@ -1708,12 +1776,16 @@ namespace Abc
             var lcmp = EqualityComparer<long>.Default;
             var scmp = EqualityComparer<string>.Default;
             var ucmp = EqualityComparer<Uri>.Default;
+            var acmp = EqualityComparer<AnyT>.Default;
             // Act & Assert
             Assert.Equal(icmp.GetHashCode(1), ((IStructuralEquatable)One).GetHashCode(icmp));
             Assert.Equal(icmp.GetHashCode(2), ((IStructuralEquatable)Two).GetHashCode(icmp));
             Assert.Equal(lcmp.GetHashCode(2L), ((IStructuralEquatable)TwoL).GetHashCode(lcmp));
             Assert.Equal(scmp.GetHashCode(MyText), ((IStructuralEquatable)SomeText).GetHashCode(scmp));
             Assert.Equal(ucmp.GetHashCode(MyUri), ((IStructuralEquatable)SomeUri).GetHashCode(ucmp));
+
+            var (any, some) = AnyT.New();
+            Assert.Equal(acmp.GetHashCode(any), ((IStructuralEquatable)some).GetHashCode(acmp));
         }
     }
 }
