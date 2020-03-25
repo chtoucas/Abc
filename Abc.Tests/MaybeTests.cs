@@ -42,18 +42,28 @@ namespace Abc
 
         private sealed class AnyT
         {
-            public static readonly AnyT Value = new AnyT();
-            public static readonly Task<AnyT> AsyncValue = Task.FromResult(new AnyT());
-            private AnyT() { }
+            public static AnyT Value => new AnyT();
+            public static Task<AnyT> AsyncValue => Task.FromResult(new AnyT());
 
             public static Maybe<AnyT> None => Maybe<AnyT>.None;
             public static Maybe<AnyT> Some => Maybe.SomeOrNone(Value);
         }
 
+        // This one is a singleton.
+        private sealed class AnyResult
+        {
+            public static readonly AnyResult Value = new AnyResult();
+            public static readonly Task<AnyResult> AsyncValue = Task.FromResult(new AnyResult());
+
+            private AnyResult() { }
+
+            public static Maybe<AnyResult> None => Maybe<AnyResult>.None;
+            public static Maybe<AnyResult> Some => Maybe.SomeOrNone(Value);
+        }
+
         private sealed class AnyT1
         {
-            public static readonly AnyT1 Value = new AnyT1();
-            private AnyT1() { }
+            public static AnyT1 Value => new AnyT1();
 
             public static Maybe<AnyT1> None => Maybe<AnyT1>.None;
             public static Maybe<AnyT1> Some => Maybe.SomeOrNone(Value);
@@ -61,8 +71,7 @@ namespace Abc
 
         private sealed class AnyT2
         {
-            public static readonly AnyT2 Value = new AnyT2();
-            private AnyT2() { }
+            public static AnyT2 Value => new AnyT2();
 
             public static Maybe<AnyT2> None => Maybe<AnyT2>.None;
             public static Maybe<AnyT2> Some => Maybe.SomeOrNone(Value);
@@ -70,8 +79,7 @@ namespace Abc
 
         private sealed class AnyT3
         {
-            public static readonly AnyT3 Value = new AnyT3();
-            private AnyT3() { }
+            public static AnyT3 Value => new AnyT3();
 
             public static Maybe<AnyT3> None => Maybe<AnyT3>.None;
             public static Maybe<AnyT3> Some => Maybe.SomeOrNone(Value);
@@ -79,8 +87,7 @@ namespace Abc
 
         private sealed class AnyT4
         {
-            public static readonly AnyT4 Value = new AnyT4();
-            private AnyT4() { }
+            public static AnyT4 Value => new AnyT4();
 
             public static Maybe<AnyT4> None => Maybe<AnyT4>.None;
             public static Maybe<AnyT4> Some => Maybe.SomeOrNone(Value);
@@ -88,8 +95,7 @@ namespace Abc
 
         private sealed class AnyT5
         {
-            public static readonly AnyT5 Value = new AnyT5();
-            private AnyT5() { }
+            public static AnyT5 Value => new AnyT5();
 
             public static Maybe<AnyT5> None => Maybe<AnyT5>.None;
             public static Maybe<AnyT5> Some => Maybe.SomeOrNone(Value);
@@ -287,13 +293,13 @@ namespace Abc
         [Fact]
         public static void Bind_Some()
         {
-            Assert.Some(AnyT.Value, One.Bind(x => AnyT.Some));
-            Assert.Some(AnyT.Value, SomeText.Bind(x => AnyT.Some));
-            Assert.Some(AnyT.Value, SomeUri.Bind(x => AnyT.Some));
+            Assert.Some(AnyResult.Value, One.Bind(x => AnyResult.Some));
+            Assert.Some(AnyResult.Value, SomeText.Bind(x => AnyResult.Some));
+            Assert.Some(AnyResult.Value, SomeUri.Bind(x => AnyResult.Some));
 
-            Assert.None(One.Bind(x => AnyT.None));
-            Assert.None(SomeText.Bind(x => AnyT.None));
-            Assert.None(SomeUri.Bind(x => AnyT.None));
+            Assert.None(One.Bind(x => AnyResult.None));
+            Assert.None(SomeText.Bind(x => AnyResult.None));
+            Assert.None(SomeUri.Bind(x => AnyResult.None));
         }
 
         [Fact]
@@ -333,30 +339,30 @@ namespace Abc
         [Fact]
         public static void Switch_None_NullCaseNone_Throws()
         {
-            Assert.ThrowsArgNullEx("caseNone", () => Ø.Switch(Funk<int, AnyT>.Any, Funk<AnyT>.Null));
+            Assert.ThrowsArgNullEx("caseNone", () => Ø.Switch(Funk<int, AnyResult>.Any, Funk<AnyResult>.Null));
         }
 
         [Fact]
         public static void Switch_None_NullCaseSome_DoesNotThrow()
         {
             // Act & Assert
-            AnyT v = Ø.Switch(Funk<int, AnyT>.Null, () => AnyT.Value);
-            Assert.Same(AnyT.Value, v);
+            AnyResult v = Ø.Switch(Funk<int, AnyResult>.Null, () => AnyResult.Value);
+            Assert.Same(AnyResult.Value, v);
         }
 
         [Fact]
         public static void Switch_Some_NullCaseSome_Throws()
         {
-            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Funk<int, AnyT>.Null, Funk<AnyT>.Any));
-            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Funk<int, AnyT>.Null, AnyT.Value));
+            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Funk<int, AnyResult>.Null, Funk<AnyResult>.Any));
+            Assert.ThrowsArgNullEx("caseSome", () => One.Switch(Funk<int, AnyResult>.Null, AnyResult.Value));
         }
 
         [Fact]
         public static void Switch_Some_NullCaseNone_DoesNotThrow()
         {
             // Act & Assert
-            AnyT v = One.Switch(x => AnyT.Value, Funk<AnyT>.Null);
-            Assert.Same(AnyT.Value, v);
+            AnyResult v = One.Switch(x => AnyResult.Value, Funk<AnyResult>.Null);
+            Assert.Same(AnyResult.Value, v);
         }
 
         [Fact]
