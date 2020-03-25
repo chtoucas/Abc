@@ -184,39 +184,112 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
+        public static void Lift_NullThis()
+        {
+            // Arrange
+            Func<AnyT1, AnyT> source = null!;
+            // Act & Assert
+            Assert.ThrowsArgNullEx("selector", () => source.Lift(AnyT1.Some));
+        }
+
+        [Fact]
+        public static void Lift_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, AnyT> source = x => AnyT.Value;
+            // Act & Assert
+            Assert.None(source.Lift(AnyT1.None));
+        }
+
+        [Fact]
+        public static void Lift_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, AnyT> source = x => AnyT.Value;
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Lift(AnyT1.Some));
+        }
+
+        [Fact]
         public static void Lift2_NullThis()
         {
             // Arrange
-            Func<int, int, int> source = null!;
+            Func<AnyT1, AnyT2, AnyT> source = null!;
             // Act & Assert
-            Assert.ThrowsArgNullEx("this", () => source.Lift(One, One));
+            Assert.ThrowsArgNullEx("this", () => source.Lift(AnyT1.Some, AnyT2.Some));
+        }
+
+        [Fact]
+        public static void Lift2_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT> source = (x, y) => AnyT.Value;
+            // Act & Assert
+            Assert.None(source.Lift(AnyT1.None, AnyT2.Some));
+            Assert.None(source.Lift(AnyT1.Some, AnyT2.None));
         }
 
         [Fact]
         public static void Lift3_NullThis()
         {
             // Arrange
-            Func<int, int, int, int> source = null!;
+            Func<AnyT1, AnyT2, AnyT3, AnyT> source = null!;
             // Act & Assert
-            Assert.ThrowsArgNullEx("this", () => source.Lift(One, One, One));
+            Assert.ThrowsArgNullEx("this", () => source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some));
+        }
+
+        [Fact]
+        public static void Lift3_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT> source = (x, y, z) => AnyT.Value;
+            // Act & Assert
+            Assert.None(source.Lift(AnyT1.None, AnyT2.Some, AnyT3.Some));
+            Assert.None(source.Lift(AnyT1.Some, AnyT2.None, AnyT3.Some));
+            Assert.None(source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.None));
         }
 
         [Fact]
         public static void Lift4_NullThis()
         {
             // Arrange
-            Func<int, int, int, int, int> source = null!;
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT> source = null!;
             // Act & Assert
-            Assert.ThrowsArgNullEx("this", () => source.Lift(One, One, One, One));
+            Assert.ThrowsArgNullEx("this", () => source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
+        }
+
+        [Fact]
+        public static void Lift4_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT> source = (x, y, z, a) => AnyT.Value;
+            // Act & Assert
+            Assert.None(source.Lift(AnyT1.None, AnyT2.Some, AnyT3.Some, AnyT4.Some));
+            Assert.None(source.Lift(AnyT1.Some, AnyT2.None, AnyT3.Some, AnyT4.Some));
+            Assert.None(source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.None, AnyT4.Some));
+            Assert.None(source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.None));
         }
 
         [Fact]
         public static void Lift5_NullThis()
         {
             // Arrange
-            Func<int, int, int, int, int, int> source = null!;
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyT> source = null!;
             // Act & Assert
-            Assert.ThrowsArgNullEx("this", () => source.Lift(One, One, One, One, One));
+            Assert.ThrowsArgNullEx("this", () => source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+        }
+
+        [Fact]
+        public static void Lift45_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyT> source = (x, y, z, a, b) => AnyT.Value;
+            // Act & Assert
+            Assert.None(source.Lift(AnyT1.None, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.None(source.Lift(AnyT1.Some, AnyT2.None, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.None(source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.None, AnyT4.Some, AnyT5.Some));
+            Assert.None(source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.None, AnyT5.Some));
+            Assert.None(source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.None));
         }
     }
 
@@ -225,9 +298,174 @@ namespace Abc
     {
         #region Invoke()
 
+        [Fact]
+        public static void Invoke_None()
+        {
+            // Arrange
+            var source = Maybe<Func<AnyT1, AnyT>>.None;
+            // Act & Assert
+            Assert.None(source.Invoke(AnyT1.Value));
+        }
+
+        [Fact]
+        public static void Invoke2_None()
+        {
+            // Arrange
+            var source = Maybe<Func<AnyT1, AnyT2, AnyT>>.None;
+            // Act & Assert
+            Assert.None(source.Invoke(AnyT1.Value, AnyT2.Value));
+        }
+
+        [Fact]
+        public static void Invoke3_None()
+        {
+            // Arrange
+            var source = Maybe<Func<AnyT1, AnyT2, AnyT3, AnyT>>.None;
+            // Act & Assert
+            Assert.None(source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value));
+        }
+
+        [Fact]
+        public static void Invoke4_None()
+        {
+            // Arrange
+            var source = Maybe<Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT>>.None;
+            // Act & Assert
+            Assert.None(source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value));
+        }
+
+        [Fact]
+        public static void Invoke5_None()
+        {
+            // Arrange
+            var source = Maybe<Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyT>>.None;
+            // Act & Assert
+            Assert.None(source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value, AnyT5.Value));
+        }
+
         #endregion
 
         #region Apply()
+
+        [Fact]
+        public static void Apply_None()
+        {
+            // Arrange
+            var source = Maybe<Func<AnyT1, AnyT>>.None;
+            // Act & Assert
+            Assert.None(source.Apply(AnyT1.None));
+            Assert.None(source.Apply(AnyT1.Some));
+        }
+
+        [Fact]
+        public static void Apply_Some_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, AnyT> f = x => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.None(source.Apply(AnyT1.None));
+        }
+
+        [Fact]
+        public static void Apply2_None()
+        {
+            // Arrange
+            var source = Maybe<Func<AnyT1, AnyT2, AnyT>>.None;
+            // Act & Assert
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some));
+            Assert.None(source.Apply(AnyT1.None, AnyT2.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.None));
+        }
+
+        [Fact]
+        public static void Apply2_Some_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT> f = (x, y) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.None(source.Apply(AnyT1.None, AnyT2.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.None));
+        }
+
+        [Fact]
+        public static void Apply3_None()
+        {
+            // Arrange
+            var source = Maybe<Func<AnyT1, AnyT2, AnyT3, AnyT>>.None;
+            // Act & Assert
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some));
+            Assert.None(source.Apply(AnyT1.None, AnyT2.Some, AnyT3.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.None, AnyT3.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.None));
+        }
+
+        [Fact]
+        public static void Apply3_Some_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT> f = (x, y, z) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.None(source.Apply(AnyT1.None, AnyT2.Some, AnyT3.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.None, AnyT3.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.None));
+        }
+
+        [Fact]
+        public static void Apply4_None()
+        {
+            // Arrange
+            var source = Maybe<Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT>>.None;
+            // Act & Assert
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
+            Assert.None(source.Apply(AnyT1.None, AnyT2.Some, AnyT3.Some, AnyT4.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.None, AnyT3.Some, AnyT4.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.None, AnyT4.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.None));
+        }
+
+        [Fact]
+        public static void Apply4_Some_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT> f = (x, y, z, a) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.None(source.Apply(AnyT1.None, AnyT2.Some, AnyT3.Some, AnyT4.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.None, AnyT3.Some, AnyT4.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.None, AnyT4.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.None));
+        }
+
+        [Fact]
+        public static void Apply5_None()
+        {
+            // Arrange
+            var source = Maybe<Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyT>>.None;
+            // Act & Assert
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.None(source.Apply(AnyT1.None, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.None, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.None, AnyT4.Some, AnyT5.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.None, AnyT5.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.None));
+        }
+
+        [Fact]
+        public static void Apply5_Some_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyT> f = (x, y, z, a, b) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.None(source.Apply(AnyT1.None, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.None, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.None, AnyT4.Some, AnyT5.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.None, AnyT5.Some));
+            Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.None));
+        }
 
         #endregion
     }

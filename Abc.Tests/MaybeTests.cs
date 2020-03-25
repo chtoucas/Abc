@@ -45,18 +45,54 @@ namespace Abc
             public static readonly AnyT Value = new AnyT();
             public static readonly Task<AnyT> AsyncValue = Task.FromResult(new AnyT());
             private AnyT() { }
+
+            public static Maybe<AnyT> None => Maybe<AnyT>.None;
+            public static Maybe<AnyT> Some => Maybe.SomeOrNone(Value);
         }
 
         private sealed class AnyT1
         {
             public static readonly AnyT1 Value = new AnyT1();
             private AnyT1() { }
+
+            public static Maybe<AnyT1> None => Maybe<AnyT1>.None;
+            public static Maybe<AnyT1> Some => Maybe.SomeOrNone(Value);
         }
 
         private sealed class AnyT2
         {
             public static readonly AnyT2 Value = new AnyT2();
             private AnyT2() { }
+
+            public static Maybe<AnyT2> None => Maybe<AnyT2>.None;
+            public static Maybe<AnyT2> Some => Maybe.SomeOrNone(Value);
+        }
+
+        private sealed class AnyT3
+        {
+            public static readonly AnyT3 Value = new AnyT3();
+            private AnyT3() { }
+
+            public static Maybe<AnyT3> None => Maybe<AnyT3>.None;
+            public static Maybe<AnyT3> Some => Maybe.SomeOrNone(Value);
+        }
+
+        private sealed class AnyT4
+        {
+            public static readonly AnyT4 Value = new AnyT4();
+            private AnyT4() { }
+
+            public static Maybe<AnyT4> None => Maybe<AnyT4>.None;
+            public static Maybe<AnyT4> Some => Maybe.SomeOrNone(Value);
+        }
+
+        private sealed class AnyT5
+        {
+            public static readonly AnyT5 Value = new AnyT5();
+            private AnyT5() { }
+
+            public static Maybe<AnyT5> None => Maybe<AnyT5>.None;
+            public static Maybe<AnyT5> Some => Maybe.SomeOrNone(Value);
         }
     }
 
