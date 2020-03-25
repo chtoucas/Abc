@@ -277,6 +277,26 @@ namespace Abc
         }
 
         [Fact]
+        public static void Bind_None()
+        {
+            Assert.None(Ø.Bind(x => AnyT.Some));
+            Assert.None(NoText.Bind(x => AnyT.Some));
+            Assert.None(NoUri.Bind(x => AnyT.Some));
+        }
+
+        [Fact]
+        public static void Bind_Some()
+        {
+            Assert.Some(AnyT.Value, One.Bind(x => AnyT.Some));
+            Assert.Some(AnyT.Value, SomeText.Bind(x => AnyT.Some));
+            Assert.Some(AnyT.Value, SomeUri.Bind(x => AnyT.Some));
+
+            Assert.None(One.Bind(x => AnyT.None));
+            Assert.None(SomeText.Bind(x => AnyT.None));
+            Assert.None(SomeUri.Bind(x => AnyT.None));
+        }
+
+        [Fact]
         public static void Flatten_None()
         {
             Assert.Equal(Ø, Maybe<Maybe<int>>.None.Flatten());

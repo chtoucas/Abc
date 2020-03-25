@@ -128,6 +128,71 @@ namespace Abc
         }
     }
 
+    // Helpers for functions in the Kleisli category.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void Kleisli_Invoke_NullThis()
+        {
+            // Arrange
+            Func<AnyT1, Maybe<AnyT>> f = null!;
+            // Act & Assert
+            Assert.ThrowsArgNullEx("binder", () => f.Invoke(AnyT1.Some));
+        }
+
+        [Fact]
+        public static void Kleisli_Invoke_WithNone()
+        {
+            // Arrange
+            Func<AnyT1, Maybe<AnyT>> f = x => AnyT.Some;
+            // Act & Assert
+            Assert.None(f.Invoke(AnyT1.None));
+        }
+
+        [Fact]
+        public static void Kleisli_Invoke_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, Maybe<AnyT>> f = x => AnyT.Some;
+            Func<AnyT1, Maybe<AnyT>> g = x => AnyT.None;
+            // Act & Assert
+            Assert.Some(AnyT.Value, f.Invoke(AnyT1.Some));
+            Assert.None(g.Invoke(AnyT1.Some));
+        }
+
+        [Fact]
+        public static void Compose_NullThis()
+        {
+            Assert.ThrowsArgNullEx("this", () => Kunc<AnyT1, AnyT2>.Null.Compose(Kunc<AnyT2, AnyT3>.Any));
+        }
+
+        [Fact]
+        public static void Compose()
+        {
+            // Arrange
+            Func<AnyT1, Maybe<AnyT2>> f = x => AnyT2.Some;
+            Func<AnyT2, Maybe<AnyT3>> g = x => AnyT3.Some;
+            // Act & Assert
+            Assert.Some(AnyT3.Value, f.Compose(g)(AnyT1.Value));
+        }
+
+        [Fact]
+        public static void ComposeBack_NullThis()
+        {
+            Assert.ThrowsArgNullEx("other", () => Kunc<AnyT2, AnyT3>.Any.ComposeBack(Kunc<AnyT1, AnyT2>.Null));
+        }
+
+        [Fact]
+        public static void ComposeBack()
+        {
+            // Arrange
+            Func<AnyT1, Maybe<AnyT2>> f = x => AnyT2.Some;
+            Func<AnyT2, Maybe<AnyT3>> g = x => AnyT3.Some;
+            // Act & Assert
+            Assert.Some(AnyT3.Value, g.ComposeBack(f)(AnyT1.Value));
+        }
+    }
+
     // Helpers for Maybe<T> where T is disposable.
     public partial class MaybeTests
     {

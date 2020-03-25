@@ -24,8 +24,8 @@ namespace Abc
         [Fact]
         public static void Functor_FirstLaw()
         {
-            Assert.Equal(Ø, Ø.Select(x => x));
-            Assert.Equal(One, One.Select(x => x));
+            Assert.Equal(AnyT.None, AnyT.None.Select(x => x));
+            Assert.Equal(AnyT.Some, AnyT.Some.Select(x => x));
         }
 
         // Second Functor Law: Select preserves the composition operator.
