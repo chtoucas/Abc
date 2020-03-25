@@ -48,7 +48,7 @@ namespace Abc
             public static Maybe<AnyT> None => Maybe<AnyT>.None;
             public static Maybe<AnyT> Some => Maybe.SomeOrNone(Value);
 
-            public static (AnyT Any, Maybe<AnyT> Some) New()
+            public static (AnyT Value, Maybe<AnyT> Some) New()
             {
                 var any = new AnyT();
                 return (any, Maybe.SomeOrNone(any));

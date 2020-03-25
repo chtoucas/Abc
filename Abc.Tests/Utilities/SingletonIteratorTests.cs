@@ -11,13 +11,9 @@ namespace Abc.Utilities
 
     public static class SingletonIteratorTests
     {
-        private sealed class AnyT { public AnyT() { } }
-
         private static readonly AnyT Value;
         private static readonly IEnumerator<AnyT> AsEnumerator;
-        private static readonly IEnumerable<AnyT> AsEnumerable;
         private static readonly IList<AnyT> AsList;
-        //private static readonly IReadOnlyList<AnyT> AsReadOnlyList;
 
 #pragma warning disable CA1810 // Initialize reference type static fields inline
         static SingletonIteratorTests()
@@ -26,21 +22,28 @@ namespace Abc.Utilities
             Value = new AnyT();
             var some = Maybe.SomeOrNone(Value);
             AsEnumerator = some.GetEnumerator();
-            AsEnumerable = some.ToEnumerable();
-            AsList = (IList<AnyT>)AsEnumerable;
-            //AsReadOnlyList = (IReadOnlyList<AnyT>)AsEnumerable;
+            AsList = (IList<AnyT>)some.ToEnumerable();
         }
+
+        private sealed class AnyT { public AnyT() { } }
+
+        [Fact]
+        public static void Count() => Assert.Equal(1, AsList.Count);
 
         [Fact]
         public static void IsReadOnly() => Assert.True(AsList.IsReadOnly);
 
         [Fact]
-        public static void Count() => Assert.Equal(1, AsList.Count);
+        public static void Contains_OK() => Assert.True(AsList.Contains(Value));
 
-        // TODO: to be improved.
-        // Current is in fact constant...
         [Fact]
-        public static void Current() => Assert.Equal(Value, AsEnumerator.Current);
+        public static void Contains_KO() => Assert.False(AsList.Contains(new AnyT()));
+
+        [Fact]
+        public static void IndexOf_OK() => Assert.Equal(0, AsList.IndexOf(Value));
+
+        [Fact]
+        public static void IndexOf_KO() => Assert.Equal(-1, AsList.IndexOf(new AnyT()));
 
         [Fact]
         public static void Add() => Assert.Throws<NotSupportedException>(() => AsList.Add(new AnyT()));
@@ -49,12 +52,20 @@ namespace Abc.Utilities
         public static void Clear() => Assert.Throws<NotSupportedException>(() => AsList.Clear());
 
         [Fact]
-        public static void Insert() => Assert.Throws<NotSupportedException>(() => AsList.Insert(2, new AnyT()));
+        public static void Insert() => Assert.Throws<NotSupportedException>(() => AsList.Insert(1, new AnyT()));
 
         [Fact]
         public static void Remove() => Assert.Throws<NotSupportedException>(() => AsList.Remove(Value));
 
         [Fact]
-        public static void RemoveAt() => Assert.Throws<NotSupportedException>(() => AsList.RemoveAt(1));
+        public static void RemoveAt() => Assert.Throws<NotSupportedException>(() => AsList.RemoveAt(0));
+
+        // TODO: to be improved.
+        // Current is in fact constant...
+        [Fact]
+        public static void Current() => Assert.Same(Value, AsEnumerator.Current);
+
+        [Fact]
+        public static void GetEnumerator() => Assert.Same(AsList, AsList.GetEnumerator());
     }
 }
