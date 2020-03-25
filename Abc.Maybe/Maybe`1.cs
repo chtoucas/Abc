@@ -954,7 +954,7 @@ namespace Abc
         }
     }
 
-    // Interface IComparable<>.
+    // Interface IComparable<> and alike.
     // The comparison operators behave like the ones for nullable value types:
     // if one of the operand is empty, return false, otherwise compare the
     // values.
@@ -1088,7 +1088,7 @@ namespace Abc
         }
     }
 
-    // Interface IEquatable<>.
+    // Interface IEquatable<> and alike.
     public partial struct Maybe<T>
     {
         /// <summary>
