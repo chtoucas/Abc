@@ -60,7 +60,7 @@ namespace Abc
         }
     }
 
-    // Factories, simple methods.
+    // Factories.
     public partial class MaybeTests
     {
         [Fact]
@@ -173,7 +173,11 @@ namespace Abc
             Assert.None(Maybe.SquareOrNone((Uri?)null));
             Assert.Some(Maybe.SomeOrNone(MyUri), Maybe.SquareOrNone(MyUri));
         }
+    }
 
+    // Simple conversions.
+    public partial class MaybeTests
+    {
         [Fact]
         public static void ToString_None()
         {
@@ -190,20 +194,6 @@ namespace Abc
             Assert.Contains(value, some.ToString(), StringComparison.OrdinalIgnoreCase);
         }
 
-        //[Fact]
-        //public static void Implicit_ToMaybe()
-        //{
-        //    // Arrange
-        //    Maybe<string> none = My.NullString; // implicit cast of a null-string
-
-        //    // Act & Assert
-        //    Assert.Some(1, 1);      // the second 1 is implicit casted to Maybe<int>
-        //    Assert.None(none);
-
-        //    Assert.True(1 == One);
-        //    Assert.True(One == 1);
-        //}
-
         [Fact]
         public static void Explicit_FromMaybe_WithNone()
         {
@@ -219,15 +209,34 @@ namespace Abc
             Assert.Equal(MyText, (string)SomeText);
             Assert.Equal(MyUri, (Uri)SomeUri);
         }
+
+        //[Fact]
+        //public static void Implicit_ToMaybe()
+        //{
+        //    // Arrange
+        //    Maybe<string> none = My.NullString; // implicit cast of a null-string
+
+        //    // Act & Assert
+        //    Assert.Some(1, 1);      // the second 1 is implicit casted to Maybe<int>
+        //    Assert.None(none);
+
+        //    Assert.True(1 == One);
+        //    Assert.True(One == 1);
+        //}
     }
 
     // Core methods.
     public partial class MaybeTests
     {
         [Fact]
-        public static void Bind_NullBinder()
+        public static void Bind_None_NullBinder()
         {
             Assert.ThrowsArgNullEx("binder", () => Ø.Bind(Kunc<int, AnyT>.Null));
+        }
+
+        [Fact]
+        public static void Bind_Some_NullBinder()
+        {
             Assert.ThrowsArgNullEx("binder", () => One.Bind(Kunc<int, AnyT>.Null));
         }
 
@@ -237,6 +246,12 @@ namespace Abc
             Assert.Equal(Ø, Maybe<Maybe<int>>.None.Flatten());
             Assert.Equal(NoText, Maybe<Maybe<string>>.None.Flatten());
             Assert.Equal(NoUri, Maybe<Maybe<Uri>>.None.Flatten());
+        }
+
+        [Fact]
+        public static void Flatten_None_NullableValueType()
+        {
+            Assert.Equal(Ø, Maybe<Maybe<int?>>.None.Flatten());
         }
 
         [Fact]
@@ -269,7 +284,7 @@ namespace Abc
         public static void Switch_None_NullCaseSome_DoesNotThrow()
         {
             // Act & Assert
-            var v = Ø.Switch(Funk<int, AnyT>.Null, () => AnyT.Value);
+            AnyT v = Ø.Switch(Funk<int, AnyT>.Null, () => AnyT.Value);
             Assert.Same(AnyT.Value, v);
         }
 
@@ -284,7 +299,7 @@ namespace Abc
         public static void Switch_Some_NullCaseNone_DoesNotThrow()
         {
             // Act & Assert
-            var v = One.Switch(x => AnyT.Value, Funk<AnyT>.Null);
+            AnyT v = One.Switch(x => AnyT.Value, Funk<AnyT>.Null);
             Assert.Same(AnyT.Value, v);
         }
 
@@ -710,12 +725,26 @@ namespace Abc
         }
 
         [Fact]
-        public static void SelectMany_InvalidArg()
+        public static void SelectMany_None_NullSelector()
         {
             Assert.ThrowsArgNullEx("selector", () => Ø.SelectMany(Kunc<int, AnyT1>.Null, Funk<int, AnyT1, AnyT2>.Any));
-            Assert.ThrowsArgNullEx("selector", () => One.SelectMany(Kunc<int, AnyT1>.Null, Funk<int, AnyT1, AnyT2>.Any));
+        }
 
+        [Fact]
+        public static void SelectMany_Some_NullSelector()
+        {
+            Assert.ThrowsArgNullEx("selector", () => One.SelectMany(Kunc<int, AnyT1>.Null, Funk<int, AnyT1, AnyT2>.Any));
+        }
+
+        [Fact]
+        public static void SelectMany_None_NullResultSelector()
+        {
             Assert.ThrowsArgNullEx("resultSelector", () => Ø.SelectMany(Kunc<int, AnyT1>.Any, Funk<int, AnyT1, AnyT2>.Null));
+        }
+
+        [Fact]
+        public static void SelectMany_Some_NullResultSelector()
+        {
             Assert.ThrowsArgNullEx("resultSelector", () => One.SelectMany(Kunc<int, AnyT1>.Any, Funk<int, AnyT1, AnyT2>.Null));
         }
 
@@ -1038,20 +1067,24 @@ namespace Abc
         }
 
         [Fact]
-        public static void Yield()
+        public static void Yield_None()
         {
             Assert.Empty(NoText.Yield(0));
             Assert.Empty(NoText.Yield(10));
             Assert.Empty(NoText.Yield(100));
             Assert.Empty(NoText.Yield(1000));
 
+            Assert.Empty(NoText.Yield());
+        }
+
+        [Fact]
+        public static void Yield_Some()
+        {
             Assert.Equal(Enumerable.Repeat(MyText, 0), SomeText.Yield(0));
             Assert.Equal(Enumerable.Repeat(MyText, 1), SomeText.Yield(1));
             Assert.Equal(Enumerable.Repeat(MyText, 10), SomeText.Yield(10));
             Assert.Equal(Enumerable.Repeat(MyText, 100), SomeText.Yield(100));
             Assert.Equal(Enumerable.Repeat(MyText, 1000), SomeText.Yield(1000));
-
-            Assert.Empty(NoText.Yield());
 
             Assert.Equal(Enumerable.Repeat(MyText, 0), SomeText.Yield().Take(0));
             Assert.Equal(Enumerable.Repeat(MyText, 1), SomeText.Yield().Take(1));
@@ -1061,26 +1094,35 @@ namespace Abc
         }
 
         [Fact]
-        public static void Contains_InvalidArg()
+        public static void Contains_None_NullComparer()
         {
             Assert.ThrowsArgNullEx("comparer", () => Ø.Contains(1, null!));
+        }
+
+        [Fact]
+        public static void Contains_Some_NullComparer()
+        {
             Assert.ThrowsArgNullEx("comparer", () => One.Contains(1, null!));
         }
 
         [Fact]
-        public static void Contains()
+        public static void Contains_None()
         {
             Assert.False(Ø.Contains(0));
             Assert.False(Ø.Contains(1));
             Assert.False(Ø.Contains(2));
 
-            Assert.False(One.Contains(0));
-            Assert.True(One.Contains(1));
-            Assert.False(One.Contains(2));
-
             Assert.False(NoText.Contains("XXX"));
             Assert.False(NoText.Contains("XXX", StringComparer.Ordinal));
             Assert.False(NoText.Contains("XXX", StringComparer.OrdinalIgnoreCase));
+        }
+
+        [Fact]
+        public static void Contains_Some()
+        {
+            Assert.False(One.Contains(0));
+            Assert.True(One.Contains(1));
+            Assert.False(One.Contains(2));
 
             Assert.True(Maybe.SomeOrNone("XXX").Contains("XXX"));
             // Default comparison does NOT ignore case.
@@ -1108,7 +1150,7 @@ namespace Abc
         [Fact]
         public static void Comparison_WithNone()
         {
-            // The result is alwaays "false".
+            // The result is always "false".
 
             Assert.False(One < Ø);
             Assert.False(One > Ø);
@@ -1152,13 +1194,8 @@ namespace Abc
         }
 
         [Fact]
-        public static void CompareTo()
+        public static void CompareTo_WithSome()
         {
-            // With None
-            Assert.Equal(1, One.CompareTo(Ø));
-            Assert.Equal(-1, Ø.CompareTo(One));
-            Assert.Equal(0, Ø.CompareTo(Ø));
-            // Without None
             Assert.Equal(1, Two.CompareTo(One));
             Assert.Equal(0, One.CompareTo(One));
             Assert.Equal(-1, One.CompareTo(Two));
@@ -1191,18 +1228,25 @@ namespace Abc
         }
 
         [Fact]
-        public static void StructuralComparable_InvalidArg()
+        public static void CompareTo_Structural_None_NullComparer()
         {
             // Arrange
             IStructuralComparable none = Ø;
-            IStructuralComparable one = One;
             // Act & Assert
-            Assert.ThrowsArgNullEx("comparer", () => one.CompareTo(One, null!));
             Assert.ThrowsArgNullEx("comparer", () => none.CompareTo(One, null!));
         }
 
         [Fact]
-        public static void StructuralComparable()
+        public static void CompareTo_Structural_Some_NullComparer()
+        {
+            // Arrange
+            IStructuralComparable one = One;
+            // Act & Assert
+            Assert.ThrowsArgNullEx("comparer", () => one.CompareTo(One, null!));
+        }
+
+        [Fact]
+        public static void CompareTo_Structural()
         {
             // Arrange
             var cmp = Comparer<int>.Default;
@@ -1366,7 +1410,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void Equals_StructuralEquatable_NullComparer()
+        public static void Equals_Structural_NullComparer()
         {
             // Arrange
             IStructuralEquatable one = One;
@@ -1375,12 +1419,12 @@ namespace Abc
         }
 
         [Fact]
-        public static void Equals_StructuralEquatable_None_ValueType()
+        public static void Equals_Structural_None_ValueType()
         {
             // Arrange
             IStructuralEquatable none = Maybe<int>.None;
             var same = Maybe<int>.None;
-            var notSame = Maybe.Some(2);
+            var some = Maybe.Some(2);
             var cmp = EqualityComparer<int>.Default;
 
             // Act & Assert
@@ -1389,16 +1433,18 @@ namespace Abc
 
             Assert.True(none.Equals(none, cmp));
             Assert.True(none.Equals(same, cmp));
-            Assert.False(none.Equals(notSame, cmp));
+
+            Assert.False(none.Equals(some, cmp));
         }
 
         [Fact]
-        public static void Equals_StructuralEquatable_Some_ValueType()
+        public static void Equals_Structural_Some_ValueType()
         {
             // Arrange
             IStructuralEquatable some = Maybe.Some(1);
             var same = Maybe.Some(1);
             var notSame = Maybe.Some(2);
+            var none = Maybe<int>.None;
             var cmp = EqualityComparer<int>.Default;
 
             // Act & Assert
@@ -1408,15 +1454,17 @@ namespace Abc
             Assert.True(some.Equals(some, cmp));
             Assert.True(some.Equals(same, cmp));
             Assert.False(some.Equals(notSame, cmp));
+
+            Assert.False(some.Equals(none, cmp));
         }
 
         [Fact]
-        public static void Equals_StructuralEquatable_None_ReferenceType()
+        public static void Equals_Structural_None_ReferenceType()
         {
             // Arrange
-            IStructuralEquatable none = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
-            var same = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
-            var notSame = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
+            IStructuralEquatable none = Maybe<Uri>.None;
+            var same = Maybe<Uri>.None;
+            var some = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
             var cmp = EqualityComparer<Uri>.Default;
 
             // Act & Assert
@@ -1425,16 +1473,18 @@ namespace Abc
 
             Assert.True(none.Equals(none, cmp));
             Assert.True(none.Equals(same, cmp));
-            Assert.False(none.Equals(notSame, cmp));
+
+            Assert.False(none.Equals(some, cmp));
         }
 
         [Fact]
-        public static void Equals_StructuralEquatable_Some_ReferenceType()
+        public static void Equals_Structural_Some_ReferenceType()
         {
             // Arrange
             IStructuralEquatable some = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
             var same = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
             var notSame = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
+            var none = Maybe<Uri>.None;
             var cmp = EqualityComparer<Uri>.Default;
 
             // Act & Assert
@@ -1444,6 +1494,8 @@ namespace Abc
             Assert.True(some.Equals(some, cmp));
             Assert.True(some.Equals(same, cmp));
             Assert.False(some.Equals(notSame, cmp));
+
+            Assert.False(some.Equals(none, cmp));
         }
 
         [Fact]
@@ -1466,7 +1518,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void GetHashCode_StructuralEquatable_NullComparer()
+        public static void GetHashCode_Structural_NullComparer()
         {
             // Arrange
             IStructuralEquatable one = One;
@@ -1475,7 +1527,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void GetHashCode_StructuralEquatable_None()
+        public static void GetHashCode_Structural_None()
         {
             // Arrange
             var icmp = EqualityComparer<int>.Default;
@@ -1490,7 +1542,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void GetHashCode_StructuralEquatable_Some()
+        public static void GetHashCode_Structural_Some()
         {
             // Arrange
             var icmp = EqualityComparer<int>.Default;
