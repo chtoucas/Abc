@@ -1075,13 +1075,9 @@ namespace Abc
                 throw EF.InvalidType(nameof(other), typeof(Maybe<>), other);
             }
 
-            // NB: the comparer is for T not for Maybe<T>, in particular it is
-            // not meant to be used with MaybeComparer<T>.Default.
-            // REVIEW: should we make it work with a comparer w/ Maybe<T>.
-            //   return comparer.Compare(this, maybe);
-            // Should we esnure that MaybeComparer<T> works with T?
-            // DO NOT FORGET TO UPDATE MaybeTests.StructuralComparable().
-            // Same thing w/ IStructuralEquatable.
+            // NB: structural comparison means that the comparer is expected to
+            // be for T not for Maybe<T>, in particular it is not meant to work
+            // with MaybeComparer<T>.Default.
             return _isSome
                 ? maybe._isSome ? comparer.Compare(_value, maybe._value) : 1
                 : maybe._isSome ? -1 : 0;
@@ -1128,6 +1124,8 @@ namespace Abc
 
             if (other is null || !(other is Maybe<T> maybe)) { return false; }
 
+            // NB: structural comparison means that the comparer is expected to
+            // be for T not for Maybe<T>.
             return _isSome ? maybe._isSome && comparer.Equals(_value, maybe._value)
                 : !maybe._isSome;
         }

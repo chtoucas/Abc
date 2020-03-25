@@ -43,6 +43,8 @@ Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TO
 Abc.MaybeComparer<T>
 Abc.MaybeComparer<T>.Compare(Abc.Maybe<T> left, Abc.Maybe<T> right) -> int
 Abc.MaybeComparer<T>.Compare(object left, object right) -> int
+Abc.MaybeComparer<T>.Equals(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
+Abc.MaybeComparer<T>.GetHashCode(Abc.Maybe<T> obj) -> int
 Abc.Unit
 Abc.Unit.Equals(Abc.Unit other) -> bool
 Abc.Unit.Equals(System.ValueTuple other) -> bool
