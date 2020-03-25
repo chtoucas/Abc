@@ -1,3 +1,5 @@
+![Code Coverage](coverage.svg)
+
 # Abécédaire
 
 `Abc` features a rich option type for C#.
