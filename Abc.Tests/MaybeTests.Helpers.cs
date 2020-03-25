@@ -134,12 +134,20 @@ namespace Abc
 #pragma warning disable CA2000 // Dispose objects before losing scope
 
         [Fact]
-        public static void Use_InvalidArg()
+        public static void Use_NullBinder()
         {
             // Arrange
             var source = Maybe.Of(new My.Disposable());
             // Act & Assert
             Assert.ThrowsArgNullEx("binder", () => source.Use(default(Func<My.Disposable, Maybe<int>>)!));
+        }
+
+        [Fact]
+        public static void Use_NullSelector()
+        {
+            // Arrange
+            var source = Maybe.Of(new My.Disposable());
+            // Act & Assert
             Assert.ThrowsArgNullEx("selector", () => source.Use(default(Func<My.Disposable, int>)!));
         }
 
@@ -175,10 +183,52 @@ namespace Abc
     // Lift.
     public partial class MaybeTests
     {
+        [Fact]
+        public static void Lift2_NullThis()
+        {
+            // Arrange
+            Func<int, int, int> source = null!;
+            // Act & Assert
+            Assert.ThrowsArgNullEx("this", () => source.Lift(One, One));
+        }
+
+        [Fact]
+        public static void Lift3_NullThis()
+        {
+            // Arrange
+            Func<int, int, int, int> source = null!;
+            // Act & Assert
+            Assert.ThrowsArgNullEx("this", () => source.Lift(One, One, One));
+        }
+
+        [Fact]
+        public static void Lift4_NullThis()
+        {
+            // Arrange
+            Func<int, int, int, int, int> source = null!;
+            // Act & Assert
+            Assert.ThrowsArgNullEx("this", () => source.Lift(One, One, One, One));
+        }
+
+        [Fact]
+        public static void Lift5_NullThis()
+        {
+            // Arrange
+            Func<int, int, int, int, int, int> source = null!;
+            // Act & Assert
+            Assert.ThrowsArgNullEx("this", () => source.Lift(One, One, One, One, One));
+        }
     }
 
     // Helpers for Maybe<T> where T is a function.
     public partial class MaybeTests
     {
+        #region Invoke()
+
+        #endregion
+
+        #region Apply()
+
+        #endregion
     }
 }
