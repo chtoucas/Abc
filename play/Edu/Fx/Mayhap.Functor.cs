@@ -101,7 +101,7 @@ namespace Abc.Edu.Fx
 #if STRICT_HASKELL
             return Map(__const, mayhap);
 
-            // NB: This is just (_ => value).
+            // NB: this is just (_ => value).
             TResult __const(TSource x) => Stubs<TResult, TSource>.Const1(value, x);
 #else
             return mayhap.Select(_ => value);

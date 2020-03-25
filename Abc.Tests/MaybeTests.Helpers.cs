@@ -280,7 +280,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void Lift45_WithNone()
+        public static void Lift5_WithNone()
         {
             // Arrange
             Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyT> source = (x, y, z, a, b) => AnyT.Value;
