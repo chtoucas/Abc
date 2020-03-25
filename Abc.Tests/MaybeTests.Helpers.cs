@@ -230,6 +230,15 @@ namespace Abc
         }
 
         [Fact]
+        public static void Lift2_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT> source = (x, y) => AnyT.Value;
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Lift(AnyT1.Some, AnyT2.Some));
+        }
+
+        [Fact]
         public static void Lift3_NullThis()
         {
             // Arrange
@@ -247,6 +256,15 @@ namespace Abc
             Assert.None(source.Lift(AnyT1.None, AnyT2.Some, AnyT3.Some));
             Assert.None(source.Lift(AnyT1.Some, AnyT2.None, AnyT3.Some));
             Assert.None(source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.None));
+        }
+
+        [Fact]
+        public static void Lift3_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT> source = (x, y, z) => AnyT.Value;
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some));
         }
 
         [Fact]
@@ -271,6 +289,15 @@ namespace Abc
         }
 
         [Fact]
+        public static void Lift4_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT> source = (x, y, z, a) => AnyT.Value;
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
+        }
+
+        [Fact]
         public static void Lift5_NullThis()
         {
             // Arrange
@@ -291,6 +318,15 @@ namespace Abc
             Assert.None(source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.None, AnyT5.Some));
             Assert.None(source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.None));
         }
+
+        [Fact]
+        public static void Lift5_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyT> source = (x, y, z, a, b) => AnyT.Value;
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+        }
     }
 
     // Helpers for Maybe<T> where T is a function.
@@ -308,12 +344,32 @@ namespace Abc
         }
 
         [Fact]
+        public static void Invoke_Some()
+        {
+            // Arrange
+            Func<AnyT1, AnyT> f = x => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Invoke(AnyT1.Value));
+        }
+
+        [Fact]
         public static void Invoke2_None()
         {
             // Arrange
             var source = Maybe<Func<AnyT1, AnyT2, AnyT>>.None;
             // Act & Assert
             Assert.None(source.Invoke(AnyT1.Value, AnyT2.Value));
+        }
+
+        [Fact]
+        public static void Invoke2_Some()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT> f = (x, y) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Invoke(AnyT1.Value, AnyT2.Value));
         }
 
         [Fact]
@@ -326,6 +382,16 @@ namespace Abc
         }
 
         [Fact]
+        public static void Invoke3_Some()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT> f = (x, y, z) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value));
+        }
+
+        [Fact]
         public static void Invoke4_None()
         {
             // Arrange
@@ -335,12 +401,32 @@ namespace Abc
         }
 
         [Fact]
+        public static void Invoke4_Some()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT> f = (x, y, z, a) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value));
+        }
+
+        [Fact]
         public static void Invoke5_None()
         {
             // Arrange
             var source = Maybe<Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyT>>.None;
             // Act & Assert
             Assert.None(source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value, AnyT5.Value));
+        }
+
+        [Fact]
+        public static void Invoke5_Some()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyT> f = (x, y, z, a, b) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value, AnyT5.Value));
         }
 
         #endregion
@@ -368,6 +454,16 @@ namespace Abc
         }
 
         [Fact]
+        public static void Apply_Some_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, AnyT> f = x => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Apply(AnyT1.Some));
+        }
+
+        [Fact]
         public static void Apply2_None()
         {
             // Arrange
@@ -387,6 +483,16 @@ namespace Abc
             // Act & Assert
             Assert.None(source.Apply(AnyT1.None, AnyT2.Some));
             Assert.None(source.Apply(AnyT1.Some, AnyT2.None));
+        }
+
+        [Fact]
+        public static void Apply2_Some_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT> f = (x, y) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Apply(AnyT1.Some, AnyT2.Some));
         }
 
         [Fact]
@@ -411,6 +517,16 @@ namespace Abc
             Assert.None(source.Apply(AnyT1.None, AnyT2.Some, AnyT3.Some));
             Assert.None(source.Apply(AnyT1.Some, AnyT2.None, AnyT3.Some));
             Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.None));
+        }
+
+        [Fact]
+        public static void Apply3_Some_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT> f = (x, y, z) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some));
         }
 
         [Fact]
@@ -440,6 +556,16 @@ namespace Abc
         }
 
         [Fact]
+        public static void Apply4_Some_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT> f = (x, y, z, a) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
+        }
+
+        [Fact]
         public static void Apply5_None()
         {
             // Arrange
@@ -465,6 +591,16 @@ namespace Abc
             Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.None, AnyT4.Some, AnyT5.Some));
             Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.None, AnyT5.Some));
             Assert.None(source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.None));
+        }
+
+        [Fact]
+        public static void Apply5_Some_WithSome()
+        {
+            // Arrange
+            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyT> f = (x, y, z, a, b) => AnyT.Value;
+            var source = Maybe.Of(f);
+            // Act & Assert
+            Assert.Some(AnyT.Value, source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
         }
 
         #endregion
