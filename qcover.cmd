@@ -10,6 +10,11 @@
 @set outdir=%~dp0\__work
 @if not exist %outdir% mkdir %outdir%
 
+@rem Not necessary, but seems to speed up the whole process and might prevent
+@rem random crashes w/ OpenCover.
+:Build
+dotnet build -c Debug --no-restore
+
 :OpenCover
 @set OpenCover=%USERPROFILE%\.nuget\packages\opencover\%OpenCoverVersion%\tools\OpenCover.Console.exe
 
