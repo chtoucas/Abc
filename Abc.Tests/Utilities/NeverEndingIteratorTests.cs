@@ -2,7 +2,6 @@
 
 namespace Abc.Utilities
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -21,13 +20,12 @@ namespace Abc.Utilities
         {
             var anyT = AnyT.New();
             Value = anyT.Value;
-            AsEnumerableT = anyT.Some.ToEnumerable();
+            AsEnumerableT = anyT.Some.Yield();
         }
 
-        private static IDisposable AsDisposable => (IDisposable)AsEnumerableT;
-        private static IEnumerator AsEnumerator => AsEnumerableT.GetEnumerator();
-        private static IEnumerator<AnyT> AsEnumeratorT => AsEnumerableT.GetEnumerator();
         private static IEnumerable AsEnumerable => AsEnumerableT;
+        private static IEnumerator<AnyT> AsEnumeratorT => AsEnumerableT.GetEnumerator();
+        private static IEnumerator AsEnumerator => AsEnumerableT.GetEnumerator();
 
         [Fact]
         public static void GetEnumerator()
@@ -37,23 +35,79 @@ namespace Abc.Utilities
         public static void GetEnumerator_Untyped()
             => Assert.Same(AsEnumerableT, AsEnumerable.GetEnumerator());
 
-        // TODO: to be improved.
-        // Current is in fact constant...
         [Fact]
-        public static void Current() => Assert.Same(Value, AsEnumeratorT.Current);
+        public static void Current()
+        {
+            var enumeratorT = AsEnumeratorT;
+
+            // Even before MoveNext(), Current already returns Value.
+            Assert.Same(Value, enumeratorT.Current);
+
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.True(enumeratorT.MoveNext());
+                Assert.Same(Value, enumeratorT.Current);
+            }
+        }
 
         [Fact]
-        public static void Current_Untyped() => Assert.Same(Value, AsEnumerator.Current);
+        public static void Dispose()
+        {
+            var enumeratorT = AsEnumeratorT;
+
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.True(enumeratorT.MoveNext());
+                Assert.Same(Value, enumeratorT.Current);
+            }
+
+            // Dispose() does nothing.
+            enumeratorT.Dispose();
+
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.True(enumeratorT.MoveNext());
+                Assert.Same(Value, enumeratorT.Current);
+            }
+        }
+
+        [Fact]
+        public static void Current_Untyped()
+        {
+            var enumerator = AsEnumerator;
+
+            // Even before MoveNext(), Current already returns Value.
+            Assert.Same(Value, enumerator.Current);
+
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.True(enumerator.MoveNext());
+                Assert.Same(Value, enumerator.Current);
+            }
+        }
 
         [Fact]
         public static void MoveNext() => Assert.True(AsEnumerator.MoveNext());
 
-        // Reset() does nothing, in particular it does not throw.
         [Fact]
-        public static void Reset() => AsEnumerator.Reset();
+        public static void Reset()
+        {
+            var enumerator = AsEnumerator;
 
-        // Dispose() does nothing, in particular it does not throw.
-        [Fact]
-        public static void Dispose() => AsDisposable.Dispose();
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.True(enumerator.MoveNext());
+                Assert.Same(Value, enumerator.Current);
+            }
+
+            // Reset() does nothing.
+            enumerator.Reset();
+
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.True(enumerator.MoveNext());
+                Assert.Same(Value, enumerator.Current);
+            }
+        }
     }
 }

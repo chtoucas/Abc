@@ -120,19 +120,21 @@ namespace Abc.Utilities
             _element = element;
         }
 
+        // IEnumerable<T>
         public IEnumerator<T> GetEnumerator() => this;
+
+        // IEnumerable
         IEnumerator IEnumerable.GetEnumerator() => this;
 
-        #region IEnumerator<T>
-
+        // IEnumerator<T>
         public T Current => _element;
+
+        // IEnumerator
         object IEnumerator.Current => _element;
-
         public bool MoveNext() => true;
-
         void IEnumerator.Reset() { }
-        void IDisposable.Dispose() { }
 
-        #endregion
+        // IDisposable
+        void IDisposable.Dispose() { }
     }
 }
