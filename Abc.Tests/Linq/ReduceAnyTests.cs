@@ -9,7 +9,7 @@ namespace Abc.Linq
     public sealed class ReduceAnyTests : QperatorsTests
     {
         [Fact]
-        public static void InvalidArg()
+        public static void NullSource()
         {
             Assert.ThrowsArgNullEx("source", () => Null.ReduceAny(Kunc<int, int, int>.Any));
             Assert.ThrowsArgNullEx("accumulator", () => NotNull.ReduceAny(Kunc<int, int, int>.Null));

@@ -30,10 +30,12 @@ namespace Abc.Utilities
         private static IEnumerable AsEnumerable => AsEnumerableT;
 
         [Fact]
-        public static void GetEnumerator() => Assert.Same(AsEnumerableT, AsEnumerableT.GetEnumerator());
+        public static void GetEnumerator()
+            => Assert.Same(AsEnumerableT, AsEnumerableT.GetEnumerator());
 
         [Fact]
-        public static void GetEnumerator_Untyped() => Assert.Same(AsEnumerableT, AsEnumerable.GetEnumerator());
+        public static void GetEnumerator_Untyped()
+            => Assert.Same(AsEnumerableT, AsEnumerable.GetEnumerator());
 
         // TODO: to be improved.
         // Current is in fact constant...

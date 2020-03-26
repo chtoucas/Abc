@@ -264,15 +264,10 @@ namespace Abc
         public static void Flatten_None()
         {
             Assert.Equal(Ø, Maybe<Maybe<int>>.None.Flatten());
+            Assert.Equal(Ø, Maybe<Maybe<int?>>.None.Flatten());
             Assert.Equal(NoText, Maybe<Maybe<string>>.None.Flatten());
             Assert.Equal(NoUri, Maybe<Maybe<Uri>>.None.Flatten());
             Assert.Equal(AnyT.None, Maybe<Maybe<AnyT>>.None.Flatten());
-        }
-
-        [Fact]
-        public static void Flatten_None_NullableValueType()
-        {
-            Assert.Equal(Ø, Maybe<Maybe<int?>>.None.Flatten());
         }
 
         [Fact]
@@ -293,6 +288,9 @@ namespace Abc
 
             var some = AnyT.Some;
             Assert.Equal(some, Maybe.Some(some).Flatten());
+
+            Maybe<int?> one = One.Select(x => (int?)x);
+            Assert.Equal(One, Maybe.Some(one).Flatten());
         }
     }
 

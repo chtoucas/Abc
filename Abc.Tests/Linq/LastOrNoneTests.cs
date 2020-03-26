@@ -17,7 +17,7 @@ namespace Abc.Linq
     public sealed class LastOrNoneTests : QperatorsTests
     {
         [Fact]
-        public static void InvalidArg()
+        public static void NullSource()
         {
             Assert.ThrowsArgNullEx("source", () => Null.LastOrNone());
 

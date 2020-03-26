@@ -12,14 +12,14 @@ namespace Abc.Linq
     public sealed class SelectAnyTests : QperatorsTests
     {
         [Fact]
-        public static void InvalidArg()
+        public static void NullSource()
         {
             Assert.ThrowsArgNullEx("source", () => Null.SelectAny(Kunc<int, int>.Any));
             Assert.ThrowsArgNullEx("selector", () => NotNull.SelectAny(Kunc<int, int>.Null));
         }
 
         [Fact]
-        public static void Deferred()
+        public static void IsDeferred()
         {
             bool notCalled = true;
             Func<Maybe<int>> fun = () => { notCalled = false; return Maybe.Of(1); };

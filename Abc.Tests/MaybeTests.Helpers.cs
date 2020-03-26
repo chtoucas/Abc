@@ -17,8 +17,8 @@ namespace Abc
         public static void Squash()
         {
             // Arrange
-            var none = Ø.Select(x => (int?)x);
-            var one = One.Select(x => (int?)x);
+            Maybe<int?> none = Maybe<int?>.None;
+            Maybe<int?> one = One.Select(x => (int?)x);
             // Act & Assert
             Assert.Equal(Ø, none.Squash());
             Assert.Equal(One, one.Squash());
@@ -28,8 +28,8 @@ namespace Abc
         public static void ToNullable()
         {
             // Arrange
-            var none = Ø.Select(x => (int?)x);
-            var one = One.Select(x => (int?)x);
+            Maybe<int?> none = Maybe<int?>.None;
+            Maybe<int?> one = One.Select(x => (int?)x);
             // Act & Assert
             Assert.Null(Ø.ToNullable());
             Assert.Equal(1, One.ToNullable());
@@ -126,7 +126,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void CollectAny_Deferred()
+        public static void CollectAny_IsDeferred()
         {
             IEnumerable<Maybe<int>> source = new ThrowingEnumerable<Maybe<int>>();
 

@@ -9,7 +9,7 @@ namespace Abc.Linq
     public sealed class ZipAnyTests : QperatorsTests
     {
         [Fact]
-        public static void InvalidArg()
+        public static void NullSource()
         {
             Assert.ThrowsArgNullEx("first", () => Null.ZipAny(NotNull, Kunc<int, int, int>.Any));
             Assert.ThrowsArgNullEx("second", () => NotNull.ZipAny(Null, Kunc<int, int, int>.Any));

@@ -16,7 +16,7 @@ namespace Abc.Linq
     public sealed class ElementAtOrNoneTests : QperatorsTests
     {
         [Fact]
-        public static void InvalidArg()
+        public static void NullSource()
         {
             Assert.ThrowsArgNullEx("source", () => Null.ElementAtOrNone(1));
         }

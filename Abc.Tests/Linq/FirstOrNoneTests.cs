@@ -17,7 +17,7 @@ namespace Abc.Linq
     public sealed class FirstOrNoneTests : QperatorsTests
     {
         [Fact]
-        public static void InvalidArg()
+        public static void NullSource()
         {
             Assert.ThrowsArgNullEx("source", () => Null.FirstOrNone());
 

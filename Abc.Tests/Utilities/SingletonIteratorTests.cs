@@ -50,6 +50,38 @@ namespace Abc.Utilities
         public static void Contains_KO() => Assert.False(AsList.Contains(AnyT.Value));
 
         [Fact]
+        public static void CopyTo()
+        {
+            // Arrange
+            var arr = new AnyT[10]
+            {
+                AnyT.Value,
+                AnyT.Value,
+                AnyT.Value,
+                AnyT.Value,
+                AnyT.Value,
+                AnyT.Value,
+                AnyT.Value,
+                AnyT.Value,
+                AnyT.Value,
+                AnyT.Value,
+            };
+            // Act
+            AsList.CopyTo(arr, 4);
+            // Assert
+            Assert.NotSame(Value, arr[0]);
+            Assert.NotSame(Value, arr[1]);
+            Assert.NotSame(Value, arr[2]);
+            Assert.NotSame(Value, arr[3]);
+            Assert.Same(Value, arr[4]);
+            Assert.NotSame(Value, arr[5]);
+            Assert.NotSame(Value, arr[6]);
+            Assert.NotSame(Value, arr[7]);
+            Assert.NotSame(Value, arr[8]);
+            Assert.NotSame(Value, arr[9]);
+        }
+
+        [Fact]
         public static void IndexOf_OK() => Assert.Equal(0, AsList.IndexOf(Value));
 
         [Fact]

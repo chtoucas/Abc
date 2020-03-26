@@ -9,7 +9,7 @@ namespace Abc.Linq
     public sealed class FoldAnyTests : QperatorsTests
     {
         [Fact]
-        public static void InvalidArg()
+        public static void NullSource()
         {
             Assert.ThrowsArgNullEx("source", () => Null.FoldAny(1, Kunc<int, int, int>.Any));
             Assert.ThrowsArgNullEx("accumulator", () => NotNull.FoldAny(1, Kunc<int, int, int>.Null));
