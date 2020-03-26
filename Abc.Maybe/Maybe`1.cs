@@ -911,7 +911,8 @@ namespace Abc
         [Pure]
         public IEnumerator<T> GetEnumerator()
             // BONSANG! When _isSome is true, _value is NOT null.
-            => _isSome ? new SingletonIterator<T>(_value!) : EmptyIterator<T>.Instance;
+            => _isSome ? new SingletonList<T>.Iterator(_value!)
+                : EmptyIterator<T>.Instance;
 
         /// <summary>
         /// Converts the current instance to <see cref="IEnumerable{T}"/>.
@@ -921,7 +922,7 @@ namespace Abc
         [Pure]
         public IEnumerable<T> ToEnumerable()
             // BONSANG! When _isSome is true, _value is NOT null.
-            => _isSome ? new SingletonIterator<T>(_value!) : Enumerable.Empty<T>();
+            => _isSome ? new SingletonList<T>(_value!) : Enumerable.Empty<T>();
 
         // Beware, Yield() doesn't match the F# yield of computation expressions.
 

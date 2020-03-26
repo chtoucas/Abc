@@ -36,7 +36,8 @@ namespace Abc.Utilities
         public static void GetEnumerator_Untyped()
         {
             // Arrange
-            IEnumerator it = Iter.GetEnumerator();
+            IEnumerable enumerable = Iter;
+            IEnumerator it = enumerable.GetEnumerator();
             // Act & Assert
             Assert.Same(Iter, it);
         }

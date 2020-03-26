@@ -1159,7 +1159,6 @@ namespace Abc
             int count = 0;
 
             // Act & Assert
-
             // First loop.
             foreach (string x in SomeText) { count++; Assert.Equal(MyText, x); }
             Assert.Equal(1, count);
@@ -1171,49 +1170,29 @@ namespace Abc
             // Using an explicit iterator.
             var iter = SomeText.GetEnumerator();
 
-            // First loop.
-            count = 0;
-            while (iter.MoveNext()) { count++; }
-            Assert.Equal(1, count);
-            // Second loop: no call to Reset().
-            count = 0;
-            while (iter.MoveNext()) { count++; }
-            Assert.Equal(0, count);
-            // Third loop: call to Reset().
-            count = 0;
+            Assert.True(iter.MoveNext());
+            Assert.Same(MyText, iter.Current);
+            Assert.False(iter.MoveNext());
+
             iter.Reset();
-            while (iter.MoveNext()) { count++; }
-            Assert.Equal(1, count);
+
+            Assert.True(iter.MoveNext());
+            Assert.Same(MyText, iter.Current);
+            Assert.False(iter.MoveNext());
         }
 
         [Fact]
         public static void GetEnumerator_None()
         {
-            // Arrange
-            int count = 0;
-
-            // Act & Assert
-
-            // First loop.
-            foreach (string x in NoText) { count++; }
-            Assert.Equal(0, count);
-            // Second loop (new iterator).
-            foreach (string x in NoText) { count++; }
-            Assert.Equal(0, count);
+            foreach (string _ in NoText) { Assert.True(false); }
+            foreach (string _ in NoText) { Assert.True(false); }
 
             // Using an explicit iterator.
             var iter = NoText.GetEnumerator();
 
-            // First loop.
-            while (iter.MoveNext()) { count++; }
-            Assert.Equal(0, count);
-            // Second loop: no call to Reset().
-            while (iter.MoveNext()) { count++; }
-            Assert.Equal(0, count);
-            // Third loop: call to Reset().
+            Assert.False(iter.MoveNext());
             iter.Reset();
-            while (iter.MoveNext()) { count++; }
-            Assert.Equal(0, count);
+            Assert.False(iter.MoveNext());
         }
 
         [Fact]

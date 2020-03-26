@@ -46,13 +46,11 @@ namespace Abc.Utilities
     /// Enumerable.Repeat() does not seem to produce one.
     /// </remarks>
     [DebuggerDisplay("Count = 1")]
-    internal sealed class SingletonIterator<T>
-        : IList<T>, IReadOnlyList<T>, IEnumerator<T>
+    internal sealed class SingletonList<T> : IList<T>, IReadOnlyList<T>
     {
         [NotNull] private readonly T _element;
-        private bool _done = false;
 
-        public SingletonIterator([DisallowNull] T element)
+        public SingletonList([DisallowNull] T element)
         {
             _element = element;
         }
@@ -94,34 +92,41 @@ namespace Abc.Utilities
 
         #region IEnumerable<T>
 
-        public IEnumerator<T> GetEnumerator() => this;
-        IEnumerator IEnumerable.GetEnumerator() => this;
+        public IEnumerator<T> GetEnumerator() => new Iterator(_element);
+        IEnumerator IEnumerable.GetEnumerator() => new Iterator(_element);
 
         #endregion
 
-        #region IEnumerator<T>
-
-        // Common behaviour:
-        // - before any call to MoveNext(), returns default(T)
-        // - when done iterating, returns the last value
-        // Here, we always return _element.
-        public T Current => _element;
-        object IEnumerator.Current => _element;
-
-        public bool MoveNext()
+        public sealed class Iterator : IEnumerator<T>
         {
-            if (_done) { return false; }
+            [NotNull] private readonly T _element;
+            private bool _done = false;
 
-            _done = true;
-            return true;
+            public Iterator([DisallowNull] T element)
+            {
+                _element = element;
+            }
+
+            // Common behaviour:
+            // - before any call to MoveNext(), returns default(T)
+            // - when done iterating, returns the last value
+            // Here, we always return _element.
+            public T Current => _element;
+            object IEnumerator.Current => _element;
+
+            public bool MoveNext()
+            {
+                if (_done) { return false; }
+
+                _done = true;
+                return true;
+            }
+
+            // It seems that it is now a requirement to throw an exception
+            // (eg not supported), anyway it doesn't really matter.
+            void IEnumerator.Reset() => _done = false;
+            void IDisposable.Dispose() { }
         }
-
-        // It seems that it is now a requirement to throw an exception
-        // (eg not supported), anyway it doesn't really matter.
-        void IEnumerator.Reset() => _done = false;
-        void IDisposable.Dispose() { }
-
-        #endregion
     }
 
     [DebuggerDisplay("Count = ∞")]

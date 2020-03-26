@@ -3,7 +3,6 @@
 namespace Abc.Utilities
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
 
     using Xunit;
@@ -14,7 +13,6 @@ namespace Abc.Utilities
     {
         private static readonly AnyT Value;
         private static readonly IEnumerable<AnyT> Iter;
-        private static readonly IEnumerator<AnyT> AsEnumerator;
 
 #pragma warning disable CA1810 // Initialize reference type static fields inline
         static SingletonIteratorTests()
@@ -23,7 +21,6 @@ namespace Abc.Utilities
             var anyT = AnyT.New();
             Value = anyT.Value;
             Iter = anyT.Some.ToEnumerable();
-            AsEnumerator = anyT.Some.GetEnumerator();
         }
     }
 
@@ -198,26 +195,34 @@ namespace Abc.Utilities
     public partial class SingletonIteratorTests
     {
         [Fact]
-        public static void GetEnumerator()
+        public static void Iterate()
         {
             // Arrange
-            IEnumerator<AnyT> enumerator = Iter.GetEnumerator();
-            // Act & Assert
-            Assert.Same(Iter, enumerator);
-        }
+            IEnumerator<AnyT> it = Iter.GetEnumerator();
 
-        [Fact]
-        public static void GetEnumerator_Untyped()
-        {
-            // Arrange
-            IEnumerator enumerator = Iter.GetEnumerator();
             // Act & Assert
-            Assert.Same(Iter, enumerator);
-        }
+            // Even before the first MoveNext(), Current already returns Value.
+            Assert.Same(Value, it.Current);
 
-        // TODO: to be improved.
-        // Current is in fact constant...
-        [Fact]
-        public static void Current() => Assert.Same(Value, AsEnumerator.Current);
+            Assert.True(it.MoveNext());
+            Assert.Same(Value, it.Current);
+            Assert.False(it.MoveNext());
+
+            it.Reset();
+
+            Assert.True(it.MoveNext());
+            Assert.Same(Value, it.Current);
+            Assert.False(it.MoveNext());
+
+            // Dispose() does nothing.
+            it.Dispose();
+            Assert.False(it.MoveNext());
+
+            it.Reset();
+
+            Assert.True(it.MoveNext());
+            Assert.Same(Value, it.Current);
+            Assert.False(it.MoveNext());
+        }
     }
 }
