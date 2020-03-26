@@ -11,6 +11,8 @@ namespace Abc
 
     using Assert = AssertEx;
 
+    // TODO: real tests not just smoke tests.
+
     public static partial class MaybeTests
     {
         private static readonly Maybe<int> Ø = Maybe<int>.None;
