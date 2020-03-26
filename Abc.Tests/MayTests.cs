@@ -7,8 +7,6 @@ namespace Abc
 
     using Xunit;
 
-    using static global::My;
-
     using Assert = AssertEx;
 
     // We do not need to be comprehensive, the May helpers only wrap BCL methods.
@@ -302,9 +300,9 @@ namespace Abc
         [InlineData(" Alias1 ")]
         public static void ParseEnum(string value)
         {
-            Assert.Some(My.Enum012.One, May.ParseEnum<Enum012>(value));
-            Assert.Some(My.Enum012.One, May.ParseEnum<Enum012>(value, ignoreCase: false));
-            Assert.Some(My.Enum012.One, May.ParseEnum<Enum012>(value, ignoreCase: true));
+            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(value));
+            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(value, ignoreCase: false));
+            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(value, ignoreCase: true));
         }
 
         [Theory]
@@ -325,9 +323,9 @@ namespace Abc
         [InlineData(" alias1 ")]
         public static void ParseEnum_MixedCase(string value)
         {
-            Assert.None(May.ParseEnum<Enum012>(value));
-            Assert.None(May.ParseEnum<Enum012>(value, ignoreCase: false));
-            Assert.Some(My.Enum012.One, May.ParseEnum<Enum012>(value, ignoreCase: true));
+            Assert.None(May.ParseEnum<SimpleEnum>(value));
+            Assert.None(May.ParseEnum<SimpleEnum>(value, ignoreCase: false));
+            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(value, ignoreCase: true));
         }
 
         [Theory]
@@ -339,9 +337,9 @@ namespace Abc
         // Weird but passing any integer value will succeed.
         public static void ParseEnum_AnyInteger(string value)
         {
-            Assert.Some((Enum012)4, May.ParseEnum<Enum012>(value));
-            Assert.Some((Enum012)4, May.ParseEnum<Enum012>(value, ignoreCase: false));
-            Assert.Some((Enum012)4, May.ParseEnum<Enum012>(value, ignoreCase: true));
+            Assert.Some((SimpleEnum)4, May.ParseEnum<SimpleEnum>(value));
+            Assert.Some((SimpleEnum)4, May.ParseEnum<SimpleEnum>(value, ignoreCase: false));
+            Assert.Some((SimpleEnum)4, May.ParseEnum<SimpleEnum>(value, ignoreCase: true));
         }
 
         [Theory]
@@ -355,9 +353,9 @@ namespace Abc
         [InlineData(" Whatever ")]
         public static void ParseEnum_InvalidName(string value)
         {
-            Assert.None(May.ParseEnum<Enum012>(value));
-            Assert.None(May.ParseEnum<Enum012>(value, ignoreCase: false));
-            Assert.None(May.ParseEnum<Enum012>(value, ignoreCase: true));
+            Assert.None(May.ParseEnum<SimpleEnum>(value));
+            Assert.None(May.ParseEnum<SimpleEnum>(value, ignoreCase: false));
+            Assert.None(May.ParseEnum<SimpleEnum>(value, ignoreCase: true));
         }
 
         [Theory]
@@ -374,9 +372,9 @@ namespace Abc
         [InlineData(" One,  Two ")]
         public static void ParseEnum_CompositeValue(string value)
         {
-            Assert.Some(My.EnumBits.OneTwo, May.ParseEnum<EnumBits>(value));
-            Assert.Some(My.EnumBits.OneTwo, May.ParseEnum<EnumBits>(value, ignoreCase: false));
-            Assert.Some(My.EnumBits.OneTwo, May.ParseEnum<EnumBits>(value, ignoreCase: true));
+            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(value));
+            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(value, ignoreCase: false));
+            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(value, ignoreCase: true));
         }
 
         [Theory]
@@ -393,9 +391,9 @@ namespace Abc
         [InlineData(" one, two ")]
         public static void ParseEnum_CompositeValue_MixedCase(string value)
         {
-            Assert.None(May.ParseEnum<EnumBits>(value));
-            Assert.None(May.ParseEnum<EnumBits>(value, ignoreCase: false));
-            Assert.Some(My.EnumBits.OneTwo, May.ParseEnum<EnumBits>(value, ignoreCase: true));
+            Assert.None(May.ParseEnum<FlagsEnum>(value));
+            Assert.None(May.ParseEnum<FlagsEnum>(value, ignoreCase: false));
+            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(value, ignoreCase: true));
         }
 
         [Theory]
@@ -404,9 +402,9 @@ namespace Abc
         [InlineData("onetWo")]
         public static void ParseEnum_Flags_InvalidName(string value)
         {
-            Assert.None(May.ParseEnum<Enum012>(value));
-            Assert.None(May.ParseEnum<Enum012>(value, ignoreCase: false));
-            Assert.None(May.ParseEnum<Enum012>(value, ignoreCase: true));
+            Assert.None(May.ParseEnum<SimpleEnum>(value));
+            Assert.None(May.ParseEnum<SimpleEnum>(value, ignoreCase: false));
+            Assert.None(May.ParseEnum<SimpleEnum>(value, ignoreCase: true));
         }
     }
 
