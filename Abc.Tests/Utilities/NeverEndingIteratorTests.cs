@@ -18,10 +18,10 @@ namespace Abc.Utilities
         static NeverEndingIteratorTests()
 #pragma warning restore CA1810
         {
-            var any = AnyT.New();
-            Value = any.Value;
-            AsEnumerator = any.Some.GetEnumerator();
-            AsEnumerable = any.Some.ToEnumerable();
+            var anyT = AnyT.New();
+            Value = anyT.Value;
+            AsEnumerator = anyT.Some.GetEnumerator();
+            AsEnumerable = anyT.Some.ToEnumerable();
         }
 
         // TODO: to be improved.
