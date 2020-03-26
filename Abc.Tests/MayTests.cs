@@ -221,6 +221,45 @@ namespace Abc
             Assert.Some(1.1m, May.ParseDecimal("1.1", NumberStyles.Float, CultureInfo.InvariantCulture));
         }
 
+        public static readonly TheoryData<string, sbyte> SByteData
+            = new TheoryData<string, sbyte>
+            {
+                { "-1", -1 },
+                { "0", 0 },
+                { "1", 1 }
+            };
+
+        [Theory, MemberData(nameof(SByteData))]
+        public static void ParseSByte(string value, sbyte exp)
+        {
+            Assert.Some(exp, May.ParseSByte(value));
+        }
+
+        [Theory, MemberData(nameof(SByteData))]
+        public static void ParseSByte_Invariant(string value, sbyte exp)
+        {
+            Assert.Some(exp, May.ParseSByte(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
+        }
+
+        public static readonly TheoryData<string, byte> ByteData
+            = new TheoryData<string, byte>
+            {
+                { "0", 0 },
+                { "1", 1 }
+            };
+
+        [Theory, MemberData(nameof(ByteData))]
+        public static void ParseByte(string value, byte exp)
+        {
+            Assert.Some(exp, May.ParseByte(value));
+        }
+
+        [Theory, MemberData(nameof(ByteData))]
+        public static void ParseByte_Invariant(string value, byte exp)
+        {
+            Assert.Some(exp, May.ParseByte(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
+        }
+
         public static readonly TheoryData<string, ushort> UInt16Data
             = new TheoryData<string, ushort>
             {
@@ -425,5 +464,41 @@ namespace Abc
     // CreateUri().
     public partial class MayTests
     {
+#pragma warning disable CA2234 // Pass system uri objects instead of strings
+
+        [Fact]
+        public static void CreateUri_None()
+        {
+            // Arrange
+            var baseUri = new Uri("http://www.narvalo.org");
+            var relativeUri = new Uri("about", UriKind.Relative);
+
+            // Act & Assert
+            Assert.None(May.CreateUri(null, ""));
+            Assert.None(May.CreateUri(baseUri, (string?)null));
+
+            Assert.None(May.CreateUri(null, relativeUri));
+            Assert.None(May.CreateUri(baseUri, (Uri?)null));
+
+            Assert.None(May.CreateUri(null, UriKind.Absolute));
+            Assert.None(May.CreateUri("about", UriKind.Absolute));
+            Assert.None(May.CreateUri("http://www.narvalo.org", UriKind.Relative));
+        }
+
+        [Fact]
+        public static void CreateUri_Some()
+        {
+            // Arrange
+            var baseUri = new Uri("http://www.narvalo.org");
+            var relativeUri = new Uri("about", UriKind.Relative);
+            var exp = new Uri("http://www.narvalo.org/about");
+            // Act & Assert
+            Assert.Some(exp, May.CreateUri(baseUri, "about"));
+            Assert.Some(exp, May.CreateUri(baseUri, relativeUri));
+            Assert.Some(relativeUri, May.CreateUri("about", UriKind.Relative));
+            Assert.Some(baseUri, May.CreateUri("http://www.narvalo.org", UriKind.Absolute));
+        }
+
+#pragma warning restore CA2234
     }
 }

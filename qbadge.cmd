@@ -10,6 +10,11 @@
 @set outdir=%~dp0\__work
 @if not exist %outdir% mkdir %outdir%
 
+:Build
+@rem Not necessary, but seems to speed up the whole process and might prevent
+@rem random crashes w/ OpenCover.
+dotnet build -c Debug --no-restore
+
 :OpenCover
 @set OpenCover=%USERPROFILE%\.nuget\packages\opencover\%OpenCoverVersion%\tools\OpenCover.Console.exe
 
@@ -28,7 +33,7 @@
 
 :: Only Abc.Maybe.
 @set filter="+[Abc.Maybe]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*"
-@call %OpenCover% -showunvisited -oldStyle -register:user -hideskipped:All -showunvisited -output:%opencover_xml% -filter:%filter% -target:%target% -targetargs:%targetargs% -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
+@call %OpenCover% -showunvisited -oldStyle -register:user -hideskipped:All -output:%opencover_xml% -filter:%filter% -target:%target% -targetargs:%targetargs% -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
 
 :ReportGenerator
 @set ReportGenerator=%USERPROFILE%\.nuget\packages\reportgenerator\%ReportGeneratorVersion%\tools\net47\ReportGenerator.exe
