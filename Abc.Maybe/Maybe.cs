@@ -35,6 +35,8 @@ namespace Abc
         /// </summary>
         [Pure]
         // Not actually obsolete, but clearly states that we shouldn't use it.
+        // Still, Select() allows the creation of a Maybe<T?>. For instance,
+        //   Maybe.Some(1).Select(x => (int?)x);
         [Obsolete("Use SomeOrNone() instead.")]
         public static Maybe<T> Of<T>(T? value) where T : struct
             => value.HasValue ? new Maybe<T>(value.Value) : Maybe<T>.None;
