@@ -37,5 +37,11 @@ namespace Abc
         /// </summary>
         public static void LogicalFalse<T>(Maybe<T> maybe)
             => False(maybe.ToBoolean());
+
+        /// <summary>
+        /// Verifies that <paramref name="maybe"/> is <see cref="Maybe.Unknown"/>.
+        /// </summary>
+        public static void Unknown(Maybe<bool> maybe)
+            => True(maybe.IsNone);
     }
 }

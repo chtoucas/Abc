@@ -72,7 +72,7 @@ namespace Abc
         {
             Assert.Some(false, Maybe.True.Negate());
             Assert.Some(true, Maybe.False.Negate());
-            Assert.None(Maybe.Unknown.Negate());
+            Assert.Unknown(Maybe.Unknown.Negate());
         }
 
         [Fact]
@@ -84,11 +84,11 @@ namespace Abc
 
             Assert.Some(true, Maybe.False.Or(Maybe.True));
             Assert.Some(false, Maybe.False.Or(Maybe.False));
-            Assert.None(Maybe.False.Or(Maybe.Unknown));
+            Assert.Unknown(Maybe.False.Or(Maybe.Unknown));
 
             Assert.Some(true, Maybe.Unknown.Or(Maybe.True));
-            Assert.None(Maybe.Unknown.Or(Maybe.False));
-            Assert.None(Maybe.Unknown.Or(Maybe.Unknown));
+            Assert.Unknown(Maybe.Unknown.Or(Maybe.False));
+            Assert.Unknown(Maybe.Unknown.Or(Maybe.Unknown));
         }
 
         [Fact]
@@ -96,15 +96,15 @@ namespace Abc
         {
             Assert.Some(true, Maybe.True.And(Maybe.True));
             Assert.Some(false, Maybe.True.And(Maybe.False));
-            Assert.None(Maybe.True.And(Maybe.Unknown));
+            Assert.Unknown(Maybe.True.And(Maybe.Unknown));
 
             Assert.Some(false, Maybe.False.And(Maybe.True));
             Assert.Some(false, Maybe.False.And(Maybe.False));
             Assert.Some(false, Maybe.False.And(Maybe.Unknown));
 
-            Assert.None(Maybe.Unknown.And(Maybe.True));
+            Assert.Unknown(Maybe.Unknown.And(Maybe.True));
             Assert.Some(false, Maybe.Unknown.And(Maybe.False));
-            Assert.None(Maybe.Unknown.And(Maybe.Unknown));
+            Assert.Unknown(Maybe.Unknown.And(Maybe.Unknown));
         }
     }
 
@@ -145,9 +145,11 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Invoke_NullObject()
+        public static void Invoke_NullBinder()
         {
-            Assert.ThrowsArgNullEx("binder", () => Kunc<AnyT, AnyResult>.Null.Invoke(AnyT.Some));
+            Assert.ThrowsArgNullEx("binder", () =>
+                Kunc<AnyT, AnyResult>.Null
+                    .Invoke(AnyT.Some));
         }
 
         [Fact]
@@ -173,7 +175,9 @@ namespace Abc
         [Fact]
         public static void Compose_NullObject()
         {
-            Assert.ThrowsArgNullEx("this", () => Kunc<AnyT1, AnyT2>.Null.Compose(Kunc<AnyT2, AnyResult>.Any));
+            Assert.ThrowsArgNullEx("this", () =>
+                Kunc<AnyT1, AnyT2>.Null
+                    .Compose(Kunc<AnyT2, AnyResult>.Any));
         }
 
         [Fact]
@@ -187,9 +191,11 @@ namespace Abc
         }
 
         [Fact]
-        public static void ComposeBack_NullObject()
+        public static void ComposeBack_NullOther()
         {
-            Assert.ThrowsArgNullEx("other", () => Kunc<AnyT2, AnyResult>.Any.ComposeBack(Kunc<AnyT1, AnyT2>.Null));
+            Assert.ThrowsArgNullEx("other", () =>
+                Kunc<AnyT2, AnyResult>.Any
+                    .ComposeBack(Kunc<AnyT1, AnyT2>.Null));
         }
 
         [Fact]
@@ -214,7 +220,7 @@ namespace Abc
             // Arrange
             var source = Maybe.Of(new AnyDisposable());
             // Act & Assert
-            Assert.ThrowsArgNullEx("binder", () => source.Use(default(Func<AnyDisposable, Maybe<int>>)!));
+            Assert.ThrowsArgNullEx("binder", () => source.Use(Kunc<AnyDisposable, int>.Null));
         }
 
         [Fact]
@@ -223,7 +229,7 @@ namespace Abc
             // Arrange
             var source = Maybe.Of(new AnyDisposable());
             // Act & Assert
-            Assert.ThrowsArgNullEx("selector", () => source.Use(default(Func<AnyDisposable, int>)!));
+            Assert.ThrowsArgNullEx("selector", () => source.Use(Funk<AnyDisposable, int>.Null));
         }
 
         [Fact]
@@ -259,9 +265,11 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Lift_NullObject()
+        public static void Lift_NullSelector()
         {
-            Assert.ThrowsArgNullEx("selector", () => Funk<AnyT, AnyResult>.Null.Lift(AnyT.Some));
+            Assert.ThrowsArgNullEx("selector", () =>
+                Funk<AnyT, AnyResult>.Null
+                    .Lift(AnyT.Some));
         }
 
         [Fact]
@@ -285,7 +293,9 @@ namespace Abc
         [Fact]
         public static void Lift2_NullObject()
         {
-            Assert.ThrowsArgNullEx("this", () => Funk<AnyT1, AnyT2, AnyResult>.Null.Lift(AnyT1.Some, AnyT2.Some));
+            Assert.ThrowsArgNullEx("this", () =>
+                Funk<AnyT1, AnyT2, AnyResult>.Null
+                    .Lift(AnyT1.Some, AnyT2.Some));
         }
 
         [Fact]
@@ -310,7 +320,9 @@ namespace Abc
         [Fact]
         public static void Lift3_NullObject()
         {
-            Assert.ThrowsArgNullEx("this", () => Funk<AnyT1, AnyT2, AnyT3, AnyResult>.Null.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some));
+            Assert.ThrowsArgNullEx("this", () =>
+                Funk<AnyT1, AnyT2, AnyT3, AnyResult>.Null
+                    .Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some));
         }
 
         [Fact]
@@ -336,7 +348,9 @@ namespace Abc
         [Fact]
         public static void Lift4_NullObject()
         {
-            Assert.ThrowsArgNullEx("this", () => Funk<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult>.Null.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
+            Assert.ThrowsArgNullEx("this", () =>
+                Funk<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult>.Null
+                    .Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
         }
 
         [Fact]
@@ -363,7 +377,9 @@ namespace Abc
         [Fact]
         public static void Lift5_NullObject()
         {
-            Assert.ThrowsArgNullEx("this", () => Funk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult>.Null.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.ThrowsArgNullEx("this", () =>
+                Funk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult>.Null
+                    .Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
         }
 
         [Fact]
