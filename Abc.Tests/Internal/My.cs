@@ -25,16 +25,4 @@ internal static class My
         OneTwo = One | Two,
         OneTwoFour = One | Two | Four
     }
-
-    public sealed class Disposable : IDisposable
-    {
-        public Disposable() { }
-
-        public bool WasDisposed { get; private set; }
-
-        public void Dispose()
-        {
-            WasDisposed = true;
-        }
-    }
 }

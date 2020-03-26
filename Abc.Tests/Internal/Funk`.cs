@@ -38,3 +38,33 @@ internal static class Funk<T1, T2, TResult>
 
     public static readonly Func<T1, T2, Task<TResult>> AnyAsync = (x, y) => default!;
 }
+
+internal static class Funk<T1, T2, T3, TResult>
+    where T1 : notnull
+    where T2 : notnull
+    where T3 : notnull
+    where TResult : notnull
+{
+    public static readonly Func<T1, T2, T3, TResult> Null = default!;
+}
+
+internal static class Funk<T1, T2, T3, T4, TResult>
+    where T1 : notnull
+    where T2 : notnull
+    where T3 : notnull
+    where T4 : notnull
+    where TResult : notnull
+{
+    public static readonly Func<T1, T2, T3, T4, TResult> Null = default!;
+}
+
+internal static class Funk<T1, T2, T3, T4, T5, TResult>
+    where T1 : notnull
+    where T2 : notnull
+    where T3 : notnull
+    where T4 : notnull
+    where T5 : notnull
+    where TResult : notnull
+{
+    public static readonly Func<T1, T2, T3, T4, T5, TResult> Null = default!;
+}

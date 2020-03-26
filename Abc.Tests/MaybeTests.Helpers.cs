@@ -147,10 +147,7 @@ namespace Abc
         [Fact]
         public static void Invoke_NullObject()
         {
-            // Arrange
-            Func<AnyT, Maybe<AnyResult>> f = null!;
-            // Act & Assert
-            Assert.ThrowsArgNullEx("binder", () => f.Invoke(AnyT.Some));
+            Assert.ThrowsArgNullEx("binder", () => Kunc<AnyT, AnyResult>.Null.Invoke(AnyT.Some));
         }
 
         [Fact]
@@ -215,25 +212,25 @@ namespace Abc
         public static void Use_NullBinder()
         {
             // Arrange
-            var source = Maybe.Of(new My.Disposable());
+            var source = Maybe.Of(new AnyDisposable());
             // Act & Assert
-            Assert.ThrowsArgNullEx("binder", () => source.Use(default(Func<My.Disposable, Maybe<int>>)!));
+            Assert.ThrowsArgNullEx("binder", () => source.Use(default(Func<AnyDisposable, Maybe<int>>)!));
         }
 
         [Fact]
         public static void Use_NullSelector()
         {
             // Arrange
-            var source = Maybe.Of(new My.Disposable());
+            var source = Maybe.Of(new AnyDisposable());
             // Act & Assert
-            Assert.ThrowsArgNullEx("selector", () => source.Use(default(Func<My.Disposable, int>)!));
+            Assert.ThrowsArgNullEx("selector", () => source.Use(default(Func<AnyDisposable, int>)!));
         }
 
         [Fact]
         public static void Use_Bind()
         {
             // Arrange
-            var obj = new My.Disposable();
+            var obj = new AnyDisposable();
             var source = Maybe.Of(obj);
             // Act
             Maybe<int> result = source.Use(_ => Maybe.Some(1));
@@ -246,7 +243,7 @@ namespace Abc
         public static void Use_Select()
         {
             // Arrange
-            var obj = new My.Disposable();
+            var obj = new AnyDisposable();
             var source = Maybe.Of(obj);
             // Act
             Maybe<int> result = source.Use(_ => 1);
@@ -264,10 +261,7 @@ namespace Abc
         [Fact]
         public static void Lift_NullObject()
         {
-            // Arrange
-            Func<AnyT, AnyResult> source = null!;
-            // Act & Assert
-            Assert.ThrowsArgNullEx("selector", () => source.Lift(AnyT.Some));
+            Assert.ThrowsArgNullEx("selector", () => Funk<AnyT, AnyResult>.Null.Lift(AnyT.Some));
         }
 
         [Fact]
@@ -291,10 +285,7 @@ namespace Abc
         [Fact]
         public static void Lift2_NullObject()
         {
-            // Arrange
-            Func<AnyT1, AnyT2, AnyResult> source = null!;
-            // Act & Assert
-            Assert.ThrowsArgNullEx("this", () => source.Lift(AnyT1.Some, AnyT2.Some));
+            Assert.ThrowsArgNullEx("this", () => Funk<AnyT1, AnyT2, AnyResult>.Null.Lift(AnyT1.Some, AnyT2.Some));
         }
 
         [Fact]
@@ -319,10 +310,7 @@ namespace Abc
         [Fact]
         public static void Lift3_NullObject()
         {
-            // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyResult> source = null!;
-            // Act & Assert
-            Assert.ThrowsArgNullEx("this", () => source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some));
+            Assert.ThrowsArgNullEx("this", () => Funk<AnyT1, AnyT2, AnyT3, AnyResult>.Null.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some));
         }
 
         [Fact]
@@ -348,10 +336,7 @@ namespace Abc
         [Fact]
         public static void Lift4_NullObject()
         {
-            // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult> source = null!;
-            // Act & Assert
-            Assert.ThrowsArgNullEx("this", () => source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
+            Assert.ThrowsArgNullEx("this", () => Funk<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult>.Null.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
         }
 
         [Fact]
@@ -378,10 +363,7 @@ namespace Abc
         [Fact]
         public static void Lift5_NullObject()
         {
-            // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult> source = null!;
-            // Act & Assert
-            Assert.ThrowsArgNullEx("this", () => source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.ThrowsArgNullEx("this", () => Funk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult>.Null.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
         }
 
         [Fact]
