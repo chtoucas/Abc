@@ -2,6 +2,8 @@
 
 namespace Abc.Utilities
 {
+    using System;
+    using System.Collections;
     using System.Collections.Generic;
 
     using Xunit;
@@ -11,8 +13,7 @@ namespace Abc.Utilities
     public static class NeverEndingIteratorTests
     {
         private static readonly AnyT Value;
-        private static readonly IEnumerator<AnyT> AsEnumerator;
-        private static readonly IEnumerable<AnyT> AsEnumerable;
+        private static readonly IEnumerable<AnyT> AsEnumerableT;
 
 #pragma warning disable CA1810 // Initialize reference type static fields inline
         static NeverEndingIteratorTests()
@@ -20,19 +21,37 @@ namespace Abc.Utilities
         {
             var anyT = AnyT.New();
             Value = anyT.Value;
-            AsEnumerator = anyT.Some.GetEnumerator();
-            AsEnumerable = anyT.Some.ToEnumerable();
+            AsEnumerableT = anyT.Some.ToEnumerable();
         }
+
+        private static IDisposable AsDisposable => (IDisposable)AsEnumerableT;
+        private static IEnumerator AsEnumerator => AsEnumerableT.GetEnumerator();
+        private static IEnumerator<AnyT> AsEnumeratorT => AsEnumerableT.GetEnumerator();
+        private static IEnumerable AsEnumerable => AsEnumerableT;
+
+        [Fact]
+        public static void GetEnumerator() => Assert.Same(AsEnumerableT, AsEnumerableT.GetEnumerator());
+
+        [Fact]
+        public static void GetEnumerator_Untyped() => Assert.Same(AsEnumerableT, AsEnumerable.GetEnumerator());
 
         // TODO: to be improved.
         // Current is in fact constant...
         [Fact]
-        public static void Current() => Assert.Same(Value, AsEnumerator.Current);
+        public static void Current() => Assert.Same(Value, AsEnumeratorT.Current);
 
         [Fact]
-        public static void GetEnumerator() => Assert.Same(AsEnumerable, AsEnumerable.GetEnumerator());
+        public static void Current_Untyped() => Assert.Same(Value, AsEnumerator.Current);
 
+        [Fact]
+        public static void MoveNext() => Assert.True(AsEnumerator.MoveNext());
+
+        // Reset() does nothing, in particular it does not throw.
         [Fact]
         public static void Reset() => AsEnumerator.Reset();
+
+        // Dispose() does nothing, in particular it does not throw.
+        [Fact]
+        public static void Dispose() => AsDisposable.Dispose();
     }
 }

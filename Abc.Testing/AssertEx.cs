@@ -42,6 +42,20 @@ namespace Abc
             Equal(argName, ex.ParamName);
         }
 
+        // Throws an ArgumentOutOfRangeException.
+        public static void ThrowsAoorEx(string argName, Action testCode)
+        {
+            ArgumentOutOfRangeException ex = Throws<ArgumentOutOfRangeException>(testCode);
+            Equal(argName, ex.ParamName);
+        }
+
+        // Throws an ArgumentOutOfRangeException.
+        public static void ThrowsAoorEx(string argName, Func<object> testCode)
+        {
+            ArgumentOutOfRangeException ex = Throws<ArgumentOutOfRangeException>(testCode);
+            Equal(argName, ex.ParamName);
+        }
+
 #pragma warning disable CA1034 // Nested types should not be visible
         public static class Async
 #pragma warning restore CA1034

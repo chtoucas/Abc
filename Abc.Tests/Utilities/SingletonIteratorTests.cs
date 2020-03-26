@@ -19,13 +19,11 @@ namespace Abc.Utilities
         static SingletonIteratorTests()
 #pragma warning restore CA1810
         {
-            Value = new AnyT();
+            Value = AnyT.Value;
             var some = Maybe.SomeOrNone(Value);
             AsEnumerator = some.GetEnumerator();
             AsList = (IList<AnyT>)some.ToEnumerable();
         }
-
-        private sealed class AnyT { public AnyT() { } }
 
         [Fact]
         public static void Count() => Assert.Equal(1, AsList.Count);
@@ -34,25 +32,37 @@ namespace Abc.Utilities
         public static void IsReadOnly() => Assert.True(AsList.IsReadOnly);
 
         [Fact]
+        public static void Indexer_Set()
+            => Assert.Throws<NotSupportedException>(() => AsList[1] = AnyT.Value);
+
+        [Fact]
+        public static void Indexer_Get_InvalidIndex()
+            => Assert.ThrowsAoorEx("index", () => AsList[1]);
+
+        [Fact]
+        public static void Indexer_Get()
+            => Assert.Equal(Value, AsList[0]);
+
+        [Fact]
         public static void Contains_OK() => Assert.True(AsList.Contains(Value));
 
         [Fact]
-        public static void Contains_KO() => Assert.False(AsList.Contains(new AnyT()));
+        public static void Contains_KO() => Assert.False(AsList.Contains(AnyT.Value));
 
         [Fact]
         public static void IndexOf_OK() => Assert.Equal(0, AsList.IndexOf(Value));
 
         [Fact]
-        public static void IndexOf_KO() => Assert.Equal(-1, AsList.IndexOf(new AnyT()));
+        public static void IndexOf_KO() => Assert.Equal(-1, AsList.IndexOf(AnyT.Value));
 
         [Fact]
-        public static void Add() => Assert.Throws<NotSupportedException>(() => AsList.Add(new AnyT()));
+        public static void Add() => Assert.Throws<NotSupportedException>(() => AsList.Add(AnyT.Value));
 
         [Fact]
         public static void Clear() => Assert.Throws<NotSupportedException>(() => AsList.Clear());
 
         [Fact]
-        public static void Insert() => Assert.Throws<NotSupportedException>(() => AsList.Insert(1, new AnyT()));
+        public static void Insert() => Assert.Throws<NotSupportedException>(() => AsList.Insert(1, AnyT.Value));
 
         [Fact]
         public static void Remove() => Assert.Throws<NotSupportedException>(() => AsList.Remove(Value));
