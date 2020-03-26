@@ -27,34 +27,34 @@ namespace Abc.Utilities
         public static void GetEnumerator()
         {
             // Arrange
-            IEnumerator<AnyT> enumerator = Iter.GetEnumerator();
+            IEnumerator<AnyT> it = Iter.GetEnumerator();
             // Act & Assert
-            Assert.Same(Iter, enumerator);
+            Assert.Same(Iter, it);
         }
 
         [Fact]
         public static void GetEnumerator_Untyped()
         {
             // Arrange
-            IEnumerator enumerator = Iter.GetEnumerator();
+            IEnumerator it = Iter.GetEnumerator();
             // Act & Assert
-            Assert.Same(Iter, enumerator);
+            Assert.Same(Iter, it);
         }
 
         [Fact]
         public static void Current()
         {
             // Arrange
-            IEnumerator<AnyT> enumerator = Iter.GetEnumerator();
+            IEnumerator<AnyT> it = Iter.GetEnumerator();
 
             // Act & Assert
-            // Even before MoveNext(), Current already returns Value.
-            Assert.Same(Value, enumerator.Current);
+            // Even before the first MoveNext(), Current already returns Value.
+            Assert.Same(Value, it.Current);
 
             for (int i = 0; i < 100; i++)
             {
-                Assert.True(enumerator.MoveNext());
-                Assert.Same(Value, enumerator.Current);
+                Assert.True(it.MoveNext());
+                Assert.Same(Value, it.Current);
             }
         }
 
@@ -62,16 +62,16 @@ namespace Abc.Utilities
         public static void Current_Untyped()
         {
             // Arrange
-            IEnumerator enumerator = Iter.GetEnumerator();
+            IEnumerator it = Iter.GetEnumerator();
 
             // Act & Assert
-            // Even before MoveNext(), Current already returns Value.
-            Assert.Same(Value, enumerator.Current);
+            // Even before the first MoveNext(), Current already returns Value.
+            Assert.Same(Value, it.Current);
 
             for (int i = 0; i < 100; i++)
             {
-                Assert.True(enumerator.MoveNext());
-                Assert.Same(Value, enumerator.Current);
+                Assert.True(it.MoveNext());
+                Assert.Same(Value, it.Current);
             }
         }
 
@@ -79,31 +79,31 @@ namespace Abc.Utilities
         public static void MoveNext()
         {
             // Arrange
-            IEnumerator enumerator = Iter.GetEnumerator();
+            IEnumerator it = Iter.GetEnumerator();
             // Act & Assert
-            Assert.True(enumerator.MoveNext());
+            Assert.True(it.MoveNext());
         }
 
         [Fact]
         public static void Reset()
         {
             // Arrange
-            IEnumerator enumerator = Iter.GetEnumerator();
+            IEnumerator it = Iter.GetEnumerator();
 
             // Act & Assert
             for (int i = 0; i < 100; i++)
             {
-                Assert.True(enumerator.MoveNext());
-                Assert.Same(Value, enumerator.Current);
+                Assert.True(it.MoveNext());
+                Assert.Same(Value, it.Current);
             }
 
             // Reset() does nothing.
-            enumerator.Reset();
+            it.Reset();
 
             for (int i = 0; i < 100; i++)
             {
-                Assert.True(enumerator.MoveNext());
-                Assert.Same(Value, enumerator.Current);
+                Assert.True(it.MoveNext());
+                Assert.Same(Value, it.Current);
             }
         }
 
@@ -111,22 +111,22 @@ namespace Abc.Utilities
         public static void Dispose()
         {
             // Arrange
-            IEnumerator<AnyT> enumerator = Iter.GetEnumerator();
+            IEnumerator<AnyT> it = Iter.GetEnumerator();
 
             // Act & Assert
             for (int i = 0; i < 100; i++)
             {
-                Assert.True(enumerator.MoveNext());
-                Assert.Same(Value, enumerator.Current);
+                Assert.True(it.MoveNext());
+                Assert.Same(Value, it.Current);
             }
 
             // Dispose() does nothing.
-            enumerator.Dispose();
+            it.Dispose();
 
             for (int i = 0; i < 100; i++)
             {
-                Assert.True(enumerator.MoveNext());
-                Assert.Same(Value, enumerator.Current);
+                Assert.True(it.MoveNext());
+                Assert.Same(Value, it.Current);
             }
         }
     }
