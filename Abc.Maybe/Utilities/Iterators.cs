@@ -57,9 +57,7 @@ namespace Abc.Utilities
             _element = element;
         }
 
-        public int Count => 1;
-
-        public bool IsReadOnly => true;
+        #region IList<T>
 
         public T this[int index]
         {
@@ -67,23 +65,39 @@ namespace Abc.Utilities
             set => throw EF.ReadOnlyCollection;
         }
 
+        public int IndexOf(T item)
+            => EqualityComparer<T>.Default.Equals(item, _element) ? 0 : -1;
+
+        public void Insert(int index, T item) => throw EF.ReadOnlyCollection;
+        public void RemoveAt(int index) => throw EF.ReadOnlyCollection;
+
+        #endregion
+
+        #region ICollection<T>
+
+        public int Count => 1;
+
+        public bool IsReadOnly => true;
+
+        public void Add(T item) => throw EF.ReadOnlyCollection;
+        public void Clear() => throw EF.ReadOnlyCollection;
+
         public bool Contains(T item)
             => EqualityComparer<T>.Default.Equals(item, _element);
 
         public void CopyTo(T[] array, int arrayIndex)
             => array[arrayIndex] = _element;
 
-        public int IndexOf(T item)
-            => EqualityComparer<T>.Default.Equals(item, _element) ? 0 : -1;
-
-        public void Add(T item) => throw EF.ReadOnlyCollection;
-        public void Clear() => throw EF.ReadOnlyCollection;
-        public void Insert(int index, T item) => throw EF.ReadOnlyCollection;
         public bool Remove(T item) => throw EF.ReadOnlyCollection;
-        public void RemoveAt(int index) => throw EF.ReadOnlyCollection;
+
+        #endregion
+
+        #region IEnumerable<T>
 
         public IEnumerator<T> GetEnumerator() => this;
         IEnumerator IEnumerable.GetEnumerator() => this;
+
+        #endregion
 
         #region IEnumerator<T>
 
