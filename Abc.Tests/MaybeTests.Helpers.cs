@@ -46,6 +46,7 @@ namespace Abc
 
         [Fact]
         public static void Zero() => Assert.None(Maybe.Zero);
+
         [Fact]
         public static void Guard()
         {
@@ -144,7 +145,7 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Invoke_NullThis()
+        public static void Invoke_NullObject()
         {
             // Arrange
             Func<AnyT, Maybe<AnyResult>> f = null!;
@@ -173,7 +174,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void Compose_NullThis()
+        public static void Compose_NullObject()
         {
             Assert.ThrowsArgNullEx("this", () => Kunc<AnyT1, AnyT2>.Null.Compose(Kunc<AnyT2, AnyResult>.Any));
         }
@@ -189,7 +190,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void ComposeBack_NullThis()
+        public static void ComposeBack_NullObject()
         {
             Assert.ThrowsArgNullEx("other", () => Kunc<AnyT2, AnyResult>.Any.ComposeBack(Kunc<AnyT1, AnyT2>.Null));
         }
@@ -261,7 +262,7 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Lift_NullThis()
+        public static void Lift_NullObject()
         {
             // Arrange
             Func<AnyT, AnyResult> source = null!;
@@ -288,7 +289,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void Lift2_NullThis()
+        public static void Lift2_NullObject()
         {
             // Arrange
             Func<AnyT1, AnyT2, AnyResult> source = null!;
@@ -316,7 +317,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void Lift3_NullThis()
+        public static void Lift3_NullObject()
         {
             // Arrange
             Func<AnyT1, AnyT2, AnyT3, AnyResult> source = null!;
@@ -345,7 +346,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void Lift4_NullThis()
+        public static void Lift4_NullObject()
         {
             // Arrange
             Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult> source = null!;
@@ -375,7 +376,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void Lift5_NullThis()
+        public static void Lift5_NullObject()
         {
             // Arrange
             Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult> source = null!;

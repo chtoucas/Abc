@@ -2,7 +2,6 @@
 
 namespace Abc.Utilities
 {
-    using System;
     using System.Collections.Generic;
 
     using Xunit;
@@ -19,13 +18,11 @@ namespace Abc.Utilities
         static NeverEndingIteratorTests()
 #pragma warning restore CA1810
         {
-            Value = new AnyT();
-            var some = Maybe.SomeOrNone(Value);
-            AsEnumerator = some.GetEnumerator();
-            AsEnumerable = some.ToEnumerable();
+            var any = AnyT.New();
+            Value = any.Value;
+            AsEnumerator = any.Some.GetEnumerator();
+            AsEnumerable = any.Some.ToEnumerable();
         }
-
-        private sealed class AnyT { public AnyT() { } }
 
         // TODO: to be improved.
         // Current is in fact constant...
