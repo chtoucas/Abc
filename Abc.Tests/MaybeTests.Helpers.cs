@@ -156,7 +156,7 @@ namespace Abc
         public static void Invoke_WithNone()
         {
             // Arrange
-            Func<AnyT, Maybe<AnyResult>> f = x => AnyResult.Some;
+            var f = Thunk<AnyT>.Const(AnyResult.Some);
             // Act & Assert
             Assert.None(f.Invoke(AnyT.None));
         }
@@ -165,8 +165,8 @@ namespace Abc
         public static void Invoke_WithSome()
         {
             // Arrange
-            Func<AnyT1, Maybe<AnyResult>> f = x => AnyResult.Some;
-            Func<AnyT1, Maybe<AnyResult>> g = x => AnyResult.None;
+            var f = Thunk<AnyT1>.Const(AnyResult.Some);
+            var g = Thunk<AnyT1>.Const(AnyResult.None);
             // Act & Assert
             Assert.Some(AnyResult.Value, f.Invoke(AnyT1.Some));
             Assert.None(g.Invoke(AnyT1.Some));
@@ -184,8 +184,8 @@ namespace Abc
         public static void Compose()
         {
             // Arrange
-            Func<AnyT1, Maybe<AnyT2>> f = x => AnyT2.Some;
-            Func<AnyT2, Maybe<AnyResult>> g = x => AnyResult.Some;
+            var f = Thunk<AnyT1>.Const(AnyT2.Some);
+            var g = Thunk<AnyT2>.Const(AnyResult.Some);
             // Act & Assert
             Assert.Some(AnyResult.Value, f.Compose(g)(AnyT1.Value));
         }
@@ -202,8 +202,8 @@ namespace Abc
         public static void ComposeBack()
         {
             // Arrange
-            Func<AnyT1, Maybe<AnyT2>> f = x => AnyT2.Some;
-            Func<AnyT2, Maybe<AnyResult>> g = x => AnyResult.Some;
+            var f = Thunk<AnyT1>.Const(AnyT2.Some);
+            var g = Thunk<AnyT2>.Const(AnyResult.Some);
             // Act & Assert
             Assert.Some(AnyResult.Value, g.ComposeBack(f)(AnyT1.Value));
         }
@@ -276,7 +276,7 @@ namespace Abc
         public static void Lift_WithNone()
         {
             // Arrange
-            Func<AnyT, AnyResult> source = x => AnyResult.Value;
+            var source = Thunk<AnyT>.Const(AnyResult.Value);
             // Act & Assert
             Assert.None(source.Lift(AnyT.None));
         }
@@ -285,7 +285,7 @@ namespace Abc
         public static void Lift_WithSome()
         {
             // Arrange
-            Func<AnyT, AnyResult> source = x => AnyResult.Value;
+            var source = Thunk<AnyT>.Const(AnyResult.Value);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Lift(AnyT.Some));
         }
@@ -302,7 +302,7 @@ namespace Abc
         public static void Lift2_WithNone()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyResult> source = (x, y) => AnyResult.Value;
+            var source = Thunk<AnyT1, AnyT2>.Const(AnyResult.Value);
             // Act & Assert
             Assert.None(source.Lift(AnyT1.None, AnyT2.Some));
             Assert.None(source.Lift(AnyT1.Some, AnyT2.None));
@@ -312,7 +312,7 @@ namespace Abc
         public static void Lift2_WithSome()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyResult> source = (x, y) => AnyResult.Value;
+            var source = Thunk<AnyT1, AnyT2>.Const(AnyResult.Value);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Lift(AnyT1.Some, AnyT2.Some));
         }
@@ -329,7 +329,7 @@ namespace Abc
         public static void Lift3_WithNone()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyResult> source = (x, y, z) => AnyResult.Value;
+            var source = Thunk<AnyT1, AnyT2, AnyT3>.Const(AnyResult.Value);
             // Act & Assert
             Assert.None(source.Lift(AnyT1.None, AnyT2.Some, AnyT3.Some));
             Assert.None(source.Lift(AnyT1.Some, AnyT2.None, AnyT3.Some));
@@ -340,7 +340,7 @@ namespace Abc
         public static void Lift3_WithSome()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyResult> source = (x, y, z) => AnyResult.Value;
+            var source = Thunk<AnyT1, AnyT2, AnyT3>.Const(AnyResult.Value);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some));
         }
@@ -357,7 +357,7 @@ namespace Abc
         public static void Lift4_WithNone()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult> source = (x, y, z, a) => AnyResult.Value;
+            var source = Thunk<AnyT1, AnyT2, AnyT3, AnyT4>.Const(AnyResult.Value);
             // Act & Assert
             Assert.None(source.Lift(AnyT1.None, AnyT2.Some, AnyT3.Some, AnyT4.Some));
             Assert.None(source.Lift(AnyT1.Some, AnyT2.None, AnyT3.Some, AnyT4.Some));
@@ -369,7 +369,7 @@ namespace Abc
         public static void Lift4_WithSome()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult> source = (x, y, z, a) => AnyResult.Value;
+            var source = Thunk<AnyT1, AnyT2, AnyT3, AnyT4>.Const(AnyResult.Value);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
         }
@@ -386,7 +386,7 @@ namespace Abc
         public static void Lift5_WithNone()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult> source = (x, y, z, a, b) => AnyResult.Value;
+            var source = Thunk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5>.Const(AnyResult.Value);
             // Act & Assert
             Assert.None(source.Lift(AnyT1.None, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
             Assert.None(source.Lift(AnyT1.Some, AnyT2.None, AnyT3.Some, AnyT4.Some, AnyT5.Some));
@@ -399,7 +399,7 @@ namespace Abc
         public static void Lift5_WithSome()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult> source = (x, y, z, a, b) => AnyResult.Value;
+            var source = Thunk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5>.Const(AnyResult.Value);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
         }
@@ -423,7 +423,7 @@ namespace Abc
         public static void Invoke_Some()
         {
             // Arrange
-            Func<AnyT, AnyResult> f = x => AnyResult.Value;
+            var f = Thunk<AnyT>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Invoke(AnyT.Value));
@@ -442,7 +442,7 @@ namespace Abc
         public static void Invoke2_Some()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyResult> f = (x, y) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Invoke(AnyT1.Value, AnyT2.Value));
@@ -461,7 +461,7 @@ namespace Abc
         public static void Invoke3_Some()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyResult> f = (x, y, z) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2, AnyT3>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value));
@@ -480,7 +480,7 @@ namespace Abc
         public static void Invoke4_Some()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult> f = (x, y, z, a) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2, AnyT3, AnyT4>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value));
@@ -499,7 +499,7 @@ namespace Abc
         public static void Invoke5_Some()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult> f = (x, y, z, a, b) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value, AnyT5.Value));
@@ -523,7 +523,7 @@ namespace Abc
         public static void Apply_Some_WithNone()
         {
             // Arrange
-            Func<AnyT, AnyResult> f = x => AnyResult.Value;
+            var f = Thunk<AnyT>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.None(source.Apply(AnyT.None));
@@ -533,7 +533,7 @@ namespace Abc
         public static void Apply_Some_WithSome()
         {
             // Arrange
-            Func<AnyT, AnyResult> f = x => AnyResult.Value;
+            var f = Thunk<AnyT>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Apply(AnyT.Some));
@@ -554,7 +554,7 @@ namespace Abc
         public static void Apply2_Some_WithNone()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyResult> f = (x, y) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.None(source.Apply(AnyT1.None, AnyT2.Some));
@@ -565,7 +565,7 @@ namespace Abc
         public static void Apply2_Some_WithSome()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyResult> f = (x, y) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Apply(AnyT1.Some, AnyT2.Some));
@@ -587,7 +587,7 @@ namespace Abc
         public static void Apply3_Some_WithNone()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyResult> f = (x, y, z) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2, AnyT3>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.None(source.Apply(AnyT1.None, AnyT2.Some, AnyT3.Some));
@@ -599,7 +599,7 @@ namespace Abc
         public static void Apply3_Some_WithSome()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyResult> f = (x, y, z) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2, AnyT3>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some));
@@ -622,7 +622,7 @@ namespace Abc
         public static void Apply4_Some_WithNone()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult> f = (x, y, z, a) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2, AnyT3, AnyT4>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.None(source.Apply(AnyT1.None, AnyT2.Some, AnyT3.Some, AnyT4.Some));
@@ -635,7 +635,7 @@ namespace Abc
         public static void Apply4_Some_WithSome()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult> f = (x, y, z, a) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2, AnyT3, AnyT4>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
@@ -659,7 +659,7 @@ namespace Abc
         public static void Apply5_Some_WithNone()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult> f = (x, y, z, a, b) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.None(source.Apply(AnyT1.None, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
@@ -673,7 +673,7 @@ namespace Abc
         public static void Apply5_Some_WithSome()
         {
             // Arrange
-            Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult> f = (x, y, z, a, b) => AnyResult.Value;
+            var f = Thunk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
             Assert.Some(AnyResult.Value, source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
