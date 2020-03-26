@@ -174,13 +174,15 @@ namespace Abc
     public partial class Maybe
     {
         /// <summary>
-        /// Represents the unit for the type <see cref="Maybe{Unit}"/>.
+        /// Represents the unit for the type <see cref="Maybe{T}"/> where
+        /// <c>T</c> is the <see cref="Abc.Unit"/> type.
         /// <para>This field is read-only.</para>
         /// </summary>
         public static readonly Maybe<Unit> Unit = Some(default(Unit));
 
         /// <summary>
-        /// Represents the zero for <see cref="Maybe{Unit}.Bind"/>.
+        /// Represents the zero for <see cref="Maybe{T}.Bind"/>where
+        /// <c>T</c> is the <see cref="Abc.Unit"/> type.
         /// <para>This field is read-only.</para>
         /// </summary>
         public static readonly Maybe<Unit> Zero = Maybe<Unit>.None;
@@ -199,19 +201,22 @@ namespace Abc
     public partial class Maybe
     {
         /// <summary>
-        /// Represents the unknown for the type <see cref="Maybe{Boolean}"/>.
+        /// Represents the unknown for the type <see cref="Maybe{T}"/> where
+        /// <c>T</c> is the <see cref="Boolean"/> type.
         /// <para>This field is read-only.</para>
         /// </summary>
         public static readonly Maybe<bool> Unknown = Maybe<bool>.None;
 
         /// <summary>
-        /// Represents the true for the type <see cref="Maybe{Boolean}"/>.
+        /// Represents the true for the type <see cref="Maybe{T}"/> where
+        /// <c>T</c> is the <see cref="Boolean"/> type.
         /// <para>This field is read-only.</para>
         /// </summary>
         public static readonly Maybe<bool> True = Some(true);
 
         /// <summary>
-        /// Represents the false for the type <see cref="Maybe{Boolean}"/>.
+        /// Represents the false for the type <see cref="Maybe{T}"/> where
+        /// <c>T</c> is the <see cref="Boolean"/> type.
         /// <para>This field is read-only.</para>
         /// </summary>
         public static readonly Maybe<bool> False = Some(false);
