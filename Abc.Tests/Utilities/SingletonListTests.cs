@@ -221,6 +221,12 @@ namespace Abc.Utilities
     public partial class SingletonListTests
     {
         [Fact]
+        public static void GetEnumerator()
+        {
+            Assert.NotSame(Iter.GetEnumerator(), Iter.GetEnumerator());
+        }
+
+        [Fact]
         public static void Iterate()
         {
             // Arrange

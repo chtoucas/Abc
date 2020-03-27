@@ -21,10 +21,7 @@ namespace Abc
         private static readonly NumberFormatInfo s_EmptyNfi = new NumberFormatInfo();
 
         private static readonly NumberFormatInfo s_CurrencyNfi
-            = new NumberFormatInfo()
-            {
-                CurrencySymbol = "$",
-            };
+            = new NumberFormatInfo() { CurrencySymbol = "$", };
 
         [Fact]
         public static void ParseXXX_None()
@@ -576,14 +573,107 @@ namespace Abc
     // ParseDateTime() & ParseDateTimeExactly().
     public partial class MayTests
     {
-        [Fact]
-        public static void ParseDateTime_None()
-        {
-            Assert.None(May.ParseDateTime(null));
-            Assert.None(May.ParseDateTime("XXX"));
+        // Adapted from
+        // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Runtime/tests/System/DateTimeTests.cs
 
-            Assert.None(May.ParseDateTime(null, CultureInfo.CurrentCulture, DateTimeStyles.None));
-            Assert.None(May.ParseDateTime("XXX", CultureInfo.CurrentCulture, DateTimeStyles.None));
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("  ")]
+        [InlineData("   ")]
+        public static void ParseDateTime_NullOrWhiteSpace(string input)
+        {
+            Assert.None(May.ParseDateTime(input));
+            Assert.None(May.ParseDateTime(input, new MyFormatter(), DateTimeStyles.None));
+        }
+
+        [Fact]
+        public static void ParseDateTimeExact_InvalidArgs()
+        {
+            Assert.None(May.ParseDateTimeExactly(null, "d", new MyFormatter(), DateTimeStyles.None));
+            Assert.None(May.ParseDateTimeExactly(null, "d", new MyFormatter(), DateTimeStyles.None));
+            Assert.None(May.ParseDateTimeExactly(null, new[] { "d" }, new MyFormatter(), DateTimeStyles.None));
+
+            Assert.None(May.ParseDateTimeExactly("", "d", new MyFormatter(), DateTimeStyles.None));
+            Assert.None(May.ParseDateTimeExactly("", new[] { "d" }, new MyFormatter(), DateTimeStyles.None));
+
+            Assert.None(May.ParseDateTimeExactly("abc", (string?)null, new MyFormatter(), DateTimeStyles.None));
+            Assert.None(May.ParseDateTimeExactly("abc", (string[]?)null, new MyFormatter(), DateTimeStyles.None));
+
+            Assert.None(May.ParseDateTimeExactly("abc", "", new MyFormatter(), DateTimeStyles.None));
+            Assert.None(May.ParseDateTimeExactly("abc", Array.Empty<string>(), new MyFormatter(), DateTimeStyles.None));
+            Assert.None(May.ParseDateTimeExactly("abc", new string?[] { null }, new MyFormatter(), DateTimeStyles.None));
+            Assert.None(May.ParseDateTimeExactly("abc", new[] { "" }, new MyFormatter(), DateTimeStyles.None));
+            Assert.None(May.ParseDateTimeExactly("abc", new[] { "" }, new MyFormatter(), DateTimeStyles.None));
+        }
+
+#pragma warning disable CA1305 // Specify IFormatProvider
+
+        [Fact(Skip = "Formatting problem: .9999999 / .0000000.")]
+        public static void ParseDateTime_String()
+        {
+            var exp = DateTime.MaxValue;
+            string input = exp.ToString("g");
+
+            Assert.Some(exp, May.ParseDateTime(input));
+
+            //DateTime result;
+            //Assert.True(DateTime.TryParse(expectedString, out result));
+            //Assert.Equal(expectedString, result.ToString("g"));
+        }
+
+        [Fact(Skip = "Formatting problem: .9999999 / .0000000.")]
+        public static void ParseDateTime_String_FormatProvider_DateTimeStyles_U()
+        {
+            var exp = DateTime.MaxValue;
+            string input = exp.ToString("u");
+
+            Assert.Some(exp,
+                May.ParseDateTime(input, null, DateTimeStyles.AdjustToUniversal));
+
+            //DateTime result;
+            //Assert.True(DateTime.TryParse(expectedString, null, DateTimeStyles.AdjustToUniversal, out result));
+            //Assert.Equal(expectedString, result.ToString("u"));
+        }
+
+        [Fact(Skip = "Formatting problem: .9999999 / .0000000Z.")]
+        public static void ParseDateTime_String_FormatProvider_DateTimeStyles_G()
+        {
+            var exp = DateTime.MaxValue;
+            string input = exp.ToString("g");
+
+            Assert.Some(exp,
+                May.ParseDateTime(input, null, DateTimeStyles.AdjustToUniversal));
+
+            //DateTime result;
+            //Assert.True(DateTime.TryParse(expectedString, null, DateTimeStyles.AdjustToUniversal, out result));
+            //Assert.Equal(expectedString, result.ToString("g"));
+        }
+
+#pragma warning restore CA1305
+
+        //[Fact]
+        //public static void ParseDateTime_TimeDesignators_NetCore()
+        //{
+        //    DateTime result;
+        //    Assert.True(DateTime.TryParse("4/21 5am", new CultureInfo("en-US"), DateTimeStyles.None, out result));
+        //    Assert.Equal(4, result.Month);
+        //    Assert.Equal(21, result.Day);
+        //    Assert.Equal(5, result.Hour);
+
+        //    Assert.True(DateTime.TryParse("4/21 5pm", new CultureInfo("en-US"), DateTimeStyles.None, out result));
+        //    Assert.Equal(4, result.Month);
+        //    Assert.Equal(21, result.Day);
+        //    Assert.Equal(17, result.Hour);
+        //}
+
+        private class MyFormatter : IFormatProvider
+        {
+            public object? GetFormat(Type? formatType)
+            {
+                return typeof(IFormatProvider) == formatType ? this : null;
+            }
         }
     }
 

@@ -1193,8 +1193,10 @@ namespace Abc
         [Fact]
         public static void GetEnumerator_None()
         {
-            foreach (string _ in NoText) { Assert.True(false); }
-            foreach (string _ in NoText) { Assert.True(false); }
+            foreach (string _ in NoText)
+            {
+                Assert.True(false, "An empty maybe should create an empty iterator.");
+            }
 
             // Using an explicit iterator.
             var iter = NoText.GetEnumerator();
