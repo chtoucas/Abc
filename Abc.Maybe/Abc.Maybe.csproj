@@ -6,8 +6,12 @@
     <!-- See explanations in Abc.csproj -->
     <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
 
-    <VersionPrefix>1.0.0-alpha.1</VersionPrefix>
-    <PackageTags>option;maybe;LINQ</PackageTags>
+    <PackageId>Abc.Maybe</PackageId>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <PackageTags>Option;Maybe;LINQ</PackageTags>
+    <Description>
+      A rich Option type for C#.
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>

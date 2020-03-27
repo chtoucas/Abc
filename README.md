@@ -402,6 +402,8 @@ the inability to return a meaningful result.
 Version History
 ---------------
 
+1.0.0-alpha-1 (27/03/2020)
+
 0.28.0 Still available on nuget.org under a different name (Narvalo.Fx).
        Deprecated, broken, do not use it.
 
@@ -417,10 +419,13 @@ Developer Notes
 - Seal classes unless they are designed with extensibility in mind.
 - Tag any use of the null-forgiving operator (!) with `BONSANG!`.
 
+### Package
+
+Three targets: .NET Standard 2.0, .NET Standard 2.1 w/ nullable annotations
+and .NET Core 3.1.
+
 ### TODOs
 
-- Target .NET Standard 2.1 too to be able to distribute a version with nullable
-  annotations?
 - Tests & code coverage (coverlet). Currently, there are many cases where we
   don't go beyond smoke tests.
 - XML comments with complete examples.
