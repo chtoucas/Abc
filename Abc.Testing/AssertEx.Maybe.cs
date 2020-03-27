@@ -23,9 +23,6 @@ namespace Abc
         /// </summary>
         public static void Some<T>(T exp, Maybe<T> maybe)
         {
-            // FIXME: Contains()
-            //True(maybe.Contains(exp));
-
             False(maybe.IsNone, "The maybe should not be empty.");
 
             if (maybe.IsSome)
@@ -33,6 +30,9 @@ namespace Abc
                 // BONSANG! When IsSome is true, Value is NOT null.
                 Equal(exp, maybe.Value!);
             }
+
+            // We also test Contains().
+            True(maybe.Contains(exp));
         }
 
         /// <summary>

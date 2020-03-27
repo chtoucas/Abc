@@ -609,8 +609,15 @@ namespace Abc
 
 #pragma warning disable CA1305 // Specify IFormatProvider
 
-        // REVIEW: fails on Equal().
-        //   Assert.Some(exp, May.ParseDateTime(input));
+        // Beware, ParseDateTime() is not exact therefore we must be careful.
+        //   string input = dateTime.ToString(XXX);
+        //   var maybe = May.ParseDateTime(input);
+        // We can not write:
+        //   Assert.Some(dateTime, May.ParseDateTime(input));
+        // the equality test can fail.
+        // We should write instead:
+        //   Assert.Some(maybe);
+        //   maybe.OnSome(x => Assert.Equal(input, x.ToString(XXX)));
 
         [Fact]
         public static void ParseDateTime_String()

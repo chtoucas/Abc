@@ -1,12 +1,16 @@
 # Abécédaire
 
+![Code Coverage](coverage.svg)
+
 `Abc` features a rich option type for C#.
 
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
 - [Developer Notes](#developer-notes)
 
-![Code Coverage](coverage.svg)
+#### Status: unstable
+- The API should be pretty stable except (maybe) for the LINQ extensions.
+- Testing is well underway but there is still a lot to be done.
 
 Quick Start with `Maybe<T>`
 ---------------------------
@@ -367,6 +371,8 @@ When tempted to do so, we should think harder, most certainly there is a better
 design. It is also dubious to see a method returning a _maybe_ when the method
 has no reason to fail. On a side note, do not replace exceptions with _maybe_'s
 when the error is actually "exceptional".
+
+(TODO: input not OK -> NRT, output OK)
 
 In general, I would not even recommend to expose `Maybe<T>` in a general purpose
 library. For instance, returning a _maybe_ raises the concern that unexperienced
