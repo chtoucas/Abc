@@ -890,24 +890,28 @@ namespace Abc
             => _isSome ? Maybe.Unit : Maybe.Zero;
     }
 
-    // Iterable but not IEnumerable<>.
+    // Iterable but **not** IEnumerable<>.
     // 1) A maybe is indeed a collection but a rather trivial one.
     // 2) Maybe<T> being a struct, I worry about hidden casts.
     // 3) Source of confusion (conflicts?) if we import System.Linq too.
     // Furthermore, this type does NOT implement the whole Query Expression
     // Pattern.
+    //
+    // Supporting "foreach" is a bit odd but it is not if we realize that
+    // a maybe is just a set (singleton or empty).
+    // Four ways of doing the "same" thing:
+    // - Using an implicit iterator (no opportunity for "onNone"):
+    //     foreach (var x in maybe) { action(x); }
+    // - Using an explicit iterator:
+    //     var iter = maybe.GetEnumerator();
+    //     if (iter.MoveNext()) { action(iter.Current); } else { onNone(); }
+    // - Using Do() or OnSome():
+    //     maybe.Do(action, onNone);
+    //     maybe.OnSome(action);
+    // - Using TryGetValue():
+    //     if (maybe.TryGetValue(out T value)) { action(value); } else { onNone(); }
     public partial struct Maybe<T>
     {
-        // Supporting "foreach" is a bit odd but sometimes rather than:
-        //   foreach (var x in maybe) { action(x); }
-        // I prefer to write:
-        //   maybe.OnSome(action);
-        // or even better ("using" is not necessary here):
-        //   var iter = maybe.GetEnumerator();
-        //   if (iter.MoveNext()) { onSome(iter.Current); } else { onNone(); }
-        // It is less weird if we realize that a maybe is just a set (singleton
-        // or empty).
-        // See also TryGetValue().
         [Pure]
         public IEnumerator<T> GetEnumerator()
             // BONSANG! When _isSome is true, _value is NOT null.
@@ -917,14 +921,14 @@ namespace Abc
         /// <summary>
         /// Converts the current instance to <see cref="IEnumerable{T}"/>.
         /// </summary>
-        // Only useful if we want to manipulate a maybe together with another
+        // Really useful if we wish to manipulate a maybe together with another
         // sequence.
         [Pure]
         public IEnumerable<T> ToEnumerable()
             // BONSANG! When _isSome is true, _value is NOT null.
             => _isSome ? new SingletonList<T>(_value!) : Enumerable.Empty<T>();
 
-        // Beware, Yield() doesn't match the F# yield of computation expressions.
+        // Beware, Yield() doesn't match the yield from F# computation expressions.
 
         // Yield break or yield return "count" times.
         ///// See also <seealso cref="Replicate(int)"/> and the comments there.
@@ -932,7 +936,7 @@ namespace Abc
         public IEnumerable<T> Yield(int count)
             => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
-        // Beware, infinite loop!
+        // Beware, may create an infinite loop!
         ///// See also <seealso cref="Replicate()"/> and the comments there.
         [Pure]
         public IEnumerable<T> Yield()

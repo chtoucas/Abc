@@ -11,7 +11,7 @@ namespace Abc
 
     using Assert = AssertEx;
 
-    // TODO: real tests not just smoke tests.
+    // TODO: real tests not just smoke tests (see AnyT & co w/ functions).
 
     public static partial class MaybeTests
     {
