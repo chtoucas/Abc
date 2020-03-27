@@ -609,54 +609,37 @@ namespace Abc
 
 #pragma warning disable CA1305 // Specify IFormatProvider
 
-        // Beware, ParseDateTime() is not exact therefore we must be careful.
-        //   string input = dateTime.ToString(XXX);
-        //   var maybe = May.ParseDateTime(input);
-        // We can not write:
-        //   Assert.Some(dateTime, May.ParseDateTime(input));
-        // the equality test can fail.
-        // We should write instead:
-        //   Assert.Some(maybe);
-        //   maybe.OnSome(x => Assert.Equal(input, x.ToString(XXX)));
-
         [Fact]
         public static void ParseDateTime_String()
         {
             // Arrange
-            var exp = DateTime.MaxValue;
-            string input = exp.ToString("g");
+            string input = DateTime.MaxValue.ToString("g");
             // Act
             var maybe = May.ParseDateTime(input);
             // Assert
-            Assert.Some(maybe);
-            maybe.OnSome(x => Assert.Equal(input, x.ToString("g")));
-
+            CheckDateTime(input, "g", maybe);
         }
 
         [Fact]
         public static void ParseDateTime_String_FormatProvider_DateTimeStyles_U()
         {
             // Arrange
-            var exp = DateTime.MaxValue;
-            string input = exp.ToString("u");
+            string input = DateTime.MaxValue.ToString("u");
             // Act
             var maybe = May.ParseDateTime(input, null, DateTimeStyles.AdjustToUniversal);
             // Assert
-            Assert.Some(maybe);
-            maybe.OnSome(x => Assert.Equal(input, x.ToString("u")));
+            CheckDateTime(input, "u", maybe);
         }
 
         [Fact]
         public static void ParseDateTime_String_FormatProvider_DateTimeStyles_G()
         {
             // Arrange
-            var exp = DateTime.MaxValue;
-            string input = exp.ToString("g");
+            string input = DateTime.MaxValue.ToString("g");
             // Act
             var maybe = May.ParseDateTime(input, null, DateTimeStyles.AdjustToUniversal);
             // Assert
-            Assert.Some(maybe);
-            maybe.OnSome(x => Assert.Equal(input, x.ToString("g")));
+            CheckDateTime(input, "g", maybe);
         }
 
 #pragma warning restore CA1305
@@ -687,6 +670,77 @@ namespace Abc
                 }
             );
         }
+
+        public static TheoryData<string> StandardFormatSpecifiers
+            => new TheoryData<string>
+            {
+                { "d" },
+                { "D" },
+                { "f" },
+                { "F" },
+                { "g" },
+                { "G" },
+                { "m" },
+                { "M" },
+                { "o" },
+                { "O" },
+                { "r" },
+                { "R" },
+                { "s" },
+                { "t" },
+                { "T" },
+                { "u" },
+                { "U" },
+                { "y" },
+                { "Y" },
+            };
+
+#pragma warning disable CA1305 // Specify IFormatProvider
+
+        [Theory, MemberData(nameof(StandardFormatSpecifiers))]
+        public static void ParseDateTimeExact_ToStringThenParseExactRoundtrip(string fmt)
+        {
+            var r = new Random(42);
+            for (int i = 0; i < 200; i++) // test with a bunch of random dates
+            {
+                long ticks = DateTime.MinValue.Ticks
+                    + (long)(r.NextDouble() * (DateTime.MaxValue.Ticks - DateTime.MinValue.Ticks));
+                var dt = new DateTime(ticks, DateTimeKind.Unspecified);
+                string input = dt.ToString(fmt);
+
+                CheckDateTime(input, fmt,
+                    May.ParseDateTimeExactly(input, fmt, null, DateTimeStyles.None));
+
+                CheckDateTime(input, fmt,
+                    May.ParseDateTimeExactly(input, fmt, null, DateTimeStyles.AllowWhiteSpaces));
+
+                CheckDateTime(input, fmt,
+                    May.ParseDateTimeExactly(input, new[] { fmt }, null, DateTimeStyles.None));
+
+                CheckDateTime(input, fmt,
+                    May.ParseDateTimeExactly(input, new[] { fmt }, null, DateTimeStyles.AllowWhiteSpaces));
+
+                // Should also parse with Parse, though may not round trip exactly.
+                Assert.Some(May.ParseDateTime(input));
+            }
+        }
+
+        // REVIEW: Beware, we must be careful.
+        //   string input = dateTime.ToString(XXX);
+        //   var maybe = May.ParseDateTime(input);
+        // We can not write:
+        //   Assert.Some(dateTime, May.ParseDateTime(input));
+        // the equality test can fail.
+        // We should write instead:
+        //   Assert.Some(maybe);
+        //   maybe.OnSome(x => Assert.Equal(input, x.ToString(XXX)));
+        private static void CheckDateTime(string input, string fmt, Maybe<DateTime> maybe)
+        {
+            Assert.Some(maybe);
+            maybe.OnSome(x => Assert.Equal(input, x.ToString(fmt)));
+        }
+
+#pragma warning restore CA1305
 
         private class MyFormatter : IFormatProvider
         {
