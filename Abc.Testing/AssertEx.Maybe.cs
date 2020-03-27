@@ -26,15 +26,12 @@ namespace Abc
             // FIXME: Contains()
             //True(maybe.Contains(exp));
 
+            False(maybe.IsNone, "The maybe should not be empty.");
+
             if (maybe.IsSome)
             {
-                False(maybe.IsNone, "The maybe should not be empty."); // Sanity check
                 // BONSANG! When IsSome is true, Value is NOT null.
                 Equal(exp, maybe.Value!);
-            }
-            else
-            {
-                True(false, "The maybe should not be empty.");
             }
         }
 
