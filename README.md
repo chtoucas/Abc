@@ -425,5 +425,5 @@ Developer Notes
   don't go beyond smoke tests.
 - XML comments with complete examples.
 - NuGet package.
-- Perf tool.
+- Perf tool (LINQ, nulls).
 - Optimize LINQ ops.
