@@ -34,7 +34,7 @@ namespace Abc
             }
             else
             {
-                True(false, "The maybe is empty.");
+                True(false, "The maybe should not be empty.");
             }
         }
 
@@ -43,19 +43,19 @@ namespace Abc
         /// boolean context.
         /// </summary>
         public static void LogicalTrue<T>(Maybe<T> maybe)
-            => True(maybe.ToBoolean());
+            => True(maybe.ToBoolean(), "The maybe should evaluate to true.");
 
         /// <summary>
         /// Verifies that <paramref name="maybe"/> evaluates to false in a
         /// boolean context.
         /// </summary>
         public static void LogicalFalse<T>(Maybe<T> maybe)
-            => False(maybe.ToBoolean());
+            => False(maybe.ToBoolean(), "The maybe should evaluate to false.");
 
         /// <summary>
         /// Verifies that <paramref name="maybe"/> is <see cref="Maybe.Unknown"/>.
         /// </summary>
         public static void Unknown(Maybe<bool> maybe)
-            => True(maybe.IsNone);
+            => True(maybe.IsNone, "The maybe should be empty.");
     }
 }
