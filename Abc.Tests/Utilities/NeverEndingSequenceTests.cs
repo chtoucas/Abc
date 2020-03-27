@@ -23,7 +23,7 @@ namespace Abc.Utilities
             Iter = anyT.Some.Yield();
         }
 
-        [Fact]
+        [Fact(DisplayName = "GetEnumerator() always returns the same iterator.")]
         public static void GetEnumerator()
         {
             // Arrange
@@ -32,7 +32,7 @@ namespace Abc.Utilities
             Assert.Same(Iter, it);
         }
 
-        [Fact]
+        [Fact(DisplayName = "GetEnumerator() (untyped) always returns the same iterator.")]
         public static void GetEnumerator_Untyped()
         {
             // Arrange

@@ -220,7 +220,7 @@ namespace Abc.Utilities
     // IEnumerable<T>.
     public partial class SingletonListTests
     {
-        [Fact]
+        [Fact(DisplayName = "GetEnumerator() returns a new iterator.")]
         public static void GetEnumerator()
         {
             Assert.NotSame(Iter.GetEnumerator(), Iter.GetEnumerator());

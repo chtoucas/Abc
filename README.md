@@ -415,7 +415,8 @@ Developer Notes
 
 - Target .NET Standard 2.1 too to be able to distribute a version with nullable
   annotations?
-- Tests & code coverage (coverlet).
+- Tests & code coverage (coverlet). Currently, there are many cases where we
+  don't go beyond smoke tests.
 - XML comments with complete examples.
 - NuGet package.
 - Perf tool.
