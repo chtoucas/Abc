@@ -571,11 +571,10 @@ namespace Abc
     }
 
     // ParseDateTime() & ParseDateTimeExactly().
+    // Adapted from
+    // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Runtime/tests/System/DateTimeTests.cs
     public partial class MayTests
     {
-        // Adapted from
-        // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Runtime/tests/System/DateTimeTests.cs
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -589,7 +588,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void ParseDateTimeExact_InvalidArgs()
+        public static void ParseDateTimeExactly_InvalidArgs()
         {
             Assert.None(May.ParseDateTimeExactly(null, "d", new MyFormatter(), DateTimeStyles.None));
             Assert.None(May.ParseDateTimeExactly(null, "d", new MyFormatter(), DateTimeStyles.None));
@@ -610,63 +609,77 @@ namespace Abc
 
 #pragma warning disable CA1305 // Specify IFormatProvider
 
-        [Fact(Skip = "Formatting problem: .9999999 / .0000000.")]
+        // REVIEW: fails on Equal().
+        //   Assert.Some(exp, May.ParseDateTime(input));
+
+        [Fact]
         public static void ParseDateTime_String()
         {
+            // Arrange
             var exp = DateTime.MaxValue;
             string input = exp.ToString("g");
+            // Act
+            var maybe = May.ParseDateTime(input);
+            // Assert
+            Assert.Some(maybe);
+            maybe.OnSome(x => Assert.Equal(input, x.ToString("g")));
 
-            Assert.Some(exp, May.ParseDateTime(input));
-
-            //DateTime result;
-            //Assert.True(DateTime.TryParse(expectedString, out result));
-            //Assert.Equal(expectedString, result.ToString("g"));
         }
 
-        [Fact(Skip = "Formatting problem: .9999999 / .0000000.")]
+        [Fact]
         public static void ParseDateTime_String_FormatProvider_DateTimeStyles_U()
         {
+            // Arrange
             var exp = DateTime.MaxValue;
             string input = exp.ToString("u");
-
-            Assert.Some(exp,
-                May.ParseDateTime(input, null, DateTimeStyles.AdjustToUniversal));
-
-            //DateTime result;
-            //Assert.True(DateTime.TryParse(expectedString, null, DateTimeStyles.AdjustToUniversal, out result));
-            //Assert.Equal(expectedString, result.ToString("u"));
+            // Act
+            var maybe = May.ParseDateTime(input, null, DateTimeStyles.AdjustToUniversal);
+            // Assert
+            Assert.Some(maybe);
+            maybe.OnSome(x => Assert.Equal(input, x.ToString("u")));
         }
 
-        [Fact(Skip = "Formatting problem: .9999999 / .0000000Z.")]
+        [Fact]
         public static void ParseDateTime_String_FormatProvider_DateTimeStyles_G()
         {
+            // Arrange
             var exp = DateTime.MaxValue;
             string input = exp.ToString("g");
-
-            Assert.Some(exp,
-                May.ParseDateTime(input, null, DateTimeStyles.AdjustToUniversal));
-
-            //DateTime result;
-            //Assert.True(DateTime.TryParse(expectedString, null, DateTimeStyles.AdjustToUniversal, out result));
-            //Assert.Equal(expectedString, result.ToString("g"));
+            // Act
+            var maybe = May.ParseDateTime(input, null, DateTimeStyles.AdjustToUniversal);
+            // Assert
+            Assert.Some(maybe);
+            maybe.OnSome(x => Assert.Equal(input, x.ToString("g")));
         }
 
 #pragma warning restore CA1305
 
-        //[Fact]
-        //public static void ParseDateTime_TimeDesignators_NetCore()
-        //{
-        //    DateTime result;
-        //    Assert.True(DateTime.TryParse("4/21 5am", new CultureInfo("en-US"), DateTimeStyles.None, out result));
-        //    Assert.Equal(4, result.Month);
-        //    Assert.Equal(21, result.Day);
-        //    Assert.Equal(5, result.Hour);
-
-        //    Assert.True(DateTime.TryParse("4/21 5pm", new CultureInfo("en-US"), DateTimeStyles.None, out result));
-        //    Assert.Equal(4, result.Month);
-        //    Assert.Equal(21, result.Day);
-        //    Assert.Equal(17, result.Hour);
-        //}
+        [Fact]
+        public static void ParseDateTime_TimeDesignators_NetCore()
+        {
+            // Act
+            var am = May.ParseDateTime("4/21 5am", new CultureInfo("en-US"), DateTimeStyles.None);
+            var pm = May.ParseDateTime("4/21 5pm", new CultureInfo("en-US"), DateTimeStyles.None);
+            // Assert
+            Assert.Some(am);
+            am.OnSome(
+                x =>
+                {
+                    Assert.Equal(4, x.Month);
+                    Assert.Equal(21, x.Day);
+                    Assert.Equal(5, x.Hour);
+                }
+            );
+            Assert.Some(pm);
+            pm.OnSome(
+                x =>
+                {
+                    Assert.Equal(4, x.Month);
+                    Assert.Equal(21, x.Day);
+                    Assert.Equal(17, x.Hour);
+                }
+            );
+        }
 
         private class MyFormatter : IFormatProvider
         {
