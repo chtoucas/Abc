@@ -29,9 +29,6 @@ namespace Abc
         [Fact]
         public static void ParseXXX_None()
         {
-            Assert.None(May.ParseBoolean(null));
-            Assert.None(May.ParseBoolean("XXX"));
-
             Assert.None(May.ParseInt16(null));
             Assert.None(May.ParseInt16("XXX"));
 
@@ -99,13 +96,63 @@ namespace Abc
             Assert.None(May.ParseUInt64("XXX", NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
-        [Theory]
-        [InlineData("true", true)]
-        [InlineData("false", false)]
-        public static void ParseBoolean(string value, bool exp)
+        #region ParseBoolean()
+
+        // Adapted from
+        // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Runtime/tests/System/BooleanTests.cs#L52
+        public static TheoryData<string?> BadBooleanData
+            => new TheoryData<string?>
+            {
+                { null },
+                { "" },
+                { " " },
+                { "Garbage" },
+                { "True\0Garbage" },
+                { "True\0True" },
+                { "True True" },
+                { "True False" },
+                { "False True" },
+                { "Fa lse" },
+                { "T" },
+                { "0" },
+                { "1" },
+            };
+
+        // Adapted from
+        // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Runtime/tests/System/BooleanTests.cs#L24
+        public static TheoryData<string, bool> BooleanData
+            => new TheoryData<string, bool>
+            {
+                { "True", true },
+                { "true", true },
+                { "TRUE", true },
+                { "tRuE", true },
+                { "  True  ", true },
+                { "True\0", true },
+                { " \0 \0  True   \0 ", true },
+
+                { "False", false },
+                { "false", false },
+                { "FALSE", false },
+                { "fAlSe", false },
+                { "False  ", false },
+                { "False\0", false },
+                { "  False \0\0\0  ", false },
+            };
+
+        [Theory, MemberData(nameof(BadBooleanData))]
+        public static void ParseBoolean_None(string? input)
         {
-            Assert.Some(exp, May.ParseBoolean(value));
+            Assert.None(May.ParseBoolean(input));
         }
+
+        [Theory, MemberData(nameof(BooleanData))]
+        public static void ParseBoolean(string input, bool exp)
+        {
+            Assert.Some(exp, May.ParseBoolean(input));
+        }
+
+        #endregion
 
         #region ParseInt16()
 
@@ -118,15 +165,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(Int16Data))]
-        public static void ParseInt16(string value, short exp)
+        public static void ParseInt16(string input, short exp)
         {
-            Assert.Some(exp, May.ParseInt16(value));
+            Assert.Some(exp, May.ParseInt16(input));
         }
 
         [Theory, MemberData(nameof(Int16Data))]
-        public static void ParseInt16_Invariant(string value, short exp)
+        public static void ParseInt16_Invariant(string input, short exp)
         {
-            Assert.Some(exp, May.ParseInt16(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(exp, May.ParseInt16(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -142,15 +189,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(Int32Data))]
-        public static void ParseInt32(string value, int exp)
+        public static void ParseInt32(string input, int exp)
         {
-            Assert.Some(exp, May.ParseInt32(value));
+            Assert.Some(exp, May.ParseInt32(input));
         }
 
         [Theory, MemberData(nameof(Int32Data))]
-        public static void ParseInt32_Invariant(string value, int exp)
+        public static void ParseInt32_Invariant(string input, int exp)
         {
-            Assert.Some(exp, May.ParseInt32(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(exp, May.ParseInt32(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -166,15 +213,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(Int64Data))]
-        public static void ParseInt64(string value, long exp)
+        public static void ParseInt64(string input, long exp)
         {
-            Assert.Some(exp, May.ParseInt64(value));
+            Assert.Some(exp, May.ParseInt64(input));
         }
 
         [Theory, MemberData(nameof(Int64Data))]
-        public static void ParseInt64_Invariant(string value, long exp)
+        public static void ParseInt64_Invariant(string input, long exp)
         {
-            Assert.Some(exp, May.ParseInt64(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(exp, May.ParseInt64(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -190,17 +237,17 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(SingleData))]
-        public static void ParseSingle(string value, float exp)
+        public static void ParseSingle(string input, float exp)
         {
-            Assert.Some(exp, May.ParseSingle(value));
+            Assert.Some(exp, May.ParseSingle(input));
         }
 
         [Theory, MemberData(nameof(SingleData))]
         [InlineData("-1.1", -1.1f)]
         [InlineData("1.1", 1.1f)]
-        public static void ParseSingle_Invariant(string value, float exp)
+        public static void ParseSingle_Invariant(string input, float exp)
         {
-            Assert.Some(exp, May.ParseSingle(value, NumberStyles.Float, CultureInfo.InvariantCulture));
+            Assert.Some(exp, May.ParseSingle(input, NumberStyles.Float, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -216,17 +263,17 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(DoubleData))]
-        public static void ParseDouble(string value, double exp)
+        public static void ParseDouble(string input, double exp)
         {
-            Assert.Some(exp, May.ParseDouble(value));
+            Assert.Some(exp, May.ParseDouble(input));
         }
 
         [Theory, MemberData(nameof(DoubleData))]
         [InlineData("-1.1", -1.1d)]
         [InlineData("1.1", 1.1d)]
-        public static void ParseDouble_Invariant(string value, double exp)
+        public static void ParseDouble_Invariant(string input, double exp)
         {
-            Assert.Some(exp, May.ParseDouble(value, NumberStyles.Float, CultureInfo.InvariantCulture));
+            Assert.Some(exp, May.ParseDouble(input, NumberStyles.Float, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -264,15 +311,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(SByteData))]
-        public static void ParseSByte(string value, sbyte exp)
+        public static void ParseSByte(string input, sbyte exp)
         {
-            Assert.Some(exp, May.ParseSByte(value));
+            Assert.Some(exp, May.ParseSByte(input));
         }
 
         [Theory, MemberData(nameof(SByteData))]
-        public static void ParseSByte_Invariant(string value, sbyte exp)
+        public static void ParseSByte_Invariant(string input, sbyte exp)
         {
-            Assert.Some(exp, May.ParseSByte(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(exp, May.ParseSByte(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -316,17 +363,17 @@ namespace Abc
 
         [Theory, MemberData(nameof(ByteData))]
         public static void ParseByte(
-            string value, NumberStyles style, NumberFormatInfo? nfi, byte exp)
+            string input, NumberStyles style, NumberFormatInfo? nfi, byte exp)
         {
             if (style != NumberStyles.Integer || nfi != null) { return; }
-            Assert.Some(exp, May.ParseByte(value));
+            Assert.Some(exp, May.ParseByte(input));
         }
 
         [Theory, MemberData(nameof(ByteData))]
         public static void ParseByte_Invariant(
-            string value, NumberStyles style, NumberFormatInfo? nfi, byte exp)
+            string input, NumberStyles style, NumberFormatInfo? nfi, byte exp)
         {
-            Assert.Some(exp, May.ParseByte(value, style, nfi));
+            Assert.Some(exp, May.ParseByte(input, style, nfi));
         }
 
         #endregion
@@ -341,15 +388,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(UInt16Data))]
-        public static void ParseUInt16(string value, ushort exp)
+        public static void ParseUInt16(string input, ushort exp)
         {
-            Assert.Some(exp, May.ParseUInt16(value));
+            Assert.Some(exp, May.ParseUInt16(input));
         }
 
         [Theory, MemberData(nameof(UInt16Data))]
-        public static void ParseUInt16_Invariant(string value, ushort exp)
+        public static void ParseUInt16_Invariant(string input, ushort exp)
         {
-            Assert.Some(exp, May.ParseUInt16(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(exp, May.ParseUInt16(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -364,15 +411,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(UInt32Data))]
-        public static void ParseUInt32(string value, uint exp)
+        public static void ParseUInt32(string input, uint exp)
         {
-            Assert.Some(exp, May.ParseUInt32(value));
+            Assert.Some(exp, May.ParseUInt32(input));
         }
 
         [Theory, MemberData(nameof(UInt32Data))]
-        public static void ParseUInt32_Invariant(string value, uint exp)
+        public static void ParseUInt32_Invariant(string input, uint exp)
         {
-            Assert.Some(exp, May.ParseUInt32(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(exp, May.ParseUInt32(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -387,15 +434,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(UInt64Data))]
-        public static void ParseUInt64(string value, ulong exp)
+        public static void ParseUInt64(string input, ulong exp)
         {
-            Assert.Some(exp, May.ParseUInt64(value));
+            Assert.Some(exp, May.ParseUInt64(input));
         }
 
         [Theory, MemberData(nameof(UInt64Data))]
-        public static void ParseUInt64_Invariant(string value, ulong exp)
+        public static void ParseUInt64_Invariant(string input, ulong exp)
         {
-            Assert.Some(exp, May.ParseUInt64(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(exp, May.ParseUInt64(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -420,11 +467,11 @@ namespace Abc
         [InlineData("Alias1 ")]
         [InlineData(" Alias1")]
         [InlineData(" Alias1 ")]
-        public static void ParseEnum(string value)
+        public static void ParseEnum(string input)
         {
-            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(value));
-            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(value, ignoreCase: false));
-            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(value, ignoreCase: true));
+            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(input));
+            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(input, ignoreCase: false));
+            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(input, ignoreCase: true));
         }
 
         [Theory]
@@ -443,11 +490,11 @@ namespace Abc
         [InlineData("alias1 ")]
         [InlineData(" alias1")]
         [InlineData(" alias1 ")]
-        public static void ParseEnum_MixedCase(string value)
+        public static void ParseEnum_MixedCase(string input)
         {
-            Assert.None(May.ParseEnum<SimpleEnum>(value));
-            Assert.None(May.ParseEnum<SimpleEnum>(value, ignoreCase: false));
-            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(value, ignoreCase: true));
+            Assert.None(May.ParseEnum<SimpleEnum>(input));
+            Assert.None(May.ParseEnum<SimpleEnum>(input, ignoreCase: false));
+            Assert.Some(SimpleEnum.One, May.ParseEnum<SimpleEnum>(input, ignoreCase: true));
         }
 
         [Theory]
@@ -457,11 +504,11 @@ namespace Abc
         [InlineData(" 4 ")]
         [CLSCompliant(false)]
         // Weird but passing any integer value will succeed.
-        public static void ParseEnum_AnyInteger(string value)
+        public static void ParseEnum_AnyInteger(string input)
         {
-            Assert.Some((SimpleEnum)4, May.ParseEnum<SimpleEnum>(value));
-            Assert.Some((SimpleEnum)4, May.ParseEnum<SimpleEnum>(value, ignoreCase: false));
-            Assert.Some((SimpleEnum)4, May.ParseEnum<SimpleEnum>(value, ignoreCase: true));
+            Assert.Some((SimpleEnum)4, May.ParseEnum<SimpleEnum>(input));
+            Assert.Some((SimpleEnum)4, May.ParseEnum<SimpleEnum>(input, ignoreCase: false));
+            Assert.Some((SimpleEnum)4, May.ParseEnum<SimpleEnum>(input, ignoreCase: true));
         }
 
         [Theory]
@@ -473,11 +520,11 @@ namespace Abc
         [InlineData("Whatever ")]
         [InlineData(" Whatever")]
         [InlineData(" Whatever ")]
-        public static void ParseEnum_InvalidName(string value)
+        public static void ParseEnum_InvalidName(string input)
         {
-            Assert.None(May.ParseEnum<SimpleEnum>(value));
-            Assert.None(May.ParseEnum<SimpleEnum>(value, ignoreCase: false));
-            Assert.None(May.ParseEnum<SimpleEnum>(value, ignoreCase: true));
+            Assert.None(May.ParseEnum<SimpleEnum>(input));
+            Assert.None(May.ParseEnum<SimpleEnum>(input, ignoreCase: false));
+            Assert.None(May.ParseEnum<SimpleEnum>(input, ignoreCase: true));
         }
 
         [Theory]
@@ -492,11 +539,11 @@ namespace Abc
         [InlineData(" One,  Two")]
         [InlineData(" One, Two ")]
         [InlineData(" One,  Two ")]
-        public static void ParseEnum_CompositeValue(string value)
+        public static void ParseEnum_CompositeValue(string input)
         {
-            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(value));
-            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(value, ignoreCase: false));
-            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(value, ignoreCase: true));
+            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(input));
+            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(input, ignoreCase: false));
+            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(input, ignoreCase: true));
         }
 
         [Theory]
@@ -511,22 +558,22 @@ namespace Abc
         [InlineData("one, two ")]
         [InlineData(" one, two")]
         [InlineData(" one, two ")]
-        public static void ParseEnum_CompositeValue_MixedCase(string value)
+        public static void ParseEnum_CompositeValue_MixedCase(string input)
         {
-            Assert.None(May.ParseEnum<FlagsEnum>(value));
-            Assert.None(May.ParseEnum<FlagsEnum>(value, ignoreCase: false));
-            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(value, ignoreCase: true));
+            Assert.None(May.ParseEnum<FlagsEnum>(input));
+            Assert.None(May.ParseEnum<FlagsEnum>(input, ignoreCase: false));
+            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(input, ignoreCase: true));
         }
 
         [Theory]
         [InlineData("OneTwo")]
         [InlineData("onetwo")]
         [InlineData("onetWo")]
-        public static void ParseEnum_Flags_InvalidName(string value)
+        public static void ParseEnum_Flags_InvalidName(string input)
         {
-            Assert.None(May.ParseEnum<SimpleEnum>(value));
-            Assert.None(May.ParseEnum<SimpleEnum>(value, ignoreCase: false));
-            Assert.None(May.ParseEnum<SimpleEnum>(value, ignoreCase: true));
+            Assert.None(May.ParseEnum<SimpleEnum>(input));
+            Assert.None(May.ParseEnum<SimpleEnum>(input, ignoreCase: false));
+            Assert.None(May.ParseEnum<SimpleEnum>(input, ignoreCase: true));
         }
     }
 
