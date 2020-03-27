@@ -122,7 +122,8 @@ namespace Abc
         [Fact]
         public static void CollectAny_NullSource()
         {
-            Assert.ThrowsArgNullEx("source", () => Maybe.CollectAny(default(IEnumerable<Maybe<int>>)!));
+            Assert.ThrowsArgNullEx("source", () =>
+                Maybe.CollectAny(default(IEnumerable<Maybe<int>>)!));
         }
 
         [Fact]
@@ -221,7 +222,8 @@ namespace Abc
             // Arrange
             var source = Maybe.Of(new AnyDisposable());
             // Act & Assert
-            Assert.ThrowsArgNullEx("binder", () => source.Use(Kunc<AnyDisposable, int>.Null));
+            Assert.ThrowsArgNullEx("binder", () =>
+                source.Use(Kunc<AnyDisposable, int>.Null));
         }
 
         [Fact]
@@ -230,7 +232,8 @@ namespace Abc
             // Arrange
             var source = Maybe.Of(new AnyDisposable());
             // Act & Assert
-            Assert.ThrowsArgNullEx("selector", () => source.Use(Funk<AnyDisposable, int>.Null));
+            Assert.ThrowsArgNullEx("selector", () =>
+                source.Use(Funk<AnyDisposable, int>.Null));
         }
 
         [Fact]
@@ -402,7 +405,8 @@ namespace Abc
             // Arrange
             var source = Thunk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5>.Const(AnyResult.Value);
             // Act & Assert
-            Assert.Some(AnyResult.Value, source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.Some(AnyResult.Value,
+                source.Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
         }
     }
 
@@ -465,7 +469,8 @@ namespace Abc
             var f = Thunk<AnyT1, AnyT2, AnyT3>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
-            Assert.Some(AnyResult.Value, source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value));
+            Assert.Some(AnyResult.Value,
+                    source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value));
         }
 
         [Fact]
@@ -484,7 +489,8 @@ namespace Abc
             var f = Thunk<AnyT1, AnyT2, AnyT3, AnyT4>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
-            Assert.Some(AnyResult.Value, source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value));
+            Assert.Some(AnyResult.Value,
+                source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value));
         }
 
         [Fact]
@@ -493,7 +499,8 @@ namespace Abc
             // Arrange
             var source = Maybe<Func<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult>>.None;
             // Act & Assert
-            Assert.None(source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value, AnyT5.Value));
+            Assert.None(source.Invoke(
+                AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value, AnyT5.Value));
         }
 
         [Fact]
@@ -503,7 +510,8 @@ namespace Abc
             var f = Thunk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
-            Assert.Some(AnyResult.Value, source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value, AnyT5.Value));
+            Assert.Some(AnyResult.Value,
+                source.Invoke(AnyT1.Value, AnyT2.Value, AnyT3.Value, AnyT4.Value, AnyT5.Value));
         }
 
         #endregion
@@ -639,7 +647,8 @@ namespace Abc
             var f = Thunk<AnyT1, AnyT2, AnyT3, AnyT4>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
-            Assert.Some(AnyResult.Value, source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
+            Assert.Some(AnyResult.Value,
+                source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
         }
 
         [Fact]
@@ -677,7 +686,8 @@ namespace Abc
             var f = Thunk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5>.Const(AnyResult.Value);
             var source = Maybe.Of(f);
             // Act & Assert
-            Assert.Some(AnyResult.Value, source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
+            Assert.Some(AnyResult.Value,
+                source.Apply(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
         }
 
         #endregion

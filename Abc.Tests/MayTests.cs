@@ -147,7 +147,7 @@ namespace Abc
         }
 
         [Theory, MemberData(nameof(BooleanData))]
-        public static void ParseBoolean(string input, bool exp)
+        public static void ParseBoolean_Some(string input, bool exp)
         {
             Assert.Some(exp, May.ParseBoolean(input));
         }
@@ -362,17 +362,13 @@ namespace Abc
         }
 
         [Theory, MemberData(nameof(ByteData))]
-        public static void ParseByte(
+        public static void ParseByte_Some(
             string input, NumberStyles style, NumberFormatInfo? nfi, byte exp)
         {
-            if (style != NumberStyles.Integer || nfi != null) { return; }
-            Assert.Some(exp, May.ParseByte(input));
-        }
-
-        [Theory, MemberData(nameof(ByteData))]
-        public static void ParseByte_Invariant(
-            string input, NumberStyles style, NumberFormatInfo? nfi, byte exp)
-        {
+            if (style == NumberStyles.Integer && nfi is null)
+            {
+                Assert.Some(exp, May.ParseByte(input));
+            }
             Assert.Some(exp, May.ParseByte(input, style, nfi));
         }
 
