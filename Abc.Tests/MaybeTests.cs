@@ -1153,6 +1153,20 @@ namespace Abc
         }
 
         [Fact]
+        public static void GetEnumerator_None()
+        {
+            foreach (string _ in NoText) { Assert.True(false); }
+            foreach (string _ in NoText) { Assert.True(false); }
+
+            // Using an explicit iterator.
+            var iter = NoText.GetEnumerator();
+
+            Assert.False(iter.MoveNext());
+            iter.Reset();
+            Assert.False(iter.MoveNext());
+        }
+
+        [Fact]
         public static void GetEnumerator_Some()
         {
             // Arrange
@@ -1178,20 +1192,6 @@ namespace Abc
 
             Assert.True(iter.MoveNext());
             Assert.Same(MyText, iter.Current);
-            Assert.False(iter.MoveNext());
-        }
-
-        [Fact]
-        public static void GetEnumerator_None()
-        {
-            foreach (string _ in NoText) { Assert.True(false); }
-            foreach (string _ in NoText) { Assert.True(false); }
-
-            // Using an explicit iterator.
-            var iter = NoText.GetEnumerator();
-
-            Assert.False(iter.MoveNext());
-            iter.Reset();
             Assert.False(iter.MoveNext());
         }
 

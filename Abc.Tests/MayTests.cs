@@ -11,14 +11,21 @@ namespace Abc
 
     // We do not need to be comprehensive, the May helpers only wrap BCL methods.
 
-    // FIXME: default parsers are culture-dependent.
-    // See https://github.com/dotnet/runtime/blob/master/src/libraries/System.Runtime/tests/System/UInt64Tests.cs
+    // FIXME: more test data, default parsers are culture-dependent.
 
     public static partial class MayTests { }
 
     // Parsers for simple value types.
     public partial class MayTests
     {
+        private static readonly NumberFormatInfo s_EmptyNfi = new NumberFormatInfo();
+
+        private static readonly NumberFormatInfo s_CurrencyNfi
+            = new NumberFormatInfo()
+            {
+                CurrencySymbol = "$",
+            };
+
         [Fact]
         public static void ParseXXX_None()
         {
@@ -100,6 +107,8 @@ namespace Abc
             Assert.Some(exp, May.ParseBoolean(value));
         }
 
+        #region ParseInt16()
+
         public static readonly TheoryData<string, short> Int16Data
             = new TheoryData<string, short>
             {
@@ -119,6 +128,10 @@ namespace Abc
         {
             Assert.Some(exp, May.ParseInt16(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
+
+        #endregion
+
+        #region ParseInt32()
 
         public static readonly TheoryData<string, int> Int32Data
             = new TheoryData<string, int>
@@ -140,6 +153,10 @@ namespace Abc
             Assert.Some(exp, May.ParseInt32(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
+        #endregion
+
+        #region ParseInt64()
+
         public static readonly TheoryData<string, long> Int64Data
             = new TheoryData<string, long>
             {
@@ -159,6 +176,10 @@ namespace Abc
         {
             Assert.Some(exp, May.ParseInt64(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
+
+        #endregion
+
+        #region ParseSingle()
 
         public static readonly TheoryData<string, float> SingleData
             = new TheoryData<string, float>
@@ -182,6 +203,10 @@ namespace Abc
             Assert.Some(exp, May.ParseSingle(value, NumberStyles.Float, CultureInfo.InvariantCulture));
         }
 
+        #endregion
+
+        #region ParseDouble()
+
         public static readonly TheoryData<string, double> DoubleData
             = new TheoryData<string, double>
             {
@@ -204,6 +229,10 @@ namespace Abc
             Assert.Some(exp, May.ParseDouble(value, NumberStyles.Float, CultureInfo.InvariantCulture));
         }
 
+        #endregion
+
+        #region ParseDecimal()
+
         [Fact]
         public static void ParseDecimal()
         {
@@ -221,6 +250,10 @@ namespace Abc
             Assert.Some(-1.1m, May.ParseDecimal("-1.1", NumberStyles.Float, CultureInfo.InvariantCulture));
             Assert.Some(1.1m, May.ParseDecimal("1.1", NumberStyles.Float, CultureInfo.InvariantCulture));
         }
+
+        #endregion
+
+        #region ParseSByte()
 
         public static readonly TheoryData<string, sbyte> SByteData
             = new TheoryData<string, sbyte>
@@ -242,24 +275,63 @@ namespace Abc
             Assert.Some(exp, May.ParseSByte(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
-        public static readonly TheoryData<string, byte> ByteData
-            = new TheoryData<string, byte>
+        #endregion
+
+        #region ParseByte()
+
+        // Adapted from
+        // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Runtime/tests/System/ByteTests.cs#L165
+        public static TheoryData<string, NumberStyles, NumberFormatInfo?, byte> ByteData
+        {
+            get
             {
-                { "0", 0 },
-                { "1", 1 }
-            };
+                var defaultStyle = NumberStyles.Integer;
+
+                return new TheoryData<string, NumberStyles, NumberFormatInfo?, byte>
+                {
+                    // Default style, no format provider.
+                    { "0", defaultStyle, null, Byte.MinValue },
+                    { "1", defaultStyle, null, 1 },
+                    { "123", defaultStyle, null, 123 },
+                    { "+123", defaultStyle, null, 123 },
+                    { "  123  ", defaultStyle, null, 123 },
+                    { "255", defaultStyle, null, Byte.MaxValue },
+
+                    // Custom style, empty format provider.
+                    { "12", NumberStyles.HexNumber, null, 0x12 },
+                    { "10", NumberStyles.AllowThousands, null, 10 },
+
+                    // Default style, empty format provider.
+                    { "123", defaultStyle, s_EmptyNfi, 123 },
+
+                    // Custom style.
+                    { "123", NumberStyles.Any, s_EmptyNfi, 123 },
+                    { "12", NumberStyles.HexNumber, s_EmptyNfi, 0x12 },
+                    { "ab", NumberStyles.HexNumber, s_EmptyNfi, 0xab },
+                    { "AB", NumberStyles.HexNumber, null, 0xab },
+                    { "$100", NumberStyles.Currency, s_CurrencyNfi, 100 },
+                };
+            }
+        }
 
         [Theory, MemberData(nameof(ByteData))]
-        public static void ParseByte(string value, byte exp)
+        public static void ParseByte(
+            string value, NumberStyles style, NumberFormatInfo? nfi, byte exp)
         {
+            if (style != NumberStyles.Integer || nfi != null) { return; }
             Assert.Some(exp, May.ParseByte(value));
         }
 
         [Theory, MemberData(nameof(ByteData))]
-        public static void ParseByte_Invariant(string value, byte exp)
+        public static void ParseByte_Invariant(
+            string value, NumberStyles style, NumberFormatInfo? nfi, byte exp)
         {
-            Assert.Some(exp, May.ParseByte(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(exp, May.ParseByte(value, style, nfi));
         }
+
+        #endregion
+
+        #region ParseUInt16()
 
         public static readonly TheoryData<string, ushort> UInt16Data
             = new TheoryData<string, ushort>
@@ -280,6 +352,10 @@ namespace Abc
             Assert.Some(exp, May.ParseUInt16(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
+        #endregion
+
+        #region ParseUInt32()
+
         public static readonly TheoryData<string, uint> UInt32Data
             = new TheoryData<string, uint>
             {
@@ -299,6 +375,10 @@ namespace Abc
             Assert.Some(exp, May.ParseUInt32(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
+        #endregion
+
+        #region ParseUInt64()
+
         public static readonly TheoryData<string, ulong> UInt64Data
             = new TheoryData<string, ulong>
             {
@@ -317,6 +397,8 @@ namespace Abc
         {
             Assert.Some(exp, May.ParseUInt64(value, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
+
+        #endregion
     }
 
     // ParseEnum().
