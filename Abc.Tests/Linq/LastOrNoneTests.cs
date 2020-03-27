@@ -1,4 +1,7 @@
-﻿// See LICENSE.txt in the project root for license information.
+﻿// See LICENSE.dotnet.txt in the project root for license information.
+//
+// Largely inspired by
+// https://github.com/dotnet/corefx/blob/master/src/System.Linq/tests/LastOrDefaultTests.cs
 
 namespace Abc.Linq
 {
@@ -11,9 +14,6 @@ namespace Abc.Linq
 
     using Assert = AssertEx;
 
-    // LastOrNone.
-    // Largely inspired by
-    // https://github.com/dotnet/corefx/blob/master/src/System.Linq/tests/LastOrDefaultTests.cs
     public sealed class LastOrNoneTests : QperatorsTests
     {
         [Fact]

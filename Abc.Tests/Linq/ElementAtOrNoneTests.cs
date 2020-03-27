@@ -1,4 +1,7 @@
-﻿// See LICENSE.txt in the project root for license information.
+﻿// See LICENSE.dotnet.txt in the project root for license information.
+//
+// Largely inspired by
+// https://github.com/dotnet/corefx/blob/master/src/System.Linq/tests/ElementAtOrDefaultTests.cs
 
 namespace Abc.Linq
 {
@@ -11,8 +14,6 @@ namespace Abc.Linq
 
     using Assert = AssertEx;
 
-    // Largely inspired by
-    // https://github.com/dotnet/corefx/blob/master/src/System.Linq/tests/ElementAtOrDefaultTests.cs
     public sealed class ElementAtOrNoneTests : QperatorsTests
     {
         [Fact]

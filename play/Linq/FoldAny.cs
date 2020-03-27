@@ -7,24 +7,25 @@ namespace Abc.Linq
     using System.Diagnostics.Contracts;
 
     using Anexn = System.ArgumentNullException;
-    using EF = Abc.Utilities.ExceptionFactory;
 
-    // Aggregation: Reduce.
-    public partial class Qperators
+    // REVIEW: FoldBackAny().
+
+    // Aggregation: Fold.
+    public partial class QperatorsEx
     {
         [Pure]
-        public static Maybe<TSource> ReduceAny<TSource>(
+        public static Maybe<TAccumulate> FoldAny<TSource, TAccumulate>(
             this IEnumerable<TSource> source,
-            Func<TSource, TSource, Maybe<TSource>> accumulator)
+            TAccumulate seed,
+            Func<TAccumulate, TSource, Maybe<TAccumulate>> accumulator)
         {
             if (source is null) { throw new Anexn(nameof(source)); }
             if (accumulator is null) { throw new Anexn(nameof(accumulator)); }
 
+            // TODO: optimize (break the loop early).
             using var iter = source.GetEnumerator();
 
-            if (!iter.MoveNext()) { throw EF.EmptySequence; }
-
-            var r = Maybe.Of(iter.Current);
+            var r = Maybe.Of(seed);
             while (iter.MoveNext())
             {
                 r = r.Bind(x => accumulator(x, iter.Current));
@@ -33,10 +34,11 @@ namespace Abc.Linq
         }
 
         [Pure]
-        public static Maybe<TSource> ReduceAny<TSource>(
+        public static Maybe<TAccumulate> FoldAny<TSource, TAccumulate>(
             this IEnumerable<TSource> source,
-            Func<TSource, TSource, Maybe<TSource>> accumulator,
-            Func<Maybe<TSource>, bool> predicate)
+            TAccumulate seed,
+            Func<TAccumulate, TSource, Maybe<TAccumulate>> accumulator,
+            Func<Maybe<TAccumulate>, bool> predicate)
         {
             if (source is null) { throw new Anexn(nameof(source)); }
             if (accumulator is null) { throw new Anexn(nameof(accumulator)); }
@@ -44,9 +46,7 @@ namespace Abc.Linq
 
             using var iter = source.GetEnumerator();
 
-            if (!iter.MoveNext()) { throw EF.EmptySequence; }
-
-            var r = Maybe.Of(iter.Current);
+            var r = Maybe.Of(seed);
             while (predicate(r) && iter.MoveNext())
             {
                 r = r.Bind(x => accumulator(x, iter.Current));
