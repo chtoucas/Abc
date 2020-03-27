@@ -937,7 +937,7 @@ namespace Abc
         [Pure]
         public IEnumerable<T> Yield()
             // BONSANG! When _isSome is true, _value is NOT null.
-            => _isSome ? new NeverEndingIterator<T>(_value!) : Enumerable.Empty<T>();
+            => _isSome ? new NeverEndingSequence<T>(_value!) : Enumerable.Empty<T>();
 
         // See also Replicate() and the comments there.
         // Maybe<T> being a struct it is never equal to null, therefore

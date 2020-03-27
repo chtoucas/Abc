@@ -9,13 +9,13 @@ namespace Abc.Utilities
 
     using Assert = AssertEx;
 
-    public static partial class SingletonIteratorTests
+    public static partial class SingletonListTests
     {
         private static readonly AnyT Value;
         private static readonly IEnumerable<AnyT> Iter;
 
 #pragma warning disable CA1810 // Initialize reference type static fields inline
-        static SingletonIteratorTests()
+        static SingletonListTests()
 #pragma warning restore CA1810
         {
             var anyT = AnyT.New();
@@ -25,15 +25,30 @@ namespace Abc.Utilities
     }
 
     // IList<T>
-    public partial class SingletonIteratorTests
+    public partial class SingletonListTests
     {
-        [Fact]
-        public static void Indexer_Get_InvalidIndex()
+        public static readonly TheoryData<int> IndexesForNotSupportedMethod
+            = new TheoryData<int>
+            {
+                // -1 is always invalid for a list.
+                -1,
+                // Only 0 is actually valid but we use this data to test not
+                // supported methods.
+                0, 1, 100, 1000, Int32.MaxValue
+            };
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(1)]
+        [InlineData(10)]
+        [InlineData(100)]
+        [InlineData(Int32.MaxValue)]
+        public static void Indexer_Get_InvalidIndex(int index)
         {
             // Arrange
             var list = (IList<AnyT>)Iter;
             // Act & Assert
-            Assert.ThrowsAoorEx("index", () => list[1]);
+            Assert.ThrowsAoorEx("index", () => list[index]);
         }
 
         [Fact]
@@ -45,13 +60,13 @@ namespace Abc.Utilities
             Assert.Equal(Value, list[0]);
         }
 
-        [Fact]
-        public static void Indexer_Set()
+        [Theory, MemberData(nameof(IndexesForNotSupportedMethod))]
+        public static void Indexer_Set(int index)
         {
             // Arrange
             var list = (IList<AnyT>)Iter;
             // Act & Assert
-            Assert.Throws<NotSupportedException>(() => list[1] = AnyT.Value);
+            Assert.Throws<NotSupportedException>(() => list[index] = AnyT.Value);
         }
 
         [Fact]
@@ -72,27 +87,27 @@ namespace Abc.Utilities
             Assert.Equal(-1, list.IndexOf(AnyT.Value));
         }
 
-        [Fact]
-        public static void Insert()
+        [Theory, MemberData(nameof(IndexesForNotSupportedMethod))]
+        public static void Insert(int index)
         {
             // Arrange
             var list = (IList<AnyT>)Iter;
             // Act & Assert
-            Assert.Throws<NotSupportedException>(() => list.Insert(1, AnyT.Value));
+            Assert.Throws<NotSupportedException>(() => list.Insert(index, AnyT.Value));
         }
 
-        [Fact]
-        public static void RemoveAt()
+        [Theory, MemberData(nameof(IndexesForNotSupportedMethod))]
+        public static void RemoveAt(int index)
         {
             // Arrange
             var list = (IList<AnyT>)Iter;
             // Act & Assert
-            Assert.Throws<NotSupportedException>(() => list.RemoveAt(0));
+            Assert.Throws<NotSupportedException>(() => list.RemoveAt(index));
         }
     }
 
     // ICollection<T>
-    public partial class SingletonIteratorTests
+    public partial class SingletonListTests
     {
         [Fact]
         public static void Count()
@@ -148,8 +163,18 @@ namespace Abc.Utilities
             Assert.False(list.Contains(AnyT.Value));
         }
 
-        [Fact]
-        public static void CopyTo()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(4)]
+        [InlineData(5)]
+        [InlineData(6)]
+        [InlineData(7)]
+        [InlineData(8)]
+        [InlineData(9)]
+        public static void CopyTo(int index)
         {
             // Arrange
             var list = (IList<AnyT>)Iter;
@@ -167,18 +192,19 @@ namespace Abc.Utilities
                 AnyT.Value,
             };
             // Act
-            list.CopyTo(arr, 4);
+            list.CopyTo(arr, index);
             // Assert
-            Assert.NotSame(Value, arr[0]);
-            Assert.NotSame(Value, arr[1]);
-            Assert.NotSame(Value, arr[2]);
-            Assert.NotSame(Value, arr[3]);
-            Assert.Same(Value, arr[4]);
-            Assert.NotSame(Value, arr[5]);
-            Assert.NotSame(Value, arr[6]);
-            Assert.NotSame(Value, arr[7]);
-            Assert.NotSame(Value, arr[8]);
-            Assert.NotSame(Value, arr[9]);
+            for (int i = 0; i < 10; i++)
+            {
+                if (i == index)
+                {
+                    Assert.Same(Value, arr[index]);
+                }
+                else
+                {
+                    Assert.NotSame(Value, arr[i]);
+                }
+            }
         }
 
         [Fact]
@@ -192,7 +218,7 @@ namespace Abc.Utilities
     }
 
     // IEnumerable<T>.
-    public partial class SingletonIteratorTests
+    public partial class SingletonListTests
     {
         [Fact]
         public static void Iterate()

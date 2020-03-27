@@ -9,13 +9,13 @@ namespace Abc.Utilities
 
     using Assert = AssertEx;
 
-    public static class NeverEndingIteratorTests
+    public static class NeverEndingSequenceTests
     {
         private static readonly AnyT Value;
         private static readonly IEnumerable<AnyT> Iter;
 
 #pragma warning disable CA1810 // Initialize reference type static fields inline
-        static NeverEndingIteratorTests()
+        static NeverEndingSequenceTests()
 #pragma warning restore CA1810
         {
             var anyT = AnyT.New();

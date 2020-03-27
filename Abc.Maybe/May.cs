@@ -37,7 +37,7 @@ namespace Abc
     /// </example>
     public abstract partial class May
     {
-        // Truely a static class.
+        // A static class actually.
         [ExcludeFromCodeCoverage]
         protected May() { }
     }

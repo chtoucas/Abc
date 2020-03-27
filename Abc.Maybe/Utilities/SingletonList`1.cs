@@ -12,27 +12,6 @@ namespace Abc.Utilities
     using EF = ExceptionFactory;
 
     /// <summary>
-    /// Represents the empty iterator.
-    /// <para>This class cannot be inherited.</para>
-    /// </summary>
-    [DebuggerDisplay("Count = 0")]
-    internal sealed class EmptyIterator<T> : IEnumerator<T>
-    {
-        public static readonly IEnumerator<T> Instance = new EmptyIterator<T>();
-
-        private EmptyIterator() { }
-
-        // No one should ever call these properties.
-        [ExcludeFromCodeCoverage] [MaybeNull] public T Current => default;
-        [ExcludeFromCodeCoverage] [MaybeNull] object IEnumerator.Current => default;
-
-        public bool MoveNext() => false;
-
-        void IEnumerator.Reset() { }
-        void IDisposable.Dispose() { }
-    }
-
-    /// <summary>
     /// Represents a single value iterator, a read-only singleton set.
     /// <para>This iterator is resettable.</para>
     /// <para>This class cannot be inherited.</para>
@@ -124,36 +103,9 @@ namespace Abc.Utilities
 
             // It seems that it is now a requirement to throw an exception
             // (eg not supported), anyway it doesn't really matter.
-            void IEnumerator.Reset() => _done = false;
+            public void Reset() => _done = false;
+
             void IDisposable.Dispose() { }
         }
-    }
-
-    [DebuggerDisplay("Count = ∞")]
-    internal sealed class NeverEndingIterator<T> : IEnumerable<T>, IEnumerator<T>
-    {
-        [NotNull] private readonly T _element;
-
-        public NeverEndingIterator([DisallowNull] T element)
-        {
-            _element = element;
-        }
-
-        // IEnumerable<T>
-        public IEnumerator<T> GetEnumerator() => this;
-
-        // IEnumerable
-        IEnumerator IEnumerable.GetEnumerator() => this;
-
-        // IEnumerator<T>
-        public T Current => _element;
-
-        // IEnumerator
-        object IEnumerator.Current => _element;
-        public bool MoveNext() => true;
-        void IEnumerator.Reset() { }
-
-        // IDisposable
-        void IDisposable.Dispose() { }
     }
 }
