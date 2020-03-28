@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Abc;
 
-// AnyT is plain reference type; no special property whatsoever.
+// AnyT is a plain reference type; no special property whatsoever.
 internal sealed class AnyT
 {
     /// <summary>

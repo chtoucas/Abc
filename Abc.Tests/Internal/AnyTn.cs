@@ -2,7 +2,7 @@
 
 using Abc;
 
-// AnyTn is plain reference type; no special property whatsoever.
+// AnyTn is a plain reference type; no special property whatsoever.
 
 internal sealed class AnyT1
 {

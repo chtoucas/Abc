@@ -434,7 +434,7 @@ Supported frameworks:
 Version History
 ---------------
 
-**1.0.0-alpha-1** (2020-03-27) First public release on nuget.org.
+**1.0.0-alpha-1** (2020-03-27) First public release.
 
 **0.28.0** Still available on nuget.org under a different name (Narvalo.Fx).
            Deprecated, broken, do not use it.

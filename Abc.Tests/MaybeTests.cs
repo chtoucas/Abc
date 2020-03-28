@@ -240,24 +240,29 @@ namespace Abc
         [Fact]
         public static void Bind_None()
         {
-            Assert.None(Ø.Bind(x => AnyResult.Some));
-            Assert.None(NoText.Bind(x => AnyResult.Some));
-            Assert.None(NoUri.Bind(x => AnyResult.Some));
-            Assert.None(AnyT.None.Bind(x => AnyResult.Some));
+            Assert.None(Ø.Bind(_ => AnyResult.Some));
+            Assert.None(NoText.Bind(_ => AnyResult.Some));
+            Assert.None(NoUri.Bind(_ => AnyResult.Some));
+            Assert.None(AnyT.None.Bind(_ => AnyResult.Some));
         }
 
         [Fact]
         public static void Bind_Some()
         {
-            Assert.Some(AnyResult.Value, One.Bind(x => AnyResult.Some));
-            Assert.Some(AnyResult.Value, SomeText.Bind(x => AnyResult.Some));
-            Assert.Some(AnyResult.Value, SomeUri.Bind(x => AnyResult.Some));
-            Assert.Some(AnyResult.Value, AnyT.Some.Bind(x => AnyResult.Some));
+            Assert.Some(AnyResult.Value, One.Bind(_ => AnyResult.Some));
+            Assert.Some(AnyResult.Value, SomeText.Bind(_ => AnyResult.Some));
+            Assert.Some(AnyResult.Value, SomeUri.Bind(_ => AnyResult.Some));
+            Assert.Some(AnyResult.Value, AnyT.Some.Bind(_ => AnyResult.Some));
 
-            Assert.None(One.Bind(x => AnyResult.None));
-            Assert.None(SomeText.Bind(x => AnyResult.None));
-            Assert.None(SomeUri.Bind(x => AnyResult.None));
-            Assert.None(AnyT.Some.Bind(x => AnyResult.None));
+            Assert.None(One.Bind(_ => AnyResult.None));
+            Assert.None(SomeText.Bind(_ => AnyResult.None));
+            Assert.None(SomeUri.Bind(_ => AnyResult.None));
+            Assert.None(AnyT.Some.Bind(_ => AnyResult.None));
+
+            // Beyond smoke tests.
+            Assert.Some(2L, One.Bind(x => Maybe.Some(2L * x)));
+            Assert.Some(6L, Two.Bind(x => Maybe.Some(3L * x)));
+            Assert.Some(MyUri.AbsoluteUri, SomeUri.Bind(x => Maybe.SomeOrNone(x.AbsoluteUri)));
         }
 
         [Fact]
@@ -746,8 +751,14 @@ namespace Abc
         [Fact]
         public static void Select_Some()
         {
-            Assert.Some(2, One.Select(x => 2 * x));
-            Assert.Some(2, from x in One select 2 * x);
+            Assert.Some(2L, One.Select(x => 2L * x));
+            Assert.Some(2L, from x in One select 2L * x);
+
+            Assert.Some(6L, Two.Select(x => 3L * x));
+            Assert.Some(6L, from x in Two select 3L * x);
+
+            Assert.Some(MyUri.AbsoluteUri, SomeUri.Select(x => x.AbsoluteUri));
+            Assert.Some(MyUri.AbsoluteUri, from x in SomeUri select x.AbsoluteUri);
         }
 
         #endregion

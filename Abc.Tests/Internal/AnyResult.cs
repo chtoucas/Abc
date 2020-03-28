@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 
 using Abc;
 
-// This one is a singleton to simplify some tests.
+/// <summary>
+/// Represents a singleton reference type.
+/// </summary>
 internal sealed class AnyResult
 {
     /// <summary>
