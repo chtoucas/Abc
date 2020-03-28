@@ -1018,10 +1018,10 @@ namespace Abc
         {
             var tasks = new Task[4];
 
-            tasks[0] = Assert.Async.None(Ø.BindAsync(_ => AnyResult.AsyncSome));
-            tasks[1] = Assert.Async.None(NoText.BindAsync(_ => AnyResult.AsyncSome));
-            tasks[2] = Assert.Async.None(NoUri.BindAsync(_ => AnyResult.AsyncSome));
-            tasks[3] = Assert.Async.None(AnyT.None.BindAsync(_ => AnyResult.AsyncSome));
+            tasks[0] = Assert.Async.None(Ø.BindAsync(AsyncFakes.ConstAsync));
+            tasks[1] = Assert.Async.None(NoText.BindAsync(AsyncFakes.ConstAsync));
+            tasks[2] = Assert.Async.None(NoUri.BindAsync(AsyncFakes.ConstAsync));
+            tasks[3] = Assert.Async.None(AnyT.None.BindAsync(AsyncFakes.ConstAsync));
 
             await Task.WhenAll(tasks);
         }
