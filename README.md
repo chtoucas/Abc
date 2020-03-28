@@ -431,6 +431,9 @@ Supported frameworks:
 - Perf tool (LINQ, nulls).
 - Optimize LINQ ops.
 
+### Issues
+- [MSB3277](https://github.com/microsoft/msbuild/issues/608)
+
 Version History
 ---------------
 
