@@ -1,5 +1,6 @@
 # Abécédaire
 
+[![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/)
 ![Code Coverage](coverage.svg)
 
 `Abc` features a rich option type for C#.
@@ -7,8 +8,10 @@
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
 - [Developer Notes](#developer-notes)
+- [License](https://github.com/chtoucas/Abc.Maybe/tree/master/LICENSE.txt)
 
-#### Status: unstable
+#### Status: _unstable_
+
 - The API should be pretty stable except (maybe) for the LINQ extensions.
 - Testing is well underway but there is still a lot to be done.
 
@@ -402,7 +405,7 @@ the inability to return a meaningful result.
 Version History
 ---------------
 
-1.0.0-alpha-1 (27/03/2020)
+1.0.0-alpha-1 (27/03/2020) First public package.
 
 0.28.0 Still available on nuget.org under a different name (Narvalo.Fx).
        Deprecated, broken, do not use it.
