@@ -6,6 +6,7 @@ namespace Abc
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Xunit;
 
@@ -174,17 +175,20 @@ namespace Abc
         [Fact]
         public static void ToString_None()
         {
-            Assert.Contains("None", Maybe<int>.None.ToString(), StringComparison.OrdinalIgnoreCase);
+            Assert.Equal("Maybe(None)", Maybe<int>.None.ToString());
+            Assert.Equal("Maybe(None)", Maybe<string>.None.ToString());
+            Assert.Equal("Maybe(None)", Maybe<Uri>.None.ToString());
+            Assert.Equal("Maybe(None)", Maybe<AnyT>.None.ToString());
         }
 
         [Fact]
         public static void ToString_Some()
         {
             // Arrange
-            string value = "My Value";
-            var some = Maybe.SomeOrNone(value);
+            string text = "My Value";
+            var some = Maybe.SomeOrNone(text);
             // Act & Assert
-            Assert.Contains(value, some.ToString(), StringComparison.OrdinalIgnoreCase);
+            Assert.Contains(text, some.ToString(), StringComparison.OrdinalIgnoreCase);
         }
 
         [Fact]
@@ -262,6 +266,7 @@ namespace Abc
             // Beyond smoke tests.
             Assert.Some(2L, One.Bind(x => Maybe.Some(2L * x)));
             Assert.Some(6L, Two.Bind(x => Maybe.Some(3L * x)));
+            Assert.Some(8L, TwoL.Bind(x => Maybe.Some(4 * x)));
             Assert.Some(MyUri.AbsoluteUri, SomeUri.Bind(x => Maybe.SomeOrNone(x.AbsoluteUri)));
         }
 
@@ -985,6 +990,8 @@ namespace Abc
     // Async methods.
     public partial class MaybeTests
     {
+        #region BindAsync()
+
         [Fact]
         public static void BindAsync_None_NullBinder()
         {
@@ -1000,6 +1007,33 @@ namespace Abc
         }
 
         [Fact]
+        public static void BindAsync_None()
+        {
+            Assert.Async.None(Ø.BindAsync(_ => Task.FromResult(AnyResult.Some)));
+            Assert.Async.None(NoText.BindAsync(_ => Task.FromResult(AnyResult.Some)));
+            Assert.Async.None(NoUri.BindAsync(_ => Task.FromResult(AnyResult.Some)));
+            Assert.Async.None(AnyT.None.BindAsync(_ => Task.FromResult(AnyResult.Some)));
+        }
+
+        [Fact]
+        public static void BindAsync_Some()
+        {
+            Assert.Async.Some(AnyResult.Value, One.BindAsync(_ => Task.FromResult(AnyResult.Some)));
+            Assert.Async.Some(AnyResult.Value, SomeText.BindAsync(_ => Task.FromResult(AnyResult.Some)));
+            Assert.Async.Some(AnyResult.Value, SomeUri.BindAsync(_ => Task.FromResult(AnyResult.Some)));
+            Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(_ => Task.FromResult(AnyResult.Some)));
+
+            Assert.Async.None(One.BindAsync(_ => Task.FromResult(AnyResult.None)));
+            Assert.Async.None(SomeText.BindAsync(_ => Task.FromResult(AnyResult.None)));
+            Assert.Async.None(SomeUri.BindAsync(_ => Task.FromResult(AnyResult.None)));
+            Assert.Async.None(AnyT.Some.BindAsync(_ => Task.FromResult(AnyResult.None)));
+        }
+
+        #endregion
+
+        #region SelectAsync()
+
+        [Fact]
         public static void SelectAsync_None_NullSelector()
         {
             Assert.Async.ThrowsArgNullEx("selector", () =>
@@ -1013,6 +1047,10 @@ namespace Abc
                 One.SelectAsync(Funk<int, AnyT>.NullAsync));
         }
 
+        #endregion
+
+        #region OrElseAsync()
+
         [Fact]
         public static void OrElseAsync_None_NullOther()
         {
@@ -1025,19 +1063,49 @@ namespace Abc
             Assert.Async.ThrowsArgNullEx("other", () => One.OrElseAsync(null!));
         }
 
+        #endregion
+
+        #region SwitchAsync()
+
         [Fact]
-        public static void SwitchAsync_None_NullCaseNone()
+        public static void SwitchAsync_None_NullCaseNone_Throws()
         {
             Assert.Async.ThrowsArgNullEx("caseNone", () =>
-                Ø.SwitchAsync(Funk<int, AnyT>.AnyAsync, null!));
+                Ø.SwitchAsync(
+                    caseSome: Funk<int, AnyT>.AnyAsync,
+                    caseNone: null!));
         }
 
         [Fact]
-        public static void SwitchAsync_Some_NullCaseSome()
+        public static void SwitchAsync_None_NullCaseSome_DoesNotThrow()
+        {
+            // Act & Assert
+            Task<AnyResult> v = Ø.SwitchAsync(
+                caseSome: Funk<int, AnyResult>.NullAsync,
+                caseNone: AnyResult.AsyncValue);
+            Assert.Same(AnyResult.Value, v.Result); // Sanity check
+        }
+
+        [Fact]
+        public static void SwitchAsync_Some_NullCaseSome_Throws()
         {
             Assert.Async.ThrowsArgNullEx("caseSome", () =>
-                One.SwitchAsync(Funk<int, AnyT>.NullAsync, AnyT.AsyncValue));
+                One.SwitchAsync(
+                    caseSome: Funk<int, AnyT>.NullAsync,
+                    caseNone: AnyT.AsyncValue));
         }
+
+        [Fact]
+        public static void SwitchAsync_Some_NullCaseNone_DoesNotThrow()
+        {
+            // Act & Assert
+            Task<AnyResult> v = One.SwitchAsync(
+                caseSome: x => AnyResult.AsyncValue,
+                caseNone: null!);
+            Assert.Same(AnyResult.Value, v.Result); // Sanity check
+        }
+
+        #endregion
     }
 
     // "Bitwise" logical operations.

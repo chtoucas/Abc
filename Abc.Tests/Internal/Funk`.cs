@@ -9,6 +9,10 @@ internal static class Funk<TResult>
     public static readonly Func<TResult> Null = default!;
 
     public static readonly Func<TResult> Any = () => default!;
+
+    public static readonly Func<Task<TResult>> NullAsync = default!;
+
+    public static readonly Func<Task<TResult>> AnyAsync = () => default!;
 }
 
 internal static class Funk<T, TResult>
