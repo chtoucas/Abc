@@ -2,8 +2,12 @@
 
 `Abc` features a rich option type for C#.
 
-|NuGet|Open Cover|
-|-----|----------|
+**Status:** _unstable_
+- The API should be stable except for the LINQ extensions.
+- Testing is well underway but there is still a lot to be done.
+
+|NuGet|OpenCover|
+|-----|---------|
 | [![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/) | ![Code Coverage](coverage.svg) |
 
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
@@ -11,10 +15,6 @@
 - [Developer Notes](#developer-notes)
 - [Version History](#version-history)
 - [License](https://github.com/chtoucas/Abc/blob/master/LICENSE.txt)
-
-#### Status: _unstable_
-- The API should be pretty stable except (maybe) for the LINQ extensions.
-- Testing is well underway but there is still a lot to be done.
 
 Quick Start with `Maybe<T>`
 ---------------------------
@@ -389,7 +389,7 @@ otherwise I would not have written this library. _Maybe_'s should be
 **ephemeral** and mostly confined inside a method.
 
 #### Regarding performance
-- **AVOID using a _maybe_ if the object is expected to be long-lived.** (why not?)
+- **AVOID using a _maybe_ if the object is expected to be long-lived.** (TODO: _why not?_)
 - **AVOID using a _maybe_ in hot code paths.**
 
 (TODO: _be less categorical, struct could imply a ton of copying, what about LINQ
@@ -417,8 +417,10 @@ Developer Notes
 
 ### Package
 
-Three targets: .NET Standard 2.0, .NET Standard 2.1 w/ nullable annotations
-and .NET Core 3.1.
+Supported frameworks:
+- .NET Standard 2.0
+- .NET Standard 2.1 w/ nullable annotations
+- .NET Core 3.1.
 
 ### TODOs
 
@@ -432,7 +434,7 @@ and .NET Core 3.1.
 Version History
 ---------------
 
-1.0.0-alpha-1 (27/03/2020) First public package.
+**1.0.0-alpha-1** (2020-03-27) First public release on nuget.org.
 
-0.28.0 Still available on nuget.org under a different name (Narvalo.Fx).
-       Deprecated, broken, do not use it.
+**0.28.0** Still available on nuget.org under a different name (Narvalo.Fx).
+           Deprecated, broken, do not use it.
