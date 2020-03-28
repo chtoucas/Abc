@@ -19,7 +19,7 @@ namespace Abc.Utilities
     internal static class Require
     {
         [DebuggerStepThrough]
-        public static void NotNull<T>([ValidatedNotNull]T value, string paramName)
+        public static void NotNull<T>([ValidatedNotNull] T value, string paramName)
             where T : class
         {
             if (value is null)
