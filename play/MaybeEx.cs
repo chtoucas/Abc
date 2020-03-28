@@ -97,6 +97,7 @@ namespace Abc
     {
         // Configurable core async methods?
         // https://devblogs.microsoft.com/dotnet/configureawait-faq/
+        // https://ericlippert.com/2020/03/10/passing-awaited-tasks/
 
         [Pure]
         public static async Task<Maybe<TResult>> BindAsync<T, TResult>(

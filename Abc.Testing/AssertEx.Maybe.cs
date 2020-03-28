@@ -64,11 +64,13 @@ namespace Abc
             /// <summary>
             /// Verifies that the result of <paramref name="task"/> is empty.
             /// </summary>
-            public static void None<T>(Task<Maybe<T>> task)
+            public static async Task None<T>(Task<Maybe<T>> task)
             {
                 if (IsNull(nameof(task), task)) { return; }
 
-                True(task.Result.IsNone, "The maybe should be empty.");
+                var maybe = await task.ConfigureAwait(false);
+
+                True(maybe.IsNone, "The maybe should be empty.");
             }
 
             /// <summary>
@@ -78,7 +80,9 @@ namespace Abc
             {
                 if (IsNull(nameof(task), task)) { return; }
 
-                False(task.Result.IsNone, "The maybe should not be empty.");
+                var maybe = task.Result;
+
+                False(maybe.IsNone, "The maybe should not be empty.");
             }
 
             /// <summary>

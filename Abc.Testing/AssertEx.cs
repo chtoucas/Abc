@@ -72,10 +72,11 @@ namespace Abc
 #pragma warning restore CA1034
         {
             // Threw ArgumentNullException.
-            public static void ThrowsArgNullEx(string argName, Func<Task> testCode)
+            public static async Task ThrowsArgNullEx(string argName, Func<Task> testCode)
             {
-                Task<ArgumentNullException> ex = ThrowsAsync<ArgumentNullException>(testCode);
-                Equal(argName, ex.Result.ParamName);
+                ArgumentNullException ex =
+                    await ThrowsAsync<ArgumentNullException>(testCode).ConfigureAwait(false);
+                Equal(argName, ex.ParamName);
             }
         }
     }
