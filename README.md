@@ -8,7 +8,7 @@
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
 - [Developer Notes](#developer-notes)
-- [License](https://github.com/chtoucas/Abc.Maybe/tree/master/LICENSE.txt)
+- [License](https://github.com/chtoucas/Abc/blob/master/LICENSE.txt)
 
 #### Status: _unstable_
 
