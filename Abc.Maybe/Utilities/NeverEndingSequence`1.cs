@@ -7,6 +7,7 @@ namespace Abc.Utilities
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     [DebuggerDisplay("Count = ∞")]
     internal sealed class NeverEndingSequence<T> : IEnumerable<T>, IEnumerator<T>
@@ -19,17 +20,17 @@ namespace Abc.Utilities
         }
 
         // IEnumerable<T>
-        public IEnumerator<T> GetEnumerator() => this;
+        [Pure] public IEnumerator<T> GetEnumerator() => this;
 
         // IEnumerable
-        IEnumerator IEnumerable.GetEnumerator() => this;
+        [Pure] IEnumerator IEnumerable.GetEnumerator() => this;
 
         // IEnumerator<T>
-        public T Current => _element;
+        [Pure] public T Current => _element;
 
         // IEnumerator
-        object IEnumerator.Current => _element;
-        public bool MoveNext() => true;
+        [Pure] object IEnumerator.Current => _element;
+        [Pure] public bool MoveNext() => true;
         void IEnumerator.Reset() { }
 
         // IDisposable

@@ -7,6 +7,7 @@ namespace Abc.Utilities
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     using AoorException = System.ArgumentOutOfRangeException;
     using EF = ExceptionFactory;
@@ -42,6 +43,7 @@ namespace Abc.Utilities
             set => throw EF.ReadOnlyCollection;
         }
 
+        [Pure]
         public int IndexOf(T item)
             => EqualityComparer<T>.Default.Equals(item, _element) ? 0 : -1;
 
@@ -59,6 +61,7 @@ namespace Abc.Utilities
         public void Add(T item) => throw EF.ReadOnlyCollection;
         public void Clear() => throw EF.ReadOnlyCollection;
 
+        [Pure]
         public bool Contains(T item)
             => EqualityComparer<T>.Default.Equals(item, _element);
 
@@ -71,8 +74,8 @@ namespace Abc.Utilities
 
         #region IEnumerable<T>
 
-        public IEnumerator<T> GetEnumerator() => new Iterator(_element);
-        IEnumerator IEnumerable.GetEnumerator() => new Iterator(_element);
+        [Pure] public IEnumerator<T> GetEnumerator() => new Iterator(_element);
+        [Pure] IEnumerator IEnumerable.GetEnumerator() => new Iterator(_element);
 
         #endregion
 
@@ -90,9 +93,10 @@ namespace Abc.Utilities
             // - before any call to MoveNext(), returns default(T)
             // - when done iterating, returns the last value
             // Here, we always return _element.
-            public T Current => _element;
-            object IEnumerator.Current => _element;
+            [Pure] public T Current => _element;
+            [Pure] object IEnumerator.Current => _element;
 
+            [Pure]
             public bool MoveNext()
             {
                 if (_done) { return false; }

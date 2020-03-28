@@ -7,6 +7,7 @@ namespace Abc.Utilities
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Represents the empty iterator.
@@ -23,7 +24,7 @@ namespace Abc.Utilities
         [ExcludeFromCodeCoverage] [MaybeNull] public T Current => default;
         [ExcludeFromCodeCoverage] [MaybeNull] object IEnumerator.Current => default;
 
-        public bool MoveNext() => false;
+        [Pure] public bool MoveNext() => false;
 
         void IEnumerator.Reset() { }
         void IDisposable.Dispose() { }
