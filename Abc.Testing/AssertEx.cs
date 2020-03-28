@@ -10,6 +10,17 @@ namespace Abc
     public sealed partial class AssertEx : Assert
     {
         private AssertEx() { }
+
+        private static bool IsNull<T>(string paramName, [ValidatedNotNull] T obj)
+            where T : notnull
+        {
+            if (obj is null)
+            {
+                True(false, $"{paramName} was null.");
+                return true;
+            }
+            return false;
+        }
     }
 
     public partial class AssertEx
@@ -57,7 +68,7 @@ namespace Abc
         }
 
 #pragma warning disable CA1034 // Nested types should not be visible
-        public static class Async
+        public static partial class Async
 #pragma warning restore CA1034
         {
             // Threw ArgumentNullException.

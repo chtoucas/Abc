@@ -9,7 +9,7 @@ namespace Abc
     {
         public static void ThrowsOnNext<T>(IEnumerable<T> seq)
         {
-            if (seq is null) { throw new ArgumentNullException(nameof(seq)); }
+            if (IsNull(nameof(seq), seq)) { return; }
 
             using var iter = seq.GetEnumerator();
             Throws<InvalidOperationException>(() => iter.MoveNext());
@@ -17,7 +17,7 @@ namespace Abc
 
         public static void ThrowsAfter<T>(IEnumerable<T> seq, int count)
         {
-            if (seq is null) { throw new ArgumentNullException(nameof(seq)); }
+            if (IsNull(nameof(seq), seq)) { return; }
 
             int i = 0;
             using var iter = seq.GetEnumerator();
@@ -27,7 +27,7 @@ namespace Abc
 
         public static void CalledOnNext<T>(IEnumerable<T> seq, ref bool notCalled)
         {
-            if (seq is null) { throw new ArgumentNullException(nameof(seq)); }
+            if (IsNull(nameof(seq), seq)) { return; }
 
             using var iter = seq.GetEnumerator();
             iter.MoveNext();
@@ -36,7 +36,7 @@ namespace Abc
 
         public static void CalledAfter<T>(IEnumerable<T> seq, int count, ref bool notCalled)
         {
-            if (seq is null) { throw new ArgumentNullException(nameof(seq)); }
+            if (IsNull(nameof(seq), seq)) { return; }
 
             int i = 0;
             using var iter = seq.GetEnumerator();

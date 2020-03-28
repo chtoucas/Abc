@@ -2,6 +2,8 @@
 
 namespace Abc
 {
+    using System.Threading.Tasks;
+
     public partial class AssertEx
     {
         /// <summary>
@@ -54,5 +56,52 @@ namespace Abc
         /// </summary>
         public static void Unknown(Maybe<bool> maybe)
             => True(maybe.IsNone, "The maybe should be empty.");
+
+#pragma warning disable CA1034 // Nested types should not be visible
+        public static partial class Async
+#pragma warning restore CA1034
+        {
+            /// <summary>
+            /// Verifies that the result of <paramref name="task"/> is empty.
+            /// </summary>
+            public static void None<T>(Task<Maybe<T>> task)
+            {
+                if (IsNull(nameof(task), task)) { return; }
+
+                True(task.Result.IsNone, "The maybe should be empty.");
+            }
+
+            /// <summary>
+            /// Verifies that the result of <paramref name="task"/> is NOT empty.
+            /// </summary>
+            public static void Some<T>(Task<Maybe<T>> task)
+            {
+                if (IsNull(nameof(task), task)) { return; }
+
+                False(task.Result.IsNone, "The maybe should not be empty.");
+            }
+
+            /// <summary>
+            /// Verifies that <paramref name="task"/> is NOT empty and contains
+            /// <paramref name="exp"/>.
+            /// </summary>
+            public static void Some<T>(T exp, Task<Maybe<T>> task)
+            {
+                if (IsNull(nameof(task), task)) { return; }
+
+                Maybe<T> maybe = task.Result;
+
+                False(maybe.IsNone, "The maybe should not be empty.");
+
+                if (maybe.IsSome)
+                {
+                    // BONSANG! When IsSome is true, Value is NOT null.
+                    Equal(exp, maybe.Value!);
+                }
+
+                // We also test Contains().
+                True(maybe.Contains(exp));
+            }
+        }
     }
 }
