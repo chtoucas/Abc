@@ -1,17 +1,18 @@
 # Abécédaire
 
-[![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/)
-![Code Coverage](coverage.svg)
-
 `Abc` features a rich option type for C#.
+
+|NuGet|Open Cover|
+|-----|----------|
+| [![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/) | ![Code Coverage](coverage.svg) |
 
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
 - [Developer Notes](#developer-notes)
+- [Version History](#version-history)
 - [License](https://github.com/chtoucas/Abc/blob/master/LICENSE.txt)
 
 #### Status: _unstable_
-
 - The API should be pretty stable except (maybe) for the LINQ extensions.
 - Testing is well underway but there is still a lot to be done.
 
@@ -37,7 +38,7 @@ Quick Start with `Maybe<T>`
 An option type, aka maybe type (a better fit for what we use it for), is like
 a box containing a value or no value at all.
 
-(TODO: improve what follows)
+(TODO: _improve what follows_)
 
 It can help preventing null reference exceptions, but that's not the point, it
 really forces us to think about the outcome of a computation. What it is not is
@@ -61,8 +62,8 @@ is not valid in C#.
 
 #### Use case scenarios
 
-(TODO: untaint data, validate, transform, filter, correctness,
-SQL `null`, may-parse pattern, command-line args, HTTP query params)
+(TODO: _untaint data, validate, transform, filter, correctness,
+SQL `null`, may-parse pattern, command-line args, HTTP query params_)
 
 ### Construct a _maybe_
 
@@ -233,7 +234,7 @@ foreach (var x in maybe.Yield()) {
 `GetEnumerator()` creates an iterator which is resettable and does not need to
 be disposed (`using` is not necessary).
 
-(TODO: perf when compared to `Switch` & `Do`)
+(TODO: _perf when compared to `Switch` & `Do`_)
 
 ```csharp
 // One iteration or no iteration at all.
@@ -375,7 +376,7 @@ design. It is also dubious to see a method returning a _maybe_ when the method
 has no reason to fail. On a side note, do not replace exceptions with _maybe_'s
 when the error is actually "exceptional".
 
-(TODO: input not OK -> NRT, output OK)
+(TODO: _input not OK -> NRT, output OK_)
 
 In general, I would not even recommend to expose `Maybe<T>` in a general purpose
 library. For instance, returning a _maybe_ raises the concern that unexperienced
@@ -391,8 +392,8 @@ otherwise I would not have written this library. _Maybe_'s should be
 - **AVOID using a _maybe_ if the object is expected to be long-lived.** (why not?)
 - **AVOID using a _maybe_ in hot code paths.**
 
-(TODO: be less categorical, struct could imply a ton of copying, what about LINQ
-(seq of _maybe_'s)?)
+(TODO: _be less categorical, struct could imply a ton of copying, what about LINQ
+(seq of _maybe_'s)?_)
 
 #### About the May-Parse pattern
 - **DO use the May-Parse pattern instead of the Try-Parse pattern for reference
@@ -401,14 +402,6 @@ otherwise I would not have written this library. _Maybe_'s should be
 
 For reference types, a _maybe_ offers a better paradigm than a `null` to express
 the inability to return a meaningful result.
-
-Version History
----------------
-
-1.0.0-alpha-1 (27/03/2020) First public package.
-
-0.28.0 Still available on nuget.org under a different name (Narvalo.Fx).
-       Deprecated, broken, do not use it.
 
 Developer Notes
 ---------------
@@ -435,3 +428,11 @@ and .NET Core 3.1.
 - NuGet package.
 - Perf tool (LINQ, nulls).
 - Optimize LINQ ops.
+
+Version History
+---------------
+
+1.0.0-alpha-1 (27/03/2020) First public package.
+
+0.28.0 Still available on nuget.org under a different name (Narvalo.Fx).
+       Deprecated, broken, do not use it.
