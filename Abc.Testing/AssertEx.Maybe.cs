@@ -82,8 +82,8 @@ namespace Abc
             }
 
             /// <summary>
-            /// Verifies that <paramref name="task"/> is NOT empty and contains
-            /// <paramref name="exp"/>.
+            /// Verifies that the result of <paramref name="task"/> is NOT empty
+            /// and contains <paramref name="exp"/>.
             /// </summary>
             public static void Some<T>(T exp, Task<Maybe<T>> task)
             {

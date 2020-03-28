@@ -1009,24 +1009,24 @@ namespace Abc
         [Fact]
         public static void BindAsync_None()
         {
-            Assert.Async.None(Ø.BindAsync(_ => Task.FromResult(AnyResult.Some)));
-            Assert.Async.None(NoText.BindAsync(_ => Task.FromResult(AnyResult.Some)));
-            Assert.Async.None(NoUri.BindAsync(_ => Task.FromResult(AnyResult.Some)));
-            Assert.Async.None(AnyT.None.BindAsync(_ => Task.FromResult(AnyResult.Some)));
+            Assert.Async.None(Ø.BindAsync(_ => AnyResult.AsyncSome));
+            Assert.Async.None(NoText.BindAsync(_ => AnyResult.AsyncSome));
+            Assert.Async.None(NoUri.BindAsync(_ => AnyResult.AsyncSome));
+            Assert.Async.None(AnyT.None.BindAsync(_ => AnyResult.AsyncSome));
         }
 
         [Fact]
         public static void BindAsync_Some()
         {
-            Assert.Async.Some(AnyResult.Value, One.BindAsync(_ => Task.FromResult(AnyResult.Some)));
-            Assert.Async.Some(AnyResult.Value, SomeText.BindAsync(_ => Task.FromResult(AnyResult.Some)));
-            Assert.Async.Some(AnyResult.Value, SomeUri.BindAsync(_ => Task.FromResult(AnyResult.Some)));
-            Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(_ => Task.FromResult(AnyResult.Some)));
+            Assert.Async.Some(AnyResult.Value, One.BindAsync(_ => AnyResult.AsyncSome));
+            Assert.Async.Some(AnyResult.Value, SomeText.BindAsync(_ => AnyResult.AsyncSome));
+            Assert.Async.Some(AnyResult.Value, SomeUri.BindAsync(_ => AnyResult.AsyncSome));
+            Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(_ => AnyResult.AsyncSome));
 
-            Assert.Async.None(One.BindAsync(_ => Task.FromResult(AnyResult.None)));
-            Assert.Async.None(SomeText.BindAsync(_ => Task.FromResult(AnyResult.None)));
-            Assert.Async.None(SomeUri.BindAsync(_ => Task.FromResult(AnyResult.None)));
-            Assert.Async.None(AnyT.Some.BindAsync(_ => Task.FromResult(AnyResult.None)));
+            Assert.Async.None(One.BindAsync(_ => AnyResult.AsyncNone));
+            Assert.Async.None(SomeText.BindAsync(_ => AnyResult.AsyncNone));
+            Assert.Async.None(SomeUri.BindAsync(_ => AnyResult.AsyncNone));
+            Assert.Async.None(AnyT.Some.BindAsync(_ => AnyResult.AsyncNone));
         }
 
         #endregion

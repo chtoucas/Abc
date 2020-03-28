@@ -16,6 +16,8 @@ internal sealed class AnyResult
 
     private AnyResult() { }
 
+    public static Task<Maybe<AnyResult>> AsyncNone => Task.FromResult(None);
+
     /// <summary>
     /// Gets the unique instance of the <see cref="AnyResult"/> class.
     /// </summary>
@@ -27,6 +29,8 @@ internal sealed class AnyResult
     /// Creates a new non-empty "maybe" for the <see cref="AnyResult"/> class.
     /// </summary>
     public static Maybe<AnyResult> Some => Maybe.SomeOrNone(Instance_.Value);
+
+    public static Task<Maybe<AnyResult>> AsyncSome => Task.FromResult(Some);
 
     private static class Instance_
     {

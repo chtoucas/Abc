@@ -695,6 +695,7 @@ namespace Abc
             return _isSome ? this : await other.ConfigureAwait(false);
         }
 
+        // REVIEW: version w/ Func<Task<TResult>>?
         [Pure]
         public async Task<TResult> SwitchAsync<TResult>(
             Func<T, Task<TResult>> caseSome, Task<TResult> caseNone)
