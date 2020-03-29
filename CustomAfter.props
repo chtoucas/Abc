@@ -1,14 +1,12 @@
 <Project>
 
+  <!--
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <!-- Purpose: define the nullable attributes -->
-    <DefineConstants>$(DefineConstants);NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
 
-  <!-- Not currently used -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD2_1</DefineConstants>
   </PropertyGroup>
+  -->
 
   <!-- RELEASE -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

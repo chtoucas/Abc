@@ -20,7 +20,6 @@ vNEXT
 - Multitargeting:
   * Tests.
   * How to handle PublicAPI.XXX.txt?
-  * Clean up `CustomAfter.props`, [Compiler symbols](https://docs.microsoft.com/en-us/dotnet/core/tutorials/libraries)
   * [NetStandardImplicitPackageVersion](https://docs.microsoft.com/en-us/dotnet/core/packages)
 - Strong name? How to avoid binding redirects? Prerequesite: assembly version.
   MUST be done before v1.0.0.
@@ -30,7 +29,8 @@ vNEXT
   * `<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>`
   * [NuGet#4142](https://github.com/NuGet/Home/issues/4142)
 - MSBuild:
-  * Improve NuGet package description.
+  * Improve NuGet package description, `PackageLicenseFile`;
+    see [here](https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets)
   * `Deterministic`, `Title`, `AssemblyTitle`, `VersionPrefix`.
 
 TODOs
@@ -67,6 +67,10 @@ Guidelines
 - Add _nullable annotations_ whenever necessary.
 - _Seal classes_ unless they are designed with extensibility in mind.
 - Tag any use of the null-forgiving operator (!) with `BONSANG!`.
+
+### Editor config
+See [here](https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-language-conventions?view=vs-2019)
+- IDE0060 (Remove unused parameter) covered by CA1801.
 
 Future plans?
 -------------
