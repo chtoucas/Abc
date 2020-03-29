@@ -97,16 +97,17 @@ namespace Abc
     {
         // Configurable core async methods?
         // https://devblogs.microsoft.com/dotnet/configureawait-faq/
+        // https://ericlippert.com/2020/03/10/passing-awaited-tasks/
 
         [Pure]
         public static async Task<Maybe<TResult>> BindAsync<T, TResult>(
-            this Maybe<T> @this,
+            Maybe<T> maybe,
             Func<T, Task<Maybe<TResult>>> binder,
             bool continueOnCapturedContext)
         {
             Require.NotNull(binder, nameof(binder));
 
-            if (@this.TryGetValue(out T value))
+            if (maybe.TryGetValue(out T value))
             {
                 return await binder(value)
                     .ConfigureAwait(continueOnCapturedContext);
@@ -119,13 +120,13 @@ namespace Abc
 
         [Pure]
         public static async Task<Maybe<TResult>> SelectAsync<T, TResult>(
-            this Maybe<T> @this,
+            Maybe<T> maybe,
             Func<T, Task<TResult>> selector,
             bool continueOnCapturedContext)
         {
             Require.NotNull(selector, nameof(selector));
 
-            if (@this.TryGetValue(out T value))
+            if (maybe.TryGetValue(out T value))
             {
                 TResult result = await selector(value)
                     .ConfigureAwait(continueOnCapturedContext);
@@ -143,15 +144,15 @@ namespace Abc
 
         [Pure]
         public static async Task<Maybe<T>> WhereAsync<T>(
-            this Maybe<T> @this,
+            Maybe<T> maybe,
             Func<T, Task<bool>> predicate)
         {
             Require.NotNull(predicate, nameof(predicate));
 
-            return await @this.BindAsync(__binder).ConfigureAwait(false);
+            return await maybe.BindAsync(__binder).ConfigureAwait(false);
 
             async Task<Maybe<T>> __binder(T x)
-                => await predicate(x).ConfigureAwait(false) ? @this : Maybe<T>.None;
+                => await predicate(x).ConfigureAwait(false) ? maybe : Maybe<T>.None;
         }
     }
 

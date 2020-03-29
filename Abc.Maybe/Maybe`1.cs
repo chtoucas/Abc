@@ -667,6 +667,7 @@ namespace Abc
     // NB: these async methods discard the context when they resume.
     public partial struct Maybe<T>
     {
+        // TODO: async methods. Check args eagerly. Copy of this. Static AsyncNone.
         [Pure]
         public async Task<Maybe<TResult>> BindAsync<TResult>(
             Func<T, Task<Maybe<TResult>>> binder)
@@ -675,6 +676,14 @@ namespace Abc
 
             return _isSome ? await binder(_value).ConfigureAwait(false)
                 : Maybe<TResult>.None;
+
+            //var @this = this;
+            //return await __bind(@this).configureawait(false);
+
+            //task<maybe<tresult>> __bind(maybe<t> @this)
+            //    // bonsang! when _issome is true, _value is not null.
+            //    => @this._issome ? binder(@this._value!)
+            //        : task.fromresult(maybe<tresult>.none);
         }
 
         [Pure]

@@ -16,21 +16,22 @@ internal sealed class AnyResult
 
     private AnyResult() { }
 
-    public static Task<Maybe<AnyResult>> AsyncNone => Task.FromResult(None);
+    public static Task<Maybe<AnyResult>> AsyncNone { get; }
+        = Task.FromResult(Maybe<AnyResult>.None);
 
     /// <summary>
     /// Gets the unique instance of the <see cref="AnyResult"/> class.
     /// </summary>
     public static AnyResult Value => Instance_.Value;
 
-    public static Task<AnyResult> AsyncValue => Task.FromResult(Instance_.Value);
+    public static Task<AnyResult> AsyncValue { get; }
+        = Task.FromResult(Instance_.Value);
 
-    /// <summary>
-    /// Creates a new non-empty "maybe" for the <see cref="AnyResult"/> class.
-    /// </summary>
-    public static Maybe<AnyResult> Some => Maybe.SomeOrNone(Instance_.Value);
+    public static Maybe<AnyResult> Some { get; }
+        = Maybe.SomeOrNone(Instance_.Value);
 
-    public static Task<Maybe<AnyResult>> AsyncSome => Task.FromResult(Some);
+    public static Task<Maybe<AnyResult>> AsyncSome { get; }
+        = Task.FromResult(Maybe.SomeOrNone(Instance_.Value));
 
     private static class Instance_
     {
