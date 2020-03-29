@@ -61,14 +61,16 @@ namespace Abc
         public static partial class Async
 #pragma warning restore CA1034
         {
+            // TODO: make them async.
+
             /// <summary>
             /// Verifies that the result of <paramref name="task"/> is empty.
             /// </summary>
-            public static async Task None<T>(Task<Maybe<T>> task)
+            public static void None<T>(Task<Maybe<T>> task)
             {
                 if (IsNull(nameof(task), task)) { return; }
 
-                var maybe = await task.ConfigureAwait(false);
+                var maybe = task.Result;
 
                 True(maybe.IsNone, "The maybe should be empty.");
             }

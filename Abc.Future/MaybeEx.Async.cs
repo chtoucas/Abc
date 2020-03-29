@@ -12,6 +12,8 @@ namespace Abc
     // https://ericlippert.com/2020/03/10/passing-awaited-tasks/
 
     // Async methods.
+    // Not extension methods: we already have instance methods with the same
+    // names.
     public partial class MaybeEx
     {
         [Pure]

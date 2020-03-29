@@ -8,60 +8,86 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
+    // TODO: async methods.
+
     // Async methods.
     // NB: these async methods discard the context when they resume.
     public partial struct Maybe<T>
     {
-        // TODO: async methods. Check args eagerly. Copy of this. Static AsyncNone.
         [Pure]
-        public async Task<Maybe<TResult>> BindAsync<TResult>(
+        public Task<Maybe<TResult>> BindAsync<TResult>(
             Func<T, Task<Maybe<TResult>>> binder)
         {
+            // Check arg eagerly.
             if (binder is null) { throw new Anexn(nameof(binder)); }
 
-            return _isSome ? await binder(_value).ConfigureAwait(false)
-                : Maybe<TResult>.None;
-
-            //var @this = this;
-            //return await __bind(@this).configureawait(false);
-
-            //task<maybe<tresult>> __bind(maybe<t> @this)
-            //    // bonsang! when _issome is true, _value is not null.
-            //    => @this._issome ? binder(@this._value!)
-            //        : task.fromresult(maybe<tresult>.none);
+            return BindAsyncImpl(binder);
         }
 
         [Pure]
-        public async Task<Maybe<TResult>> SelectAsync<TResult>(
+        private async Task<Maybe<TResult>> BindAsyncImpl<TResult>(
+            Func<T, Task<Maybe<TResult>>> binder)
+        {
+            return _isSome ? await binder(_value).ConfigureAwait(false)
+                : Maybe<TResult>.None;
+        }
+
+        [Pure]
+        public Task<Maybe<TResult>> SelectAsync<TResult>(
             Func<T, Task<TResult>> selector)
         {
+            // Check arg eagerly.
             if (selector is null) { throw new Anexn(nameof(selector)); }
 
+            return SelectAsyncImpl(selector);
+        }
+
+        [Pure]
+        private async Task<Maybe<TResult>> SelectAsyncImpl<TResult>(
+            Func<T, Task<TResult>> selector)
+        {
             return _isSome ? Maybe.Of(await selector(_value).ConfigureAwait(false))
                 : Maybe<TResult>.None;
         }
 
         [Pure]
-        public async Task<Maybe<T>> OrElseAsync(Task<Maybe<T>> other)
+        public Task<Maybe<T>> OrElseAsync(Task<Maybe<T>> other)
         {
+            // Check arg eagerly.
             if (other is null) { throw new Anexn(nameof(other)); }
 
+            return OrElseAsyncImpl(other);
+        }
+
+        [Pure]
+        private async Task<Maybe<T>> OrElseAsyncImpl(Task<Maybe<T>> other)
+        {
             return _isSome ? this : await other.ConfigureAwait(false);
         }
 
-        // REVIEW: version w/ Func<Task<TResult>>?
+        // Do not behave like the non-async Swith(), the method throws right
+        // away when "caseSome" or "caseNone" is null.
         [Pure]
-        public async Task<TResult> SwitchAsync<TResult>(
+        public Task<TResult> SwitchAsync<TResult>(
+            Func<T, Task<TResult>> caseSome, Task<TResult> caseNone)
+        {
+            // Check args eagerly.
+            if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
+            if (caseNone is null) { throw new Anexn(nameof(caseNone)); }
+
+            return SwitchAsyncImpl(caseSome, caseNone);
+        }
+
+        [Pure]
+        private async Task<TResult> SwitchAsyncImpl<TResult>(
             Func<T, Task<TResult>> caseSome, Task<TResult> caseNone)
         {
             if (_isSome)
             {
-                if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
                 return await caseSome(_value).ConfigureAwait(false);
             }
             else
             {
-                if (caseNone is null) { throw new Anexn(nameof(caseNone)); }
                 return await caseNone.ConfigureAwait(false);
             }
         }
