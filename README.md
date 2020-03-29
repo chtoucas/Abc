@@ -18,8 +18,8 @@
 - [Usage Guidelines](#usage-guidelines)
 - [Version History](#version-history)
 - [Changelog](Changelog.md)
-- [Developer Notes](https://github.com/chtoucas/Abc/blob/master/NOTES.md)
-- [License](https://github.com/chtoucas/Abc/blob/master/LICENSE.txt)
+- [Developer Notes](NOTES.md)
+- [License](LICENSE.txt)
 
 Quick Start with `Maybe<T>`
 ---------------------------
@@ -411,5 +411,5 @@ the inability to return a meaningful result.
 Version History
 ---------------
 
-- [1.0.0-alpha-1](Changelog.md#100-alpha-1-2020-03-27) [2020-03-27] First public release.
+- 2020-03-27, v[1.0.0-alpha-1](Changelog.md#100-alpha-1-2020-03-27) First public release.
 
