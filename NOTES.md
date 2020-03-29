@@ -55,7 +55,8 @@ Operations:
 Issues
 ------
 
-- `Abc.Testing`, [MSB3277](https://github.com/microsoft/msbuild/issues/608)
+- Abc.Testing build warnings (sometimes); see
+  [MSB3277](https://github.com/microsoft/msbuild/issues/608).
 - Scripts: stop on first error (rewrite in PowerShell?).
 
 Release Process

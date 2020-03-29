@@ -1,9 +1,9 @@
 # Changelog
 
-### Next
+### vNEXT
 
 Internal Changes.
-- New project `Narvalo.Future` for experimental code.
+- New project Narvalo.Future for experimental code.
 - Clean up project files.
   * No longer define compiler symbols `NETSTANDARD2_0` and `NETSTANDARD2_1` as
     this is already done by MSBuild;
@@ -18,5 +18,5 @@ First public release.
 ### 2017-04-07, version 0.28.0
 
 Still available on nuget.org but under a different
-([name](https://www.nuget.org/packages/Narvalo.Fx/)),
+[name](https://www.nuget.org/packages/Narvalo.Fx/),
 now deprecated. It is broken, please do NOT use.

@@ -1,6 +1,6 @@
 # Abécédaire
 
-`Abc` features a rich option type for C#.
+Abc features a rich option type for C#.
 
 **Status:** _unstable_
 - The API should be stable except for the async methods and the LINQ extensions.

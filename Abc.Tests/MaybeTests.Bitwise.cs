@@ -2,80 +2,15 @@
 
 namespace Abc
 {
-    using System.Collections.Generic;
-
     using Xunit;
 
     using Assert = AssertEx;
-
-    public static partial class MaybeTests
-    {
-        public const string NullString = null;
-        public const string? NullNullString = null;
-    }
-
-    public partial class MaybeTests
-    {
-        // Not a test for Maybe's.
-        // Comparison w/ null is weird.
-        //   "For the comparison operators <, >, <=, and >=, if one or both
-        //   operands are null, the result is false; otherwise, the contained
-        //   values of operands are compared. Do not assume that because a
-        //   particular comparison (for example, <=) returns false, the opposite
-        //   comparison (>) returns true."
-        // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/nullable-value-types#lifted-operators
-        //   "Basically the rule here is that nulls compare for equality normally,
-        //   but any other comparison results in false."
-        // https://ericlippert.com/2015/08/31/nullable-comparisons-are-weird/
-        // Three options (extracts from Lippert's article):
-        // 1) Make comparison operators produce nullable bool.
-        // 2) Make comparison operators produce bool, and say that
-        //    greater-than-or-equal comparisons to null have the same semantics
-        //    as "or-ing" together the greater-than and equals operations.
-        // 3) Make comparison operators produce a bool and apply a total
-        //    ordering.
-        // Choice 3 is for sorting.
-        [Fact]
-        public static void Comparisons()
-        {
-            int? one = 1;
-            int? nil = null;
-            // Default comparer for nullable int.
-            var comparer = Comparer<int?>.Default;
-
-            // If one of the operand is null, the comparison returns false.
-            // Important consequence: we can't say that "x >= y" is equivalent
-            // to "not(x < y)"...
-            Assert.False(one < nil);    // false
-            Assert.False(one > nil);    // false    "contradicts" Compare; see below
-            Assert.False(one <= nil);   // false
-            Assert.False(one >= nil);   // false
-
-            // Equality is fine.
-            Assert.False(one == nil);   // false
-            Assert.True(one != nil);    // true
-
-#pragma warning disable CS1718 // Comparison made to same variable
-            Assert.False(nil < nil);    // false
-            Assert.False(nil > nil);    // false
-            Assert.False(nil <= nil);   // false    weird
-            Assert.False(nil >= nil);   // false    weird
-
-            Assert.True(nil == nil);    // true
-            Assert.False(nil != nil);   // false
-#pragma warning restore CS1718
-
-            Assert.Equal(1, comparer.Compare(one, nil));    // "one > nil"
-            Assert.Equal(-1, comparer.Compare(nil, one));   // "nil < one"
-            Assert.Equal(0, comparer.Compare(nil, nil));    // "nil >= nil"
-        }
-    }
 
     // "Bitwise" logical operations.
     public partial class MaybeTests
     {
         [Fact]
-        public static void OrElse_Future()
+        public static void OrElse()
         {
             // Some Some -> Some
             Assert.Equal(One, One.OrElse(Two));
@@ -94,6 +29,105 @@ namespace Abc
         }
 
         [Fact]
+        public static void AndThen()
+        {
+            // Some Some -> Some
+            Assert.Equal(TwoL, One.AndThen(TwoL));
+            // Some None -> None
+            Assert.Equal(ØL, One.AndThen(ØL));
+            // None Some -> None
+            Assert.Equal(ØL, Ø.AndThen(TwoL));
+            // None None -> None
+            Assert.Equal(ØL, Ø.AndThen(ØL));
+
+            // AndThen() is AndThenRTL() flipped.
+            Assert.Equal(TwoL, TwoL.AndThenRTL(One));
+            Assert.Equal(ØL, ØL.AndThenRTL(One));
+            Assert.Equal(ØL, TwoL.AndThenRTL(Ø));
+            Assert.Equal(ØL, ØL.AndThenRTL(Ø));
+        }
+
+        [Fact]
+        public static void XorElse()
+        {
+            // Some Some -> None
+            Assert.Equal(Ø, One.XorElse(Two));
+            // Some None -> Some
+            Assert.Equal(One, One.XorElse(Ø));
+            // None Some -> Some
+            Assert.Equal(Two, Ø.XorElse(Two));
+            // None None -> None
+            Assert.Equal(Ø, Ø.XorElse(Ø));
+
+            // XorElse() flips to itself.
+            Assert.Equal(Ø, Two.XorElse(One));
+            Assert.Equal(One, Ø.XorElse(One));
+            Assert.Equal(Two, Two.XorElse(Ø));
+            Assert.Equal(Ø, Ø.XorElse(Ø));
+        }
+
+        [Fact]
+        public static void BitwiseOr()
+        {
+            // Some Some -> Some
+            Assert.Equal(One, One | Two);
+            Assert.Equal(Two, Two | One);   // non-abelian
+            // Some None -> Some
+            Assert.Equal(One, One | Ø);
+            // None Some -> Some
+            Assert.Equal(Two, Ø | Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø | Ø);
+
+            Assert.LogicalTrue(One | Two);
+            Assert.LogicalTrue(One | Ø);
+            Assert.LogicalTrue(Ø | Two);
+            Assert.LogicalFalse(Ø | Ø);
+        }
+
+        [Fact]
+        public static void BitwiseAnd()
+        {
+            // Some Some -> Some
+            Assert.Equal(Two, One & Two);
+            Assert.Equal(One, Two & One);   // non-abelian
+            // Some None -> None
+            Assert.Equal(Ø, One & Ø);
+            // None Some -> None
+            Assert.Equal(Ø, Ø & Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø & Ø);
+
+            Assert.LogicalTrue(One & Two);
+            Assert.LogicalFalse(One & Ø);
+            Assert.LogicalFalse(Ø & Two);
+            Assert.LogicalFalse(Ø & Ø);
+        }
+
+        [Fact]
+        public static void ExclusiveOr()
+        {
+            // Some Some -> None
+            Assert.Equal(Ø, One ^ Two);
+            Assert.Equal(Ø, Two ^ One);     // abelian
+            // Some None -> Some
+            Assert.Equal(One, One ^ Ø);
+            // None Some -> Some
+            Assert.Equal(Two, Ø ^ Two);
+            // None None -> None
+            Assert.Equal(Ø, Ø ^ Ø);
+
+            Assert.LogicalFalse(One ^ Two);
+            Assert.LogicalTrue(One ^ Ø);
+            Assert.LogicalTrue(Ø ^ Two);
+            Assert.LogicalFalse(Ø ^ Ø);
+        }
+    }
+
+    // In Future.
+    public partial class MaybeTests
+    {
+        [Fact]
         public static void OrElseRTL()
         {
             // Some Some -> Some
@@ -110,25 +144,6 @@ namespace Abc
             Assert.Equal(One, Ø.OrElse(One));
             Assert.Equal(Two, Two.OrElse(Ø));
             Assert.Equal(Ø, Ø.OrElse(Ø));
-        }
-
-        [Fact]
-        public static void AndThen_Future()
-        {
-            // Some Some -> Some
-            Assert.Equal(TwoL, One.AndThen(TwoL));
-            // Some None -> None
-            Assert.Equal(ØL, One.AndThen(ØL));
-            // None Some -> None
-            Assert.Equal(ØL, Ø.AndThen(TwoL));
-            // None None -> None
-            Assert.Equal(ØL, Ø.AndThen(ØL));
-
-            // AndThen() is AndThenRTL() flipped.
-            Assert.Equal(TwoL, TwoL.AndThenRTL(One));
-            Assert.Equal(ØL, ØL.AndThenRTL(One));
-            Assert.Equal(ØL, TwoL.AndThenRTL(Ø));
-            Assert.Equal(ØL, ØL.AndThenRTL(Ø));
         }
 
         [Fact]
@@ -298,32 +313,6 @@ namespace Abc
             Assert.LogicalFalse(One.ContinueWith(ØL));
             Assert.LogicalTrue(Ø.ContinueWith(TwoL));
             Assert.LogicalFalse(Ø.ContinueWith(ØL));
-        }
-    }
-
-    // Misc methods.
-    public partial class MaybeTests
-    {
-        [Fact]
-        public static void ReplaceWith()
-        {
-            // Arrange
-            var some = Maybe.Unit;
-
-            // Act & Assert
-            Assert.Some("value", some.ReplaceWith("value"));
-            Assert.None(Ø.ReplaceWith("value"));
-
-            Assert.None(some.ReplaceWith(NullString));
-            Assert.None(Ø.ReplaceWith(NullString));
-
-#nullable disable
-            Assert.Some(2, some.ReplaceWith((int?)2));
-            Assert.None(Ø.ReplaceWith((int?)2));
-
-            Assert.None(some.ReplaceWith(NullNullString));
-            Assert.None(Ø.ReplaceWith(NullNullString));
-#nullable restore
         }
     }
 }
