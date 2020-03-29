@@ -13,7 +13,7 @@ Guidelines
 TODOs
 -----
 
-See `FIXME`, `TODO` and `REVIEW` within the code and:
+- See `FIXME`, `TODO` and `REVIEW` within the code.
 - Tests & code coverage (coverlet). Currently, there are many cases where we
   don't go beyond smoke tests.
 - XML comments with complete examples.
