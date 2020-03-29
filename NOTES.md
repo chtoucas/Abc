@@ -11,8 +11,6 @@ vNEXT
 -----
 
 ### Version 1.0.0-alpha-2
-- Simplify project layout (move part of "play" to a separate project).
-  Check coverage after.
 - Remove async methods.
 
 ### Towards version 1.0.0
@@ -57,7 +55,7 @@ Operations:
 Issues
 ------
 
-- MSBuild [MSB3277](https://github.com/microsoft/msbuild/issues/608)
+- `Abc.Testing`, [MSB3277](https://github.com/microsoft/msbuild/issues/608)
 - Scripts: stop on first error (rewrite in PowerShell?).
 
 Release Process
