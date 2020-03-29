@@ -1,5 +1,33 @@
 # Developer Notes
 
+vNEXT
+-----
+
+- Remove async methods.
+- Add overloads w/ `IEqualityComparer<T>`? Ops `Maybe<T> == T`?
+- Strong name? How to avoid binding redirects? Prerequesite: assembly version.
+  MUST be done before v1.0.0.
+  * [Strong Name Signing](https://github.com/dotnet/runtime/blob/master/docs/project/strong-name-signing.md)
+  * [Strong naming](https://docs.microsoft.com/en-gb/dotnet/standard/library-guidance/strong-naming)
+
+TODOs
+-----
+
+See `FIXME`, `TODO` and `REVIEW` within the code.
+- LINQ: optimize, more ops.
+- Async methods.
+
+Operations:
+- Tests. Currently, there are many cases where we don't go beyond smoke tests.
+- Code coverage w/ coverlet.
+- XML comments with complete examples.
+- Perf tool (LINQ, nulls).
+
+### Issues
+
+- MSBuild [MSB3277](https://github.com/microsoft/msbuild/issues/608)
+- Scripts: stop on first error (rewrite in PowerShell?).
+
 Guidelines
 ----------
 
@@ -9,20 +37,6 @@ Guidelines
 - Add _nullable annotations_ whenever necessary.
 - _Seal classes_ unless they are designed with extensibility in mind.
 - Tag any use of the null-forgiving operator (!) with `BONSANG!`.
-
-TODOs
------
-
-- See `FIXME`, `TODO` and `REVIEW` within the code.
-- Tests & code coverage (coverlet). Currently, there are many cases where we
-  don't go beyond smoke tests.
-- XML comments with complete examples.
-- Perf tool (LINQ, nulls).
-- Optimize LINQ ops.
-
-### Issues
-
-- [MSB3277](https://github.com/microsoft/msbuild/issues/608)
 
 Future plans?
 -------------
