@@ -6,13 +6,17 @@
 - The API should be stable except for the LINQ extensions.
 - Testing is well underway but there is still a lot to be done.
 
+Supported frameworks:
+- .NET Standard 2.0
+- .NET Standard 2.1 w/ nullable annotations
+- .NET Core 3.1.
+
 |NuGet|OpenCover|
 |-----|---------|
 | [![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/) | ![Code Coverage](coverage.svg) |
 
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
-- [Developer Notes](#developer-notes)
 - [Version History](#version-history)
 - [License](https://github.com/chtoucas/Abc/blob/master/LICENSE.txt)
 
@@ -403,41 +407,16 @@ otherwise I would not have written this library. _Maybe_'s should be
 For reference types, a _maybe_ offers a better paradigm than a `null` to express
 the inability to return a meaningful result.
 
-Developer Notes
----------------
-
-### Guidelines
-
-- Methods that return something should have the attribure `Pure`. It is not
-  mandatory but it clearly states that the result should not be ignored.
-  It might seem superfluous, but "ça ne mange pas de pain".
-- Add nullable annotations whenever necessary.
-- Seal classes unless they are designed with extensibility in mind.
-- Tag any use of the null-forgiving operator (!) with `BONSANG!`.
-
-### Package
-
-Supported frameworks:
-- .NET Standard 2.0
-- .NET Standard 2.1 w/ nullable annotations
-- .NET Core 3.1.
-
-### TODOs
-
-- Tests & code coverage (coverlet). Currently, there are many cases where we
-  don't go beyond smoke tests.
-- XML comments with complete examples.
-- NuGet package.
-- Perf tool (LINQ, nulls).
-- Optimize LINQ ops.
-
-### Issues
-- [MSB3277](https://github.com/microsoft/msbuild/issues/608)
-
 Version History
 ---------------
 
-**1.0.0-alpha-1** (2020-03-27) First public release.
+### Unreleased
+#### Removed
+- Async methods.
 
-**0.28.0** Still available on nuget.org under a different name (Narvalo.Fx).
-           Deprecated, broken, do not use it.
+### 1.0.0-alpha-1 (2020-03-27)
+First public release.
+
+### 0.28.0
+Still available on nuget.org but under a different name (Narvalo.Fx).
+Deprecated, broken, please do NOT use.

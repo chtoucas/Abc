@@ -6,7 +6,7 @@
     <!-- See explanations in Abc.csproj -->
     <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
 
-    <PackageTags>Option;Maybe;Linq;ROP;Railway;Monad</PackageTags>
+    <PackageTags>Option;Maybe;LINQ;ROP;Railway;Monad</PackageTags>
     <Description>
       A rich Option type for C#.
     </Description>
