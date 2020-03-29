@@ -5,11 +5,11 @@
 **Status:** _unstable_
 - The API should be stable except for the async methods and the LINQ extensions.
 - Testing is well underway but there is still a lot to be done.
-
-Supported frameworks:
 - .NET Standard 2.0
-- .NET Standard 2.1 w/ nullable annotations
-- .NET Core 3.1.
+- Supported frameworks:
+  * .NET Standard 2.0
+  * .NET Standard 2.1 w/ nullable annotations
+  * .NET Core 3.1.
 
 |NuGet|OpenCover|
 |-----|---------|
@@ -18,6 +18,7 @@ Supported frameworks:
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
 - [Version History](#version-history)
+- [Developer Notes](https://github.com/chtoucas/Abc/blob/master/NOTES.md)
 - [License](https://github.com/chtoucas/Abc/blob/master/LICENSE.txt)
 
 Quick Start with `Maybe<T>`
