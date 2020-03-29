@@ -12,12 +12,6 @@ namespace Abc
     {
         public const string NullString = null;
         public const string? NullNullString = null;
-
-        private static readonly Maybe<int> Ø = Maybe<int>.None;
-        private static readonly Maybe<int> One = Maybe.Some(1);
-        private static readonly Maybe<int> Two = Maybe.Some(2);
-        private static readonly Maybe<long> ØL = Maybe<long>.None;
-        private static readonly Maybe<long> TwoL = Maybe.Some(2L);
     }
 
     public partial class MaybeTests
@@ -81,7 +75,7 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void OrElse()
+        public static void OrElse_Future()
         {
             // Some Some -> Some
             Assert.Equal(One, One.OrElse(Two));
@@ -119,7 +113,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void AndThen()
+        public static void AndThen_Future()
         {
             // Some Some -> Some
             Assert.Equal(TwoL, One.AndThen(TwoL));

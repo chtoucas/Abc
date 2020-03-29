@@ -51,6 +51,7 @@ namespace Abc
     // Parsers for simple value types.
     public partial class MayEx
     {
+#if !NETSTANDARD2_0
         [Pure]
         public static Maybe<bool> ParseBoolean(ReadOnlySpan<char> span)
         {
@@ -232,11 +233,13 @@ namespace Abc
             return UInt64.TryParse(span, style, provider, out ulong result)
                 ? Maybe.Some(result) : Maybe<ulong>.None;
         }
+#endif
     }
 
     // Parsers for value types that are not simple types.
     public partial class MayEx
     {
+#if !NETSTANDARD2_0
         [Pure]
         public static Maybe<object> ParseEnum(Type enumType, string? value)
             => Enum.TryParse(enumType, value, out object? result)
@@ -284,5 +287,6 @@ namespace Abc
             return DateTime.TryParseExact(span, formats, provider, style, out DateTime result)
                 ? Maybe.Some(result) : Maybe<DateTime>.None;
         }
+#endif
     }
 }

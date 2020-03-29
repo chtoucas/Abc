@@ -9,8 +9,6 @@ namespace Abc
     using System.Threading.Tasks;
     using System.Xml.Linq;
 
-    using Abc.Utilities;
-
     using Anexn = System.ArgumentNullException;
 
     // REVIEW: lazy extensions. Is there anything useful we can do w/
@@ -105,7 +103,7 @@ namespace Abc
             Func<T, Task<Maybe<TResult>>> binder,
             bool continueOnCapturedContext)
         {
-            Require.NotNull(binder, nameof(binder));
+            if (binder is null) { throw new Anexn(nameof(binder)); }
 
             if (maybe.TryGetValue(out T value))
             {
@@ -124,7 +122,7 @@ namespace Abc
             Func<T, Task<TResult>> selector,
             bool continueOnCapturedContext)
         {
-            Require.NotNull(selector, nameof(selector));
+            if (selector is null) { throw new Anexn(nameof(selector)); }
 
             if (maybe.TryGetValue(out T value))
             {
@@ -147,7 +145,7 @@ namespace Abc
             Maybe<T> maybe,
             Func<T, Task<bool>> predicate)
         {
-            Require.NotNull(predicate, nameof(predicate));
+            if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
             return await maybe.BindAsync(__binder).ConfigureAwait(false);
 
@@ -533,7 +531,7 @@ namespace Abc
         public static Maybe<T> Sum<T>(
             IEnumerable<Maybe<T>> source, Func<T, T, T> add, T zero)
         {
-            Require.NotNull(add, nameof(add));
+            if (add is null) { throw new Anexn(nameof(add)); }
 
             Maybe<IEnumerable<T>> aggr = Collect(source);
 
