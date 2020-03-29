@@ -6,14 +6,10 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
-    <!-- Silent a warning w/ Microsoft.NET.Test.Sdk -->
-    <GenerateProgramFile>false</GenerateProgramFile>
-
     <!--
       CA1303      Do not pass literals as localized parameters
-      IDE0002     Simplify Member Access
     -->
-    <NoWarn>$(NoWarn);CA1303;IDE0002</NoWarn>
+    <NoWarn>$(NoWarn);CA1303</NoWarn>
 
     <!-- Optional symbols -->
     <DefineConstants>$(DefineConstants);STRICT_HASKELL</DefineConstants>
@@ -25,9 +21,6 @@
     <None Update="play.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xunit.runner.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -35,16 +28,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Abc.Maybe\Abc.Maybe.csproj" />
-    <ProjectReference Include="..\Abc.Testing\Abc.Testing.csproj" />
     <ProjectReference Include="..\Abc\Abc.csproj" />
   </ItemGroup>
 

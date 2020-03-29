@@ -22,10 +22,6 @@ namespace Abc.Linq
     /// Joining:
     /// - ZipAny()          deferred streaming execution
     ///
-    /// Aggregation operations:
-    /// - FoldAny()         immediate execution
-    /// - ReduceAny()       immediate execution
-    ///
     /// Element operations:
     /// - FirstOrNone()     immediate execution
     /// - LastOrNone()      immediate execution

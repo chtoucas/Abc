@@ -3,6 +3,7 @@
 - [vNEXT](#vnext)
 - [TODOs](#todos)
 - [Issues](#issues)
+- [Release Process](#release-process)
 - [Guidelines](#guidelines)
 - [Future plans?](#future-plans)
 
@@ -10,12 +11,13 @@ vNEXT
 -----
 
 ### Version 1.0.0-alpha-2
+- Simplify project layout (move part of "play" to a separate project).
+  Check coverage after.
 - Remove async methods.
 
 ### Towards version 1.0.0
 - API
   * Add overloads w/ `IEqualityComparer<T>`? Ops `Maybe<T> == T`?
-- Simplify project layout (move part of "play" to a separate project).
 - Test NuGet package.
 - Multitargeting:
   * Tests.
@@ -57,6 +59,9 @@ Issues
 
 - MSBuild [MSB3277](https://github.com/microsoft/msbuild/issues/608)
 - Scripts: stop on first error (rewrite in PowerShell?).
+
+Release Process
+---------------
 
 Guidelines
 ----------

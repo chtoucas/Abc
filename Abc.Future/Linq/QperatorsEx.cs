@@ -2,5 +2,10 @@
 
 namespace Abc.Linq
 {
+    /// <_text><![CDATA[
+    /// Aggregation operations:
+    /// - FoldAny()         immediate execution
+    /// - ReduceAny()       immediate execution
+    /// ]]></_text>
     public static partial class QperatorsEx { }
 }

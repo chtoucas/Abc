@@ -2,7 +2,7 @@
 
 ## Not yet released
 
-### Changes
+### Internal Changes
 - Clean up project files.
   * No longer define compiler symbols `NETSTANDARD2_0` and `NETSTANDARD2_1` as
     this is already done by MSBuild;
