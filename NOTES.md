@@ -1,13 +1,20 @@
 # Developer Notes
 
+- [vNEXT](#vnext)
+- [TODOs](#todos)
+- [Issues](#issues)
+- [Guidelines](#guidelines)
+- [Future plans?](#future-plans)
+
 vNEXT
 -----
 
-Version 1.0.0-alpha-2
+### Version 1.0.0-alpha-2
 - Remove async methods.
 
-Towards version 1.0.0
-- Add overloads w/ `IEqualityComparer<T>`? Ops `Maybe<T> == T`?
+### Towards version 1.0.0
+- API
+  * Add overloads w/ `IEqualityComparer<T>`? Ops `Maybe<T> == T`?
 - Simplify project layout (move part of "play" to a separate project).
 - Test NuGet package.
 - Multitargeting:
@@ -36,7 +43,7 @@ See `FIXME`, `TODO` and `REVIEW` within the code.
   * Microsoft.Bcl.AsyncInterfaces
   * Async enumerables.
 - .NET Standard 2.1 & .NET Core 3.1
-  * May helpers w/ `Span<T>`
+  * More `May` helpers w/ `Span<T>`.
   * `System.HashCode`
 
 Operations:
@@ -45,7 +52,8 @@ Operations:
 - XML comments with complete examples.
 - Perf tool (LINQ, nulls).
 
-### Issues
+Issues
+------
 
 - MSBuild [MSB3277](https://github.com/microsoft/msbuild/issues/608)
 - Scripts: stop on first error (rewrite in PowerShell?).
