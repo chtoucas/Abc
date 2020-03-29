@@ -14,6 +14,7 @@ namespace Abc
     // Async methods.
     // Not extension methods: we already have instance methods with the same
     // names.
+    // NB: these async methods discard the context when they resume.
     public partial class MaybeEx
     {
         [Pure]

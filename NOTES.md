@@ -38,13 +38,22 @@ TODOs
 
 See `FIXME`, `TODO` and `REVIEW` within the code.
 - LINQ: optimize, more ops.
+- .NET Standard 2.1 & .NET Core 3.1
+  * More `May` helpers w/ `Span<T>`.
+  * `System.HashCode`
+
+Async:
 - Async methods?
   * Eager validation.
   * Microsoft.Bcl.AsyncInterfaces
   * Async enumerables.
-- .NET Standard 2.1 & .NET Core 3.1
-  * More `May` helpers w/ `Span<T>`.
-  * `System.HashCode`
+- References
+  * https://markheath.net/post/async-antipatterns
+  * https://github.com/StephenCleary/AsyncEx
+  * https://stackoverflow.com/questions/19098143/what-is-the-purpose-of-return-await-in-c
+  * https://blog.stephencleary.com/2016/12/eliding-async-await.html
+  * https://stackoverflow.com/questions/18656379/validate-parameters-in-async-method
+  * https://codeblog.jonskeet.uk/2010/11/01/control-flow-redux-exceptions-in-asynchronous-code/
 
 Operations:
 - Tests. Currently, there are many cases where we don't go beyond smoke tests.
