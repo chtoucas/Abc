@@ -5,7 +5,6 @@
 **Status:** _unstable_
 - The API should be stable except for the async methods and the LINQ extensions.
 - Testing is well underway but there is still a lot to be done.
-- .NET Standard 2.0
 - Supported frameworks:
   * .NET Standard 2.0
   * .NET Standard 2.1 w/ nullable annotations
