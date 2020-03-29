@@ -8,11 +8,23 @@ Version 1.0.0-alpha-2
 
 Towards version 1.0.0
 - Add overloads w/ `IEqualityComparer<T>`? Ops `Maybe<T> == T`?
+- Simplify project layout (move part of "play" to a separate project).
+- Test NuGet package.
+- Multitargeting:
+  * Tests.
+  * How to handle PublicAPI.XXX.txt?
+  * Clean up `CustomAfter.props`, [Compiler symbols](https://docs.microsoft.com/en-us/dotnet/core/tutorials/libraries)
+  * [NetStandardImplicitPackageVersion](https://docs.microsoft.com/en-us/dotnet/core/packages)
 - Strong name? How to avoid binding redirects? Prerequesite: assembly version.
   MUST be done before v1.0.0.
   * [Strong Name Signing](https://github.com/dotnet/runtime/blob/master/docs/project/strong-name-signing.md)
   * [Strong naming](https://docs.microsoft.com/en-gb/dotnet/standard/library-guidance/strong-naming)
-- Improve NuGet package description. Publish symbols? SourceLink?
+- Publish symbols? SourceLink?
+  * `<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>`
+  * [NuGet#4142](https://github.com/NuGet/Home/issues/4142)
+- MSBuild:
+  * Improve NuGet package description.
+  * `Deterministic`, `Title`, `AssemblyTitle`, `VersionPrefix`.
 
 TODOs
 -----
@@ -20,6 +32,12 @@ TODOs
 See `FIXME`, `TODO` and `REVIEW` within the code.
 - LINQ: optimize, more ops.
 - Async methods?
+  * Eager validation.
+  * Microsoft.Bcl.AsyncInterfaces
+  * Async enumerables.
+- .NET Standard 2.1 & .NET Core 3.1
+  * May helpers w/ `Span<T>`
+  * `System.HashCode`
 
 Operations:
 - Tests. Currently, there are many cases where we don't go beyond smoke tests.
