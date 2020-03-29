@@ -2,38 +2,9 @@
 
 namespace Abc
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
     using Xunit;
 
     using Assert = AssertEx;
-
-    // Misc methods.
-    public partial class MaybeTests
-    {
-        [Fact]
-        public static void ReplaceWith()
-        {
-            // Arrange
-            var some = Maybe.Unit;
-
-            // Act & Assert
-            Assert.Some("value", some.ReplaceWith("value"));
-            Assert.None(Ø.ReplaceWith("value"));
-
-            Assert.None(some.ReplaceWith(NullString));
-            Assert.None(Ø.ReplaceWith(NullString));
-
-#nullable disable
-            Assert.Some(2, some.ReplaceWith((int?)2));
-            Assert.None(Ø.ReplaceWith((int?)2));
-
-            Assert.None(some.ReplaceWith(NullNullString));
-            Assert.None(Ø.ReplaceWith(NullNullString));
-#nullable restore
-        }
-    }
 
     // Helpers for Maybe<T> where T is a struct.
     public partial class MaybeTests
@@ -130,41 +101,6 @@ namespace Abc
             Assert.Unknown(Maybe.Unknown.And(Maybe.True));
             Assert.Some(false, Maybe.Unknown.And(Maybe.False));
             Assert.Unknown(Maybe.Unknown.And(Maybe.Unknown));
-        }
-    }
-
-    // Helpers for Maybe<IEnumerable<T>>.
-    public partial class MaybeTests
-    {
-        [Fact]
-        public static void EmptyEnumerable()
-        {
-            // TODO: a better test whould not check the reference equality
-            // but the equality of both sequences.
-            Assert.Some(Enumerable.Empty<int>(), Maybe.EmptyEnumerable<int>());
-        }
-
-        [Fact]
-        public static void CollectAny_NullSource()
-        {
-            Assert.ThrowsArgNullEx("source", () =>
-                Maybe.CollectAny(default(IEnumerable<Maybe<int>>)!));
-        }
-
-        [Fact]
-        public static void CollectAny_IsDeferred()
-        {
-            IEnumerable<Maybe<int>> source = new ThrowingEnumerable<Maybe<int>>();
-
-            var q = Maybe.CollectAny(source);
-            Assert.ThrowsOnNext(q);
-        }
-
-        // TODO: non-empty test.
-        [Fact]
-        public static void CollectAny()
-        {
-            Assert.Empty(Maybe.CollectAny(Enumerable.Empty<Maybe<int>>()));
         }
     }
 
