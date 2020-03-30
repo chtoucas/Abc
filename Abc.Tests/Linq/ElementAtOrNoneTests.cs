@@ -14,7 +14,27 @@ namespace Abc.Linq
 
     using Assert = AssertEx;
 
-    public sealed partial class ElementAtOrNoneTests : QperatorsTests { }
+    public sealed partial class ElementAtOrNoneTests : QperatorsTests
+    {
+        public static IEnumerable<object[]> SampleData
+        {
+            get
+            {
+                yield return new object[] { NumberRangeGuaranteedNotCollectionType(9, 1), 0, Maybe.Of(9) };
+                yield return new object[] { NumberRangeGuaranteedNotCollectionType(9, 10), 9, Maybe.Of(18) };
+                yield return new object[] { NumberRangeGuaranteedNotCollectionType(-4, 10), 3, Maybe.Of(-1) };
+
+                yield return new object[] { new int[] { 1, 2, 3, 4 }, 4, Maybe<int>.None };
+                yield return new object[] { Array.Empty<int>(), 0, Maybe<int>.None };
+                yield return new object[] { new int[] { -4 }, 0, Maybe.Of(-4) };
+                yield return new object[] { new int[] { 9, 8, 0, -5, 10 }, 4, Maybe.Of(10) };
+
+                yield return new object[] { NumberRangeGuaranteedNotCollectionType(-4, 5), -1, Maybe<int>.None };
+                yield return new object[] { NumberRangeGuaranteedNotCollectionType(5, 5), 5, Maybe<int>.None };
+                yield return new object[] { NumberRangeGuaranteedNotCollectionType(0, 0), 0, Maybe<int>.None };
+            }
+        }
+    }
 
     // Arg check.
     public partial class ElementAtOrNoneTests
@@ -47,14 +67,14 @@ namespace Abc.Linq
         }
 
         [Theory(DisplayName = "ElementAtOrDefault")]
-        [MemberData(nameof(ElementAtOrNoneData))]
+        [MemberData(nameof(SampleData))]
         public static void ElementAtOrNone3(IEnumerable<int> source, int index, Maybe<int> expected)
         {
             Assert.Equal(expected, source.ElementAtOrNone(index));
         }
 
         [Theory(DisplayName = "ElementAtOrDefaultRunOnce")]
-        [MemberData(nameof(ElementAtOrNoneData))]
+        [MemberData(nameof(SampleData))]
         public static void ElementAtOrNone4(IEnumerable<int> source, int index, Maybe<int> expected)
         {
             Assert.Equal(expected, source.RunOnce().ElementAtOrNone(index));
@@ -74,25 +94,6 @@ namespace Abc.Linq
 
             Assert.Equal(Maybe<string>.None, source.ElementAtOrNone(2));
             Assert.Equal(Maybe.Of("d"), source.ElementAtOrNone(3));
-        }
-
-        public static IEnumerable<object[]> ElementAtOrNoneData
-        {
-            get
-            {
-                yield return new object[] { NumberRangeGuaranteedNotCollectionType(9, 1), 0, Maybe.Of(9) };
-                yield return new object[] { NumberRangeGuaranteedNotCollectionType(9, 10), 9, Maybe.Of(18) };
-                yield return new object[] { NumberRangeGuaranteedNotCollectionType(-4, 10), 3, Maybe.Of(-1) };
-
-                yield return new object[] { new int[] { 1, 2, 3, 4 }, 4, Maybe<int>.None };
-                yield return new object[] { Array.Empty<int>(), 0, Maybe<int>.None };
-                yield return new object[] { new int[] { -4 }, 0, Maybe.Of(-4) };
-                yield return new object[] { new int[] { 9, 8, 0, -5, 10 }, 4, Maybe.Of(10) };
-
-                yield return new object[] { NumberRangeGuaranteedNotCollectionType(-4, 5), -1, Maybe<int>.None };
-                yield return new object[] { NumberRangeGuaranteedNotCollectionType(5, 5), 5, Maybe<int>.None };
-                yield return new object[] { NumberRangeGuaranteedNotCollectionType(0, 0), 0, Maybe<int>.None };
-            }
         }
     }
 }
