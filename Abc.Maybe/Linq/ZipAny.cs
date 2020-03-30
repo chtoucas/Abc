@@ -7,7 +7,6 @@ namespace Abc.Linq
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-    // Concatenation: ZipAny.
     public partial class Qperators
     {
         [Pure]
