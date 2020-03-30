@@ -127,6 +127,95 @@ namespace Abc
                         MaybeEx.BindAsync(Ø, Kunc<int, AnyT>.NullAsync))
                     .ConfigureAwait(false);
 
+            [Fact]
+            public static async Task BindAsync_Some_NullBinder() =>
+                await Assert.Async
+                    .ThrowsAnexn("binder", () =>
+                        MaybeEx.BindAsync(One, Kunc<int, AnyT>.NullAsync))
+                    .ConfigureAwait(false);
+
+            #endregion
+
+            #region SelectAsync()
+
+            [Fact]
+            public static async Task SelectAsync_None_NullSelector() =>
+                await Assert.Async
+                    .ThrowsAnexn("selector", () =>
+                        MaybeEx.SelectAsync(Ø, Funk<int, AnyT>.NullAsync))
+                    .ConfigureAwait(false);
+
+            [Fact]
+            public static async Task SelectAsync_Some_NullSelector() =>
+                await Assert.Async
+                    .ThrowsAnexn("selector", () =>
+                        MaybeEx.SelectAsync(One, Funk<int, AnyT>.NullAsync))
+                    .ConfigureAwait(false);
+
+            #endregion
+
+            #region OrElseAsync()
+
+            [Fact]
+            public static async Task OrElseAsync_None_NullOther() =>
+                await Assert.Async
+                    .ThrowsAnexn("other", () => MaybeEx.OrElseAsync(Ø, null!))
+                    .ConfigureAwait(false);
+
+            [Fact]
+            public static async Task OrElseAsync_Some_NullOther() =>
+                await Assert.Async
+                    .ThrowsAnexn("other", () => MaybeEx.OrElseAsync(One, null!))
+                    .ConfigureAwait(false);
+
+            #endregion
+
+            #region SwitchAsync()
+
+            [Fact]
+            public static async Task SwitchAsync_None_NullCaseSome_DoesNotThrow()
+            {
+                var r = await MaybeEx.SwitchAsync(
+                    Ø,
+                    caseSome: Funk<int, AnyResult>.NullAsync,
+                    caseNone: AnyResult.AsyncValue
+                ).ConfigureAwait(false);
+
+                Assert.Same(AnyResult.Value, r); // Sanity check
+            }
+
+            [Fact]
+            public static async Task SwitchAsync_None_NullCaseNone() =>
+                await Assert.Async
+                    .ThrowsAnexn("caseNone", () =>
+                        MaybeEx.SwitchAsync(
+                            Ø,
+                            caseSome: Funk<int, AnyT>.AnyAsync,
+                            caseNone: null!))
+                    .ConfigureAwait(false);
+
+            [Fact]
+            public static async Task SwitchAsync_Some_NullCaseSome() =>
+                await Assert.Async
+                    .ThrowsAnexn("caseSome", () =>
+                        MaybeEx.SwitchAsync(
+                            One,
+                            caseSome: Funk<int, AnyT>.NullAsync,
+                            caseNone: AnyT.AsyncValue))
+                    .ConfigureAwait(false);
+
+            [Fact]
+            public static async Task SwitchAsync_Some_NullCaseNone_DoesNotThrow()
+            {
+                var r = await  MaybeEx.SwitchAsync(
+                    One,
+                    caseSome: x => AnyResult.AsyncValue,
+                    caseNone: null!
+                ).ConfigureAwait(false);
+
+                Assert.Same(AnyResult.Value, r); // Sanity check
+            }
+
             #endregion
         }
     }
