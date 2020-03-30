@@ -18,18 +18,14 @@ namespace Abc
         #region BindAsync()
 
         [Fact]
-        public static void BindAsync_None_NullBinder()
-        {
+        public static void BindAsync_None_NullBinder() =>
             Assert.ThrowsArgNullEx("binder", () =>
                 Ø.BindAsync(Kunc<int, AnyT>.NullAsync));
-        }
 
         [Fact]
-        public static void BindAsync_Some_NullBinder()
-        {
+        public static void BindAsync_Some_NullBinder() =>
             Assert.ThrowsArgNullEx("binder", () =>
                 One.BindAsync(Kunc<int, AnyT>.NullAsync));
-        }
 
         [Fact]
         public static void BindAsync_None()
@@ -59,18 +55,14 @@ namespace Abc
         #region SelectAsync()
 
         [Fact]
-        public static void SelectAsync_None_NullSelector()
-        {
+        public static void SelectAsync_None_NullSelector() =>
             Assert.ThrowsArgNullEx("selector", () =>
                 Ø.SelectAsync(Funk<int, AnyT>.NullAsync));
-        }
 
         [Fact]
-        public static void SelectAsync_Some_NullSelector()
-        {
+        public static void SelectAsync_Some_NullSelector() =>
             Assert.ThrowsArgNullEx("selector", () =>
                 One.SelectAsync(Funk<int, AnyT>.NullAsync));
-        }
 
         [Fact]
         public static void SelectAsync_None()
@@ -97,58 +89,45 @@ namespace Abc
         #region OrElseAsync()
 
         [Fact]
-        public static void OrElseAsync_None_NullOther()
-        {
+        public static void OrElseAsync_None_NullOther() =>
             Assert.ThrowsArgNullEx("other", () => Ø.OrElseAsync(null!));
-        }
 
         [Fact]
-        public static void OrElseAsync_Some_NullOther()
-        {
+        public static void OrElseAsync_Some_NullOther() =>
             Assert.ThrowsArgNullEx("other", () => One.OrElseAsync(null!));
-        }
 
         #endregion
 
         #region SwitchAsync()
 
         [Fact]
-        public static void SwitchAsync_None_NullCaseSome_DoesNotThrow()
-        {
-            // Act & Assert
+        public static void SwitchAsync_None_NullCaseSome() =>
             Assert.ThrowsArgNullEx("caseSome", () =>
                 Ø.SwitchAsync(
-                caseSome: Funk<int, AnyResult>.NullAsync,
-                caseNone: AnyResult.AsyncValue));
-        }
+                    caseSome: Funk<int, AnyResult>.NullAsync,
+                    caseNone: AnyResult.AsyncValue));
 
         [Fact]
-        public static void SwitchAsync_None_NullCaseNone_Throws()
-        {
+        public static void SwitchAsync_None_NullCaseNone() =>
             Assert.ThrowsArgNullEx("caseNone", () =>
                 Ø.SwitchAsync(
                     caseSome: Funk<int, AnyT>.AnyAsync,
                     caseNone: null!));
-        }
 
         [Fact]
-        public static void SwitchAsync_Some_NullCaseSome_Throws()
-        {
+        public static void SwitchAsync_Some_NullCaseSome() =>
             Assert.ThrowsArgNullEx("caseSome", () =>
                 One.SwitchAsync(
                     caseSome: Funk<int, AnyT>.NullAsync,
                     caseNone: AnyT.AsyncValue));
-        }
 
         [Fact]
-        public static void SwitchAsync_Some_NullCaseNone_DoesNotThrow()
-        {
+        public static void SwitchAsync_Some_NullCaseNone() =>
             // Act & Assert
             Assert.ThrowsArgNullEx("caseNone", () =>
                 One.SwitchAsync(
-                caseSome: x => AnyResult.AsyncValue,
-                caseNone: null!));
-        }
+                    caseSome: x => AnyResult.AsyncValue,
+                    caseNone: null!));
 
         #endregion
     }

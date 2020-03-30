@@ -6,14 +6,24 @@ namespace Abc.Linq
 
     using Assert = AssertEx;
 
-    public sealed class ZipAnyTests : QperatorsTests
+    public sealed partial class ZipAnyTests : QperatorsTests { }
+
+    // Arg check.
+    public partial class ZipAnyTests
     {
         [Fact]
-        public static void NullSource()
-        {
-            Assert.ThrowsArgNullEx("first", () => Null.ZipAny(NotNull, Kunc<int, int, int>.Any));
-            Assert.ThrowsArgNullEx("second", () => NotNull.ZipAny(Null, Kunc<int, int, int>.Any));
-            Assert.ThrowsArgNullEx("resultSelector", () => NotNull.ZipAny(NotNull, Kunc<int, int, int>.Null));
-        }
+        public static void NullFirst() =>
+            Assert.ThrowsArgNullEx("first", () =>
+                Null.ZipAny(NotNull, Kunc<int, int, int>.Any));
+
+        [Fact]
+        public static void NullSecond() =>
+            Assert.ThrowsArgNullEx("second", () =>
+                NotNull.ZipAny(Null, Kunc<int, int, int>.Any));
+
+        [Fact]
+        public static void NullResultSelector() =>
+            Assert.ThrowsArgNullEx("resultSelector", () =>
+                NotNull.ZipAny(NotNull, Kunc<int, int, int>.Null));
     }
 }

@@ -14,17 +14,26 @@ namespace Abc.Linq
 
     using Assert = AssertEx;
 
-    public sealed class SingleOrNoneTests : QperatorsTests
+    public sealed partial class SingleOrNoneTests : QperatorsTests { }
+
+    // Arg check.
+    public partial class SingleOrNoneTests
     {
         [Fact]
-        public static void NullSource()
-        {
+        public static void NullSource() =>
             Assert.ThrowsArgNullEx("source", () => Null.SingleOrNone());
 
+        [Fact]
+        public static void NullSource_WithPredicate() =>
             Assert.ThrowsArgNullEx("source", () => Null.SingleOrNone(Funk<int, bool>.Any));
-            Assert.ThrowsArgNullEx("predicate", () => NotNull.SingleOrNone(Funk<int, bool>.Null));
-        }
 
+        [Fact]
+        public static void NullPredicate() =>
+            Assert.ThrowsArgNullEx("predicate", () => NotNull.SingleOrNone(Funk<int, bool>.Null));
+    }
+
+    public partial class SingleOrNoneTests
+    {
         [Fact(DisplayName = "SingleOrNone() for int's returns the same result when called repeatedly.")]
         public static void SingleOrNone1()
         {

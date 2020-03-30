@@ -9,15 +9,22 @@ namespace Abc.Linq
 
     using Assert = AssertEx;
 
-    public sealed class WhereAnyTests : QperatorsTests
+    public sealed partial class WhereAnyTests : QperatorsTests { }
+
+    // Arg check.
+    public partial class WhereAnyTests
     {
         [Fact]
-        public static void NullSource()
-        {
+        public static void NullSource() =>
             Assert.ThrowsArgNullEx("source", () => Null.WhereAny(Kunc<int, bool>.Any));
-            Assert.ThrowsArgNullEx("predicate", () => NotNull.WhereAny(Kunc<int, bool>.Null));
-        }
 
+        [Fact]
+        public static void NullPredicate() =>
+            Assert.ThrowsArgNullEx("predicate", () => NotNull.WhereAny(Kunc<int, bool>.Null));
+    }
+
+    public partial class WhereAnyTests
+    {
         [Fact]
         public static void IsDeferred()
         {

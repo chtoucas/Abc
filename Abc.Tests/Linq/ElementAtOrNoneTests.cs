@@ -14,14 +14,18 @@ namespace Abc.Linq
 
     using Assert = AssertEx;
 
-    public sealed class ElementAtOrNoneTests : QperatorsTests
+    public sealed partial class ElementAtOrNoneTests : QperatorsTests { }
+
+    // Arg check.
+    public partial class ElementAtOrNoneTests
     {
         [Fact]
-        public static void NullSource()
-        {
+        public static void NullSource() =>
             Assert.ThrowsArgNullEx("source", () => Null.ElementAtOrNone(1));
-        }
+    }
 
+    public partial class ElementAtOrNoneTests
+    {
         [Fact(DisplayName = "ElementAtOrNone() for int's returns the same result when called repeatedly.")]
         public static void ElementAtOrNone1()
         {
