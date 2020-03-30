@@ -3,7 +3,7 @@
 using System;
 
 [Flags]
-internal enum FlagsEnum
+internal enum FlagEnum
 {
     None = 0,
     One = 1 << 0,

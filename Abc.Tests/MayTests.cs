@@ -537,9 +537,9 @@ namespace Abc
         [InlineData(" One,  Two ")]
         public static void ParseEnum_CompositeValue(string input)
         {
-            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(input));
-            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(input, ignoreCase: false));
-            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(input, ignoreCase: true));
+            Assert.Some(FlagEnum.OneTwo, May.ParseEnum<FlagEnum>(input));
+            Assert.Some(FlagEnum.OneTwo, May.ParseEnum<FlagEnum>(input, ignoreCase: false));
+            Assert.Some(FlagEnum.OneTwo, May.ParseEnum<FlagEnum>(input, ignoreCase: true));
         }
 
         [Theory]
@@ -556,9 +556,9 @@ namespace Abc
         [InlineData(" one, two ")]
         public static void ParseEnum_CompositeValue_MixedCase(string input)
         {
-            Assert.None(May.ParseEnum<FlagsEnum>(input));
-            Assert.None(May.ParseEnum<FlagsEnum>(input, ignoreCase: false));
-            Assert.Some(FlagsEnum.OneTwo, May.ParseEnum<FlagsEnum>(input, ignoreCase: true));
+            Assert.None(May.ParseEnum<FlagEnum>(input));
+            Assert.None(May.ParseEnum<FlagEnum>(input, ignoreCase: false));
+            Assert.Some(FlagEnum.OneTwo, May.ParseEnum<FlagEnum>(input, ignoreCase: true));
         }
 
         [Theory]
