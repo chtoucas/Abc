@@ -4,6 +4,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+
+    <!--
+      CA1034      Nested types should not be visible
+    -->
+    <NoWarn>$(NoWarn);CA1034</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -57,9 +57,7 @@ namespace Abc
         public static void Unknown(Maybe<bool> maybe)
             => True(maybe.IsNone, "The maybe should be empty.");
 
-#pragma warning disable CA1034 // Nested types should not be visible
         public static partial class Async
-#pragma warning restore CA1034
         {
             // TODO: make them async.
 

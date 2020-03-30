@@ -67,9 +67,7 @@ namespace Abc
             Equal(argName, ex.ParamName);
         }
 
-#pragma warning disable CA1034 // Nested types should not be visible
         public static partial class Async
-#pragma warning restore CA1034
         {
             // Threw ArgumentNullException.
             public static async Task ThrowsArgNullEx(string argName, Func<Task> testCode)
