@@ -64,26 +64,6 @@ namespace Abc
             Assert.ThrowsArgNullEx("selector", () =>
                 One.SelectAsync(Funk<int, AnyT>.NullAsync));
 
-        [Fact]
-        public static void SelectAsync_None()
-        {
-            Assert.None(Ø.Select(x => x));
-            Assert.None(from x in Ø select x);
-        }
-
-        [Fact]
-        public static void SelectAsync_Some()
-        {
-            Assert.Some(2L, One.Select(x => 2L * x));
-            Assert.Some(2L, from x in One select 2L * x);
-
-            Assert.Some(6L, Two.Select(x => 3L * x));
-            Assert.Some(6L, from x in Two select 3L * x);
-
-            Assert.Some(MyUri.AbsoluteUri, SomeUri.Select(x => x.AbsoluteUri));
-            Assert.Some(MyUri.AbsoluteUri, from x in SomeUri select x.AbsoluteUri);
-        }
-
         #endregion
 
         #region OrElseAsync()

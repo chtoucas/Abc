@@ -8,8 +8,6 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // TODO: async methods.
-
     // Async methods.
     // NB: these async methods discard the context when they resume.
     public partial struct Maybe<T>

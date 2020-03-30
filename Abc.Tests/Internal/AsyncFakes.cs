@@ -6,6 +6,7 @@ using Abc;
 
 internal static class AsyncFakes
 {
+    // Completes synchronously.
     public static Task<Maybe<AnyResult>> Const<T>(T _)
     {
         return AnyResult.AsyncSome;
