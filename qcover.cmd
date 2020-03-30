@@ -5,7 +5,7 @@
 
 :Versions
 @set OpenCoverVersion=4.7.922
-@set ReportGeneratorVersion=4.5.2
+@set ReportGeneratorVersion=4.5.3
 
 @set outdir=%~dp0\__work
 @if not exist %outdir% mkdir %outdir%
