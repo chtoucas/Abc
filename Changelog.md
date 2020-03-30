@@ -2,6 +2,9 @@
 
 ### vNEXT
 
+- Change signature of `Maybe.Compose()` and `Maybe.ComposeBack()`.
+  Now both methods return a _maybe_ rather than an anonymous function.
+
 Internal Changes.
 - New project Narvalo.Future for experimental code.
 - Clean up project files.

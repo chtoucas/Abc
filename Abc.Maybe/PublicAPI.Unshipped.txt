@@ -104,8 +104,8 @@ static Abc.Maybe.Apply<T1, T2, T3, TResult>(this Abc.Maybe<System.Func<T1, T2, T
 static Abc.Maybe.Apply<T1, T2, TResult>(this Abc.Maybe<System.Func<T1, T2, TResult>> this, Abc.Maybe<T1> first, Abc.Maybe<T2> second) -> Abc.Maybe<TResult>
 static Abc.Maybe.Apply<TSource, TResult>(this Abc.Maybe<System.Func<TSource, TResult>> this, Abc.Maybe<TSource> maybe) -> Abc.Maybe<TResult>
 static Abc.Maybe.CollectAny<T>(System.Collections.Generic.IEnumerable<Abc.Maybe<T>> source) -> System.Collections.Generic.IEnumerable<T>
-static Abc.Maybe.Compose<TSource, TMiddle, TResult>(this System.Func<TSource, Abc.Maybe<TMiddle>> this, System.Func<TMiddle, Abc.Maybe<TResult>> other) -> System.Func<TSource, Abc.Maybe<TResult>>
-static Abc.Maybe.ComposeBack<TSource, TMiddle, TResult>(this System.Func<TMiddle, Abc.Maybe<TResult>> this, System.Func<TSource, Abc.Maybe<TMiddle>> other) -> System.Func<TSource, Abc.Maybe<TResult>>
+static Abc.Maybe.Compose<TSource, TMiddle, TResult>(this System.Func<TSource, Abc.Maybe<TMiddle>> this, System.Func<TMiddle, Abc.Maybe<TResult>> other, TSource value) -> Abc.Maybe<TResult>
+static Abc.Maybe.ComposeBack<TSource, TMiddle, TResult>(this System.Func<TMiddle, Abc.Maybe<TResult>> this, System.Func<TSource, Abc.Maybe<TMiddle>> other, TSource value) -> Abc.Maybe<TResult>
 static Abc.Maybe.EmptyEnumerable<T>() -> Abc.Maybe<System.Collections.Generic.IEnumerable<T>>
 static Abc.Maybe.Flatten<T>(this in Abc.Maybe<Abc.Maybe<T>> this) -> Abc.Maybe<T>
 static Abc.Maybe.Flatten<T>(this in Abc.Maybe<Abc.Maybe<T?>> this) -> Abc.Maybe<T>

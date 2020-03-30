@@ -44,7 +44,7 @@ namespace Abc
         {
             Assert.ThrowsArgNullEx("this", () =>
                 Kunc<AnyT1, AnyT2>.Null
-                    .Compose(Kunc<AnyT2, AnyResult>.Any));
+                    .Compose(Kunc<AnyT2, AnyResult>.Any, AnyT1.Value));
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Abc
             var f = Thunk<AnyT1>.Const(AnyT2.Some);
             var g = Thunk<AnyT2>.Const(AnyResult.Some);
             // Act & Assert
-            Assert.Some(AnyResult.Value, f.Compose(g)(AnyT1.Value));
+            Assert.Some(AnyResult.Value, f.Compose(g, AnyT1.Value));
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Abc
         {
             Assert.ThrowsArgNullEx("other", () =>
                 Kunc<AnyT2, AnyResult>.Any
-                    .ComposeBack(Kunc<AnyT1, AnyT2>.Null));
+                    .ComposeBack(Kunc<AnyT1, AnyT2>.Null, AnyT1.Value));
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Abc
             var f = Thunk<AnyT1>.Const(AnyT2.Some);
             var g = Thunk<AnyT2>.Const(AnyResult.Some);
             // Act & Assert
-            Assert.Some(AnyResult.Value, g.ComposeBack(f)(AnyT1.Value));
+            Assert.Some(AnyResult.Value, g.ComposeBack(f, AnyT1.Value));
         }
     }
 

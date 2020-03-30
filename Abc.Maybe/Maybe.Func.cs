@@ -20,23 +20,25 @@ namespace Abc
         }
 
         [Pure]
-        public static Func<TSource, Maybe<TResult>> Compose<TSource, TMiddle, TResult>(
+        public static Maybe<TResult> Compose<TSource, TMiddle, TResult>(
             this Func<TSource, Maybe<TMiddle>> @this,
-            Func<TMiddle, Maybe<TResult>> other)
+            Func<TMiddle, Maybe<TResult>> other,
+            TSource value)
         {
             if (@this is null) { throw new Anexn(nameof(@this)); }
 
-            return x => @this(x).Bind(other);
+            return @this(value).Bind(other);
         }
 
         [Pure]
-        public static Func<TSource, Maybe<TResult>> ComposeBack<TSource, TMiddle, TResult>(
+        public static Maybe<TResult> ComposeBack<TSource, TMiddle, TResult>(
             this Func<TMiddle, Maybe<TResult>> @this,
-            Func<TSource, Maybe<TMiddle>> other)
+            Func<TSource, Maybe<TMiddle>> other,
+            TSource value)
         {
             if (other is null) { throw new Anexn(nameof(other)); }
 
-            return x => other(x).Bind(@this);
+            return other(value).Bind(@this);
         }
     }
 
