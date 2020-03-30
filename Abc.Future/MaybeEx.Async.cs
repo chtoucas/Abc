@@ -67,7 +67,8 @@ namespace Abc
         [Pure]
         public static async Task<TResult> SwitchAsync<T, TResult>(
             Maybe<T> maybe,
-            Func<T, Task<TResult>> caseSome, Task<TResult> caseNone)
+            Func<T, Task<TResult>> caseSome,
+            Func<Task<TResult>> caseNone)
         {
             if (maybe.TryGetValue(out T value))
             {
@@ -77,7 +78,7 @@ namespace Abc
             else
             {
                 if (caseNone is null) { throw new Anexn(nameof(caseNone)); }
-                return await caseNone.ConfigureAwait(false);
+                return await caseNone().ConfigureAwait(false);
             }
         }
 

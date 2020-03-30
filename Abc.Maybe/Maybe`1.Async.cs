@@ -63,11 +63,12 @@ namespace Abc
             return _isSome ? this : await other.ConfigureAwait(false);
         }
 
+        // REVIEW: caseNone Task<TResult> or Func<Task<TResult>>
         // Do not behave like the non-async Switch(), the method throws right
         // away when "caseSome" or "caseNone" is null.
         [Pure]
         public Task<TResult> SwitchAsync<TResult>(
-            Func<T, Task<TResult>> caseSome, Task<TResult> caseNone)
+            Func<T, Task<TResult>> caseSome, Func<Task<TResult>> caseNone)
         {
             // Check args eagerly.
             if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
@@ -78,7 +79,7 @@ namespace Abc
 
         [Pure]
         private async Task<TResult> SwitchAsyncImpl<TResult>(
-            Func<T, Task<TResult>> caseSome, Task<TResult> caseNone)
+            Func<T, Task<TResult>> caseSome, Func<Task<TResult>> caseNone)
         {
             if (_isSome)
             {
@@ -86,7 +87,7 @@ namespace Abc
             }
             else
             {
-                return await caseNone.ConfigureAwait(false);
+                return await caseNone().ConfigureAwait(false);
             }
         }
     }

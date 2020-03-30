@@ -2,6 +2,7 @@
 
 ### vNEXT
 
+- Async methods: eager validation, change signature of `SwitchAsync()`.
 - Change signature of `Maybe.Compose()` and `Maybe.ComposeBack()`.
   Now both methods return a _maybe_ rather than an anonymous function.
 
