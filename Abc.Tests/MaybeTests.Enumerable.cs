@@ -23,7 +23,7 @@ namespace Abc
         [Fact]
         public static void CollectAny_NullSource()
         {
-            Assert.ThrowsArgNullEx("source", () =>
+            Assert.ThrowsAnexn("source", () =>
                 Maybe.CollectAny(default(IEnumerable<Maybe<int>>)!));
         }
 

@@ -115,7 +115,7 @@ namespace Abc
             // Arrange
             var source = Maybe.Of(new AnyDisposable());
             // Act & Assert
-            Assert.ThrowsArgNullEx("binder", () =>
+            Assert.ThrowsAnexn("binder", () =>
                 source.Use(Kunc<AnyDisposable, int>.Null));
         }
 
@@ -125,7 +125,7 @@ namespace Abc
             // Arrange
             var source = Maybe.Of(new AnyDisposable());
             // Act & Assert
-            Assert.ThrowsArgNullEx("selector", () =>
+            Assert.ThrowsAnexn("selector", () =>
                 source.Use(Funk<AnyDisposable, int>.Null));
         }
 

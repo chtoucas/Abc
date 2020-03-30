@@ -1,5 +1,7 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+
 namespace Abc
 {
     using System;
@@ -27,43 +29,43 @@ namespace Abc
 
     public partial class AssertEx
     {
-        // Threw ArgumentException.
-        public static void ThrowsArgEx(string argName, Action testCode)
+        // Throws ArgumentException.
+        public static void ThrowsArgexn(string argName, Action testCode)
         {
             ArgumentException ex = Throws<ArgumentException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Threw ArgumentException.
-        public static void ThrowsArgEx(string argName, Func<object> testCode)
+        // Throws ArgumentException.
+        public static void ThrowsArgexn(string argName, Func<object> testCode)
         {
             ArgumentException ex = Throws<ArgumentException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Threw ArgumentNullException.
-        public static void ThrowsArgNullEx(string argName, Action testCode)
+        // Throws ArgumentNullException.
+        public static void ThrowsAnexn(string argName, Action testCode)
         {
             ArgumentNullException ex = Throws<ArgumentNullException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Threw ArgumentNullException.
-        public static void ThrowsArgNullEx(string argName, Func<object> testCode)
+        // Throws ArgumentNullException.
+        public static void ThrowsAnexn(string argName, Func<object> testCode)
         {
             ArgumentNullException ex = Throws<ArgumentNullException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Threw ArgumentOutOfRangeException.
-        public static void ThrowsAoorEx(string argName, Action testCode)
+        // Throws ArgumentOutOfRangeException.
+        public static void ThrowsAoorexn(string argName, Action testCode)
         {
             ArgumentOutOfRangeException ex = Throws<ArgumentOutOfRangeException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Threw ArgumentOutOfRangeException.
-        public static void ThrowsAoorEx(string argName, Func<object> testCode)
+        // Throws ArgumentOutOfRangeException.
+        public static void ThrowsAoorexn(string argName, Func<object> testCode)
         {
             ArgumentOutOfRangeException ex = Throws<ArgumentOutOfRangeException>(testCode);
             Equal(argName, ex.ParamName);
@@ -75,9 +77,23 @@ namespace Abc
     {
         public partial class Async
         {
-            // Threw ArgumentNullException.
-            public static async Task ThrowsArgNullEx(string argName, Func<Task> testCode)
+            // Throws ArgumentNullException.
+            public static async Task ThrowsAnexn(string argName, Func<Task> testCode)
             {
+                if (IsNull(nameof(testCode), testCode)) { return; }
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                try
+                {
+                    testCode();
+                }
+                catch (ArgumentException)
+                {
+                    throw new InvalidOperationException(
+                        "The specified task performs eager validation.");
+                }
+#pragma warning restore CS4014
+
                 ArgumentNullException ex =
                     await ThrowsAsync<ArgumentNullException>(testCode).ConfigureAwait(false);
                 Equal(argName, ex.ParamName);

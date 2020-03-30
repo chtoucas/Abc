@@ -12,14 +12,14 @@ namespace Abc
         [Fact]
         public static void ZipWith_None_NullZipper()
         {
-            Assert.ThrowsArgNullEx("zipper", () =>
+            Assert.ThrowsAnexn("zipper", () =>
                 Ø.ZipWith(TwoL, Funk<int, long, AnyT>.Null));
         }
 
         [Fact]
         public static void ZipWith_Some_NullZipper()
         {
-            Assert.ThrowsArgNullEx("zipper", () =>
+            Assert.ThrowsAnexn("zipper", () =>
                 One.ZipWith(TwoL, Funk<int, long, AnyT>.Null));
         }
 

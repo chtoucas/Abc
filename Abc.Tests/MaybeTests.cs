@@ -232,13 +232,13 @@ namespace Abc
         [Fact]
         public static void Bind_None_NullBinder()
         {
-            Assert.ThrowsArgNullEx("binder", () => Ø.Bind(Kunc<int, AnyResult>.Null));
+            Assert.ThrowsAnexn("binder", () => Ø.Bind(Kunc<int, AnyResult>.Null));
         }
 
         [Fact]
         public static void Bind_Some_NullBinder()
         {
-            Assert.ThrowsArgNullEx("binder", () => One.Bind(Kunc<int, AnyResult>.Null));
+            Assert.ThrowsAnexn("binder", () => One.Bind(Kunc<int, AnyResult>.Null));
         }
 
         [Fact]
@@ -310,7 +310,7 @@ namespace Abc
         [Fact]
         public static void Switch_None_NullCaseNone_Throws()
         {
-            Assert.ThrowsArgNullEx("caseNone", () =>
+            Assert.ThrowsAnexn("caseNone", () =>
                 Ø.Switch(Funk<int, AnyResult>.Any, Funk<AnyResult>.Null));
         }
 
@@ -325,9 +325,9 @@ namespace Abc
         [Fact]
         public static void Switch_Some_NullCaseSome_Throws()
         {
-            Assert.ThrowsArgNullEx("caseSome", () =>
+            Assert.ThrowsAnexn("caseSome", () =>
                 One.Switch(Funk<int, AnyResult>.Null, Funk<AnyResult>.Any));
-            Assert.ThrowsArgNullEx("caseSome", () =>
+            Assert.ThrowsAnexn("caseSome", () =>
                 One.Switch(Funk<int, AnyResult>.Null, AnyResult.Value));
         }
 
@@ -448,7 +448,7 @@ namespace Abc
         [Fact]
         public static void ValueOrElse_None_NullFactory_Throws()
         {
-            Assert.ThrowsArgNullEx("valueFactory", () => Ø.ValueOrElse(Funk<int>.Null));
+            Assert.ThrowsAnexn("valueFactory", () => Ø.ValueOrElse(Funk<int>.Null));
         }
 
         [Fact]
@@ -517,7 +517,7 @@ namespace Abc
         [Fact]
         public static void ValueOrThrow_NullException()
         {
-            Assert.ThrowsArgNullEx("exception", () => Ø.ValueOrThrow(null!));
+            Assert.ThrowsAnexn("exception", () => Ø.ValueOrThrow(null!));
         }
 
         [Fact]
@@ -567,7 +567,7 @@ namespace Abc
         [Fact]
         public static void Do_None_NullOnNone_Throws()
         {
-            Assert.ThrowsArgNullEx("onNone", () => Ø.Do(Act<int>.Noop, Act.Null));
+            Assert.ThrowsAnexn("onNone", () => Ø.Do(Act<int>.Noop, Act.Null));
         }
 
         [Fact]
@@ -579,7 +579,7 @@ namespace Abc
         [Fact]
         public static void Do_Some_NullOnSome_Throws()
         {
-            Assert.ThrowsArgNullEx("onSome", () => One.Do(Act<int>.Null, Act.Noop));
+            Assert.ThrowsAnexn("onSome", () => One.Do(Act<int>.Null, Act.Noop));
         }
 
         [Fact]
@@ -623,7 +623,7 @@ namespace Abc
         [Fact]
         public static void OnSome_Some_NullAction_Throws()
         {
-            Assert.ThrowsArgNullEx("action", () => One.OnSome(Act<int>.Null));
+            Assert.ThrowsAnexn("action", () => One.OnSome(Act<int>.Null));
         }
 
         [Fact]
@@ -814,13 +814,13 @@ namespace Abc
         [Fact]
         public static void Contains_None_NullComparer()
         {
-            Assert.ThrowsArgNullEx("comparer", () => Ø.Contains(1, null!));
+            Assert.ThrowsAnexn("comparer", () => Ø.Contains(1, null!));
         }
 
         [Fact]
         public static void Contains_Some_NullComparer()
         {
-            Assert.ThrowsArgNullEx("comparer", () => One.Contains(1, null!));
+            Assert.ThrowsAnexn("comparer", () => One.Contains(1, null!));
         }
 
         [Fact]

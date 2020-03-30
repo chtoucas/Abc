@@ -8,10 +8,10 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
-    // https://devblogs.microsoft.com/dotnet/configureawait-faq/
-    // https://ericlippert.com/2020/03/10/passing-awaited-tasks/
     // Async vs async...
     // Maybe<Task<T>>, Task<Maybe<T>>.
+    // https://devblogs.microsoft.com/dotnet/configureawait-faq/
+    // https://ericlippert.com/2020/03/10/passing-awaited-tasks/
 
     // Async methods.
     // Not extension methods: we already have instance methods with the same

@@ -141,8 +141,8 @@ namespace Abc
             Assert.Equal(1, none.CompareTo(null));
             Assert.Equal(1, one.CompareTo(null));
 
-            Assert.ThrowsArgEx("obj", () => none.CompareTo(new object()));
-            Assert.ThrowsArgEx("obj", () => one.CompareTo(new object()));
+            Assert.ThrowsArgexn("obj", () => none.CompareTo(new object()));
+            Assert.ThrowsArgexn("obj", () => one.CompareTo(new object()));
 
             // With None
             Assert.Equal(1, one.CompareTo(none));
@@ -161,7 +161,7 @@ namespace Abc
             // Arrange
             IStructuralComparable none = Ø;
             // Act & Assert
-            Assert.ThrowsArgNullEx("comparer", () => none.CompareTo(One, null!));
+            Assert.ThrowsAnexn("comparer", () => none.CompareTo(One, null!));
         }
 
         [Fact]
@@ -170,7 +170,7 @@ namespace Abc
             // Arrange
             IStructuralComparable one = One;
             // Act & Assert
-            Assert.ThrowsArgNullEx("comparer", () => one.CompareTo(One, null!));
+            Assert.ThrowsAnexn("comparer", () => one.CompareTo(One, null!));
         }
 
         [Fact]
@@ -183,8 +183,8 @@ namespace Abc
             IStructuralComparable two = Two;
 
             // Act & Assert
-            Assert.ThrowsArgEx("other", () => none.CompareTo(new object(), cmp));
-            Assert.ThrowsArgEx("other", () => one.CompareTo(new object(), cmp));
+            Assert.ThrowsArgexn("other", () => none.CompareTo(new object(), cmp));
+            Assert.ThrowsArgexn("other", () => one.CompareTo(new object(), cmp));
 
             Assert.Equal(1, none.CompareTo(null, cmp));
             Assert.Equal(1, one.CompareTo(null, cmp));
@@ -343,7 +343,7 @@ namespace Abc
             // Arrange
             IStructuralEquatable one = One;
             // Act & Assert
-            Assert.ThrowsArgNullEx("comparer", () => one.Equals(One, null!));
+            Assert.ThrowsAnexn("comparer", () => one.Equals(One, null!));
         }
 
         [Fact]
@@ -455,7 +455,7 @@ namespace Abc
             // Arrange
             IStructuralEquatable one = One;
             // Act & Assert
-            Assert.ThrowsArgNullEx("comparer", () => one.GetHashCode(null!));
+            Assert.ThrowsAnexn("comparer", () => one.GetHashCode(null!));
         }
 
         [Fact]

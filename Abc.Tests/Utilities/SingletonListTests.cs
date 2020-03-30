@@ -48,7 +48,7 @@ namespace Abc.Utilities
             // Arrange
             var list = (IList<AnyT>)Iter;
             // Act & Assert
-            Assert.ThrowsAoorEx("index", () => list[index]);
+            Assert.ThrowsAoorexn("index", () => list[index]);
         }
 
         [Fact]

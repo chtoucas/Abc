@@ -14,13 +14,13 @@ namespace Abc
         [Fact]
         public static void Select_None_NullSelector()
         {
-            Assert.ThrowsArgNullEx("selector", () => Ø.Select(Funk<int, AnyT>.Null));
+            Assert.ThrowsAnexn("selector", () => Ø.Select(Funk<int, AnyT>.Null));
         }
 
         [Fact]
         public static void Select_Some_NullSelector()
         {
-            Assert.ThrowsArgNullEx("selector", () => One.Select(Funk<int, AnyT>.Null));
+            Assert.ThrowsAnexn("selector", () => One.Select(Funk<int, AnyT>.Null));
         }
 
         [Fact]
@@ -50,13 +50,13 @@ namespace Abc
         [Fact]
         public static void Where_None_NullPredicate()
         {
-            Assert.ThrowsArgNullEx("predicate", () => Ø.Where(null!));
+            Assert.ThrowsAnexn("predicate", () => Ø.Where(null!));
         }
 
         [Fact]
         public static void Where_Some_NullPredicate()
         {
-            Assert.ThrowsArgNullEx("predicate", () => One.Where(null!));
+            Assert.ThrowsAnexn("predicate", () => One.Where(null!));
         }
 
         [Fact]
@@ -84,28 +84,28 @@ namespace Abc
         [Fact]
         public static void SelectMany_None_NullSelector()
         {
-            Assert.ThrowsArgNullEx("selector", () =>
+            Assert.ThrowsAnexn("selector", () =>
                 Ø.SelectMany(Kunc<int, AnyT1>.Null, Funk<int, AnyT1, AnyT2>.Any));
         }
 
         [Fact]
         public static void SelectMany_Some_NullSelector()
         {
-            Assert.ThrowsArgNullEx("selector", () =>
+            Assert.ThrowsAnexn("selector", () =>
                 One.SelectMany(Kunc<int, AnyT1>.Null, Funk<int, AnyT1, AnyT2>.Any));
         }
 
         [Fact]
         public static void SelectMany_None_NullResultSelector()
         {
-            Assert.ThrowsArgNullEx("resultSelector", () =>
+            Assert.ThrowsAnexn("resultSelector", () =>
                 Ø.SelectMany(Kunc<int, AnyT1>.Any, Funk<int, AnyT1, AnyT2>.Null));
         }
 
         [Fact]
         public static void SelectMany_Some_NullResultSelector()
         {
-            Assert.ThrowsArgNullEx("resultSelector", () =>
+            Assert.ThrowsAnexn("resultSelector", () =>
                 One.SelectMany(Kunc<int, AnyT1>.Any, Funk<int, AnyT1, AnyT2>.Null));
         }
 
@@ -134,60 +134,60 @@ namespace Abc
         [Fact]
         public static void Join_None_NullOuterKeySelector()
         {
-            Assert.ThrowsArgNullEx("outerKeySelector", () =>
+            Assert.ThrowsAnexn("outerKeySelector", () =>
                 Ø.Join(TwoL, Funk<int, AnyT1>.Null, Funk<long, AnyT1>.Null, Funk<int, long, AnyT2>.Any));
             // With a comparer.
-            Assert.ThrowsArgNullEx("outerKeySelector", () =>
+            Assert.ThrowsAnexn("outerKeySelector", () =>
                 Ø.Join(TwoL, Funk<int, AnyT1>.Null, Funk<long, AnyT1>.Null, Funk<int, long, AnyT2>.Any, null));
         }
 
         [Fact]
         public static void Join_Some_NullOuterKeySelector()
         {
-            Assert.ThrowsArgNullEx("outerKeySelector", () =>
+            Assert.ThrowsAnexn("outerKeySelector", () =>
                 One.Join(TwoL, Funk<int, AnyT1>.Null, Funk<long, AnyT1>.Any, Funk<int, long, AnyT2>.Any));
             // With a comparer.
-            Assert.ThrowsArgNullEx("outerKeySelector", () =>
+            Assert.ThrowsAnexn("outerKeySelector", () =>
                 One.Join(TwoL, Funk<int, AnyT1>.Null, Funk<long, AnyT1>.Any, Funk<int, long, AnyT2>.Any, null));
         }
 
         [Fact]
         public static void Join_None_NullInnerKeySelector()
         {
-            Assert.ThrowsArgNullEx("innerKeySelector", () =>
+            Assert.ThrowsAnexn("innerKeySelector", () =>
                 Ø.Join(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Null, Funk<int, long, AnyT2>.Any));
             // With a comparer.
-            Assert.ThrowsArgNullEx("innerKeySelector", () =>
+            Assert.ThrowsAnexn("innerKeySelector", () =>
                 Ø.Join(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Null, Funk<int, long, AnyT2>.Any, null));
         }
 
         [Fact]
         public static void Join_Some_NullInnerKeySelector()
         {
-            Assert.ThrowsArgNullEx("innerKeySelector", () =>
+            Assert.ThrowsAnexn("innerKeySelector", () =>
                 One.Join(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Null, Funk<int, long, AnyT2>.Any));
             // With a comparer.
-            Assert.ThrowsArgNullEx("innerKeySelector", () =>
+            Assert.ThrowsAnexn("innerKeySelector", () =>
                 One.Join(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Null, Funk<int, long, AnyT2>.Any, null));
         }
 
         [Fact]
         public static void Join_None_NullResultSelector()
         {
-            Assert.ThrowsArgNullEx("resultSelector", () =>
+            Assert.ThrowsAnexn("resultSelector", () =>
                 Ø.Join(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, long, AnyT2>.Null));
             // With a comparer.
-            Assert.ThrowsArgNullEx("resultSelector", () =>
+            Assert.ThrowsAnexn("resultSelector", () =>
                 Ø.Join(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, long, AnyT2>.Null, null));
         }
 
         [Fact]
         public static void Join_Some_NullResultSelector()
         {
-            Assert.ThrowsArgNullEx("resultSelector", () =>
+            Assert.ThrowsAnexn("resultSelector", () =>
                 One.Join(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, long, AnyT2>.Null));
             // With a comparer.
-            Assert.ThrowsArgNullEx("resultSelector", () =>
+            Assert.ThrowsAnexn("resultSelector", () =>
                 One.Join(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, long, AnyT2>.Null, null));
         }
 
@@ -205,59 +205,59 @@ namespace Abc
         [Fact]
         public static void GroupJoin_None_NullOuterKeySelector()
         {
-            Assert.ThrowsArgNullEx("outerKeySelector", () =>
+            Assert.ThrowsAnexn("outerKeySelector", () =>
                 Ø.GroupJoin(TwoL, Funk<int, AnyT1>.Null, Funk<long, AnyT1>.Null, Funk<int, Maybe<long>, AnyT2>.Any));
             // With a comparer.
-            Assert.ThrowsArgNullEx("outerKeySelector", () =>
+            Assert.ThrowsAnexn("outerKeySelector", () =>
                 Ø.GroupJoin(TwoL, Funk<int, AnyT1>.Null, Funk<long, AnyT1>.Null, Funk<int, Maybe<long>, AnyT2>.Any, null));
         }
 
         [Fact]
         public static void GroupJoin_Some_NullOuterKeySelector()
         {
-            Assert.ThrowsArgNullEx("outerKeySelector", () =>
+            Assert.ThrowsAnexn("outerKeySelector", () =>
                 One.GroupJoin(TwoL, Funk<int, AnyT1>.Null, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Any));
             // With a comparer.
-            Assert.ThrowsArgNullEx("outerKeySelector", () =>
+            Assert.ThrowsAnexn("outerKeySelector", () =>
                 One.GroupJoin(TwoL, Funk<int, AnyT1>.Null, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Any, null));
         }
 
         [Fact]
         public static void GroupJoin_None_NullInnerKeySelector()
         {
-            Assert.ThrowsArgNullEx("innerKeySelector", () =>
+            Assert.ThrowsAnexn("innerKeySelector", () =>
                 Ø.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Null, Funk<int, Maybe<long>, AnyT2>.Any));
             // With a comparer.
-            Assert.ThrowsArgNullEx("innerKeySelector", () =>
+            Assert.ThrowsAnexn("innerKeySelector", () =>
                 Ø.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Null, Funk<int, Maybe<long>, AnyT2>.Any, null));
         }
 
         [Fact]
         public static void GroupJoin_Some_NullInnerKeySelector()
         {
-            Assert.ThrowsArgNullEx("innerKeySelector", () =>
+            Assert.ThrowsAnexn("innerKeySelector", () =>
                 One.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Null, Funk<int, Maybe<long>, AnyT2>.Any));
             // With a comparer.
-            Assert.ThrowsArgNullEx("innerKeySelector", () =>
+            Assert.ThrowsAnexn("innerKeySelector", () =>
                 One.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Null, Funk<int, Maybe<long>, AnyT2>.Any, null));
         }
 
         [Fact]
         public static void GroupJoin_None_NullResultSelector()
         {
-            Assert.ThrowsArgNullEx("resultSelector", () =>
+            Assert.ThrowsAnexn("resultSelector", () =>
                 Ø.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Null));
             // With a comparer.
-            Assert.ThrowsArgNullEx("resultSelector", () => Ø.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Null, null));
+            Assert.ThrowsAnexn("resultSelector", () => Ø.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Null, null));
         }
 
         [Fact]
         public static void GroupJoin_Some_NullResultSelector()
         {
-            Assert.ThrowsArgNullEx("resultSelector", () =>
+            Assert.ThrowsAnexn("resultSelector", () =>
                 One.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Null));
             // With a comparer.
-            Assert.ThrowsArgNullEx("resultSelector", () =>
+            Assert.ThrowsAnexn("resultSelector", () =>
                 One.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Null, null));
         }
 

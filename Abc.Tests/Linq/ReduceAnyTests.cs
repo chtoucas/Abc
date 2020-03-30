@@ -13,27 +13,27 @@ namespace Abc.Linq
     {
         [Fact]
         public static void NullSource() =>
-            Assert.ThrowsArgNullEx("source", () =>
+            Assert.ThrowsAnexn("source", () =>
                 Null.ReduceAny(Kunc<int, int, int>.Any));
 
         [Fact]
         public static void NullAccumulator() =>
-            Assert.ThrowsArgNullEx("accumulator", () =>
+            Assert.ThrowsAnexn("accumulator", () =>
                 NotNull.ReduceAny(Kunc<int, int, int>.Null));
 
         [Fact]
         public static void NullSource_WithPredicate() =>
-            Assert.ThrowsArgNullEx("source", () =>
+            Assert.ThrowsAnexn("source", () =>
                 Null.ReduceAny(Kunc<int, int, int>.Any, Funk<Maybe<int>, bool>.Any));
 
         [Fact]
         public static void NullAccumulator_WithPredicate() =>
-            Assert.ThrowsArgNullEx("accumulator", () =>
+            Assert.ThrowsAnexn("accumulator", () =>
                 NotNull.ReduceAny(Kunc<int, int, int>.Null, Funk<Maybe<int>, bool>.Any));
 
         [Fact]
         public static void NullPredicate() =>
-            Assert.ThrowsArgNullEx("predicate", () =>
+            Assert.ThrowsAnexn("predicate", () =>
                 NotNull.ReduceAny(Kunc<int, int, int>.Any, Funk<Maybe<int>, bool>.Null));
     }
 }

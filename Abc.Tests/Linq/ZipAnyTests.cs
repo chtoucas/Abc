@@ -13,17 +13,17 @@ namespace Abc.Linq
     {
         [Fact]
         public static void NullFirst() =>
-            Assert.ThrowsArgNullEx("first", () =>
+            Assert.ThrowsAnexn("first", () =>
                 Null.ZipAny(NotNull, Kunc<int, int, int>.Any));
 
         [Fact]
         public static void NullSecond() =>
-            Assert.ThrowsArgNullEx("second", () =>
+            Assert.ThrowsAnexn("second", () =>
                 NotNull.ZipAny(Null, Kunc<int, int, int>.Any));
 
         [Fact]
         public static void NullResultSelector() =>
-            Assert.ThrowsArgNullEx("resultSelector", () =>
+            Assert.ThrowsAnexn("resultSelector", () =>
                 NotNull.ZipAny(NotNull, Kunc<int, int, int>.Null));
     }
 }

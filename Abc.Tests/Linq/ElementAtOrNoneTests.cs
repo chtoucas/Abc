@@ -41,7 +41,7 @@ namespace Abc.Linq
     {
         [Fact]
         public static void NullSource() =>
-            Assert.ThrowsArgNullEx("source", () => Null.ElementAtOrNone(1));
+            Assert.ThrowsAnexn("source", () => Null.ElementAtOrNone(1));
     }
 
     public partial class ElementAtOrNoneTests

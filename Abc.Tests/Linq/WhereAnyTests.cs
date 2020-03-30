@@ -16,11 +16,11 @@ namespace Abc.Linq
     {
         [Fact]
         public static void NullSource() =>
-            Assert.ThrowsArgNullEx("source", () => Null.WhereAny(Kunc<int, bool>.Any));
+            Assert.ThrowsAnexn("source", () => Null.WhereAny(Kunc<int, bool>.Any));
 
         [Fact]
         public static void NullPredicate() =>
-            Assert.ThrowsArgNullEx("predicate", () => NotNull.WhereAny(Kunc<int, bool>.Null));
+            Assert.ThrowsAnexn("predicate", () => NotNull.WhereAny(Kunc<int, bool>.Null));
     }
 
     public partial class WhereAnyTests

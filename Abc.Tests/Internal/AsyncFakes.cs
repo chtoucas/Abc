@@ -7,14 +7,12 @@ using Abc;
 internal static class AsyncFakes
 {
     // Completes synchronously.
-    public static Task<Maybe<AnyResult>> Const<T>(T _)
-    {
-        return AnyResult.AsyncSome;
-    }
+    public static Task<Maybe<AnyResult>> Const<T>(T _) =>
+        AnyResult.AsyncSome;
 
     public static async Task<Maybe<AnyResult>> ConstAsync<T>(T _)
     {
-        await Task.Delay(100).ConfigureAwait(false);
+        await Task.Yield();
         return AnyResult.Some;
     }
 }

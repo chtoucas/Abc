@@ -1,30 +1,33 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-// TODO: ConfigureAwait(false) or ConfigureAwait(true)?
-#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
+#pragma warning disable CA1034 // Nested types should not be visible
 
 namespace Abc
 {
+    using System.Threading.Tasks;
+
     using Xunit;
 
     using Assert = AssertEx;
 
     // TODO: figure out async tests.
+    // ConfigureAwait(false) or ConfigureAwait(true)?
+    // https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/november/async-programming-unit-testing-asynchronous-code
+    // https://bradwilson.typepad.com/blog/2012/01/xunit19.html
 
     // Async methods.
-    // https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/november/async-programming-unit-testing-asynchronous-code
     public partial class MaybeTests
     {
         #region BindAsync()
 
         [Fact]
         public static void BindAsync_None_NullBinder() =>
-            Assert.ThrowsArgNullEx("binder", () =>
+            Assert.ThrowsAnexn("binder", () =>
                 Ø.BindAsync(Kunc<int, AnyT>.NullAsync));
 
         [Fact]
         public static void BindAsync_Some_NullBinder() =>
-            Assert.ThrowsArgNullEx("binder", () =>
+            Assert.ThrowsAnexn("binder", () =>
                 One.BindAsync(Kunc<int, AnyT>.NullAsync));
 
         [Fact]
@@ -56,12 +59,12 @@ namespace Abc
 
         [Fact]
         public static void SelectAsync_None_NullSelector() =>
-            Assert.ThrowsArgNullEx("selector", () =>
+            Assert.ThrowsAnexn("selector", () =>
                 Ø.SelectAsync(Funk<int, AnyT>.NullAsync));
 
         [Fact]
         public static void SelectAsync_Some_NullSelector() =>
-            Assert.ThrowsArgNullEx("selector", () =>
+            Assert.ThrowsAnexn("selector", () =>
                 One.SelectAsync(Funk<int, AnyT>.NullAsync));
 
         #endregion
@@ -70,11 +73,11 @@ namespace Abc
 
         [Fact]
         public static void OrElseAsync_None_NullOther() =>
-            Assert.ThrowsArgNullEx("other", () => Ø.OrElseAsync(null!));
+            Assert.ThrowsAnexn("other", () => Ø.OrElseAsync(null!));
 
         [Fact]
         public static void OrElseAsync_Some_NullOther() =>
-            Assert.ThrowsArgNullEx("other", () => One.OrElseAsync(null!));
+            Assert.ThrowsAnexn("other", () => One.OrElseAsync(null!));
 
         #endregion
 
@@ -82,33 +85,49 @@ namespace Abc
 
         [Fact]
         public static void SwitchAsync_None_NullCaseSome() =>
-            Assert.ThrowsArgNullEx("caseSome", () =>
+            Assert.ThrowsAnexn("caseSome", () =>
                 Ø.SwitchAsync(
                     caseSome: Funk<int, AnyResult>.NullAsync,
                     caseNone: AnyResult.AsyncValue));
 
         [Fact]
         public static void SwitchAsync_None_NullCaseNone() =>
-            Assert.ThrowsArgNullEx("caseNone", () =>
+            Assert.ThrowsAnexn("caseNone", () =>
                 Ø.SwitchAsync(
                     caseSome: Funk<int, AnyT>.AnyAsync,
                     caseNone: null!));
 
         [Fact]
         public static void SwitchAsync_Some_NullCaseSome() =>
-            Assert.ThrowsArgNullEx("caseSome", () =>
+            Assert.ThrowsAnexn("caseSome", () =>
                 One.SwitchAsync(
                     caseSome: Funk<int, AnyT>.NullAsync,
                     caseNone: AnyT.AsyncValue));
 
         [Fact]
         public static void SwitchAsync_Some_NullCaseNone() =>
-            // Act & Assert
-            Assert.ThrowsArgNullEx("caseNone", () =>
+            Assert.ThrowsAnexn("caseNone", () =>
                 One.SwitchAsync(
                     caseSome: x => AnyResult.AsyncValue,
                     caseNone: null!));
 
         #endregion
+    }
+
+    public partial class MaybeTests
+    {
+        public static class HelperClass
+        {
+            #region BindAsync()
+
+            [Fact]
+            public static async Task BindAsync_None_NullBinder() =>
+                await Assert.Async
+                    .ThrowsAnexn("binder", () =>
+                        MaybeEx.BindAsync(Ø, Kunc<int, AnyT>.NullAsync))
+                    .ConfigureAwait(false);
+
+            #endregion
+        }
     }
 }

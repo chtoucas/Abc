@@ -21,15 +21,15 @@ namespace Abc.Linq
     {
         [Fact]
         public static void NullSource() =>
-            Assert.ThrowsArgNullEx("source", () => Null.LastOrNone());
+            Assert.ThrowsAnexn("source", () => Null.LastOrNone());
 
         [Fact]
         public static void NullSource_WithPredicate() =>
-            Assert.ThrowsArgNullEx("source", () => Null.LastOrNone(Funk<int, bool>.Any));
+            Assert.ThrowsAnexn("source", () => Null.LastOrNone(Funk<int, bool>.Any));
 
         [Fact]
         public static void NullPredicate() =>
-            Assert.ThrowsArgNullEx("predicate", () => NotNull.LastOrNone(Funk<int, bool>.Null));
+            Assert.ThrowsAnexn("predicate", () => NotNull.LastOrNone(Funk<int, bool>.Null));
     }
 
     public partial class LastOrNoneTests

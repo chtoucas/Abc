@@ -14,7 +14,7 @@ namespace Abc
         [Fact]
         public static void Invoke_NullBinder()
         {
-            Assert.ThrowsArgNullEx("binder", () =>
+            Assert.ThrowsAnexn("binder", () =>
                 Kunc<AnyT, AnyResult>.Null
                     .Invoke(AnyT.Some));
         }
@@ -42,7 +42,7 @@ namespace Abc
         [Fact]
         public static void Compose_NullObject()
         {
-            Assert.ThrowsArgNullEx("this", () =>
+            Assert.ThrowsAnexn("this", () =>
                 Kunc<AnyT1, AnyT2>.Null
                     .Compose(Kunc<AnyT2, AnyResult>.Any, AnyT1.Value));
         }
@@ -60,7 +60,7 @@ namespace Abc
         [Fact]
         public static void ComposeBack_NullOther()
         {
-            Assert.ThrowsArgNullEx("other", () =>
+            Assert.ThrowsAnexn("other", () =>
                 Kunc<AnyT2, AnyResult>.Any
                     .ComposeBack(Kunc<AnyT1, AnyT2>.Null, AnyT1.Value));
         }
@@ -82,7 +82,7 @@ namespace Abc
         [Fact]
         public static void Lift_NullSelector()
         {
-            Assert.ThrowsArgNullEx("selector", () =>
+            Assert.ThrowsAnexn("selector", () =>
                 Funk<AnyT, AnyResult>.Null
                     .Lift(AnyT.Some));
         }
@@ -108,7 +108,7 @@ namespace Abc
         [Fact]
         public static void Lift2_NullObject()
         {
-            Assert.ThrowsArgNullEx("this", () =>
+            Assert.ThrowsAnexn("this", () =>
                 Funk<AnyT1, AnyT2, AnyResult>.Null
                     .Lift(AnyT1.Some, AnyT2.Some));
         }
@@ -135,7 +135,7 @@ namespace Abc
         [Fact]
         public static void Lift3_NullObject()
         {
-            Assert.ThrowsArgNullEx("this", () =>
+            Assert.ThrowsAnexn("this", () =>
                 Funk<AnyT1, AnyT2, AnyT3, AnyResult>.Null
                     .Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some));
         }
@@ -163,7 +163,7 @@ namespace Abc
         [Fact]
         public static void Lift4_NullObject()
         {
-            Assert.ThrowsArgNullEx("this", () =>
+            Assert.ThrowsAnexn("this", () =>
                 Funk<AnyT1, AnyT2, AnyT3, AnyT4, AnyResult>.Null
                     .Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some));
         }
@@ -192,7 +192,7 @@ namespace Abc
         [Fact]
         public static void Lift5_NullObject()
         {
-            Assert.ThrowsArgNullEx("this", () =>
+            Assert.ThrowsAnexn("this", () =>
                 Funk<AnyT1, AnyT2, AnyT3, AnyT4, AnyT5, AnyResult>.Null
                     .Lift(AnyT1.Some, AnyT2.Some, AnyT3.Some, AnyT4.Some, AnyT5.Some));
         }

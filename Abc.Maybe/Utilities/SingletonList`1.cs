@@ -9,7 +9,7 @@ namespace Abc.Utilities
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
-    using AoorException = System.ArgumentOutOfRangeException;
+    using Aoorexn = System.ArgumentOutOfRangeException;
     using EF = ExceptionFactory;
 
     /// <summary>
@@ -39,7 +39,7 @@ namespace Abc.Utilities
 
         public T this[int index]
         {
-            get => index == 0 ? _element : throw new AoorException(nameof(index));
+            get => index == 0 ? _element : throw new Aoorexn(nameof(index));
             set => throw EF.ReadOnlyCollection;
         }
 
