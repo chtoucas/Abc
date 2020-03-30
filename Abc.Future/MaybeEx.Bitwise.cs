@@ -4,6 +4,8 @@ namespace Abc
 {
     using System.Diagnostics.Contracts;
 
+    // TODO: change names LeftAnd() and RightAnd().
+
     // "Bitwise" logical operations.
     // Gates, bools and bits.
     public partial class MaybeEx

@@ -9,6 +9,8 @@ namespace Abc.Edu.Fx
 
     using Abc.Utilities;
 
+    // TODO: clean up Mayhap.
+
     /// <summary>
     /// Represents the Maybe monad.
     /// </summary>

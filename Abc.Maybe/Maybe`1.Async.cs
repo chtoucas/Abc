@@ -65,7 +65,7 @@ namespace Abc
             return _isSome ? this : await other.ConfigureAwait(false);
         }
 
-        // Do not behave like the non-async Swith(), the method throws right
+        // Do not behave like the non-async Switch(), the method throws right
         // away when "caseSome" or "caseNone" is null.
         [Pure]
         public Task<TResult> SwitchAsync<TResult>(

@@ -11,7 +11,8 @@ vNEXT
 -----
 
 ### Version 1.0.0-alpha-2
-- Remove async methods.
+- Remove async methods?
+- Remove `MaybeComparer<T>`?
 
 ### Towards version 1.0.0
 - API
