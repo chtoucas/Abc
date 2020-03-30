@@ -9,7 +9,6 @@ namespace Abc.Linq
 
     using Anexn = System.ArgumentNullException;
 
-    // Filtering: WhereAny (deferred).
     public static partial class Qperators
     {
         [Pure]
@@ -17,7 +16,6 @@ namespace Abc.Linq
             this IEnumerable<TSource> source,
             Func<TSource, Maybe<bool>> predicate)
         {
-            if (source is null) { throw new Anexn(nameof(source)); }
             if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
             return from x in source

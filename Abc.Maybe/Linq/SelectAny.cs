@@ -9,7 +9,6 @@ namespace Abc.Linq
 
     using Anexn = System.ArgumentNullException;
 
-    // Projection: SelectAny (deferred).
     public static partial class Qperators
     {
         [Pure]
@@ -17,7 +16,6 @@ namespace Abc.Linq
             this IEnumerable<TSource> source,
             Func<TSource, Maybe<TResult>> selector)
         {
-            if (source is null) { throw new Anexn(nameof(source)); }
             if (selector is null) { throw new Anexn(nameof(selector)); }
 
             return from x in source
