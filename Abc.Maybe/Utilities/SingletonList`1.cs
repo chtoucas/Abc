@@ -44,8 +44,8 @@ namespace Abc.Utilities
         }
 
         [Pure]
-        public int IndexOf(T item)
-            => EqualityComparer<T>.Default.Equals(item, _element) ? 0 : -1;
+        public int IndexOf(T item) =>
+            EqualityComparer<T>.Default.Equals(item, _element) ? 0 : -1;
 
         public void Insert(int index, T item) => throw EF.ReadOnlyCollection;
         public void RemoveAt(int index) => throw EF.ReadOnlyCollection;
@@ -62,11 +62,11 @@ namespace Abc.Utilities
         public void Clear() => throw EF.ReadOnlyCollection;
 
         [Pure]
-        public bool Contains(T item)
-            => EqualityComparer<T>.Default.Equals(item, _element);
+        public bool Contains(T item) =>
+            EqualityComparer<T>.Default.Equals(item, _element);
 
-        public void CopyTo(T[] array, int arrayIndex)
-            => array[arrayIndex] = _element;
+        public void CopyTo(T[] array, int arrayIndex) =>
+            array[arrayIndex] = _element;
 
         public bool Remove(T item) => throw EF.ReadOnlyCollection;
 

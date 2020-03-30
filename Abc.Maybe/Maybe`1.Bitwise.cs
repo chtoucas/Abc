@@ -39,33 +39,33 @@ namespace Abc
         // True boolean operations ony make sense with Maybe<bool>; see Maybe.
 #if false // Only kept to be sure that I won't try it again... do NOT enable.
 
-        public static bool operator true(Maybe<T> value)
-            => value._isSome;
+        public static bool operator true(Maybe<T> value) =>
+            value._isSome;
 
-        public static bool operator false(Maybe<T> value)
-            => !value._isSome;
+        public static bool operator false(Maybe<T> value) =>
+            !value._isSome;
 
 #endif
 
         // Bitwise logical OR.
         [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "OrElse()")]
-        public static Maybe<T> operator |(Maybe<T> left, Maybe<T> right)
-            => left.OrElse(right);
+        public static Maybe<T> operator |(Maybe<T> left, Maybe<T> right) =>
+            left.OrElse(right);
 
         // Bitwise logical AND.
         [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "AndThen()")]
-        public static Maybe<T> operator &(Maybe<T> left, Maybe<T> right)
-            => left.AndThen(right);
+        public static Maybe<T> operator &(Maybe<T> left, Maybe<T> right) =>
+            left.AndThen(right);
 
         // Bitwise logical XOR.
         [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "XorElse()")]
-        public static Maybe<T> operator ^(Maybe<T> left, Maybe<T> right)
-            => left.XorElse(right);
+        public static Maybe<T> operator ^(Maybe<T> left, Maybe<T> right) =>
+            left.XorElse(right);
 
         // I know, this is just IsSome, but I wish to emphasize a boolean context.
         [InternalForTesting]
-        internal bool ToBoolean()
-            => _isSome;
+        internal bool ToBoolean() =>
+            _isSome;
 
         /// <remarks>
         /// Generalizes the null-coalescing operator (??) to maybe's, it returns
@@ -88,8 +88,8 @@ namespace Abc
         // Inclusive disjunction; mnemotechnic: "P otherwise Q".
         // "Plus" operation for maybe's.
         [Pure]
-        public Maybe<T> OrElse(Maybe<T> other)
-            => _isSome ? this : other;
+        public Maybe<T> OrElse(Maybe<T> other) =>
+            _isSome ? this : other;
 
         /// <summary>
         /// Continues with <paramref name="other"/> if the current instance is
@@ -111,10 +111,8 @@ namespace Abc
         // Compare to the nullable equiv w/ x an int? and y a long?:
         //   (x.HasValue ? y : (long?)null).
         [Pure]
-        public Maybe<TResult> AndThen<TResult>(Maybe<TResult> other)
-        {
-            return _isSome ? other : Maybe<TResult>.None;
-        }
+        public Maybe<TResult> AndThen<TResult>(Maybe<TResult> other) =>
+            _isSome ? other : Maybe<TResult>.None;
 
         // Exclusive disjunction; mnemotechnic: "either P or Q, but not both".
         // XorElse() = flip XorElse():
@@ -130,8 +128,8 @@ namespace Abc
         /// that an empty maybe is said to be false.
         /// </remarks>
         [Pure]
-        public Maybe<T> XorElse(Maybe<T> other)
-            => _isSome ? other._isSome ? None : this
+        public Maybe<T> XorElse(Maybe<T> other) =>
+            _isSome ? other._isSome ? None : this
                 : other;
     }
 }

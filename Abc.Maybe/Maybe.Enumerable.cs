@@ -13,8 +13,8 @@ namespace Abc
         // Beware, this is not the same as the empty maybe of type
         // IEnumerable<T>.
         [Pure]
-        public static Maybe<IEnumerable<T>> EmptyEnumerable<T>()
-            => MaybeEnumerable_<T>.Empty;
+        public static Maybe<IEnumerable<T>> EmptyEnumerable<T>() =>
+            MaybeEnumerable_<T>.Empty;
 
         private static class MaybeEnumerable_<T>
         {

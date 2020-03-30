@@ -27,27 +27,27 @@ namespace Abc
 
         private MaybeComparer() { }
 
-        public int Compare(object? left, object? right)
-            => left is null ? right is null ? 0 : -1
+        public int Compare(object? left, object? right) =>
+            left is null ? right is null ? 0 : -1
                 : right is null ? 1
                 : left is Maybe<T> first && right is Maybe<T> second
                     ? Compare(first, second)
                     : throw EF.MaybeComparer_InvalidType;
 
-        public int Compare(Maybe<T> left, Maybe<T> right)
+        public int Compare(Maybe<T> left, Maybe<T> right) =>
             // BONSANG! When IsSome is true, Value is NOT null.
-            => left.IsSome
+            left.IsSome
                 ? right.IsSome ? Comparer<T>.Default.Compare(left.Value!, right.Value!) : 1
                 : right.IsSome ? -1 : 0;
 
-        public bool Equals(Maybe<T> left, Maybe<T> right)
+        public bool Equals(Maybe<T> left, Maybe<T> right) =>
             // BONSANG! When IsSome is true, Value is NOT null.
-            => left.IsSome
+            left.IsSome
                 ? right.IsSome && EqualityComparer<T>.Default.Equals(left.Value!, right.Value!)
                 : !right.IsSome;
 
-        public int GetHashCode(Maybe<T> obj)
+        public int GetHashCode(Maybe<T> obj) =>
             // BONSANG! When IsSome is true, Value is NOT null.
-            => obj.IsSome ? obj.Value!.GetHashCode() : 0;
+            obj.IsSome ? obj.Value!.GetHashCode() : 0;
     }
 }

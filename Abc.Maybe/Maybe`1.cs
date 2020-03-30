@@ -189,8 +189,8 @@ namespace Abc
         /// Returns a string representation of the current instance.
         /// </summary>
         [Pure]
-        public override string ToString()
-            => _isSome ? $"Maybe({_value})" : "Maybe(None)";
+        public override string ToString() =>
+            _isSome ? $"Maybe({_value})" : "Maybe(None)";
 
         // REVIEW: implicit conversion.
         // Implicit conversion: test ImplicitToMaybe, see Square() and
@@ -201,8 +201,8 @@ namespace Abc
         // like what we have will nullable values: (int?)1 == 1 works.
         // NB: maybe (= Some(x)) == y is equivalent to maybe.Contains(y).
         //[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Maybe.Of()")]
-        //public static implicit operator Maybe<T>([AllowNull] T value)
-        //    => Maybe.Of(value);
+        //public static implicit operator Maybe<T>([AllowNull] T value) =>
+        //    Maybe.Of(value);
 
         // REVIEW: explicit conversion.
         // Friendly name: value.ValueOrThrow().
@@ -211,8 +211,8 @@ namespace Abc
         // but at the same time we can write Maybe<string> maybe = s where s is
         // in fact "null".
         [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "ValueOrThrow()")]
-        public static explicit operator T(Maybe<T> value)
-            => value._isSome ? value._value : throw EF.FromMaybe_NoValue;
+        public static explicit operator T(Maybe<T> value) =>
+            value._isSome ? value._value : throw EF.FromMaybe_NoValue;
 
         /// <summary>
         /// Represents a debugger type proxy for <see cref="Maybe{T}"/>.
@@ -328,8 +328,8 @@ namespace Abc
         /// <seealso cref="TryGetValue"/>
         [Pure]
         [return: MaybeNull]
-        public T ValueOrDefault()
-            => _isSome ? _value : default;
+        public T ValueOrDefault() =>
+            _isSome ? _value : default;
 
         /// <summary>
         /// Obtains the enclosed value if any; otherwise this method returns
@@ -338,8 +338,8 @@ namespace Abc
         /// <seealso cref="TryGetValue"/>
         [Pure]
         // It does work with null but then one should really use ValueOrDefault().
-        public T ValueOrElse([DisallowNull] T other)
-            => _isSome ? _value : other;
+        public T ValueOrElse([DisallowNull] T other) =>
+            _isSome ? _value : other;
 
         [Pure]
         public T ValueOrElse(Func<T> valueFactory)
@@ -356,8 +356,8 @@ namespace Abc
         }
 
         [Pure]
-        public T ValueOrThrow()
-            => _isSome ? _value : throw EF.Maybe_NoValue;
+        public T ValueOrThrow() =>
+            _isSome ? _value : throw EF.Maybe_NoValue;
 
         [Pure]
         public T ValueOrThrow(Exception exception)
@@ -482,8 +482,8 @@ namespace Abc
         /// <see cref="IsNone"/>.
         /// </summary>
         [Pure]
-        public Maybe<Unit> Skip()
-            => _isSome ? Maybe.Unit : Maybe.Zero;
+        public Maybe<Unit> Skip() =>
+            _isSome ? Maybe.Unit : Maybe.Zero;
     }
 
     // Iterable but **not** IEnumerable<>.
@@ -509,9 +509,9 @@ namespace Abc
     public partial struct Maybe<T>
     {
         [Pure]
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<T> GetEnumerator() =>
             // BONSANG! When _isSome is true, _value is NOT null.
-            => _isSome ? new SingletonList<T>.Iterator(_value!)
+            _isSome ? new SingletonList<T>.Iterator(_value!)
                 : EmptyIterator<T>.Instance;
 
         /// <summary>
@@ -520,31 +520,31 @@ namespace Abc
         // Really useful if we wish to manipulate a maybe together with another
         // sequence.
         [Pure]
-        public IEnumerable<T> ToEnumerable()
+        public IEnumerable<T> ToEnumerable() =>
             // BONSANG! When _isSome is true, _value is NOT null.
-            => _isSome ? new SingletonList<T>(_value!) : Enumerable.Empty<T>();
+            _isSome ? new SingletonList<T>(_value!) : Enumerable.Empty<T>();
 
         // Beware, Yield() doesn't match the yield from F# computation expressions.
 
         // Yield break or yield return "count" times.
         ///// See also <seealso cref="Replicate(int)"/> and the comments there.
         [Pure]
-        public IEnumerable<T> Yield(int count)
-            => _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
+        public IEnumerable<T> Yield(int count) =>
+            _isSome ? Enumerable.Repeat(_value, count) : Enumerable.Empty<T>();
 
         // Beware, may create an infinite loop!
         ///// See also <seealso cref="Replicate()"/> and the comments there.
         [Pure]
-        public IEnumerable<T> Yield()
+        public IEnumerable<T> Yield() =>
             // BONSANG! When _isSome is true, _value is NOT null.
-            => _isSome ? new NeverEndingSequence<T>(_value!) : Enumerable.Empty<T>();
+            _isSome ? new NeverEndingSequence<T>(_value!) : Enumerable.Empty<T>();
 
         // See also Replicate() and the comments there.
         // Maybe<T> being a struct it is never equal to null, therefore
         // Contains(null) always returns false.
         [Pure]
-        public bool Contains(T value)
-            => _isSome && EqualityComparer<T>.Default.Equals(_value, value);
+        public bool Contains(T value) =>
+            _isSome && EqualityComparer<T>.Default.Equals(_value, value);
 
         [Pure]
         public bool Contains(T value, IEqualityComparer<T> comparer)
@@ -574,10 +574,10 @@ namespace Abc
         /// <see cref="CompareTo(Maybe{T})"/> or <see cref="MaybeComparer{T}"/>
         /// as they produce a consistent total ordering.</para>
         /// </remarks>
-        public static bool operator <(Maybe<T> left, Maybe<T> right)
+        public static bool operator <(Maybe<T> left, Maybe<T> right) =>
             // Beware, this is NOT the same as
             //   left.CompareTo(right) < 0;
-            => left._isSome && right._isSome
+            left._isSome && right._isSome
                 ? Comparer<T>.Default.Compare(left._value, right._value) < 0
                 : false;
 
@@ -594,10 +594,10 @@ namespace Abc
         /// <see cref="CompareTo(Maybe{T})"/> or <see cref="MaybeComparer{T}"/>
         /// as they produce a consistent total ordering.</para>
         /// </remarks>
-        public static bool operator <=(Maybe<T> left, Maybe<T> right)
+        public static bool operator <=(Maybe<T> left, Maybe<T> right) =>
             // Beware, this is NOT the same as
             //   left.CompareTo(right) <= 0;
-            => left._isSome && right._isSome
+            left._isSome && right._isSome
                 ? Comparer<T>.Default.Compare(left._value, right._value) <= 0
                 : false;
 
@@ -614,10 +614,10 @@ namespace Abc
         /// <see cref="CompareTo(Maybe{T})"/> or <see cref="MaybeComparer{T}"/>
         /// as they produce a consistent total ordering.</para>
         /// </remarks>
-        public static bool operator >(Maybe<T> left, Maybe<T> right)
+        public static bool operator >(Maybe<T> left, Maybe<T> right) =>
             // Beware, this is NOT the same as
             //   left.CompareTo(right) > 0;
-            => left._isSome && right._isSome
+            left._isSome && right._isSome
                 ? Comparer<T>.Default.Compare(left._value, right._value) > 0
                 : false;
 
@@ -634,10 +634,10 @@ namespace Abc
         /// <see cref="CompareTo(Maybe{T})"/> or <see cref="MaybeComparer{T}"/>
         /// as they produce a consistent total ordering.</para>
         /// </remarks>
-        public static bool operator >=(Maybe<T> left, Maybe<T> right)
+        public static bool operator >=(Maybe<T> left, Maybe<T> right) =>
             // Beware, this is NOT the same as
             //   left.CompareTo(right) >= 0;
-            => left._isSome && right._isSome
+            left._isSome && right._isSome
                 ? Comparer<T>.Default.Compare(left._value, right._value) >= 0
                 : false;
 
@@ -648,8 +648,8 @@ namespace Abc
         /// The convention is that the empty maybe is strictly less than any
         /// other maybe.
         /// </remarks>
-        public int CompareTo(Maybe<T> other)
-            => _isSome
+        public int CompareTo(Maybe<T> other) =>
+            _isSome
                 ? other._isSome ? Comparer<T>.Default.Compare(_value, other._value) : 1
                 : other._isSome ? -1 : 0;
 
@@ -692,30 +692,30 @@ namespace Abc
         /// Determines whether two specified instances of <see cref="Maybe{T}"/>
         /// are equal.
         /// </summary>
-        public static bool operator ==(Maybe<T> left, Maybe<T> right)
-            => left.Equals(right);
+        public static bool operator ==(Maybe<T> left, Maybe<T> right) =>
+            left.Equals(right);
 
         /// <summary>
         /// Determines whether two specified instances of <see cref="Maybe{T}"/>
         /// are not equal.
         /// </summary>
-        public static bool operator !=(Maybe<T> left, Maybe<T> right)
-            => !left.Equals(right);
+        public static bool operator !=(Maybe<T> left, Maybe<T> right) =>
+            !left.Equals(right);
 
         /// <summary>
         /// Determines whether this instance is equal to the specified
         /// <see cref="Maybe{T}"/>.
         /// </summary>
         [Pure]
-        public bool Equals(Maybe<T> other)
-            => _isSome
+        public bool Equals(Maybe<T> other) =>
+            _isSome
                 ? other._isSome && EqualityComparer<T>.Default.Equals(_value, other._value)
                 : !other._isSome;
 
         /// <inheritdoc />
         [Pure]
-        public override bool Equals(object? obj)
-            => obj is Maybe<T> maybe && Equals(maybe);
+        public override bool Equals(object? obj) =>
+            obj is Maybe<T> maybe && Equals(maybe);
 
         /// <inheritdoc />
         [Pure]
@@ -733,8 +733,8 @@ namespace Abc
 
         /// <inheritdoc />
         [Pure]
-        public override int GetHashCode()
-            => _value?.GetHashCode() ?? 0;
+        public override int GetHashCode() =>
+            _value?.GetHashCode() ?? 0;
 
         /// <inheritdoc />
         [Pure]
