@@ -60,7 +60,7 @@ Operations:
 - Tests. Currently, there are many cases where we don't go beyond smoke tests.
 - Code coverage w/ coverlet.
 - XML comments with complete examples.
-- Perf tool (LINQ, nulls).
+- Perf tool (LINQ, nulls, iterable).
 
 Issues
 ------
