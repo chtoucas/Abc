@@ -56,10 +56,14 @@ namespace Abc
         /// </summary>
         public static void Unknown(Maybe<bool> maybe)
             => True(maybe.IsNone, "The maybe should be empty.");
+    }
 
-        public static partial class Async
+    // Async.
+    public partial class AssertEx
+    {
+        public partial class Async
         {
-            // TODO: make them async.
+            // TODO: make them async... not blocking.
 
             /// <summary>
             /// Verifies that the result of <paramref name="task"/> is empty.

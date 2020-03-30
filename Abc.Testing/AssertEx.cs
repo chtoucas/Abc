@@ -11,6 +11,8 @@ namespace Abc
     {
         private AssertEx() { }
 
+        public static partial class Async { }
+
         private static bool IsNull<T>(string paramName, [ValidatedNotNull] T obj)
             where T : notnull
         {
@@ -53,21 +55,25 @@ namespace Abc
             Equal(argName, ex.ParamName);
         }
 
-        // Throws an ArgumentOutOfRangeException.
+        // Threw ArgumentOutOfRangeException.
         public static void ThrowsAoorEx(string argName, Action testCode)
         {
             ArgumentOutOfRangeException ex = Throws<ArgumentOutOfRangeException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Throws an ArgumentOutOfRangeException.
+        // Threw ArgumentOutOfRangeException.
         public static void ThrowsAoorEx(string argName, Func<object> testCode)
         {
             ArgumentOutOfRangeException ex = Throws<ArgumentOutOfRangeException>(testCode);
             Equal(argName, ex.ParamName);
         }
+    }
 
-        public static partial class Async
+    // Async.
+    public partial class AssertEx
+    {
+        public partial class Async
         {
             // Threw ArgumentNullException.
             public static async Task ThrowsArgNullEx(string argName, Func<Task> testCode)
