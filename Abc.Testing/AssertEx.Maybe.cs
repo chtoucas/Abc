@@ -63,16 +63,14 @@ namespace Abc
     {
         public partial class Async
         {
-            // TODO: make them async... not blocking.
-
             /// <summary>
             /// Verifies that the result of <paramref name="task"/> is empty.
             /// </summary>
-            public static void None<T>(Task<Maybe<T>> task)
+            public static async Task None<T>(Task<Maybe<T>> task)
             {
                 if (IsNull(nameof(task), task)) { return; }
 
-                var maybe = task.Result;
+                Maybe<T> maybe = await task;
 
                 True(maybe.IsNone, "The maybe should be empty.");
             }
@@ -80,11 +78,11 @@ namespace Abc
             /// <summary>
             /// Verifies that the result of <paramref name="task"/> is NOT empty.
             /// </summary>
-            public static void Some<T>(Task<Maybe<T>> task)
+            public static async Task Some<T>(Task<Maybe<T>> task)
             {
                 if (IsNull(nameof(task), task)) { return; }
 
-                var maybe = task.Result;
+                Maybe<T> maybe = await task;
 
                 False(maybe.IsNone, "The maybe should not be empty.");
             }
@@ -93,11 +91,11 @@ namespace Abc
             /// Verifies that the result of <paramref name="task"/> is NOT empty
             /// and contains <paramref name="exp"/>.
             /// </summary>
-            public static void Some<T>(T exp, Task<Maybe<T>> task)
+            public static async Task Some<T>(T exp, Task<Maybe<T>> task)
             {
                 if (IsNull(nameof(task), task)) { return; }
 
-                Maybe<T> maybe = task.Result;
+                Maybe<T> maybe = await task;
 
                 False(maybe.IsNone, "The maybe should not be empty.");
 

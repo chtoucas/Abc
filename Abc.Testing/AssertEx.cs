@@ -1,7 +1,5 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
-
 namespace Abc
 {
     using System;
@@ -95,7 +93,7 @@ namespace Abc
 #pragma warning restore CS4014
 
                 ArgumentNullException ex =
-                    await ThrowsAsync<ArgumentNullException>(testCode).ConfigureAwait(false);
+                    await ThrowsAsync<ArgumentNullException>(testCode);
                 Equal(argName, ex.ParamName);
             }
         }

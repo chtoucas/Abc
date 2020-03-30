@@ -1,7 +1,5 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-#pragma warning disable CA1034 // Nested types should not be visible
-
 namespace Abc
 {
     using System.Threading.Tasks;
@@ -12,6 +10,10 @@ namespace Abc
 
     // TODO: figure out async tests.
     // ConfigureAwait(false) or ConfigureAwait(true)?
+    // - It seems that the answer is no: https://github.com/xunit/xunit/issues/1215
+    // - AssertEx.
+    // - https://github.com/xunit/xunit/issues/507
+    // - https://github.com/xunit/xunit/issues/1880
     // https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/november/async-programming-unit-testing-asynchronous-code
     // https://bradwilson.typepad.com/blog/2012/01/xunit19.html
 
@@ -31,26 +33,30 @@ namespace Abc
                 One.BindAsync(Kunc<int, AnyT>.NullAsync));
 
         [Fact]
-        public static void BindAsync_None()
+        public static async Task BindAsync_None()
         {
-            Assert.Async.None(Ø.BindAsync(AsyncFakes.ConstAsync));
-            Assert.Async.None(NoText.BindAsync(AsyncFakes.ConstAsync));
-            Assert.Async.None(NoUri.BindAsync(AsyncFakes.ConstAsync));
-            Assert.Async.None(AnyT.None.BindAsync(AsyncFakes.ConstAsync));
+            await Assert.Async.None(Ø.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.None(NoText.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.None(NoUri.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.None(AnyT.None.BindAsync(AsyncFakes.ReturnSomeAsync));
         }
 
         [Fact]
-        public static void BindAsync_Some()
+        public static async Task BindAsync_Some()
         {
-            Assert.Async.Some(AnyResult.Value, One.BindAsync(_ => AnyResult.AsyncSome));
-            Assert.Async.Some(AnyResult.Value, SomeText.BindAsync(_ => AnyResult.AsyncSome));
-            Assert.Async.Some(AnyResult.Value, SomeUri.BindAsync(_ => AnyResult.AsyncSome));
-            Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(_ => AnyResult.AsyncSome));
+            await Assert.Async
+                .Some(AnyResult.Value, One.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async
+                .Some(AnyResult.Value, SomeText.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async
+                .Some(AnyResult.Value, SomeUri.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async
+                .Some(AnyResult.Value, AnyT.Some.BindAsync(AsyncFakes.ReturnSomeAsync));
 
-            Assert.Async.None(One.BindAsync(_ => AnyResult.AsyncNone));
-            Assert.Async.None(SomeText.BindAsync(_ => AnyResult.AsyncNone));
-            Assert.Async.None(SomeUri.BindAsync(_ => AnyResult.AsyncNone));
-            Assert.Async.None(AnyT.Some.BindAsync(_ => AnyResult.AsyncNone));
+            await Assert.Async.None(One.BindAsync(AsyncFakes.ReturnNoneAsync));
+            await Assert.Async.None(SomeText.BindAsync(AsyncFakes.ReturnNoneAsync));
+            await Assert.Async.None(SomeUri.BindAsync(AsyncFakes.ReturnNoneAsync));
+            await Assert.Async.None(AnyT.Some.BindAsync(AsyncFakes.ReturnNoneAsync));
         }
 
         #endregion
@@ -124,15 +130,13 @@ namespace Abc
             public static async Task BindAsync_None_NullBinder() =>
                 await Assert.Async
                     .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(Ø, Kunc<int, AnyT>.NullAsync))
-                    .ConfigureAwait(false);
+                        MaybeEx.BindAsync(Ø, Kunc<int, AnyT>.NullAsync));
 
             [Fact]
             public static async Task BindAsync_Some_NullBinder() =>
                 await Assert.Async
                     .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(One, Kunc<int, AnyT>.NullAsync))
-                    .ConfigureAwait(false);
+                        MaybeEx.BindAsync(One, Kunc<int, AnyT>.NullAsync));
 
             #endregion
 
@@ -142,15 +146,13 @@ namespace Abc
             public static async Task SelectAsync_None_NullSelector() =>
                 await Assert.Async
                     .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(Ø, Funk<int, AnyT>.NullAsync))
-                    .ConfigureAwait(false);
+                        MaybeEx.SelectAsync(Ø, Funk<int, AnyT>.NullAsync));
 
             [Fact]
             public static async Task SelectAsync_Some_NullSelector() =>
                 await Assert.Async
                     .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(One, Funk<int, AnyT>.NullAsync))
-                    .ConfigureAwait(false);
+                        MaybeEx.SelectAsync(One, Funk<int, AnyT>.NullAsync));
 
             #endregion
 
@@ -159,14 +161,12 @@ namespace Abc
             [Fact]
             public static async Task OrElseAsync_None_NullOther() =>
                 await Assert.Async
-                    .ThrowsAnexn("other", () => MaybeEx.OrElseAsync(Ø, null!))
-                    .ConfigureAwait(false);
+                    .ThrowsAnexn("other", () => MaybeEx.OrElseAsync(Ø, null!));
 
             [Fact]
             public static async Task OrElseAsync_Some_NullOther() =>
                 await Assert.Async
-                    .ThrowsAnexn("other", () => MaybeEx.OrElseAsync(One, null!))
-                    .ConfigureAwait(false);
+                    .ThrowsAnexn("other", () => MaybeEx.OrElseAsync(One, null!));
 
             #endregion
 
@@ -179,7 +179,7 @@ namespace Abc
                     Ø,
                     caseSome: Funk<int, AnyResult>.NullAsync,
                     caseNone: AnyResult.AsyncValue
-                ).ConfigureAwait(false);
+                );
 
                 Assert.Same(AnyResult.Value, r); // Sanity check
             }
@@ -191,8 +191,7 @@ namespace Abc
                         MaybeEx.SwitchAsync(
                             Ø,
                             caseSome: Funk<int, AnyT>.AnyAsync,
-                            caseNone: null!))
-                    .ConfigureAwait(false);
+                            caseNone: null!));
 
             [Fact]
             public static async Task SwitchAsync_Some_NullCaseSome() =>
@@ -201,17 +200,16 @@ namespace Abc
                         MaybeEx.SwitchAsync(
                             One,
                             caseSome: Funk<int, AnyT>.NullAsync,
-                            caseNone: AnyT.AsyncValue))
-                    .ConfigureAwait(false);
+                            caseNone: AnyT.AsyncValue));
 
             [Fact]
             public static async Task SwitchAsync_Some_NullCaseNone_DoesNotThrow()
             {
-                var r = await  MaybeEx.SwitchAsync(
+                var r = await MaybeEx.SwitchAsync(
                     One,
                     caseSome: x => AnyResult.AsyncValue,
                     caseNone: null!
-                ).ConfigureAwait(false);
+                );
 
                 Assert.Same(AnyResult.Value, r); // Sanity check
             }

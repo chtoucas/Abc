@@ -35,8 +35,7 @@ namespace Abc
         public static async Task EagerValidationTestAsync() =>
             await Assert
                 .ThrowsAsync<InvalidOperationException>(() =>
-                    Assert.Async.ThrowsAnexn("arg", () => EagerValidation(null!)))
-                .ConfigureAwait(false);
+                    Assert.Async.ThrowsAnexn("arg", () => EagerValidation(null!)));
 
         [Fact]
         public static void AsyncValidationTest_NotAwaited_DoesNotThrow() =>
@@ -47,7 +46,6 @@ namespace Abc
         [Fact]
         public static async Task AsyncValidationTest() =>
             await Assert.Async
-                .ThrowsAnexn("arg", () => AsyncValidation(null!))
-                .ConfigureAwait(false);
+                .ThrowsAnexn("arg", () => AsyncValidation(null!));
     }
 }
