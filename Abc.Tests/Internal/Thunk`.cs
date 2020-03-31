@@ -25,6 +25,13 @@ internal static class Thunk<T>
             return result;
         };
     }
+
+    // Completes synchronously.
+    public static Func<T, Task<TResult>> ReturnSync<TResult>(TResult result)
+        where TResult : notnull
+    {
+        return x => Task.FromResult(result);
+    }
 }
 
 internal static class Thunk<T1, T2>

@@ -1,6 +1,7 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
 using System;
+using System.Threading.Tasks;
 
 internal static class Funk<TResult>
     where TResult : notnull
@@ -17,6 +18,8 @@ internal static class Funk<T, TResult>
     public static readonly Func<T, TResult> Null = null!;
 
     public static readonly Func<T, TResult> Any = _ => throw new FakeCallException();
+
+    public static readonly Func<T, Task<TResult>> NullAsync = null!;
 
 }
 

@@ -38,29 +38,29 @@ namespace Abc
         }
 #pragma warning restore CA1810
 
-        private static long MultiplyBy3(int x) => 3L * x;
-        private static async Task<long> MultiplyBy3Async(int x)
+        private static int Times3(int x) => 3 * x;
+        private static async Task<int> Times3Async(int x)
         {
             await Task.Yield();
-            return 3L * x;
+            return 3 * x;
         }
 
-        private static Maybe<long> MultiplyBy3_(int x) => Maybe.Some(3L * x);
-        private static async Task<Maybe<long>> MultiplyBy3Async_(int x)
+        private static Maybe<int> Times3_(int x) => Maybe.Some(3 * x);
+        private static async Task<Maybe<int>> Times3Async_(int x)
         {
             await Task.Yield();
-            return Maybe.Some(3L * x);
+            return Maybe.Some(3 * x);
         }
 
-        private static long MultiplyBy4(long x) => 4L * x;
-        private static async Task<long> MultiplyBy4Async(long x)
+        private static long Times4(long x) => 4L * x;
+        private static async Task<long> Times4Async(long x)
         {
             await Task.Yield();
             return 4L * x;
         }
 
-        private static Maybe<long> MultiplyBy4_(long x) => Maybe.Some(4L * x);
-        private static async Task<Maybe<long>> MultiplyBy4Async_(long x)
+        private static Maybe<long> Times4_(long x) => Maybe.Some(4L * x);
+        private static async Task<Maybe<long>> Times4Async_(long x)
         {
             await Task.Yield();
             return Maybe.Some(4L * x);
@@ -311,15 +311,15 @@ namespace Abc
 
         [Fact]
         public static void Bind_SomeInt32() =>
-            Assert.Some(6L, Two.Bind(x => Maybe.Some(3L * x)));
+            Assert.Some(6, Two.Bind(Times3_));
 
         [Fact]
         public static void Bind_SomeInt64() =>
-            Assert.Some(8L, TwoL.Bind(x => Maybe.Some(4L * x)));
+            Assert.Some(8L, TwoL.Bind(Times4_));
 
         [Fact]
         public static void Bind_SomeUri() =>
-            Assert.Some(MyUri.AbsoluteUri, SomeUri.Bind(x => Maybe.SomeOrNone(x.AbsoluteUri)));
+            Assert.Some(MyUri.AbsoluteUri, SomeUri.Bind(GetAbsoluteUri_));
 
         #endregion
 

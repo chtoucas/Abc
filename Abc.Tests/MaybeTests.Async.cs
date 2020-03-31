@@ -127,12 +127,12 @@ namespace Abc
         [Fact]
         public static void BindAsync_None_NullBinder() =>
             Assert.ThrowsAnexn("binder", () =>
-                Ø.BindAsync(AsyncFakes<int, Maybe<AnyT>>.Null));
+                Ø.BindAsync(Funk<int, Maybe<AnyT>>.NullAsync));
 
         [Fact]
         public static void BindAsync_Some_NullBinder() =>
             Assert.ThrowsAnexn("binder", () =>
-                One.BindAsync(AsyncFakes<int, Maybe<AnyT>>.Null));
+                One.BindAsync(Funk<int, Maybe<AnyT>>.NullAsync));
 
         [Fact]
         public static async Task BindAsync_None()
@@ -184,16 +184,15 @@ namespace Abc
 
         [Fact]
         public static async Task BindAsync_SomeInt32() =>
-            await Assert.Async.Some(6L, Two.BindAsync(MultiplyBy3Async_));
+            await Assert.Async.Some(6, Two.BindAsync(Times3Async_));
 
         [Fact]
         public static async Task BindAsync_SomeInt64() =>
-            await Assert.Async.Some(8L, TwoL.BindAsync(MultiplyBy4Async_));
+            await Assert.Async.Some(8L, TwoL.BindAsync(Times4Async_));
 
         [Fact]
         public static async Task BindAsync_SomeUri() =>
-            await Assert.Async.Some(MyUri.AbsoluteUri,
-                SomeUri.BindAsync(GetAbsoluteUriAsync_));
+            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.BindAsync(GetAbsoluteUriAsync_));
 
         #endregion
 
@@ -202,12 +201,12 @@ namespace Abc
         [Fact]
         public static void SelectAsync_None_NullSelector() =>
             Assert.ThrowsAnexn("selector", () =>
-                Ø.SelectAsync(AsyncFakes<int, AnyT>.Null));
+                Ø.SelectAsync(Funk<int, AnyT>.NullAsync));
 
         [Fact]
         public static void SelectAsync_Some_NullSelector() =>
             Assert.ThrowsAnexn("selector", () =>
-                One.SelectAsync(AsyncFakes<int, AnyT>.Null));
+                One.SelectAsync(Funk<int, AnyT>.NullAsync));
 
         [Fact]
         public static async Task SelectAsync_None()
@@ -223,16 +222,15 @@ namespace Abc
 
         [Fact]
         public static async Task SelectAsync_SomeInt32() =>
-            await Assert.Async.Some(6L, Two.SelectAsync(MultiplyBy3Async));
+            await Assert.Async.Some(6, Two.SelectAsync(Times3Async));
 
         [Fact]
         public static async Task SelectAsync_SomeInt64() =>
-            await Assert.Async.Some(8L, TwoL.SelectAsync(MultiplyBy4Async));
+            await Assert.Async.Some(8L, TwoL.SelectAsync(Times4Async));
 
         [Fact]
         public static async Task SelectAsync_SomeUri() =>
-            await Assert.Async.Some(MyUri.AbsoluteUri,
-                SomeUri.SelectAsync(GetAbsoluteUriAsync));
+            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.SelectAsync(GetAbsoluteUriAsync));
 
         #endregion
 
@@ -259,13 +257,13 @@ namespace Abc
             public static async Task BindAsync_None_NullBinder() =>
                 await Assert.Async
                     .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(Ø, AsyncFakes<int, Maybe<AnyT>>.Null));
+                        MaybeEx.BindAsync(Ø, Kunc<int, AnyT>.NullAsync));
 
             [Fact]
             public static async Task BindAsync_Some_NullBinder() =>
                 await Assert.Async
                     .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(One, AsyncFakes<int, Maybe<AnyT>>.Null));
+                        MaybeEx.BindAsync(One, Kunc<int, AnyT>.NullAsync));
 
             #endregion
 
@@ -275,13 +273,13 @@ namespace Abc
             public static async Task SelectAsync_None_NullSelector() =>
                 await Assert.Async
                     .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(Ø, AsyncFakes<int, AnyT>.Null));
+                        MaybeEx.SelectAsync(Ø, Funk<int, AnyT>.NullAsync));
 
             [Fact]
             public static async Task SelectAsync_Some_NullSelector() =>
                 await Assert.Async
                     .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(One, AsyncFakes<int, AnyT>.Null));
+                        MaybeEx.SelectAsync(One, Funk<int, AnyT>.NullAsync));
 
             #endregion
 
