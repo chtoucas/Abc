@@ -48,6 +48,9 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
+        // TODO: Task<T> or Func<Task<T>>, Task<Maybe<T>> or Func<Task<Maybe<T>>>?
+        // Remove SwitchAsync...
+
         [Pure]
         public Task<Maybe<T>> OrElseAsync(Task<Maybe<T>> other)
         {
@@ -56,8 +59,6 @@ namespace Abc
 
             return OrElseAsyncImpl(other);
         }
-
-        // REVIEW: Task<T> or Func<Task<T>>, Task<Maybe<T>> or Func<Task<Maybe<T>>>?
 
         [Pure]
         private async Task<Maybe<T>> OrElseAsyncImpl(Task<Maybe<T>> other)

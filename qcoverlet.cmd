@@ -5,6 +5,7 @@
 :Versions
 @set ReportGeneratorVersion=4.5.3
 
+:Cover
 dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="..\__work\coverlet.xml" /p:Include="[Abc.Maybe]*" /p:Exclude=\"[Abc*]System.Diagnostics.CodeAnalysis.*,[Abc*]System.Runtime.CompilerServices.*,[Abc*]Microsoft.CodeAnalysis.*\"
 
 :ReportGenerator

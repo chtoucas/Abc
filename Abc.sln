@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NEXT.md = NEXT.md
 		qbadge.cmd = qbadge.cmd
 		qcover.cmd = qcover.cmd
+		qcoverlet.cmd = qcoverlet.cmd
 		qtest.cmd = qtest.cmd
 		README.md = README.md
 	EndProjectSection
