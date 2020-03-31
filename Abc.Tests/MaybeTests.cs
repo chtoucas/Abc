@@ -285,28 +285,28 @@ namespace Abc
         [Fact]
         public static void Bind_None()
         {
-            Assert.None(Ø.Bind(_ => AnyResult.Some));
-            Assert.None(NoText.Bind(_ => AnyResult.Some));
-            Assert.None(NoUri.Bind(_ => AnyResult.Some));
-            Assert.None(AnyT.None.Bind(_ => AnyResult.Some));
+            Assert.None(Ø.Bind(Thunk<int>.Return(AnyResult.Some)));
+            Assert.None(NoText.Bind(Thunk<string>.Return(AnyResult.Some)));
+            Assert.None(NoUri.Bind(Thunk<Uri>.Return(AnyResult.Some)));
+            Assert.None(AnyT.None.Bind(Thunk<AnyT>.Return(AnyResult.Some)));
         }
 
         [Fact]
         public static void Bind_Some_ReturnsNone()
         {
-            Assert.None(One.Bind(_ => AnyResult.None));
-            Assert.None(SomeText.Bind(_ => AnyResult.None));
-            Assert.None(SomeUri.Bind(_ => AnyResult.None));
-            Assert.None(AnyT.Some.Bind(_ => AnyResult.None));
+            Assert.None(One.Bind(Thunk<int>.Return(AnyResult.None)));
+            Assert.None(SomeText.Bind(Thunk<string>.Return(AnyResult.None)));
+            Assert.None(SomeUri.Bind(Thunk<Uri>.Return(AnyResult.None)));
+            Assert.None(AnyT.Some.Bind(Thunk<AnyT>.Return(AnyResult.None)));
         }
 
         [Fact]
         public static void Bind_Some_ReturnsSome()
         {
-            Assert.Some(AnyResult.Value, One.Bind(_ => AnyResult.Some));
-            Assert.Some(AnyResult.Value, SomeText.Bind(_ => AnyResult.Some));
-            Assert.Some(AnyResult.Value, SomeUri.Bind(_ => AnyResult.Some));
-            Assert.Some(AnyResult.Value, AnyT.Some.Bind(_ => AnyResult.Some));
+            Assert.Some(AnyResult.Value, One.Bind(Thunk<int>.Return(AnyResult.Some)));
+            Assert.Some(AnyResult.Value, SomeText.Bind(Thunk<string>.Return(AnyResult.Some)));
+            Assert.Some(AnyResult.Value, SomeUri.Bind(Thunk<Uri>.Return(AnyResult.Some)));
+            Assert.Some(AnyResult.Value, AnyT.Some.Bind(Thunk<AnyT>.Return(AnyResult.Some)));
         }
 
         [Fact]
@@ -393,7 +393,9 @@ namespace Abc
         public static void Switch_Some_NullCaseNone_DoesNotThrow()
         {
             // Act
-            AnyResult v = One.Switch(x => AnyResult.Value, Funk<AnyResult>.Null);
+            AnyResult v = One.Switch(
+                caseSome: Thunk<int>.Return(AnyResult.Value),
+                caseNone: Funk<AnyResult>.Null);
             // Assert
             Assert.Same(AnyResult.Value, v);
         }
