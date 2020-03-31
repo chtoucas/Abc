@@ -29,21 +29,21 @@ namespace Abc
         [Fact]
         public static void Select_SomeInt32()
         {
-            Assert.Some(6L, Two.Select(x => 3L * x));
+            Assert.Some(6L, Two.Select(MultiplyBy3));
             Assert.Some(6L, from x in Two select 3L * x);
         }
 
         [Fact]
         public static void Select_SomeInt64()
         {
-            Assert.Some(8L, TwoL.Select(x => 4L * x));
+            Assert.Some(8L, TwoL.Select(MultiplyBy4));
             Assert.Some(8L, from x in TwoL select 4L * x);
         }
 
         [Fact]
         public static void Select_SomeUri()
         {
-            Assert.Some(MyUri.AbsoluteUri, SomeUri.Select(x => x.AbsoluteUri));
+            Assert.Some(MyUri.AbsoluteUri, SomeUri.Select(GetAbsoluteUri));
             Assert.Some(MyUri.AbsoluteUri, from x in SomeUri select x.AbsoluteUri);
         }
 

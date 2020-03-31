@@ -137,44 +137,66 @@ namespace Abc
         [Fact]
         public static async Task BindAsync_None()
         {
-            await Assert.Async.None(Ø.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.None(NoText.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.None(NoUri.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.None(AnyT.None.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.None(
+                Ø.BindAsync(Thunk<int>.ReturnAsync(AnyResult.Some)));
+
+            await Assert.Async.None(
+                NoText.BindAsync(Thunk<string>.ReturnAsync(AnyResult.Some)));
+
+            await Assert.Async.None(
+                NoUri.BindAsync(Thunk<Uri>.ReturnAsync(AnyResult.Some)));
+
+            await Assert.Async.None(
+                AnyT.None.BindAsync(Thunk<AnyT>.ReturnAsync(AnyResult.Some)));
         }
 
         [Fact]
         public static async Task BindAsync_Some_ReturnsNone()
         {
-            await Assert.Async.None(One.BindAsync(AsyncFakes.ReturnNoneAsync));
-            await Assert.Async.None(SomeText.BindAsync(AsyncFakes.ReturnNoneAsync));
-            await Assert.Async.None(SomeUri.BindAsync(AsyncFakes.ReturnNoneAsync));
-            await Assert.Async.None(AnyT.Some.BindAsync(AsyncFakes.ReturnNoneAsync));
+            await Assert.Async.None(
+                One.BindAsync(Thunk<int>.ReturnAsync(AnyResult.None)));
+
+            await Assert.Async.None(
+                SomeText.BindAsync(Thunk<string>.ReturnAsync(AnyResult.None)));
+
+            await Assert.Async.None(
+                SomeUri.BindAsync(Thunk<Uri>.ReturnAsync(AnyResult.None)));
+
+            await Assert.Async.None(
+                AnyT.Some.BindAsync(Thunk<AnyT>.ReturnAsync(AnyResult.None)));
         }
 
         [Fact]
         public static async Task BindAsync_Some_ReturnsSome()
         {
-            await Assert.Async.Some(AnyResult.Value, One.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.Some(AnyResult.Value, SomeText.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.Some(AnyResult.Value, SomeUri.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.Some(AnyResult.Value,
+                One.BindAsync(Thunk<int>.ReturnAsync(AnyResult.Some)));
+
+            await Assert.Async.Some(AnyResult.Value,
+                SomeText.BindAsync(Thunk<string>.ReturnAsync(AnyResult.Some)));
+
+            await Assert.Async.Some(AnyResult.Value,
+                SomeUri.BindAsync(Thunk<Uri>.ReturnAsync(AnyResult.Some)));
+
+            await Assert.Async.Some(AnyResult.Value,
+                AnyT.Some.BindAsync(Thunk<AnyT>.ReturnAsync(AnyResult.Some)));
         }
 
         [Fact]
         public static async Task BindAsync_SomeInt32()
         {
-            await Assert.Async.Some(6L, Two.BindAsync(__binder));
             await Assert.Async
                 .Some(6L,
                     Two.BindAsync(
-                        AsyncFakes<int, long>.FromSync(x => Maybe.Some(3L * x))));
+                        AsyncFakes<int, long>.FromSync(MultiplyBy3_)));
 
-            static async Task<Maybe<long>> __binder(int x)
-            {
-                await Task.Yield();
-                return Maybe.Some(3L * x);
-            }
+            //await Assert.Async.Some(6L, Two.BindAsync(__binder));
+
+            //static async Task<Maybe<long>> __binder(int x)
+            //{
+            //    await Task.Yield();
+            //    return Maybe.Some(3L * x);
+            //}
         }
 
         [Fact]

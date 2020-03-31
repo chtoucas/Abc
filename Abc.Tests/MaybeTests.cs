@@ -36,6 +36,15 @@ namespace Abc
             SomeUri = Maybe.SomeOrNone(MyUri);
         }
 #pragma warning restore CA1810
+
+        private static long MultiplyBy3(int x) => 3L * x;
+        private static Maybe<long> MultiplyBy3_(int x) => Maybe.Some(3L * x);
+
+        private static long MultiplyBy4(long x) => 4L * x;
+        private static Maybe<long> MultiplyBy4_(long x) => Maybe.Some(4L * x);
+
+        private static string GetAbsoluteUri(Uri x) => x.AbsoluteUri;
+        private static Maybe<string> GetAbsoluteUri_(Uri x) => Maybe.SomeOrNone(x.AbsoluteUri);
     }
 
     // Factories.

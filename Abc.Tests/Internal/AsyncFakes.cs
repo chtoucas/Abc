@@ -21,18 +21,6 @@ internal static class AsyncFakes
 
     // Completes synchronously.
     public static Task<Maybe<AnyResult>> ReturnNone<T>(T _) => s_AsyncNone;
-
-    public static async Task<Maybe<AnyResult>> ReturnSomeAsync<T>(T _)
-    {
-        await Task.Yield();
-        return AnyResult.Some;
-    }
-
-    public static async Task<Maybe<AnyResult>> ReturnNoneAsync<T>(T _)
-    {
-        await Task.Yield();
-        return AnyResult.None;
-    }
 }
 
 internal static class AsyncFakes<TResult>
