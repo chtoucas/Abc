@@ -18,20 +18,12 @@ internal static class Thunk<T>
 
     public static Func<T, Task<TResult>> ReturnAsync<TResult>(TResult result)
         where TResult : notnull
-    {
-        return async x =>
-        {
-            await Task.Yield();
-            return result;
-        };
-    }
+        => async _ => { await Task.Yield(); return result; };
 
     // Completes synchronously.
     public static Func<T, Task<TResult>> ReturnSync<TResult>(TResult result)
         where TResult : notnull
-    {
-        return x => Task.FromResult(result);
-    }
+        => _ => Task.FromResult(result);
 }
 
 internal static class Thunk<T1, T2>

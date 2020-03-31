@@ -5,6 +5,16 @@ using System.Threading.Tasks;
 
 using Abc;
 
+internal static class Kunc<TResult>
+    where TResult : notnull
+{
+    public static readonly Func<Maybe<TResult>> Null = null!;
+
+    public static readonly Func<Maybe<TResult>> Any = () => throw new InvalidCallException();
+
+    public static readonly Func<Task<Maybe<TResult>>> AnyAsync = () => throw new InvalidCallException();
+}
+
 internal static class Kunc<T, TResult>
     where T : notnull
     where TResult : notnull
@@ -12,7 +22,7 @@ internal static class Kunc<T, TResult>
     // Kleisli null.
     public static readonly Func<T, Maybe<TResult>> Null = null!;
 
-    public static readonly Func<T, Maybe<TResult>> Any = _ => throw new FakeCallException();
+    public static readonly Func<T, Maybe<TResult>> Any = _ => throw new InvalidCallException();
 
     public static readonly Func<T, Task<Maybe<TResult>>> NullAsync = null!;
 }
@@ -24,5 +34,5 @@ internal static class Kunc<T1, T2, TResult>
 {
     public static readonly Func<T1, T2, Maybe<TResult>> Null = null!;
 
-    public static readonly Func<T1, T2, Maybe<TResult>> Any = (x, y) => throw new FakeCallException();
+    public static readonly Func<T1, T2, Maybe<TResult>> Any = (x, y) => throw new InvalidCallException();
 }

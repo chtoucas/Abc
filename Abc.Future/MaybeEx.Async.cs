@@ -54,14 +54,16 @@ namespace Abc
             }
         }
 
+        // REVIEW: Task<T> or Func<Task<T>>, Task<Maybe<T>> or Func<Task<Maybe<T>>>?
+
         [Pure]
         public static async Task<Maybe<T>> OrElseAsync<T>(
             Maybe<T> maybe,
-            Task<Maybe<T>> other)
+            Func<Task<Maybe<T>>> other)
         {
             if (other is null) { throw new Anexn(nameof(other)); }
 
-            return maybe.IsNone ? await other.ConfigureAwait(false) : maybe;
+            return maybe.IsNone ? await other().ConfigureAwait(false) : maybe;
         }
 
         //[Pure]

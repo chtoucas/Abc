@@ -48,11 +48,10 @@ namespace Abc
                 : Maybe<TResult>.None;
         }
 
-        // TODO: Task<T> or Func<Task<T>>, Task<Maybe<T>> or Func<Task<Maybe<T>>>?
-        // Remove SwitchAsync...
+        // TODO: remove SwitchAsync...
 
         [Pure]
-        public Task<Maybe<T>> OrElseAsync(Task<Maybe<T>> other)
+        public Task<Maybe<T>> OrElseAsync(Func<Task<Maybe<T>>> other)
         {
             // Check arg eagerly.
             if (other is null) { throw new Anexn(nameof(other)); }
@@ -61,9 +60,9 @@ namespace Abc
         }
 
         [Pure]
-        private async Task<Maybe<T>> OrElseAsyncImpl(Task<Maybe<T>> other)
+        private async Task<Maybe<T>> OrElseAsyncImpl(Func<Task<Maybe<T>>> other)
         {
-            return _isSome ? this : await other.ConfigureAwait(false);
+            return _isSome ? this : await other().ConfigureAwait(false);
         }
 
         //// Do not behave like the non-async Switch(), the method throws right

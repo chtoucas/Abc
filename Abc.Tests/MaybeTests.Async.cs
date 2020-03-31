@@ -39,19 +39,25 @@ namespace Abc
         //            caseSome: Funk<int, AnyT>.AnyAsync,
         //            caseNone: null!));
 
-        //[Fact]
-        //public static void SwitchAsync_Some_NullCaseSome() =>
-        //    Assert.ThrowsAnexn("caseSome", () =>
-        //        One.SwitchAsync(
-        //            caseSome: Funk<int, AnyT>.NullAsync,
-        //            caseNone: () => AnyT.AsyncValue));
+        [Fact]
+        public static void Switch_Some_NullCaseSome_Throws_Async()
+        {
+            Assert.ThrowsAnexn("caseSome", () =>
+                One.Switch(Funk<int, AnyResult>.NullAsync, Funk<AnyResult>.AnyAsync));
+            Assert.ThrowsAnexn("caseSome", () =>
+                One.Switch(Funk<int, AnyResult>.NullAsync, Task.FromResult(AnyResult.Value)));
+        }
 
-        //[Fact]
-        //public static void SwitchAsync_Some_NullCaseNone() =>
-        //    Assert.ThrowsAnexn("caseNone", () =>
-        //        One.SwitchAsync(
-        //            caseSome: x => AsyncFakes.AsyncValue,
-        //            caseNone: null!));
+        [Fact]
+        public static async Task Switch_Some_NullCaseNone_DoesNotThrow_Async()
+        {
+            // Act
+            AnyResult v = await One.Switch(
+                caseSome: Thunk<int>.ReturnAsync(AnyResult.Value),
+                caseNone: Funk<Task<AnyResult>>.Null);
+            // Assert
+            Assert.Same(AnyResult.Value, v);
+        }
 
         //[Fact]
         //public static async Task SwitchAsync_None()

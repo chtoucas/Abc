@@ -5,7 +5,7 @@
 
 using System;
 
-internal sealed class FakeCallException : InvalidOperationException
+internal sealed class InvalidCallException : InvalidOperationException
 {
-    public FakeCallException() : base("Unexpected call to a fake delegate.") { }
+    public InvalidCallException() : base("Unexpected call.") { }
 }
