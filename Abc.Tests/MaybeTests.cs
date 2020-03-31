@@ -744,7 +744,7 @@ namespace Abc
         {
             foreach (string _ in NoText)
             {
-                Assert.True(false, "An empty maybe should create an empty iterator.");
+                Assert.Fails("An empty maybe should create an empty iterator.");
             }
 
             // Using an explicit iterator.

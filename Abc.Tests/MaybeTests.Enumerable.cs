@@ -30,7 +30,7 @@ namespace Abc
         [Fact]
         public static void CollectAny_IsDeferred()
         {
-            IEnumerable<Maybe<int>> source = new ThrowingEnumerable<Maybe<int>>();
+            IEnumerable<Maybe<int>> source = new ThrowingCollection<Maybe<int>>();
 
             var q = Maybe.CollectAny(source);
             Assert.ThrowsOnNext(q);

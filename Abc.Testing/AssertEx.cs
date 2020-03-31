@@ -7,65 +7,87 @@ namespace Abc
 
     using Xunit;
 
+    using Anexn = System.ArgumentNullException;
+    using Aoorexn = System.ArgumentOutOfRangeException;
+
+    /// <summary>
+    /// Contains various static methods that are used to verify that conditions
+    /// are met during the process of running tests.
+    /// </summary>
     public sealed partial class AssertEx : Assert
     {
         private AssertEx() { }
 
+        /// <summary>
+        /// Async test helpers.
+        /// </summary>
         public static partial class Async { }
 
-        private static bool IsNull<T>(string paramName, [ValidatedNotNull] T obj)
-            where T : notnull
-        {
-            if (obj is null)
-            {
-                True(false, $"{paramName} was null.");
-                return true;
-            }
-            return false;
-        }
+        /// <summary>
+        /// Fails with a user message.
+        /// </summary>
+        public static void Fails(string userMessage) => True(false, userMessage);
     }
 
     public partial class AssertEx
     {
-        // Throws ArgumentException.
+        /// <summary>
+        /// Verifies that the specified delegate throws an exception of type
+        /// <see cref="ArgumentException"/> (and not a derived exception type).
+        /// </summary>
         public static void ThrowsArgexn(string argName, Action testCode)
         {
             ArgumentException ex = Throws<ArgumentException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Throws ArgumentException.
+        /// <summary>
+        /// Verifies that the specified delegate throws an exception of type
+        /// <see cref="ArgumentException"/> (and not a derived exception type).
+        /// </summary>
         public static void ThrowsArgexn(string argName, Func<object> testCode)
         {
             ArgumentException ex = Throws<ArgumentException>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Throws ArgumentNullException.
+        /// <summary>
+        /// Verifies that the specified delegate throws an exception of type
+        /// <see cref="Anexn"/> (and not a derived exception type).
+        /// </summary>
         public static void ThrowsAnexn(string argName, Action testCode)
         {
-            ArgumentNullException ex = Throws<ArgumentNullException>(testCode);
+            Anexn ex = Throws<Anexn>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Throws ArgumentNullException.
+        /// <summary>
+        /// Verifies that the specified delegate throws an exception of type
+        /// <see cref="Anexn"/> (and not a derived exception type).
+        /// </summary>
         public static void ThrowsAnexn(string argName, Func<object> testCode)
         {
-            ArgumentNullException ex = Throws<ArgumentNullException>(testCode);
+            Anexn ex = Throws<Anexn>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Throws ArgumentOutOfRangeException.
+        /// <summary>
+        /// Verifies that the specified delegate throws an exception of type
+        /// <see cref="Aoorexn"/> (and not a derived exception type).
+        /// </summary>
         public static void ThrowsAoorexn(string argName, Action testCode)
         {
-            ArgumentOutOfRangeException ex = Throws<ArgumentOutOfRangeException>(testCode);
+            Aoorexn ex = Throws<Aoorexn>(testCode);
             Equal(argName, ex.ParamName);
         }
 
-        // Throws ArgumentOutOfRangeException.
+        /// <summary>
+        /// Verifies that the specified delegate throws an exception of type
+        /// <see cref="Aoorexn"/> (and not a derived exception type).
+        /// </summary>
         public static void ThrowsAoorexn(string argName, Func<object> testCode)
         {
-            ArgumentOutOfRangeException ex = Throws<ArgumentOutOfRangeException>(testCode);
+            Aoorexn ex = Throws<Aoorexn>(testCode);
             Equal(argName, ex.ParamName);
         }
     }
@@ -75,25 +97,29 @@ namespace Abc
     {
         public partial class Async
         {
-            // Throws ArgumentNullException.
+            /// <summary>
+            /// Verifies that the specified delegate throws an exception of type
+            /// <see cref="Anexn"/> (and not a derived exception type).
+            /// <para>Fails if the delegate uses eager (synchronous) validation.
+            /// </para>
+            /// </summary>
             public static async Task ThrowsAnexn(string argName, Func<Task> testCode)
             {
-                if (IsNull(nameof(testCode), testCode)) { return; }
+                if (testCode is null) { throw new Anexn(nameof(testCode)); }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 try
                 {
                     testCode();
                 }
-                catch (ArgumentException)
+                catch (Anexn)
                 {
                     throw new InvalidOperationException(
-                        "The specified task performs eager validation.");
+                        "The specified task uses eager (synchronous) validation.");
                 }
 #pragma warning restore CS4014
 
-                ArgumentNullException ex =
-                    await ThrowsAsync<ArgumentNullException>(testCode);
+                Anexn ex = await ThrowsAsync<Anexn>(testCode);
                 Equal(argName, ex.ParamName);
             }
         }

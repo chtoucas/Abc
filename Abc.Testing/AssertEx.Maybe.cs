@@ -4,6 +4,8 @@ namespace Abc
 {
     using System.Threading.Tasks;
 
+    using Anexn = System.ArgumentNullException;
+
     public partial class AssertEx
     {
         /// <summary>
@@ -68,11 +70,9 @@ namespace Abc
             /// </summary>
             public static async Task None<T>(Task<Maybe<T>> task)
             {
-                if (IsNull(nameof(task), task)) { return; }
+                if (task is null) { throw new Anexn(nameof(task)); }
 
-                Maybe<T> maybe = await task;
-
-                True(maybe.IsNone, "The maybe should be empty.");
+                AssertEx.None(await task);
             }
 
             /// <summary>
@@ -80,11 +80,9 @@ namespace Abc
             /// </summary>
             public static async Task Some<T>(Task<Maybe<T>> task)
             {
-                if (IsNull(nameof(task), task)) { return; }
+                if (task is null) { throw new Anexn(nameof(task)); }
 
-                Maybe<T> maybe = await task;
-
-                False(maybe.IsNone, "The maybe should not be empty.");
+                AssertEx.Some(await task);
             }
 
             /// <summary>
@@ -93,20 +91,9 @@ namespace Abc
             /// </summary>
             public static async Task Some<T>(T exp, Task<Maybe<T>> task)
             {
-                if (IsNull(nameof(task), task)) { return; }
+                if (task is null) { throw new Anexn(nameof(task)); }
 
-                Maybe<T> maybe = await task;
-
-                False(maybe.IsNone, "The maybe should not be empty.");
-
-                if (maybe.IsSome)
-                {
-                    // BONSANG! When IsSome is true, Value is NOT null.
-                    Equal(exp, maybe.Value!);
-                }
-
-                // We also test Contains().
-                True(maybe.Contains(exp));
+                AssertEx.Some(exp, await task);
             }
         }
     }
