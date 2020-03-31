@@ -66,31 +66,31 @@ namespace Abc
             return _isSome ? this : await other.ConfigureAwait(false);
         }
 
-        // Do not behave like the non-async Switch(), the method throws right
-        // away when "caseSome" or "caseNone" is null.
-        [Pure]
-        public Task<TResult> SwitchAsync<TResult>(
-            Func<T, Task<TResult>> caseSome, Func<Task<TResult>> caseNone)
-        {
-            // Check args eagerly.
-            if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
-            if (caseNone is null) { throw new Anexn(nameof(caseNone)); }
+        //// Do not behave like the non-async Switch(), the method throws right
+        //// away when "caseSome" or "caseNone" is null.
+        //[Pure]
+        //public Task<TResult> SwitchAsync<TResult>(
+        //    Func<T, Task<TResult>> caseSome, Func<Task<TResult>> caseNone)
+        //{
+        //    // Check args eagerly.
+        //    if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
+        //    if (caseNone is null) { throw new Anexn(nameof(caseNone)); }
 
-            return SwitchAsyncImpl(caseSome, caseNone);
-        }
+        //    return SwitchAsyncImpl(caseSome, caseNone);
+        //}
 
-        [Pure]
-        private async Task<TResult> SwitchAsyncImpl<TResult>(
-            Func<T, Task<TResult>> caseSome, Func<Task<TResult>> caseNone)
-        {
-            if (_isSome)
-            {
-                return await caseSome(_value).ConfigureAwait(false);
-            }
-            else
-            {
-                return await caseNone().ConfigureAwait(false);
-            }
-        }
+        //[Pure]
+        //private async Task<TResult> SwitchAsyncImpl<TResult>(
+        //    Func<T, Task<TResult>> caseSome, Func<Task<TResult>> caseNone)
+        //{
+        //    if (_isSome)
+        //    {
+        //        return await caseSome(_value).ConfigureAwait(false);
+        //    }
+        //    else
+        //    {
+        //        return await caseNone().ConfigureAwait(false);
+        //    }
+        //}
     }
 }

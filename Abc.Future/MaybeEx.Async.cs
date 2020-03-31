@@ -64,23 +64,23 @@ namespace Abc
             return maybe.IsNone ? await other.ConfigureAwait(false) : maybe;
         }
 
-        [Pure]
-        public static async Task<TResult> SwitchAsync<T, TResult>(
-            Maybe<T> maybe,
-            Func<T, Task<TResult>> caseSome,
-            Func<Task<TResult>> caseNone)
-        {
-            if (maybe.TryGetValue(out T value))
-            {
-                if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
-                return await caseSome(value).ConfigureAwait(false);
-            }
-            else
-            {
-                if (caseNone is null) { throw new Anexn(nameof(caseNone)); }
-                return await caseNone().ConfigureAwait(false);
-            }
-        }
+        //[Pure]
+        //public static async Task<TResult> SwitchAsync<T, TResult>(
+        //    Maybe<T> maybe,
+        //    Func<T, Task<TResult>> caseSome,
+        //    Func<Task<TResult>> caseNone)
+        //{
+        //    if (maybe.TryGetValue(out T value))
+        //    {
+        //        if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
+        //        return await caseSome(value).ConfigureAwait(false);
+        //    }
+        //    else
+        //    {
+        //        if (caseNone is null) { throw new Anexn(nameof(caseNone)); }
+        //        return await caseNone().ConfigureAwait(false);
+        //    }
+        //}
 
         //
         // Configurable.

@@ -176,33 +176,65 @@ namespace Abc
 
         #region SwitchAsync()
 
-        [Fact]
-        public static void SwitchAsync_None_NullCaseSome() =>
-            Assert.ThrowsAnexn("caseSome", () =>
-                Ø.SwitchAsync(
-                    caseSome: Funk<int, AnyResult>.NullAsync,
-                    caseNone: () => AsyncFakes.AsyncValue));
+        //[Fact]
+        //public static void SwitchAsync_None_NullCaseSome() =>
+        //    Assert.ThrowsAnexn("caseSome", () =>
+        //        Ø.SwitchAsync(
+        //            caseSome: Funk<int, AnyResult>.NullAsync,
+        //            caseNone: () => AsyncFakes.AsyncValue));
 
-        [Fact]
-        public static void SwitchAsync_None_NullCaseNone() =>
-            Assert.ThrowsAnexn("caseNone", () =>
-                Ø.SwitchAsync(
-                    caseSome: Funk<int, AnyT>.AnyAsync,
-                    caseNone: null!));
+        //[Fact]
+        //public static void SwitchAsync_None_NullCaseNone() =>
+        //    Assert.ThrowsAnexn("caseNone", () =>
+        //        Ø.SwitchAsync(
+        //            caseSome: Funk<int, AnyT>.AnyAsync,
+        //            caseNone: null!));
 
-        [Fact]
-        public static void SwitchAsync_Some_NullCaseSome() =>
-            Assert.ThrowsAnexn("caseSome", () =>
-                One.SwitchAsync(
-                    caseSome: Funk<int, AnyT>.NullAsync,
-                    caseNone: () => AnyT.AsyncValue));
+        //[Fact]
+        //public static void SwitchAsync_Some_NullCaseSome() =>
+        //    Assert.ThrowsAnexn("caseSome", () =>
+        //        One.SwitchAsync(
+        //            caseSome: Funk<int, AnyT>.NullAsync,
+        //            caseNone: () => AnyT.AsyncValue));
 
-        [Fact]
-        public static void SwitchAsync_Some_NullCaseNone() =>
-            Assert.ThrowsAnexn("caseNone", () =>
-                One.SwitchAsync(
-                    caseSome: x => AsyncFakes.AsyncValue,
-                    caseNone: null!));
+        //[Fact]
+        //public static void SwitchAsync_Some_NullCaseNone() =>
+        //    Assert.ThrowsAnexn("caseNone", () =>
+        //        One.SwitchAsync(
+        //            caseSome: x => AsyncFakes.AsyncValue,
+        //            caseNone: null!));
+
+        //[Fact]
+        //public static async Task SwitchAsync_None()
+        //{
+        //    // Arrange
+        //    bool onSomeCalled = false;
+        //    bool onNoneCalled = false;
+        //    // Act
+        //    int v = await NoText.SwitchAsync(
+        //        caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
+        //        caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
+        //    // Assert
+        //    Assert.False(onSomeCalled);
+        //    Assert.True(onNoneCalled);
+        //    Assert.Equal(0, v);
+        //}
+
+        //[Fact]
+        //public static async Task SwitchAsync_Some()
+        //{
+        //    // Arrange
+        //    bool onSomeCalled = false;
+        //    bool onNoneCalled = false;
+        //    // Act
+        //    int v = await SomeText.SwitchAsync(
+        //        caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
+        //        caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
+        //    // Assert
+        //    Assert.True(onSomeCalled);
+        //    Assert.False(onNoneCalled);
+        //    Assert.Equal(4, v);
+        //}
 
         [Fact]
         public static async Task Switch_None_Async()
@@ -228,38 +260,6 @@ namespace Abc
             bool onNoneCalled = false;
             // Act
             int v = await SomeText.Switch(
-                caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
-                caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
-            // Assert
-            Assert.True(onSomeCalled);
-            Assert.False(onNoneCalled);
-            Assert.Equal(4, v);
-        }
-
-        [Fact]
-        public static async Task SwitchAsync_None()
-        {
-            // Arrange
-            bool onSomeCalled = false;
-            bool onNoneCalled = false;
-            // Act
-            int v = await NoText.SwitchAsync(
-                caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
-                caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
-            // Assert
-            Assert.False(onSomeCalled);
-            Assert.True(onNoneCalled);
-            Assert.Equal(0, v);
-        }
-
-        [Fact]
-        public static async Task SwitchAsync_Some()
-        {
-            // Arrange
-            bool onSomeCalled = false;
-            bool onNoneCalled = false;
-            // Act
-            int v = await SomeText.SwitchAsync(
                 caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
                 caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
             // Assert
@@ -323,47 +323,47 @@ namespace Abc
 
             #region SwitchAsync()
 
-            [Fact]
-            public static async Task SwitchAsync_None_NullCaseSome_DoesNotThrow()
-            {
-                var r = await MaybeEx.SwitchAsync(
-                    Ø,
-                    caseSome: Funk<int, AnyResult>.NullAsync,
-                    caseNone: () => AsyncFakes.AsyncValue
-                );
+            //[Fact]
+            //public static async Task SwitchAsync_None_NullCaseSome_DoesNotThrow()
+            //{
+            //    var r = await MaybeEx.SwitchAsync(
+            //        Ø,
+            //        caseSome: Funk<int, AnyResult>.NullAsync,
+            //        caseNone: () => AsyncFakes.AsyncValue
+            //    );
 
-                Assert.Same(AnyResult.Value, r); // Sanity check
-            }
+            //    Assert.Same(AnyResult.Value, r); // Sanity check
+            //}
 
-            [Fact]
-            public static async Task SwitchAsync_None_NullCaseNone() =>
-                await Assert.Async
-                    .ThrowsAnexn("caseNone", () =>
-                        MaybeEx.SwitchAsync(
-                            Ø,
-                            caseSome: Funk<int, AnyT>.AnyAsync,
-                            caseNone: null!));
+            //[Fact]
+            //public static async Task SwitchAsync_None_NullCaseNone() =>
+            //    await Assert.Async
+            //        .ThrowsAnexn("caseNone", () =>
+            //            MaybeEx.SwitchAsync(
+            //                Ø,
+            //                caseSome: Funk<int, AnyT>.AnyAsync,
+            //                caseNone: null!));
 
-            [Fact]
-            public static async Task SwitchAsync_Some_NullCaseSome() =>
-                await Assert.Async
-                    .ThrowsAnexn("caseSome", () =>
-                        MaybeEx.SwitchAsync(
-                            One,
-                            caseSome: Funk<int, AnyT>.NullAsync,
-                            caseNone: () => AnyT.AsyncValue));
+            //[Fact]
+            //public static async Task SwitchAsync_Some_NullCaseSome() =>
+            //    await Assert.Async
+            //        .ThrowsAnexn("caseSome", () =>
+            //            MaybeEx.SwitchAsync(
+            //                One,
+            //                caseSome: Funk<int, AnyT>.NullAsync,
+            //                caseNone: () => AnyT.AsyncValue));
 
-            [Fact]
-            public static async Task SwitchAsync_Some_NullCaseNone_DoesNotThrow()
-            {
-                var r = await MaybeEx.SwitchAsync(
-                    One,
-                    caseSome: x => AsyncFakes.AsyncValue,
-                    caseNone: null!
-                );
+            //[Fact]
+            //public static async Task SwitchAsync_Some_NullCaseNone_DoesNotThrow()
+            //{
+            //    var r = await MaybeEx.SwitchAsync(
+            //        One,
+            //        caseSome: x => AsyncFakes.AsyncValue,
+            //        caseNone: null!
+            //    );
 
-                Assert.Same(AnyResult.Value, r); // Sanity check
-            }
+            //    Assert.Same(AnyResult.Value, r); // Sanity check
+            //}
 
             #endregion
         }
