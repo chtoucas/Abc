@@ -64,8 +64,11 @@ Operations:
 Issues
 ------
 
-- Abc.Testing build warnings (sometimes); see
-  [MSB3277](https://github.com/microsoft/msbuild/issues/608).
+- Build warnings w/ qcover.cmd and not always; see
+  [MSB3277](https://github.com/microsoft/msbuild/issues/608),
+  [here](https://nickcraver.com/blog/2020/02/11/binding-redirects/).
+  `dotnet nuget locals --clear all`? (nope)
+  OK, the problem is that we build everything in __work.
 - Scripts: stop on first error (rewrite in PowerShell?).
 
 Release Process

@@ -11,8 +11,8 @@
 @if not exist %outdir% mkdir %outdir%
 
 :Build
-@rem Not necessary, but seems to speed up the whole process and might prevent
-@rem random crashes w/ OpenCover.
+:: Not necessary, but seems to speed up the whole process and might prevent
+:: random crashes w/ OpenCover.
 dotnet build -c Debug --no-restore
 
 :OpenCover

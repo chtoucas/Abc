@@ -11,9 +11,9 @@
 @if not exist %outdir% mkdir %outdir%
 
 :Build
-@rem Not necessary, but seems to speed up the whole process and might prevent
-@rem random crashes w/ OpenCover.
-dotnet build -c Debug --no-restore
+:: Not necessary, but seems to speed up the whole process and might prevent
+:: random crashes w/ OpenCover.
+@rem @call dotnet build -c Debug /p:DebugType=Full -p:TargetFrameworks=netcoreapp3.1
 
 :OpenCover
 @set OpenCover=%USERPROFILE%\.nuget\packages\opencover\%OpenCoverVersion%\tools\OpenCover.Console.exe
@@ -25,9 +25,10 @@ dotnet build -c Debug --no-restore
     @goto Error
 )
 
-@set target="C:/Program Files/dotnet/dotnet.exe"
+@rem @set target="C:/Program Files/dotnet/dotnet.exe"
+@set target="dotnet.exe"
 @set proj="%~dp0\Abc.Tests\Abc.Tests.csproj"
-@set targetargs="test %proj% --no-restore -v quiet -c Debug /p:DebugType=Full"
+@set targetargs="test %proj% -v quiet -c Debug /p:DebugType=Full"
 
 @set opencover_xml=%outdir%\opencover.xml
 
