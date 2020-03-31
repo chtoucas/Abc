@@ -65,7 +65,7 @@ namespace Abc
         [Fact]
         public static async Task BindAsync_SomeInt32()
         {
-            await Assert.Async.Some(6L, MaybeEx.BindAsync(Two, __binder));
+            await Assert.Async.Some(6L, Two.BindAsync(__binder));
 
             static async Task<Maybe<long>> __binder(int x)
             {
@@ -77,7 +77,7 @@ namespace Abc
         [Fact]
         public static async Task BindAsync_SomeInt64()
         {
-            await Assert.Async.Some(8L, MaybeEx.BindAsync(TwoL, __binder));
+            await Assert.Async.Some(8L, TwoL.BindAsync(__binder));
 
             static async Task<Maybe<long>> __binder(long x)
             {
@@ -89,7 +89,7 @@ namespace Abc
         [Fact]
         public static async Task BindAsync_SomeUri()
         {
-            await Assert.Async.Some(MyUri.AbsoluteUri, MaybeEx.BindAsync(SomeUri, __binder));
+            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.BindAsync(__binder));
 
             static async Task<Maybe<string>> __binder(Uri x)
             {
@@ -115,7 +115,7 @@ namespace Abc
         [Fact]
         public static async Task SelectAsync_None()
         {
-            await Assert.Async.None(MaybeEx.SelectAsync(Ø, __selector));
+            await Assert.Async.None(Ø.SelectAsync(__selector));
 
             static async Task<long> __selector(int x)
             {
@@ -127,7 +127,7 @@ namespace Abc
         [Fact]
         public static async Task SelectAsync_SomeInt32()
         {
-            await Assert.Async.Some(6L, MaybeEx.SelectAsync(Two, __selector));
+            await Assert.Async.Some(6L, Two.SelectAsync(__selector));
 
             static async Task<long> __selector(int x)
             {
@@ -151,7 +151,7 @@ namespace Abc
         [Fact]
         public static async Task SelectAsync_SomeUri()
         {
-            await Assert.Async.Some(MyUri.AbsoluteUri, MaybeEx.SelectAsync(SomeUri, __selector));
+            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.SelectAsync(__selector));
 
             static async Task<string> __selector(Uri x)
             {
@@ -205,6 +205,38 @@ namespace Abc
                     caseNone: null!));
 
         [Fact]
+        public static async Task Switch_None_Async()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            bool onNoneCalled = false;
+            // Act
+            int v = await NoText.Switch(
+                caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
+                caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
+            // Assert
+            Assert.False(onSomeCalled);
+            Assert.True(onNoneCalled);
+            Assert.Equal(0, v);
+        }
+
+        [Fact]
+        public static async Task Switch_Some_Async()
+        {
+            // Arrange
+            bool onSomeCalled = false;
+            bool onNoneCalled = false;
+            // Act
+            int v = await SomeText.Switch(
+                caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
+                caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
+            // Assert
+            Assert.True(onSomeCalled);
+            Assert.False(onNoneCalled);
+            Assert.Equal(4, v);
+        }
+
+        [Fact]
         public static async Task SwitchAsync_None()
         {
             // Arrange
@@ -227,7 +259,7 @@ namespace Abc
             bool onSomeCalled = false;
             bool onNoneCalled = false;
             // Act
-            int v = await SomeText.Switch(
+            int v = await SomeText.SwitchAsync(
                 caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
                 caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
             // Assert
