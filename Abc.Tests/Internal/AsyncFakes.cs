@@ -33,13 +33,30 @@ internal static class AsyncFakes
         await Task.Yield();
         return AnyResult.None;
     }
+}
 
-    public static Func<T, Task<TResult>> FromSync<T, TResult>(Func<T, TResult> func)
+internal static class AsyncFakes<TResult>
+    where TResult : notnull
+{
+    public static readonly Func<Task<TResult>> Null = null!;
+
+    public static readonly Func<Task<TResult>> Any = () => throw new FakeCallException();
+}
+
+internal static class AsyncFakes<T, TResult>
+    where T : notnull
+    where TResult : notnull
+{
+    public static readonly Func<T, Task<TResult>> Null = null!;
+
+    public static readonly Func<T, Task<TResult>> Any = x => throw new FakeCallException();
+
+    public static Func<T, Task<TResult>> FromSync(Func<T, TResult> func)
     {
         return async x => { await Task.Yield(); return func(x); };
     }
 
-    public static Func<T, Task<Maybe<TResult>>> FromSync<T, TResult>(Func<T, Maybe<TResult>> func)
+    public static Func<T, Task<Maybe<TResult>>> FromSync(Func<T, Maybe<TResult>> func)
     {
         return async x => { await Task.Yield(); return func(x); };
     }

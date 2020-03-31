@@ -23,158 +23,7 @@ namespace Abc
 
     public partial class MaybeTests
     {
-        #region BindAsync()
-
-        [Fact]
-        public static void BindAsync_None_NullBinder() =>
-            Assert.ThrowsAnexn("binder", () =>
-                Ø.BindAsync(Kunc<int, AnyT>.NullAsync));
-
-        [Fact]
-        public static void BindAsync_Some_NullBinder() =>
-            Assert.ThrowsAnexn("binder", () =>
-                One.BindAsync(Kunc<int, AnyT>.NullAsync));
-
-        [Fact]
-        public static async Task BindAsync_None()
-        {
-            await Assert.Async.None(Ø.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.None(NoText.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.None(NoUri.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.None(AnyT.None.BindAsync(AsyncFakes.ReturnSomeAsync));
-        }
-
-        [Fact]
-        public static async Task BindAsync_Some_ReturnsNone()
-        {
-            await Assert.Async.None(One.BindAsync(AsyncFakes.ReturnNoneAsync));
-            await Assert.Async.None(SomeText.BindAsync(AsyncFakes.ReturnNoneAsync));
-            await Assert.Async.None(SomeUri.BindAsync(AsyncFakes.ReturnNoneAsync));
-            await Assert.Async.None(AnyT.Some.BindAsync(AsyncFakes.ReturnNoneAsync));
-        }
-
-        [Fact]
-        public static async Task BindAsync_Some_ReturnsSome()
-        {
-            await Assert.Async.Some(AnyResult.Value, One.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.Some(AnyResult.Value, SomeText.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.Some(AnyResult.Value, SomeUri.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(AsyncFakes.ReturnSomeAsync));
-        }
-
-        [Fact]
-        public static async Task BindAsync_SomeInt32()
-        {
-            await Assert.Async.Some(6L, Two.BindAsync(__binder));
-
-            static async Task<Maybe<long>> __binder(int x)
-            {
-                await Task.Yield();
-                return Maybe.Some(3L * x);
-            }
-        }
-
-        [Fact]
-        public static async Task BindAsync_SomeInt64()
-        {
-            await Assert.Async.Some(8L, TwoL.BindAsync(__binder));
-
-            static async Task<Maybe<long>> __binder(long x)
-            {
-                await Task.Yield();
-                return Maybe.Some(4L * x);
-            }
-        }
-
-        [Fact]
-        public static async Task BindAsync_SomeUri()
-        {
-            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.BindAsync(__binder));
-
-            static async Task<Maybe<string>> __binder(Uri x)
-            {
-                await Task.Yield();
-                return Maybe.SomeOrNone(x.AbsoluteUri);
-            }
-        }
-
-        #endregion
-
-        #region SelectAsync()
-
-        [Fact]
-        public static void SelectAsync_None_NullSelector() =>
-            Assert.ThrowsAnexn("selector", () =>
-                Ø.SelectAsync(Funk<int, AnyT>.NullAsync));
-
-        [Fact]
-        public static void SelectAsync_Some_NullSelector() =>
-            Assert.ThrowsAnexn("selector", () =>
-                One.SelectAsync(Funk<int, AnyT>.NullAsync));
-
-        [Fact]
-        public static async Task SelectAsync_None()
-        {
-            await Assert.Async.None(Ø.SelectAsync(__selector));
-
-            static async Task<long> __selector(int x)
-            {
-                await Task.Yield();
-                return x;
-            }
-        }
-
-        [Fact]
-        public static async Task SelectAsync_SomeInt32()
-        {
-            await Assert.Async.Some(6L, Two.SelectAsync(__selector));
-
-            static async Task<long> __selector(int x)
-            {
-                await Task.Yield();
-                return 3L * x;
-            }
-        }
-
-        [Fact]
-        public static async Task SelectAsync_SomeInt64()
-        {
-            await Assert.Async.Some(8L, MaybeEx.SelectAsync(TwoL, __selector));
-
-            static async Task<long> __selector(long x)
-            {
-                await Task.Yield();
-                return 4L * x;
-            }
-        }
-
-        [Fact]
-        public static async Task SelectAsync_SomeUri()
-        {
-            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.SelectAsync(__selector));
-
-            static async Task<string> __selector(Uri x)
-            {
-                await Task.Yield();
-                return x.AbsoluteUri;
-            }
-        }
-
-        #endregion
-
-        #region OrElseAsync()
-
-        [Fact]
-        public static void OrElseAsync_None_NullOther() =>
-            Assert.ThrowsAnexn("other", () => Ø.OrElseAsync(null!));
-
-        [Fact]
-        public static void OrElseAsync_Some_NullOther() =>
-            Assert.ThrowsAnexn("other", () => One.OrElseAsync(null!));
-
-        #endregion
-
-        #region SwitchAsync()
+        #region Switch()
 
         //[Fact]
         //public static void SwitchAsync_None_NullCaseSome() =>
@@ -273,6 +122,164 @@ namespace Abc
 
     public partial class MaybeTests
     {
+        #region BindAsync()
+
+        [Fact]
+        public static void BindAsync_None_NullBinder() =>
+            Assert.ThrowsAnexn("binder", () =>
+                Ø.BindAsync(AsyncFakes<int, Maybe<AnyT>>.Null));
+
+        [Fact]
+        public static void BindAsync_Some_NullBinder() =>
+            Assert.ThrowsAnexn("binder", () =>
+                One.BindAsync(AsyncFakes<int, Maybe<AnyT>>.Null));
+
+        [Fact]
+        public static async Task BindAsync_None()
+        {
+            await Assert.Async.None(Ø.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.None(NoText.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.None(NoUri.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.None(AnyT.None.BindAsync(AsyncFakes.ReturnSomeAsync));
+        }
+
+        [Fact]
+        public static async Task BindAsync_Some_ReturnsNone()
+        {
+            await Assert.Async.None(One.BindAsync(AsyncFakes.ReturnNoneAsync));
+            await Assert.Async.None(SomeText.BindAsync(AsyncFakes.ReturnNoneAsync));
+            await Assert.Async.None(SomeUri.BindAsync(AsyncFakes.ReturnNoneAsync));
+            await Assert.Async.None(AnyT.Some.BindAsync(AsyncFakes.ReturnNoneAsync));
+        }
+
+        [Fact]
+        public static async Task BindAsync_Some_ReturnsSome()
+        {
+            await Assert.Async.Some(AnyResult.Value, One.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.Some(AnyResult.Value, SomeText.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.Some(AnyResult.Value, SomeUri.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(AsyncFakes.ReturnSomeAsync));
+        }
+
+        [Fact]
+        public static async Task BindAsync_SomeInt32()
+        {
+            await Assert.Async.Some(6L, Two.BindAsync(__binder));
+            await Assert.Async
+                .Some(6L,
+                    Two.BindAsync(
+                        AsyncFakes<int, long>.FromSync(x => Maybe.Some(3L * x))));
+
+            static async Task<Maybe<long>> __binder(int x)
+            {
+                await Task.Yield();
+                return Maybe.Some(3L * x);
+            }
+        }
+
+        [Fact]
+        public static async Task BindAsync_SomeInt64()
+        {
+            await Assert.Async.Some(8L, TwoL.BindAsync(__binder));
+
+            static async Task<Maybe<long>> __binder(long x)
+            {
+                await Task.Yield();
+                return Maybe.Some(4L * x);
+            }
+        }
+
+        [Fact]
+        public static async Task BindAsync_SomeUri()
+        {
+            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.BindAsync(__binder));
+
+            static async Task<Maybe<string>> __binder(Uri x)
+            {
+                await Task.Yield();
+                return Maybe.SomeOrNone(x.AbsoluteUri);
+            }
+        }
+
+        #endregion
+
+        #region SelectAsync()
+
+        [Fact]
+        public static void SelectAsync_None_NullSelector() =>
+            Assert.ThrowsAnexn("selector", () =>
+                Ø.SelectAsync(AsyncFakes<int, AnyT>.Null));
+
+        [Fact]
+        public static void SelectAsync_Some_NullSelector() =>
+            Assert.ThrowsAnexn("selector", () =>
+                One.SelectAsync(AsyncFakes<int, AnyT>.Null));
+
+        [Fact]
+        public static async Task SelectAsync_None()
+        {
+            await Assert.Async.None(Ø.SelectAsync(__selector));
+
+            static async Task<long> __selector(int x)
+            {
+                await Task.Yield();
+                return x;
+            }
+        }
+
+        [Fact]
+        public static async Task SelectAsync_SomeInt32()
+        {
+            await Assert.Async.Some(6L, Two.SelectAsync(__selector));
+
+            static async Task<long> __selector(int x)
+            {
+                await Task.Yield();
+                return 3L * x;
+            }
+        }
+
+        [Fact]
+        public static async Task SelectAsync_SomeInt64()
+        {
+            await Assert.Async.Some(8L, MaybeEx.SelectAsync(TwoL, __selector));
+
+            static async Task<long> __selector(long x)
+            {
+                await Task.Yield();
+                return 4L * x;
+            }
+        }
+
+        [Fact]
+        public static async Task SelectAsync_SomeUri()
+        {
+            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.SelectAsync(__selector));
+
+            static async Task<string> __selector(Uri x)
+            {
+                await Task.Yield();
+                return x.AbsoluteUri;
+            }
+        }
+
+        #endregion
+
+        #region OrElseAsync()
+
+        [Fact]
+        public static void OrElseAsync_None_NullOther() =>
+            Assert.ThrowsAnexn("other", () => Ø.OrElseAsync(null!));
+
+        [Fact]
+        public static void OrElseAsync_Some_NullOther() =>
+            Assert.ThrowsAnexn("other", () => One.OrElseAsync(null!));
+
+        #endregion
+    }
+
+    public partial class MaybeTests
+    {
         public static class HelperClass
         {
             #region BindAsync()
@@ -281,13 +288,13 @@ namespace Abc
             public static async Task BindAsync_None_NullBinder() =>
                 await Assert.Async
                     .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(Ø, Kunc<int, AnyT>.NullAsync));
+                        MaybeEx.BindAsync(Ø, AsyncFakes<int, Maybe<AnyT>>.Null));
 
             [Fact]
             public static async Task BindAsync_Some_NullBinder() =>
                 await Assert.Async
                     .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(One, Kunc<int, AnyT>.NullAsync));
+                        MaybeEx.BindAsync(One, AsyncFakes<int, Maybe<AnyT>>.Null));
 
             #endregion
 
@@ -297,13 +304,13 @@ namespace Abc
             public static async Task SelectAsync_None_NullSelector() =>
                 await Assert.Async
                     .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(Ø, Funk<int, AnyT>.NullAsync));
+                        MaybeEx.SelectAsync(Ø, AsyncFakes<int, AnyT>.Null));
 
             [Fact]
             public static async Task SelectAsync_Some_NullSelector() =>
                 await Assert.Async
                     .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(One, Funk<int, AnyT>.NullAsync));
+                        MaybeEx.SelectAsync(One, AsyncFakes<int, AnyT>.Null));
 
             #endregion
 

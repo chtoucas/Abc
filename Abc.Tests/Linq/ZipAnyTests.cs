@@ -14,16 +14,16 @@ namespace Abc.Linq
         [Fact]
         public static void NullFirst() =>
             Assert.ThrowsAnexn("first", () =>
-                Null.ZipAny(NotNull, Kunc<int, int, int>.Any));
+                NullSeq.ZipAny(AnySeq, Kunc<int, int, int>.Any));
 
         [Fact]
         public static void NullSecond() =>
             Assert.ThrowsAnexn("second", () =>
-                NotNull.ZipAny(Null, Kunc<int, int, int>.Any));
+                AnySeq.ZipAny(NullSeq, Kunc<int, int, int>.Any));
 
         [Fact]
         public static void NullResultSelector() =>
             Assert.ThrowsAnexn("resultSelector", () =>
-                NotNull.ZipAny(NotNull, Kunc<int, int, int>.Null));
+                AnySeq.ZipAny(AnySeq, Kunc<int, int, int>.Null));
     }
 }

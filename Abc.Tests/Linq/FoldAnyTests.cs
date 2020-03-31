@@ -14,26 +14,26 @@ namespace Abc.Linq
         [Fact]
         public static void NullSource() =>
             Assert.ThrowsAnexn("source", () =>
-                Null.FoldAny(1, Kunc<int, int, int>.Any));
+                NullSeq.FoldAny(1, Kunc<int, int, int>.Any));
 
         [Fact]
         public static void NullAccumulator() =>
             Assert.ThrowsAnexn("accumulator", () =>
-                NotNull.FoldAny(1, Kunc<int, int, int>.Null));
+                AnySeq.FoldAny(1, Kunc<int, int, int>.Null));
 
         [Fact]
         public static void NullSource_WithPredicate() =>
             Assert.ThrowsAnexn("source", () =>
-                Null.FoldAny(1, Kunc<int, int, int>.Any, Funk<Maybe<int>, bool>.Any));
+                NullSeq.FoldAny(1, Kunc<int, int, int>.Any, Funk<Maybe<int>, bool>.Any));
 
         [Fact]
         public static void NullAccumulator_WithPredicate() =>
             Assert.ThrowsAnexn("accumulator", () =>
-                NotNull.FoldAny(1, Kunc<int, int, int>.Null, Funk<Maybe<int>, bool>.Any));
+                AnySeq.FoldAny(1, Kunc<int, int, int>.Null, Funk<Maybe<int>, bool>.Any));
 
         [Fact]
         public static void NullPredicate() =>
             Assert.ThrowsAnexn("predicate", () =>
-                NotNull.FoldAny(1, Kunc<int, int, int>.Any, Funk<Maybe<int>, bool>.Null));
+                AnySeq.FoldAny(1, Kunc<int, int, int>.Any, Funk<Maybe<int>, bool>.Null));
     }
 }

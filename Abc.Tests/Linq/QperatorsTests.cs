@@ -6,14 +6,13 @@
 namespace Abc.Linq
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     public abstract class QperatorsTests
     {
         protected QperatorsTests() { }
 
-        protected static readonly IEnumerable<int> Null = null!;
-        protected static readonly IEnumerable<int> NotNull = Enumerable.Empty<int>();
+        protected static readonly IEnumerable<int> NullSeq = null!;
+        protected static readonly IEnumerable<int> AnySeq = new ThrowingCollection<int>();
 
         protected static bool IsEven(int num) => num % 2 == 0;
 

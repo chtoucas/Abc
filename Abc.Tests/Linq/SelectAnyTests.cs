@@ -16,11 +16,11 @@ namespace Abc.Linq
     {
         [Fact]
         public static void NullSource() =>
-            Assert.ThrowsAnexn("source", () => Null.SelectAny(Kunc<int, int>.Any));
+            Assert.ThrowsAnexn("source", () => NullSeq.SelectAny(Kunc<int, int>.Any));
 
         [Fact]
         public static void NullSelector() =>
-            Assert.ThrowsAnexn("selector", () => NotNull.SelectAny(Kunc<int, int>.Null));
+            Assert.ThrowsAnexn("selector", () => AnySeq.SelectAny(Kunc<int, int>.Null));
     }
 
     public partial class SelectAnyTests
