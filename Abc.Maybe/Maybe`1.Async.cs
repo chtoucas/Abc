@@ -57,13 +57,14 @@ namespace Abc
             return OrElseAsyncImpl(other);
         }
 
+        // REVIEW: Task<T> or Func<Task<T>>, Task<Maybe<T>> or Func<Task<Maybe<T>>>?
+
         [Pure]
         private async Task<Maybe<T>> OrElseAsyncImpl(Task<Maybe<T>> other)
         {
             return _isSome ? this : await other.ConfigureAwait(false);
         }
 
-        // REVIEW: caseNone Task<TResult> or Func<Task<TResult>>
         // Do not behave like the non-async Switch(), the method throws right
         // away when "caseSome" or "caseNone" is null.
         [Pure]
