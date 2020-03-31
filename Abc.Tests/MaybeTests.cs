@@ -331,9 +331,10 @@ namespace Abc
         [Fact]
         public static void Switch_None_NullCaseSome_DoesNotThrow()
         {
-            // Act & Assert
+            // Act
             AnyResult v = Ø.Switch(Funk<int, AnyResult>.Null, () => AnyResult.Value);
-            Assert.Same(AnyResult.Value, v); // Sanity check
+            // Assert
+            Assert.Same(AnyResult.Value, v);
         }
 
         [Fact]
@@ -348,9 +349,10 @@ namespace Abc
         [Fact]
         public static void Switch_Some_NullCaseNone_DoesNotThrow()
         {
-            // Act & Assert
+            // Act
             AnyResult v = One.Switch(x => AnyResult.Value, Funk<AnyResult>.Null);
-            Assert.Same(AnyResult.Value, v); // Sanity check
+            // Assert
+            Assert.Same(AnyResult.Value, v);
         }
 
         [Fact]
@@ -587,7 +589,10 @@ namespace Abc
         [Fact]
         public static void Do_None_NullOnSome_DoesNotThrow()
         {
-            Ø.Do(Act<int>.Null, Act.Noop);
+            // Act
+            var ex = Record.Exception(() => Ø.Do(Act<int>.Null, Act.Noop));
+            // Assert
+            Assert.Null(ex);
         }
 
         [Fact]
@@ -599,7 +604,10 @@ namespace Abc
         [Fact]
         public static void Do_Some_NullOnNone_DoesNotThrow()
         {
-            One.Do(Act<int>.Noop, Act.Null);
+            // Act
+            var ex = Record.Exception(() => One.Do(Act<int>.Noop, Act.Null));
+            // Assert
+            Assert.Null(ex);
         }
 
         [Fact]
@@ -631,7 +639,10 @@ namespace Abc
         [Fact]
         public static void OnSome_None_NullAction_DoesNotThrow()
         {
-            Ø.OnSome(Act<int>.Null);
+            // Act
+            var ex = Record.Exception(() => Ø.OnSome(Act<int>.Null));
+            // Assert
+            Assert.Null(ex);
         }
 
         [Fact]

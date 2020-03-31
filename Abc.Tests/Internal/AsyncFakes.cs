@@ -1,5 +1,6 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
+using System;
 using System.Threading.Tasks;
 
 using Abc;
@@ -31,5 +32,15 @@ internal static class AsyncFakes
     {
         await Task.Yield();
         return AnyResult.None;
+    }
+
+    public static Func<T, Task<TResult>> FromSync<T, TResult>(Func<T, TResult> func)
+    {
+        return async x => { await Task.Yield(); return func(x); };
+    }
+
+    public static Func<T, Task<Maybe<TResult>>> FromSync<T, TResult>(Func<T, Maybe<TResult>> func)
+    {
+        return async x => { await Task.Yield(); return func(x); };
     }
 }
