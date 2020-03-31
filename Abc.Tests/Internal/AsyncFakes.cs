@@ -6,13 +6,20 @@ using Abc;
 
 internal static class AsyncFakes
 {
-    // Completes synchronously.
-    public static Task<Maybe<AnyResult>> ReturnSome<T>(T _) =>
-        AnyResult.AsyncSome;
+    private static readonly Task<Maybe<AnyResult>> s_AsyncNone
+        = Task.FromResult(Maybe<AnyResult>.None);
+
+    private static readonly Task<Maybe<AnyResult>> s_AsyncSome
+        = Task.FromResult(AnyResult.Some);
+
+    public static readonly Task<AnyResult> AsyncValue
+        = Task.FromResult(AnyResult.Value);
 
     // Completes synchronously.
-    public static Task<Maybe<AnyResult>> ReturnNone<T>(T _) =>
-        AnyResult.AsyncNone;
+    public static Task<Maybe<AnyResult>> ReturnSome<T>(T _) => s_AsyncSome;
+
+    // Completes synchronously.
+    public static Task<Maybe<AnyResult>> ReturnNone<T>(T _) => s_AsyncNone;
 
     public static async Task<Maybe<AnyResult>> ReturnSomeAsync<T>(T _)
     {

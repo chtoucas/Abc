@@ -62,8 +62,6 @@ namespace Abc
             await Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(AsyncFakes.ReturnSomeAsync));
         }
 
-        // Beyond smoke tests.
-
         [Fact]
         public static async Task BindAsync_SomeInt32()
         {
@@ -84,7 +82,7 @@ namespace Abc
             static async Task<Maybe<long>> __binder(long x)
             {
                 await Task.Yield();
-                return Maybe.Some(4 * x);
+                return Maybe.Some(4L * x);
             }
         }
 
@@ -114,6 +112,54 @@ namespace Abc
             Assert.ThrowsAnexn("selector", () =>
                 One.SelectAsync(Funk<int, AnyT>.NullAsync));
 
+        [Fact]
+        public static async Task SelectAsync_None()
+        {
+            await Assert.Async.None(MaybeEx.SelectAsync(Ø, __selector));
+
+            static async Task<long> __selector(int x)
+            {
+                await Task.Yield();
+                return x;
+            }
+        }
+
+        [Fact]
+        public static async Task SelectAsync_SomeInt32()
+        {
+            await Assert.Async.Some(6L, MaybeEx.SelectAsync(Two, __selector));
+
+            static async Task<long> __selector(int x)
+            {
+                await Task.Yield();
+                return 3L * x;
+            }
+        }
+
+        [Fact]
+        public static async Task SelectAsync_SomeInt64()
+        {
+            await Assert.Async.Some(8L, MaybeEx.SelectAsync(TwoL, __selector));
+
+            static async Task<long> __selector(long x)
+            {
+                await Task.Yield();
+                return 4L * x;
+            }
+        }
+
+        [Fact]
+        public static async Task SelectAsync_SomeUri()
+        {
+            await Assert.Async.Some(MyUri.AbsoluteUri, MaybeEx.SelectAsync(SomeUri, __selector));
+
+            static async Task<string> __selector(Uri x)
+            {
+                await Task.Yield();
+                return x.AbsoluteUri;
+            }
+        }
+
         #endregion
 
         #region OrElseAsync()
@@ -135,7 +181,7 @@ namespace Abc
             Assert.ThrowsAnexn("caseSome", () =>
                 Ø.SwitchAsync(
                     caseSome: Funk<int, AnyResult>.NullAsync,
-                    caseNone: () => AnyResult.AsyncValue));
+                    caseNone: () => AsyncFakes.AsyncValue));
 
         [Fact]
         public static void SwitchAsync_None_NullCaseNone() =>
@@ -155,7 +201,7 @@ namespace Abc
         public static void SwitchAsync_Some_NullCaseNone() =>
             Assert.ThrowsAnexn("caseNone", () =>
                 One.SwitchAsync(
-                    caseSome: x => AnyResult.AsyncValue,
+                    caseSome: x => AsyncFakes.AsyncValue,
                     caseNone: null!));
 
         [Fact]
@@ -251,7 +297,7 @@ namespace Abc
                 var r = await MaybeEx.SwitchAsync(
                     Ø,
                     caseSome: Funk<int, AnyResult>.NullAsync,
-                    caseNone: () => AnyResult.AsyncValue
+                    caseNone: () => AsyncFakes.AsyncValue
                 );
 
                 Assert.Same(AnyResult.Value, r); // Sanity check
@@ -280,7 +326,7 @@ namespace Abc
             {
                 var r = await MaybeEx.SwitchAsync(
                     One,
-                    caseSome: x => AnyResult.AsyncValue,
+                    caseSome: x => AsyncFakes.AsyncValue,
                     caseNone: null!
                 );
 

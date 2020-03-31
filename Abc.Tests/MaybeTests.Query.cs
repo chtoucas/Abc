@@ -12,16 +12,12 @@ namespace Abc
         #region Select()
 
         [Fact]
-        public static void Select_None_NullSelector()
-        {
+        public static void Select_None_NullSelector() =>
             Assert.ThrowsAnexn("selector", () => Ø.Select(Funk<int, AnyT>.Null));
-        }
 
         [Fact]
-        public static void Select_Some_NullSelector()
-        {
+        public static void Select_Some_NullSelector() =>
             Assert.ThrowsAnexn("selector", () => One.Select(Funk<int, AnyT>.Null));
-        }
 
         [Fact]
         public static void Select_None()
@@ -31,14 +27,22 @@ namespace Abc
         }
 
         [Fact]
-        public static void Select_Some()
+        public static void Select_SomeInt32()
         {
-            Assert.Some(2L, One.Select(x => 2L * x));
-            Assert.Some(2L, from x in One select 2L * x);
-
             Assert.Some(6L, Two.Select(x => 3L * x));
             Assert.Some(6L, from x in Two select 3L * x);
+        }
 
+        [Fact]
+        public static void Select_SomeInt64()
+        {
+            Assert.Some(8L, TwoL.Select(x => 4L * x));
+            Assert.Some(8L, from x in TwoL select 4L * x);
+        }
+
+        [Fact]
+        public static void Select_SomeUri()
+        {
             Assert.Some(MyUri.AbsoluteUri, SomeUri.Select(x => x.AbsoluteUri));
             Assert.Some(MyUri.AbsoluteUri, from x in SomeUri select x.AbsoluteUri);
         }

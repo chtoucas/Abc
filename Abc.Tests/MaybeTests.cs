@@ -229,17 +229,15 @@ namespace Abc
     // Core methods.
     public partial class MaybeTests
     {
-        [Fact]
-        public static void Bind_None_NullBinder()
-        {
-            Assert.ThrowsAnexn("binder", () => Ø.Bind(Kunc<int, AnyResult>.Null));
-        }
+        #region Bind()
 
         [Fact]
-        public static void Bind_Some_NullBinder()
-        {
+        public static void Bind_None_NullBinder() =>
+            Assert.ThrowsAnexn("binder", () => Ø.Bind(Kunc<int, AnyResult>.Null));
+
+        [Fact]
+        public static void Bind_Some_NullBinder() =>
             Assert.ThrowsAnexn("binder", () => One.Bind(Kunc<int, AnyResult>.Null));
-        }
 
         [Fact]
         public static void Bind_None()
@@ -251,24 +249,38 @@ namespace Abc
         }
 
         [Fact]
-        public static void Bind_Some()
+        public static void Bind_Some_ReturnsNone()
+        {
+            Assert.None(One.Bind(_ => AnyResult.None));
+            Assert.None(SomeText.Bind(_ => AnyResult.None));
+            Assert.None(SomeUri.Bind(_ => AnyResult.None));
+            Assert.None(AnyT.Some.Bind(_ => AnyResult.None));
+        }
+
+        [Fact]
+        public static void Bind_Some_ReturnsSome()
         {
             Assert.Some(AnyResult.Value, One.Bind(_ => AnyResult.Some));
             Assert.Some(AnyResult.Value, SomeText.Bind(_ => AnyResult.Some));
             Assert.Some(AnyResult.Value, SomeUri.Bind(_ => AnyResult.Some));
             Assert.Some(AnyResult.Value, AnyT.Some.Bind(_ => AnyResult.Some));
-
-            Assert.None(One.Bind(_ => AnyResult.None));
-            Assert.None(SomeText.Bind(_ => AnyResult.None));
-            Assert.None(SomeUri.Bind(_ => AnyResult.None));
-            Assert.None(AnyT.Some.Bind(_ => AnyResult.None));
-
-            // Beyond smoke tests.
-            Assert.Some(2L, One.Bind(x => Maybe.Some(2L * x)));
-            Assert.Some(6L, Two.Bind(x => Maybe.Some(3L * x)));
-            Assert.Some(8L, TwoL.Bind(x => Maybe.Some(4 * x)));
-            Assert.Some(MyUri.AbsoluteUri, SomeUri.Bind(x => Maybe.SomeOrNone(x.AbsoluteUri)));
         }
+
+        [Fact]
+        public static void Bind_SomeInt32() =>
+            Assert.Some(6L, Two.Bind(x => Maybe.Some(3L * x)));
+
+        [Fact]
+        public static void Bind_SomeInt64() =>
+            Assert.Some(8L, TwoL.Bind(x => Maybe.Some(4L * x)));
+
+        [Fact]
+        public static void Bind_SomeUri() =>
+            Assert.Some(MyUri.AbsoluteUri, SomeUri.Bind(x => Maybe.SomeOrNone(x.AbsoluteUri)));
+
+        #endregion
+
+        #region Flatten()
 
         [Fact]
         public static void Flatten_None()
@@ -302,6 +314,8 @@ namespace Abc
             Maybe<int?> one = One.Select(x => (int?)x);
             Assert.Equal(One, Maybe.Some(one).Flatten());
         }
+
+        #endregion
     }
 
     // Safe escapes.
