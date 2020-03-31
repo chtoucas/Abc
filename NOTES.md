@@ -32,10 +32,6 @@ vNEXT
   * Improve NuGet package description, `PackageLicenseFile`;
     see [here](https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets)
   * `Deterministic`, `Title`, `AssemblyTitle`, `VersionPrefix`.
-- Code coverage w/ coverlet:`
-  `dotnet test --collect:"XPlat Code Coverage"`
-  `dotnet test -c Debug --no-build --no-restore --settings CodeCoverage.runsettings --collect:"XPlat Code Coverage"`
-  [ReportGenerator usage](https://danielpalme.github.io/ReportGenerator/usage.html)
 
 TODOs
 -----
@@ -61,7 +57,6 @@ Async:
 
 Operations:
 - Tests. Currently, there are many cases where we don't go beyond smoke tests.
-- Code coverage w/ coverlet.
 - XML comments with complete examples.
 - Perf tool (LINQ, nulls, iterable).
 

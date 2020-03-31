@@ -13,7 +13,7 @@
 :Build
 :: Not necessary, but seems to speed up the whole process and might prevent
 :: random crashes w/ OpenCover.
-dotnet build -c Debug --no-restore
+@rem @call dotnet build -c Debug /p:DebugType=Full -p:TargetFrameworks=netcoreapp3.1
 
 :OpenCover
 @set OpenCover=%USERPROFILE%\.nuget\packages\opencover\%OpenCoverVersion%\tools\OpenCover.Console.exe
@@ -25,11 +25,14 @@ dotnet build -c Debug --no-restore
     @goto Error
 )
 
-@set target="C:/Program Files/dotnet/dotnet.exe"
+@rem @set target="C:/Program Files/dotnet/dotnet.exe"
+@set target="dotnet.exe"
 @set proj="%~dp0\Abc.Tests\Abc.Tests.csproj"
-@set targetargs="test %proj% --no-restore -v quiet -c Release /p:DebugType=Full"
+@set targetargs="test %proj% -v quiet -c Debug /p:DebugType=Full"
 
-@set opencover_xml=%outdir%\opencover_badge.xml
+@set opencover_xml=%outdir%\opencover.xml
+
+@rem Voir https://github.com/opencover/opencover/wiki/Usage
 
 :: Only Abc.Maybe.
 @set filter="+[Abc.Maybe]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*"
@@ -46,9 +49,7 @@ dotnet build -c Debug --no-restore
     @goto Error
 )
 
-@call %ReportGenerator% -verbosity:Info -reporttypes:Badges -reports:%opencover_xml% -targetdir:%outdir%
-
-@move /Y %outdir%\badge_combined.svg coverage.svg
+@call %ReportGenerator% -verbosity:Info -reporttypes:Html -reports:%opencover_xml% -targetdir:%outdir%\__ReporGeneratorHtml
 
 @endlocal
 @exit /b %ERRORLEVEL%

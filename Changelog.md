@@ -2,11 +2,12 @@
 
 ### vNEXT
 
-- Async methods: eager validation, change signature of `SwitchAsync()`.
+- Async methods: eager validation.
 - Change signature of `Maybe.Compose()` and `Maybe.ComposeBack()`.
   Now both methods return a _maybe_ rather than an anonymous function.
 
 Internal Changes.
+- Code coverage: replace OpenCover by coverlet.
 - New project Narvalo.Future for experimental code.
 - Clean up project files.
   * No longer define compiler symbols `NETSTANDARD2_0` and `NETSTANDARD2_1` as
