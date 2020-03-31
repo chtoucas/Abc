@@ -10,27 +10,16 @@ namespace Abc
     using Assert = AssertEx;
 
     // TODO: figure out async tests.
-    // ConfigureAwait(false) or ConfigureAwait(true)?
-    // - It seems that the answer is no: https://github.com/xunit/xunit/issues/1215
-    // - AssertEx.
-    // - https://github.com/xunit/xunit/issues/507
-    // - https://github.com/xunit/xunit/issues/1880
+    // - remove AsyncValue.
     // https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/november/async-programming-unit-testing-asynchronous-code
     // https://bradwilson.typepad.com/blog/2012/01/xunit19.html
 
     // Async methods.
-    public partial class MaybeTests
-    {
-        private static Func<T, Task<Maybe<TResult>>> MakeAsync<T, TResult>(Func<T, Maybe<TResult>> func)
-        {
-            return async x => { await Task.Yield(); return func(x); };
-        }
-
-        private static Func<T, Task<TResult>> MakeAsync<T, TResult>(Func<T, TResult> func)
-        {
-            return async x => { await Task.Yield(); return func(x); };
-        }
-    }
+    // Notes:
+    // - do not append ConfigureAwait(false), this is not necessary; see
+    //   https://github.com/xunit/xunit/issues/1215
+    // - use Task.Yield() to force asynchronicity.
+    public partial class MaybeTests { }
 
     public partial class MaybeTests
     {
@@ -56,32 +45,59 @@ namespace Abc
         }
 
         [Fact]
-        public static async Task BindAsync_Some()
+        public static async Task BindAsync_Some_ReturnsNone()
         {
-            await Assert.Async
-                .Some(AnyResult.Value, One.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async
-                .Some(AnyResult.Value, SomeText.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async
-                .Some(AnyResult.Value, SomeUri.BindAsync(AsyncFakes.ReturnSomeAsync));
-            await Assert.Async
-                .Some(AnyResult.Value, AnyT.Some.BindAsync(AsyncFakes.ReturnSomeAsync));
-
             await Assert.Async.None(One.BindAsync(AsyncFakes.ReturnNoneAsync));
             await Assert.Async.None(SomeText.BindAsync(AsyncFakes.ReturnNoneAsync));
             await Assert.Async.None(SomeUri.BindAsync(AsyncFakes.ReturnNoneAsync));
             await Assert.Async.None(AnyT.Some.BindAsync(AsyncFakes.ReturnNoneAsync));
+        }
 
-            // Beyond smoke tests.
-            await Assert.Async
-                .Some(2L, MaybeEx.BindAsync(One, MakeAsync<int, long>(x => Maybe.Some(2L * x))));
-            await Assert.Async
-                .Some(6L, MaybeEx.BindAsync(Two, MakeAsync<int, long>(x => Maybe.Some(3L * x))));
-            await Assert.Async
-                .Some(8L, MaybeEx.BindAsync(TwoL, MakeAsync<long, long>(x => Maybe.Some(4 * x))));
-            await Assert.Async
-                .Some(MyUri.AbsoluteUri,
-                    MaybeEx.BindAsync(SomeUri, MakeAsync<Uri, string>(x => Maybe.SomeOrNone(x.AbsoluteUri))));
+        [Fact]
+        public static async Task BindAsync_Some_ReturnsSome()
+        {
+            await Assert.Async.Some(AnyResult.Value, One.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.Some(AnyResult.Value, SomeText.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.Some(AnyResult.Value, SomeUri.BindAsync(AsyncFakes.ReturnSomeAsync));
+            await Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(AsyncFakes.ReturnSomeAsync));
+        }
+
+        // Beyond smoke tests.
+
+        [Fact]
+        public static async Task BindAsync_SomeInt32()
+        {
+            await Assert.Async.Some(6L, MaybeEx.BindAsync(Two, __binder));
+
+            static async Task<Maybe<long>> __binder(int x)
+            {
+                await Task.Yield();
+                return Maybe.Some(3L * x);
+            }
+        }
+
+        [Fact]
+        public static async Task BindAsync_SomeInt64()
+        {
+            await Assert.Async.Some(8L, MaybeEx.BindAsync(TwoL, __binder));
+
+            static async Task<Maybe<long>> __binder(long x)
+            {
+                await Task.Yield();
+                return Maybe.Some(4 * x);
+            }
+        }
+
+        [Fact]
+        public static async Task BindAsync_SomeUri()
+        {
+            await Assert.Async.Some(MyUri.AbsoluteUri, MaybeEx.BindAsync(SomeUri, __binder));
+
+            static async Task<Maybe<string>> __binder(Uri x)
+            {
+                await Task.Yield();
+                return Maybe.SomeOrNone(x.AbsoluteUri);
+            }
         }
 
         #endregion
