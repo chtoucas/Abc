@@ -1,7 +1,5 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
-using System.Threading.Tasks;
-
 using Abc;
 
 // AnyT is a plain reference type; no special property whatsoever.
@@ -18,8 +16,6 @@ internal sealed class AnyT
     /// Creates a new instance of the <see cref="AnyT"/> class.
     /// </summary>
     public static AnyT Value => new AnyT();
-
-    public static Task<AnyT> AsyncValue => Task.FromResult(new AnyT());
 
     /// <summary>
     /// Creates a new non-empty "maybe" for the <see cref="AnyT"/> class.

@@ -37,10 +37,6 @@ internal static class Funk<T1, T2, TResult>
     public static readonly Func<T1, T2, TResult> Null = default!;
 
     public static readonly Func<T1, T2, TResult> Any = (x, y) => default!;
-
-    public static readonly Func<T1, T2, Task<TResult>> NullAsync = default!;
-
-    public static readonly Func<T1, T2, Task<TResult>> AnyAsync = (x, y) => default!;
 }
 
 internal static class Funk<T1, T2, T3, TResult>
