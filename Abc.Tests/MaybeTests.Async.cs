@@ -183,45 +183,17 @@ namespace Abc
         }
 
         [Fact]
-        public static async Task BindAsync_SomeInt32()
-        {
-            await Assert.Async
-                .Some(6L,
-                    Two.BindAsync(
-                        AsyncFakes<int, long>.FromSync(MultiplyBy3_)));
-
-            //await Assert.Async.Some(6L, Two.BindAsync(__binder));
-
-            //static async Task<Maybe<long>> __binder(int x)
-            //{
-            //    await Task.Yield();
-            //    return Maybe.Some(3L * x);
-            //}
-        }
+        public static async Task BindAsync_SomeInt32() =>
+            await Assert.Async.Some(6L, Two.BindAsync(MultiplyBy3Async_));
 
         [Fact]
-        public static async Task BindAsync_SomeInt64()
-        {
-            await Assert.Async.Some(8L, TwoL.BindAsync(__binder));
-
-            static async Task<Maybe<long>> __binder(long x)
-            {
-                await Task.Yield();
-                return Maybe.Some(4L * x);
-            }
-        }
+        public static async Task BindAsync_SomeInt64() =>
+            await Assert.Async.Some(8L, TwoL.BindAsync(MultiplyBy4Async_));
 
         [Fact]
-        public static async Task BindAsync_SomeUri()
-        {
-            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.BindAsync(__binder));
-
-            static async Task<Maybe<string>> __binder(Uri x)
-            {
-                await Task.Yield();
-                return Maybe.SomeOrNone(x.AbsoluteUri);
-            }
-        }
+        public static async Task BindAsync_SomeUri() =>
+            await Assert.Async.Some(MyUri.AbsoluteUri,
+                SomeUri.BindAsync(GetAbsoluteUriAsync_));
 
         #endregion
 
@@ -250,40 +222,17 @@ namespace Abc
         }
 
         [Fact]
-        public static async Task SelectAsync_SomeInt32()
-        {
-            await Assert.Async.Some(6L, Two.SelectAsync(__selector));
-
-            static async Task<long> __selector(int x)
-            {
-                await Task.Yield();
-                return 3L * x;
-            }
-        }
+        public static async Task SelectAsync_SomeInt32() =>
+            await Assert.Async.Some(6L, Two.SelectAsync(MultiplyBy3Async));
 
         [Fact]
-        public static async Task SelectAsync_SomeInt64()
-        {
-            await Assert.Async.Some(8L, MaybeEx.SelectAsync(TwoL, __selector));
-
-            static async Task<long> __selector(long x)
-            {
-                await Task.Yield();
-                return 4L * x;
-            }
-        }
+        public static async Task SelectAsync_SomeInt64() =>
+            await Assert.Async.Some(8L, TwoL.SelectAsync(MultiplyBy4Async));
 
         [Fact]
-        public static async Task SelectAsync_SomeUri()
-        {
-            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.SelectAsync(__selector));
-
-            static async Task<string> __selector(Uri x)
-            {
-                await Task.Yield();
-                return x.AbsoluteUri;
-            }
-        }
+        public static async Task SelectAsync_SomeUri() =>
+            await Assert.Async.Some(MyUri.AbsoluteUri,
+                SomeUri.SelectAsync(GetAbsoluteUriAsync));
 
         #endregion
 

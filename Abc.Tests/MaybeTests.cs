@@ -4,6 +4,7 @@ namespace Abc
 {
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Xunit;
 
@@ -38,13 +39,46 @@ namespace Abc
 #pragma warning restore CA1810
 
         private static long MultiplyBy3(int x) => 3L * x;
+        private static async Task<long> MultiplyBy3Async(int x)
+        {
+            await Task.Yield();
+            return 3L * x;
+        }
+
         private static Maybe<long> MultiplyBy3_(int x) => Maybe.Some(3L * x);
+        private static async Task<Maybe<long>> MultiplyBy3Async_(int x)
+        {
+            await Task.Yield();
+            return Maybe.Some(3L * x);
+        }
 
         private static long MultiplyBy4(long x) => 4L * x;
+        private static async Task<long> MultiplyBy4Async(long x)
+        {
+            await Task.Yield();
+            return 4L * x;
+        }
+
         private static Maybe<long> MultiplyBy4_(long x) => Maybe.Some(4L * x);
+        private static async Task<Maybe<long>> MultiplyBy4Async_(long x)
+        {
+            await Task.Yield();
+            return Maybe.Some(4L * x);
+        }
 
         private static string GetAbsoluteUri(Uri x) => x.AbsoluteUri;
+        private static async Task<string> GetAbsoluteUriAsync(Uri x)
+        {
+            await Task.Yield();
+            return x.AbsoluteUri;
+        }
+
         private static Maybe<string> GetAbsoluteUri_(Uri x) => Maybe.SomeOrNone(x.AbsoluteUri);
+        private static async Task<Maybe<string>> GetAbsoluteUriAsync_(Uri x)
+        {
+            await Task.Yield();
+            return Maybe.SomeOrNone(x.AbsoluteUri);
+        }
     }
 
     // Factories.
