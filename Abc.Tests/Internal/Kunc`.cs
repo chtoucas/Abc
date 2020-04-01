@@ -5,16 +5,6 @@ using System.Threading.Tasks;
 
 using Abc;
 
-internal static class Kunc<TResult>
-    where TResult : notnull
-{
-    public static readonly Func<Maybe<TResult>> Null = null!;
-
-    public static readonly Func<Maybe<TResult>> Any = () => throw new InvalidCallException();
-
-    public static readonly Func<Task<Maybe<TResult>>> AnyAsync = () => throw new InvalidCallException();
-}
-
 internal static class Kunc<T, TResult>
     where T : notnull
     where TResult : notnull

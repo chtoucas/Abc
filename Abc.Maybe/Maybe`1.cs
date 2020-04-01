@@ -221,10 +221,16 @@ namespace Abc
         {
             private readonly Maybe<T> _inner;
 
+            // REVIEW: currently coverlet does not apply the attr
+            // ExcludeFromCodeCoverage to the enclosed methods.
+
+            [ExcludeFromCodeCoverage]
             public DebugView_(Maybe<T> inner) { _inner = inner; }
 
+            [ExcludeFromCodeCoverage]
             public bool IsSome => _inner._isSome;
 
+            [ExcludeFromCodeCoverage]
             [MaybeNull] public T Value => _inner._value;
         }
     }

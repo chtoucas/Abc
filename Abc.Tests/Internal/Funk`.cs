@@ -9,8 +9,6 @@ internal static class Funk<TResult>
     public static readonly Func<TResult> Null = null!;
 
     public static readonly Func<TResult> Any = () => throw new InvalidCallException();
-
-    public static readonly Func<Task<TResult>> AnyAsync = () => throw new InvalidCallException();
 }
 
 internal static class Funk<T, TResult>
