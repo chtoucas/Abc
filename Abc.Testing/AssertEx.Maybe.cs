@@ -2,6 +2,7 @@
 
 namespace Abc
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Anexn = System.ArgumentNullException;
@@ -23,20 +24,38 @@ namespace Abc
 
         /// <summary>
         /// Verifies that <paramref name="maybe"/> is NOT empty and contains
-        /// <paramref name="exp"/>.
+        /// <paramref name="expected"/>.
         /// </summary>
-        public static void Some<T>(T exp, Maybe<T> maybe)
+        public static void Some<T>(T expected, Maybe<T> maybe)
         {
             False(maybe.IsNone, "The maybe should not be empty.");
 
             if (maybe.IsSome)
             {
                 // BONSANG! When IsSome is true, Value is NOT null.
-                Equal(exp, maybe.Value!);
+                Equal(expected, maybe.Value!);
             }
 
             // We also test Contains().
-            True(maybe.Contains(exp));
+            True(maybe.Contains(expected));
+        }
+
+        /// <summary>
+        /// Verifies that <paramref name="maybe"/> is NOT empty and contains
+        /// <paramref name="expected"/>.
+        /// </summary>
+        public static void Some<T>(IEnumerable<T> expected, Maybe<IEnumerable<T>> maybe)
+        {
+            False(maybe.IsNone, "The maybe should not be empty.");
+
+            if (maybe.IsSome)
+            {
+                // BONSANG! When IsSome is true, Value is NOT null.
+                Equal(expected, maybe.Value!);
+            }
+
+            // We also test Contains().
+            True(maybe.Contains(expected));
         }
 
         /// <summary>
@@ -87,13 +106,13 @@ namespace Abc
 
             /// <summary>
             /// Verifies that the result of <paramref name="task"/> is NOT empty
-            /// and contains <paramref name="exp"/>.
+            /// and contains <paramref name="expected"/>.
             /// </summary>
-            public static async Task Some<T>(T exp, Task<Maybe<T>> task)
+            public static async Task Some<T>(T expected, Task<Maybe<T>> task)
             {
                 if (task is null) { throw new Anexn(nameof(task)); }
 
-                AssertEx.Some(exp, await task);
+                AssertEx.Some(expected, await task);
             }
         }
     }

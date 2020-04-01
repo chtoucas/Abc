@@ -13,12 +13,8 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void EmptyEnumerable()
-        {
-            // TODO: a better test whould not check the reference equality
-            // but the equality of both sequences.
+        public static void EmptyEnumerable() =>
             Assert.Some(Enumerable.Empty<int>(), Maybe.EmptyEnumerable<int>());
-        }
 
         [Fact]
         public static void CollectAny_NullSource() =>
