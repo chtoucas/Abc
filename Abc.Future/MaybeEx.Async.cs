@@ -37,58 +37,6 @@ namespace Abc
         }
 
         [Pure]
-        public static async Task<Maybe<TResult>> SelectAsync<T, TResult>(
-            Maybe<T> maybe,
-            Func<T, Task<TResult>> selector)
-        {
-            if (selector is null) { throw new Anexn(nameof(selector)); }
-
-            if (maybe.TryGetValue(out T value))
-            {
-                TResult result = await selector(value).ConfigureAwait(false);
-                return Maybe.Of(result);
-            }
-            else
-            {
-                return Maybe<TResult>.None;
-            }
-        }
-
-        // REVIEW: Task<T> or Func<Task<T>>, Task<Maybe<T>> or Func<Task<Maybe<T>>>?
-
-        [Pure]
-        public static async Task<Maybe<T>> OrElseAsync<T>(
-            Maybe<T> maybe,
-            Func<Task<Maybe<T>>> other)
-        {
-            if (other is null) { throw new Anexn(nameof(other)); }
-
-            return maybe.IsNone ? await other().ConfigureAwait(false) : maybe;
-        }
-
-        //[Pure]
-        //public static async Task<TResult> SwitchAsync<T, TResult>(
-        //    Maybe<T> maybe,
-        //    Func<T, Task<TResult>> caseSome,
-        //    Func<Task<TResult>> caseNone)
-        //{
-        //    if (maybe.TryGetValue(out T value))
-        //    {
-        //        if (caseSome is null) { throw new Anexn(nameof(caseSome)); }
-        //        return await caseSome(value).ConfigureAwait(false);
-        //    }
-        //    else
-        //    {
-        //        if (caseNone is null) { throw new Anexn(nameof(caseNone)); }
-        //        return await caseNone().ConfigureAwait(false);
-        //    }
-        //}
-
-        //
-        // Configurable.
-        //
-
-        [Pure]
         public static async Task<Maybe<TResult>> BindAsync<T, TResult>(
             Maybe<T> maybe,
             Func<T, Task<Maybe<TResult>>> binder,
@@ -100,6 +48,24 @@ namespace Abc
             {
                 return await binder(value)
                     .ConfigureAwait(continueOnCapturedContext);
+            }
+            else
+            {
+                return Maybe<TResult>.None;
+            }
+        }
+
+        [Pure]
+        public static async Task<Maybe<TResult>> SelectAsync<T, TResult>(
+            Maybe<T> maybe,
+            Func<T, Task<TResult>> selector)
+        {
+            if (selector is null) { throw new Anexn(nameof(selector)); }
+
+            if (maybe.TryGetValue(out T value))
+            {
+                TResult result = await selector(value).ConfigureAwait(false);
+                return Maybe.Of(result);
             }
             else
             {
@@ -125,6 +91,28 @@ namespace Abc
             {
                 return Maybe<TResult>.None;
             }
+        }
+
+        [Pure]
+        public static async Task<Maybe<T>> OrElseAsync<T>(
+            Maybe<T> maybe,
+            Func<Task<Maybe<T>>> other)
+        {
+            if (other is null) { throw new Anexn(nameof(other)); }
+
+            return maybe.IsNone ? await other().ConfigureAwait(false) : maybe;
+        }
+
+        [Pure]
+        public static async Task<Maybe<T>> OrElseAsync<T>(
+            Maybe<T> maybe,
+            Func<Task<Maybe<T>>> other,
+            bool continueOnCapturedContext)
+        {
+            if (other is null) { throw new Anexn(nameof(other)); }
+
+            return maybe.IsNone ? await other().ConfigureAwait(continueOnCapturedContext)
+                : maybe;
         }
 
         //

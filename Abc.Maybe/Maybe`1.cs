@@ -120,7 +120,6 @@ namespace Abc
     /// - BindAsync()           async binding
     /// - SelectAsync()         async mapping
     /// - OrElseAsync()         async coalescing
-    /// - SwitchAsync()         async pattern matching
     ///
     /// We also have several extension methods for specific types of T, eg
     /// structs, functions or enumerables; see the static class Maybe.

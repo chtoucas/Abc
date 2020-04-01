@@ -38,6 +38,8 @@ namespace Abc
         }
 #pragma warning restore CA1810
 
+        private static T Ident<T>(T x) => x;
+
         private static int Times3(int x) => 3 * x;
         private static async Task<int> Times3Async(int x)
         {
@@ -79,6 +81,9 @@ namespace Abc
             await Task.Yield();
             return Maybe.SomeOrNone(x.AbsoluteUri);
         }
+
+        private static Maybe<AnyResult> ReturnNone<T>(T _) => AnyResult.None;
+        private static Maybe<AnyResult> ReturnSome<T>(T _) => AnyResult.Some;
     }
 
     // Factories.
@@ -158,10 +163,8 @@ namespace Abc
         }
 
         [Fact]
-        public static void Some()
-        {
+        public static void Some() =>
             Assert.Some(1, Maybe.Some(1));
-        }
 
         [Fact]
         public static void SomeOrNone_WithValueType()
@@ -185,10 +188,8 @@ namespace Abc
         }
 
         [Fact]
-        public static void Square()
-        {
+        public static void Square() =>
             Assert.Some(One, Maybe.Square(1));
-        }
 
         [Fact]
         public static void SquareOrNone_WithValueType()
@@ -285,28 +286,28 @@ namespace Abc
         [Fact]
         public static void Bind_None()
         {
-            Assert.None(Ø.Bind(Thunk<int>.Return(AnyResult.Some)));
-            Assert.None(NoText.Bind(Thunk<string>.Return(AnyResult.Some)));
-            Assert.None(NoUri.Bind(Thunk<Uri>.Return(AnyResult.Some)));
-            Assert.None(AnyT.None.Bind(Thunk<AnyT>.Return(AnyResult.Some)));
+            Assert.None(Ø.Bind(ReturnSome));
+            Assert.None(NoText.Bind(ReturnSome));
+            Assert.None(NoUri.Bind(ReturnSome));
+            Assert.None(AnyT.None.Bind(ReturnSome));
         }
 
         [Fact]
         public static void Bind_Some_ReturnsNone()
         {
-            Assert.None(One.Bind(Thunk<int>.Return(AnyResult.None)));
-            Assert.None(SomeText.Bind(Thunk<string>.Return(AnyResult.None)));
-            Assert.None(SomeUri.Bind(Thunk<Uri>.Return(AnyResult.None)));
-            Assert.None(AnyT.Some.Bind(Thunk<AnyT>.Return(AnyResult.None)));
+            Assert.None(One.Bind(ReturnNone));
+            Assert.None(SomeText.Bind(ReturnNone));
+            Assert.None(SomeUri.Bind(ReturnNone));
+            Assert.None(AnyT.Some.Bind(ReturnNone));
         }
 
         [Fact]
         public static void Bind_Some_ReturnsSome()
         {
-            Assert.Some(AnyResult.Value, One.Bind(Thunk<int>.Return(AnyResult.Some)));
-            Assert.Some(AnyResult.Value, SomeText.Bind(Thunk<string>.Return(AnyResult.Some)));
-            Assert.Some(AnyResult.Value, SomeUri.Bind(Thunk<Uri>.Return(AnyResult.Some)));
-            Assert.Some(AnyResult.Value, AnyT.Some.Bind(Thunk<AnyT>.Return(AnyResult.Some)));
+            Assert.Some(AnyResult.Value, One.Bind(ReturnSome));
+            Assert.Some(AnyResult.Value, SomeText.Bind(ReturnSome));
+            Assert.Some(AnyResult.Value, SomeUri.Bind(ReturnSome));
+            Assert.Some(AnyResult.Value, AnyT.Some.Bind(ReturnSome));
         }
 
         [Fact]
@@ -365,11 +366,9 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Switch_None_NullCaseNone_Throws()
-        {
+        public static void Switch_None_NullCaseNone_Throws() =>
             Assert.ThrowsAnexn("caseNone", () =>
                 Ø.Switch(Funk<int, AnyResult>.Any, Funk<AnyResult>.Null));
-        }
 
         [Fact]
         public static void Switch_None_NullCaseSome_DoesNotThrow()
@@ -385,6 +384,7 @@ namespace Abc
         {
             Assert.ThrowsAnexn("caseSome", () =>
                 One.Switch(Funk<int, AnyResult>.Null, Funk<AnyResult>.Any));
+
             Assert.ThrowsAnexn("caseSome", () =>
                 One.Switch(Funk<int, AnyResult>.Null, AnyResult.Value));
         }
@@ -394,7 +394,7 @@ namespace Abc
         {
             // Act
             AnyResult v = One.Switch(
-                caseSome: Thunk<int>.Return(AnyResult.Value),
+                caseSome: x => AnyResult.Value,
                 caseNone: Funk<AnyResult>.Null);
             // Assert
             Assert.Same(AnyResult.Value, v);
@@ -507,10 +507,8 @@ namespace Abc
         }
 
         [Fact]
-        public static void ValueOrElse_None_NullFactory_Throws()
-        {
+        public static void ValueOrElse_None_NullFactory_Throws() =>
             Assert.ThrowsAnexn("valueFactory", () => Ø.ValueOrElse(Funk<int>.Null));
-        }
 
         [Fact]
         public static void ValueOrElse_Some_NullFactory_DoesNotThrow()
@@ -576,10 +574,8 @@ namespace Abc
         }
 
         [Fact]
-        public static void ValueOrThrow_NullException()
-        {
+        public static void ValueOrThrow_NullException() =>
             Assert.ThrowsAnexn("exception", () => Ø.ValueOrThrow(null!));
-        }
 
         [Fact]
         public static void ValueOrThrow_None()
@@ -626,10 +622,8 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Do_None_NullOnNone_Throws()
-        {
+        public static void Do_None_NullOnNone_Throws() =>
             Assert.ThrowsAnexn("onNone", () => Ø.Do(Act<int>.Noop, Act.Null));
-        }
 
         [Fact]
         public static void Do_None_NullOnSome_DoesNotThrow()
@@ -641,10 +635,8 @@ namespace Abc
         }
 
         [Fact]
-        public static void Do_Some_NullOnSome_Throws()
-        {
+        public static void Do_Some_NullOnSome_Throws() =>
             Assert.ThrowsAnexn("onSome", () => One.Do(Act<int>.Null, Act.Noop));
-        }
 
         [Fact]
         public static void Do_Some_NullOnNone_DoesNotThrow()
@@ -691,10 +683,8 @@ namespace Abc
         }
 
         [Fact]
-        public static void OnSome_Some_NullAction_Throws()
-        {
+        public static void OnSome_Some_NullAction_Throws() =>
             Assert.ThrowsAnexn("action", () => One.OnSome(Act<int>.Null));
-        }
 
         [Fact]
         public static void OnSome_None()
@@ -882,16 +872,12 @@ namespace Abc
         }
 
         [Fact]
-        public static void Contains_None_NullComparer()
-        {
+        public static void Contains_None_NullComparer() =>
             Assert.ThrowsAnexn("comparer", () => Ø.Contains(1, null!));
-        }
 
         [Fact]
-        public static void Contains_Some_NullComparer()
-        {
+        public static void Contains_Some_NullComparer() =>
             Assert.ThrowsAnexn("comparer", () => One.Contains(1, null!));
-        }
 
         [Fact]
         public static void Contains_None()

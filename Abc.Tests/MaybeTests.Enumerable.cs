@@ -21,26 +21,25 @@ namespace Abc
         }
 
         [Fact]
-        public static void CollectAny_NullSource()
-        {
+        public static void CollectAny_NullSource() =>
             Assert.ThrowsAnexn("source", () =>
                 Maybe.CollectAny(default(IEnumerable<Maybe<int>>)!));
-        }
 
         [Fact]
         public static void CollectAny_IsDeferred()
         {
+            // Arrange
             IEnumerable<Maybe<int>> source = new ThrowingCollection<Maybe<int>>();
-
+            // Act
             var q = Maybe.CollectAny(source);
+            // Assert
             Assert.ThrowsOnNext(q);
         }
 
         // TODO: non-empty test.
+
         [Fact]
-        public static void CollectAny()
-        {
+        public static void CollectAny_WithEmpty() =>
             Assert.Empty(Maybe.CollectAny(Enumerable.Empty<Maybe<int>>()));
-        }
     }
 }

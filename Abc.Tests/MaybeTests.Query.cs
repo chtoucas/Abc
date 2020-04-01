@@ -22,7 +22,7 @@ namespace Abc
         [Fact]
         public static void Select_None()
         {
-            Assert.None(Ø.Select(x => x));
+            Assert.None(Ø.Select(Ident));
             Assert.None(from x in Ø select x);
         }
 
@@ -55,12 +55,18 @@ namespace Abc
         public static void Where_None_NullPredicate()
         {
             Assert.ThrowsAnexn("predicate", () => Ø.Where(null!));
+            Assert.ThrowsAnexn("predicate", () => NoText.Where(null!));
+            Assert.ThrowsAnexn("predicate", () => NoUri.Where(null!));
+            Assert.ThrowsAnexn("predicate", () => AnyT.None.Where(null!));
         }
 
         [Fact]
         public static void Where_Some_NullPredicate()
         {
             Assert.ThrowsAnexn("predicate", () => One.Where(null!));
+            Assert.ThrowsAnexn("predicate", () => SomeText.Where(null!));
+            Assert.ThrowsAnexn("predicate", () => SomeUri.Where(null!));
+            Assert.ThrowsAnexn("predicate", () => AnyT.Some.Where(null!));
         }
 
         [Fact]

@@ -10,7 +10,6 @@ namespace Abc
     using Assert = AssertEx;
 
     // TODO: figure out async tests.
-    // - remove AsyncValue.
     // https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/november/async-programming-unit-testing-asynchronous-code
     // https://bradwilson.typepad.com/blog/2012/01/xunit19.html
 
@@ -300,52 +299,6 @@ namespace Abc
             public static async Task OrElseAsync_Some_NullOther() =>
                 await Assert.Async
                     .ThrowsAnexn("other", () => MaybeEx.OrElseAsync(One, null!));
-
-            #endregion
-
-            #region SwitchAsync()
-
-            //[Fact]
-            //public static async Task SwitchAsync_None_NullCaseSome_DoesNotThrow()
-            //{
-            //    var r = await MaybeEx.SwitchAsync(
-            //        Ø,
-            //        caseSome: Funk<int, AnyResult>.NullAsync,
-            //        caseNone: () => AsyncFakes.AsyncValue
-            //    );
-
-            //    Assert.Same(AnyResult.Value, r); // Sanity check
-            //}
-
-            //[Fact]
-            //public static async Task SwitchAsync_None_NullCaseNone() =>
-            //    await Assert.Async
-            //        .ThrowsAnexn("caseNone", () =>
-            //            MaybeEx.SwitchAsync(
-            //                Ø,
-            //                caseSome: Funk<int, AnyT>.AnyAsync,
-            //                caseNone: null!));
-
-            //[Fact]
-            //public static async Task SwitchAsync_Some_NullCaseSome() =>
-            //    await Assert.Async
-            //        .ThrowsAnexn("caseSome", () =>
-            //            MaybeEx.SwitchAsync(
-            //                One,
-            //                caseSome: Funk<int, AnyT>.NullAsync,
-            //                caseNone: () => AnyT.AsyncValue));
-
-            //[Fact]
-            //public static async Task SwitchAsync_Some_NullCaseNone_DoesNotThrow()
-            //{
-            //    var r = await MaybeEx.SwitchAsync(
-            //        One,
-            //        caseSome: x => AsyncFakes.AsyncValue,
-            //        caseNone: null!
-            //    );
-
-            //    Assert.Same(AnyResult.Value, r); // Sanity check
-            //}
 
             #endregion
         }

@@ -10,18 +10,14 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void ZipWith_None_NullZipper()
-        {
+        public static void ZipWith_None_NullZipper() =>
             Assert.ThrowsAnexn("zipper", () =>
                 Ø.ZipWith(TwoL, Funk<int, long, AnyT>.Null));
-        }
 
         [Fact]
-        public static void ZipWith_Some_NullZipper()
-        {
+        public static void ZipWith_Some_NullZipper() =>
             Assert.ThrowsAnexn("zipper", () =>
                 One.ZipWith(TwoL, Funk<int, long, AnyT>.Null));
-        }
 
         [Fact]
         public static void ZipWith()
@@ -40,12 +36,18 @@ namespace Abc
         public static void Skip_None()
         {
             Assert.Equal(Maybe.Zero, Ø.Skip());
+            Assert.Equal(Maybe.Zero, NoText.Skip());
+            Assert.Equal(Maybe.Zero, NoUri.Skip());
+            Assert.Equal(Maybe.Zero, AnyT.None.Skip());
         }
 
         [Fact]
         public static void Skip_Some()
         {
             Assert.Equal(Maybe.Unit, One.Skip());
+            Assert.Equal(Maybe.Unit, SomeText.Skip());
+            Assert.Equal(Maybe.Unit, SomeUri.Skip());
+            Assert.Equal(Maybe.Unit, AnyT.Some.Skip());
         }
     }
 

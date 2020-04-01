@@ -27,8 +27,8 @@ namespace Abc
             // Arrange
             var some = AnyT.Some;
             // Act & Assert
-            Assert.Equal(AnyT.None, AnyT.None.Select(x => x));
-            Assert.Equal(some, some.Select(x => x));
+            Assert.Equal(AnyT.None, AnyT.None.Select(Ident));
+            Assert.Equal(some, some.Select(Ident));
         }
 
         // Second Functor Law: Select preserves the composition operator.
