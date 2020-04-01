@@ -43,6 +43,8 @@ namespace Abc
         /// <summary>
         /// Verifies that <paramref name="maybe"/> is NOT empty and contains
         /// <paramref name="expected"/>.
+        /// <para>This overload checks that the enclosed sequence is equivalent
+        /// to <paramref name="expected"/>.</para>
         /// </summary>
         public static void Some<T>(IEnumerable<T> expected, Maybe<IEnumerable<T>> maybe)
         {
@@ -54,7 +56,7 @@ namespace Abc
                 Equal(expected, maybe.Value!);
             }
 
-            // We also test Contains().
+            // REVIEW: We also test Contains().
             True(maybe.Contains(expected));
         }
 
