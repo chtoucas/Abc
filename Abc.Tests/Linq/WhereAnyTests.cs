@@ -1,4 +1,7 @@
-﻿// See LICENSE.txt in the project root for license information.
+﻿// See LICENSE.dotnet.txt in the project root for license information.
+//
+// Largely inspired by
+// https://github.com/dotnet/runtime/blob/master/src/libraries/System.Linq/tests/WhereTests.cs
 
 namespace Abc.Linq
 {
@@ -23,6 +26,7 @@ namespace Abc.Linq
             Assert.ThrowsAnexn("predicate", () => AnySeq.WhereAny(Kunc<int, bool>.Null));
     }
 
+    // Deferred execution.
     public partial class WhereAnyTests
     {
         [Fact]
@@ -34,6 +38,31 @@ namespace Abc.Linq
 
             Assert.True(notCalled);
             Assert.CalledOnNext(q, ref notCalled);
+        }
+    }
+
+    public partial class WhereAnyTests
+    {
+        [Fact]
+        public void Array_TruePredicate()
+        {
+            // Arrange
+            int[] source = new[] { 1, 2, 3, 4, 5 };
+            // Act
+            var q = source.WhereAny(_ => Maybe.True);
+            // Assert
+            Assert.Equal(source, q);
+        }
+
+        [Fact]
+        public void Array_FalsePredicate()
+        {
+            // Arrange
+            int[] source = new[] { 1, 2, 3, 4, 5 };
+            // Act
+            var q = source.WhereAny(_ => Maybe.False);
+            // Assert
+            Assert.Empty(q);
         }
     }
 }

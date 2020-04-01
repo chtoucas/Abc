@@ -3,6 +3,8 @@
 namespace Abc.Linq
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
 
     using Xunit;
@@ -23,6 +25,7 @@ namespace Abc.Linq
             Assert.ThrowsAnexn("selector", () => AnySeq.SelectAny(Kunc<int, int>.Null));
     }
 
+    // Deferred execution.
     public partial class SelectAnyTests
     {
         [Fact]
@@ -35,5 +38,44 @@ namespace Abc.Linq
             Assert.True(notCalled);
             Assert.CalledOnNext(q, ref notCalled);
         }
+    }
+
+    public partial class SelectAnyTests
+    {
+        [Fact]
+        public void Array_OnlySome()
+        {
+            // Arrange
+            int[] source = new[] { 1, 2, 3, 4, 5 };
+            int[] expected = new[] { 2, 3, 4, 5, 6 };
+            // Act
+            var q = source.SelectAny(i => Maybe.Some(i + 1));
+            // Assert
+            Assert.Equal(expected, q);
+        }
+
+        //[Fact]
+        //public void List_OnlySome()
+        //{
+        //    // Arrange
+        //    var source = new List<int> { 1, 2, 3, 4, 5 };
+        //    var expected = new List<int> { 2, 3, 4, 5, 6 };
+        //    // Act
+        //    var q = source.SelectAny(i => Maybe.Some(i + 1));
+        //    // Assert
+        //    Assert.Equal(source, q);
+        //}
+
+        //[Fact]
+        //public void ReadOnlyCollection_OnlySome()
+        //{
+        //    // Arrange
+        //    var source = new ReadOnlyCollection<int>(new List<int> { 1, 2, 3, 4, 5 });
+        //    var expected = new List<int> { 2, 3, 4, 5, 6 };
+        //    // Act
+        //    var q = source.SelectAny(i => Maybe.Some(i + 1));
+        //    // Assert
+        //    Assert.Equal(source, q);
+        //}
     }
 }
