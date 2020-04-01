@@ -9,7 +9,7 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
 
     // Async vs async...
-    // Maybe<Task<T>>, Task<Maybe<T>>.
+    // Maybe<Task<T>>, Task<Maybe<T>>, Func<Task<>> vs Task<>.
     // https://devblogs.microsoft.com/dotnet/configureawait-faq/
     // https://ericlippert.com/2020/03/10/passing-awaited-tasks/
 

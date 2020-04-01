@@ -40,9 +40,10 @@ namespace Abc
 #pragma warning restore CA1810
 
         [Pure]
-        private static T Ident<T>(T x) => x;
+        private static T Ident<T>(T x) where T : notnull => x;
         [Pure]
         private static async Task<T> IdentAsync<T>(T x)
+            where T : notnull
         {
             await Task.Yield();
             return x;
@@ -94,7 +95,8 @@ namespace Abc
         }
 
         [Pure]
-        private static Maybe<string> GetAbsoluteUri_(Uri x) => Maybe.SomeOrNone(x.AbsoluteUri);
+        private static Maybe<string> GetAbsoluteUri_(Uri x) =>
+            Maybe.SomeOrNone(x.AbsoluteUri);
         [Pure]
         private static async Task<Maybe<string>> GetAbsoluteUriAsync_(Uri x)
         {

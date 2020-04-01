@@ -9,7 +9,8 @@ namespace Abc
     using Anexn = System.ArgumentNullException;
 
     // Async methods.
-    // NB: these async methods discard the context when they resume.
+    // These async methods use eager validation and discard the context when
+    // they resume.
     public partial struct Maybe<T>
     {
         [Pure]

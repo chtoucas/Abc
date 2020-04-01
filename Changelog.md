@@ -2,9 +2,11 @@
 
 ### vNEXT
 
-- Async methods: eager validation. Remove `SwitchAsync()`; use `Switch()`
-  instead. Change signature of `OrElseAsync()`.
-- Change signature of `Maybe.Compose()` and `Maybe.ComposeBack()`.
+- Async methods:
+  * Eager validation.
+  * `OrElseAsync()` now expects a factory rather than a task.
+  * Removed `SwitchAsync()`; use `Switch()` instead.
+- Changed signature of `Maybe.Compose()` and `Maybe.ComposeBack()`.
   Now both methods return a _maybe_ rather than an anonymous function.
 
 Internal Changes.

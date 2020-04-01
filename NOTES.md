@@ -44,7 +44,6 @@ See `FIXME`, `TODO` and `REVIEW` within the code.
 
 Async:
 - Async methods?
-  * Eager validation.
   * Microsoft.Bcl.AsyncInterfaces
   * Async enumerables.
 - References
@@ -59,16 +58,15 @@ Operations:
 - Tests. Currently, there are many cases where we don't go beyond smoke tests.
 - XML comments with complete examples.
 - Perf tool (LINQ, nulls, iterable).
+- Rewrite scripts in PowerShell?
+- Cleanup scripts: `dotnet nuget locals --clear all`.
 
 Issues
 ------
 
-- Build warnings w/ qcover.cmd and not always; see
-  [MSB3277](https://github.com/microsoft/msbuild/issues/608),
-  [here](https://nickcraver.com/blog/2020/02/11/binding-redirects/).
-  `dotnet nuget locals --clear all`? (nope)
-  OK, the problem is that we build everything in __work.
-- Scripts: stop on first error (rewrite in PowerShell?).
+- Build warnings w/ OpenCover; see
+  [MSB3277](https://github.com/microsoft/msbuild/issues/608).
+  The problem is that we build all platforms within the same dir.
 
 Release Process
 ---------------

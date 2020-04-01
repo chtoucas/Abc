@@ -6,7 +6,6 @@
 xunit.trx
 __coverage/
 __packages/
-__work/
 
 # User-specific files
 *.rsuser

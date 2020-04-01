@@ -1,5 +1,7 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
+using System.Diagnostics.Contracts;
+
 using Abc;
 
 // AnyT is a plain reference type; no special property whatsoever.
@@ -26,6 +28,7 @@ internal sealed class AnyT
     /// Creates a new instance of the <see cref="AnyT"/> class and its
     /// "maybe" companion.
     /// </summary>
+    [Pure]
     public static (AnyT Value, Maybe<AnyT> Some) New()
     {
         var any = new AnyT();
