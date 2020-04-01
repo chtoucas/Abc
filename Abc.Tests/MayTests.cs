@@ -147,9 +147,9 @@ namespace Abc
         }
 
         [Theory, MemberData(nameof(BooleanData))]
-        public static void ParseBoolean_Some(string input, bool exp)
+        public static void ParseBoolean_Some(string input, bool expected)
         {
-            Assert.Some(exp, May.ParseBoolean(input));
+            Assert.Some(expected, May.ParseBoolean(input));
         }
 
         #endregion
@@ -165,15 +165,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(Int16Data))]
-        public static void ParseInt16(string input, short exp)
+        public static void ParseInt16(string input, short expected)
         {
-            Assert.Some(exp, May.ParseInt16(input));
+            Assert.Some(expected, May.ParseInt16(input));
         }
 
         [Theory, MemberData(nameof(Int16Data))]
-        public static void ParseInt16_Invariant(string input, short exp)
+        public static void ParseInt16_Invariant(string input, short expected)
         {
-            Assert.Some(exp, May.ParseInt16(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(expected, May.ParseInt16(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -189,15 +189,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(Int32Data))]
-        public static void ParseInt32(string input, int exp)
+        public static void ParseInt32(string input, int expected)
         {
-            Assert.Some(exp, May.ParseInt32(input));
+            Assert.Some(expected, May.ParseInt32(input));
         }
 
         [Theory, MemberData(nameof(Int32Data))]
-        public static void ParseInt32_Invariant(string input, int exp)
+        public static void ParseInt32_Invariant(string input, int expected)
         {
-            Assert.Some(exp, May.ParseInt32(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(expected, May.ParseInt32(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -213,15 +213,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(Int64Data))]
-        public static void ParseInt64(string input, long exp)
+        public static void ParseInt64(string input, long expected)
         {
-            Assert.Some(exp, May.ParseInt64(input));
+            Assert.Some(expected, May.ParseInt64(input));
         }
 
         [Theory, MemberData(nameof(Int64Data))]
-        public static void ParseInt64_Invariant(string input, long exp)
+        public static void ParseInt64_Invariant(string input, long expected)
         {
-            Assert.Some(exp, May.ParseInt64(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(expected, May.ParseInt64(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -237,17 +237,17 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(SingleData))]
-        public static void ParseSingle(string input, float exp)
+        public static void ParseSingle(string input, float expected)
         {
-            Assert.Some(exp, May.ParseSingle(input));
+            Assert.Some(expected, May.ParseSingle(input));
         }
 
         [Theory, MemberData(nameof(SingleData))]
         [InlineData("-1.1", -1.1f)]
         [InlineData("1.1", 1.1f)]
-        public static void ParseSingle_Invariant(string input, float exp)
+        public static void ParseSingle_Invariant(string input, float expected)
         {
-            Assert.Some(exp, May.ParseSingle(input, NumberStyles.Float, CultureInfo.InvariantCulture));
+            Assert.Some(expected, May.ParseSingle(input, NumberStyles.Float, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -263,17 +263,17 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(DoubleData))]
-        public static void ParseDouble(string input, double exp)
+        public static void ParseDouble(string input, double expected)
         {
-            Assert.Some(exp, May.ParseDouble(input));
+            Assert.Some(expected, May.ParseDouble(input));
         }
 
         [Theory, MemberData(nameof(DoubleData))]
         [InlineData("-1.1", -1.1d)]
         [InlineData("1.1", 1.1d)]
-        public static void ParseDouble_Invariant(string input, double exp)
+        public static void ParseDouble_Invariant(string input, double expected)
         {
-            Assert.Some(exp, May.ParseDouble(input, NumberStyles.Float, CultureInfo.InvariantCulture));
+            Assert.Some(expected, May.ParseDouble(input, NumberStyles.Float, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -311,15 +311,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(SByteData))]
-        public static void ParseSByte(string input, sbyte exp)
+        public static void ParseSByte(string input, sbyte expected)
         {
-            Assert.Some(exp, May.ParseSByte(input));
+            Assert.Some(expected, May.ParseSByte(input));
         }
 
         [Theory, MemberData(nameof(SByteData))]
-        public static void ParseSByte_Invariant(string input, sbyte exp)
+        public static void ParseSByte_Invariant(string input, sbyte expected)
         {
-            Assert.Some(exp, May.ParseSByte(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(expected, May.ParseSByte(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -363,13 +363,13 @@ namespace Abc
 
         [Theory, MemberData(nameof(ByteData))]
         public static void ParseByte_Some(
-            string input, NumberStyles style, NumberFormatInfo? nfi, byte exp)
+            string input, NumberStyles style, NumberFormatInfo? nfi, byte expected)
         {
             if (style == NumberStyles.Integer && nfi is null)
             {
-                Assert.Some(exp, May.ParseByte(input));
+                Assert.Some(expected, May.ParseByte(input));
             }
-            Assert.Some(exp, May.ParseByte(input, style, nfi));
+            Assert.Some(expected, May.ParseByte(input, style, nfi));
         }
 
         #endregion
@@ -384,15 +384,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(UInt16Data))]
-        public static void ParseUInt16(string input, ushort exp)
+        public static void ParseUInt16(string input, ushort expected)
         {
-            Assert.Some(exp, May.ParseUInt16(input));
+            Assert.Some(expected, May.ParseUInt16(input));
         }
 
         [Theory, MemberData(nameof(UInt16Data))]
-        public static void ParseUInt16_Invariant(string input, ushort exp)
+        public static void ParseUInt16_Invariant(string input, ushort expected)
         {
-            Assert.Some(exp, May.ParseUInt16(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(expected, May.ParseUInt16(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -407,15 +407,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(UInt32Data))]
-        public static void ParseUInt32(string input, uint exp)
+        public static void ParseUInt32(string input, uint expected)
         {
-            Assert.Some(exp, May.ParseUInt32(input));
+            Assert.Some(expected, May.ParseUInt32(input));
         }
 
         [Theory, MemberData(nameof(UInt32Data))]
-        public static void ParseUInt32_Invariant(string input, uint exp)
+        public static void ParseUInt32_Invariant(string input, uint expected)
         {
-            Assert.Some(exp, May.ParseUInt32(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(expected, May.ParseUInt32(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -430,15 +430,15 @@ namespace Abc
             };
 
         [Theory, MemberData(nameof(UInt64Data))]
-        public static void ParseUInt64(string input, ulong exp)
+        public static void ParseUInt64(string input, ulong expected)
         {
-            Assert.Some(exp, May.ParseUInt64(input));
+            Assert.Some(expected, May.ParseUInt64(input));
         }
 
         [Theory, MemberData(nameof(UInt64Data))]
-        public static void ParseUInt64_Invariant(string input, ulong exp)
+        public static void ParseUInt64_Invariant(string input, ulong expected)
         {
-            Assert.Some(exp, May.ParseUInt64(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
+            Assert.Some(expected, May.ParseUInt64(input, NumberStyles.Integer, CultureInfo.InvariantCulture));
         }
 
         #endregion
@@ -784,10 +784,10 @@ namespace Abc
             // Arrange
             var baseUri = new Uri("http://www.narvalo.org");
             var relativeUri = new Uri("about", UriKind.Relative);
-            var exp = new Uri("http://www.narvalo.org/about");
+            var expected = new Uri("http://www.narvalo.org/about");
             // Act & Assert
-            Assert.Some(exp, May.CreateUri(baseUri, "about"));
-            Assert.Some(exp, May.CreateUri(baseUri, relativeUri));
+            Assert.Some(expected, May.CreateUri(baseUri, "about"));
+            Assert.Some(expected, May.CreateUri(baseUri, relativeUri));
             Assert.Some(relativeUri, May.CreateUri("about", UriKind.Relative));
             Assert.Some(baseUri, May.CreateUri("http://www.narvalo.org", UriKind.Absolute));
         }
