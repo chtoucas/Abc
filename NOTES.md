@@ -11,11 +11,13 @@ vNEXT
 -----
 
 ### Version 1.0.0-alpha-2
+- Full test coverage.
+
+### Version 1.0.0-alpha-3 or beta-1
+- Add overloads w/ `IEqualityComparer<T>`? Ops `Maybe<T> == T`?
 - Remove `MaybeComparer<T>`?
 
 ### Towards version 1.0.0
-- API
-  * Add overloads w/ `IEqualityComparer<T>`? Ops `Maybe<T> == T`?
 - Test NuGet package.
 - Multitargeting:
   * Tests.
@@ -43,10 +45,8 @@ See `FIXME`, `TODO` and `REVIEW` within the code.
   * `System.HashCode`
 
 Async:
-- Async methods?
   * Microsoft.Bcl.AsyncInterfaces
   * Async enumerables.
-- References
   * https://markheath.net/post/async-antipatterns
   * https://github.com/StephenCleary/AsyncEx
   * https://stackoverflow.com/questions/19098143/what-is-the-purpose-of-return-await-in-c
@@ -57,18 +57,10 @@ Async:
   * https://ericlippert.com/2020/03/10/passing-awaited-tasks/
 
 Operations:
-- Tests. Currently, there are many cases where we don't go beyond smoke tests.
 - XML comments with complete examples.
 - Perf tool (LINQ, nulls, iterable).
 - Rewrite scripts in PowerShell?
-- Cleanup scripts: `dotnet nuget locals --clear all`.
-
-Issues
-------
-
-- Build warnings w/ OpenCover; see
-  [MSB3277](https://github.com/microsoft/msbuild/issues/608).
-  The problem is that we build all platforms within the same dir.
+- Cleanup scripts, eg `dotnet nuget locals --clear all`.
 
 Release Process
 ---------------

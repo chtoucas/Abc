@@ -9,7 +9,7 @@
 - [Removed] `SwitchAsync()`; use `Switch()` instead.
 
 Internal Changes.
-- Replaced OpenCover by coverlet.
+- Replaced OpenCover by coverlet as the _default_ tool for test coverage.
 - New project Narvalo.Future for experimental code.
 - Cleaned up project files.
   * No longer define compiler symbols `NETSTANDARD2_0` and `NETSTANDARD2_1` as

@@ -1,8 +1,13 @@
 :: Test coverage w/ OpenCover.
 :: Slow when compared to coverlet, but we get:
-:: - report for risk hotspots.
-:: - report for unvisited methods.
-:: furthermore and more importantly, the results are different.
+:: - risk hotspots.
+:: - unvisited methods.
+:: More importantly, the results differ slightly.
+::
+:: Note to myself: do not use a separate directory for building.
+:: Build warnings w/ OpenCover; see
+:: [MSB3277](https://github.com/microsoft/msbuild/issues/608).
+:: The problem is that we build all platforms within the same dir.
 
 @echo off
 @setlocal
