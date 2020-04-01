@@ -15,17 +15,18 @@ Towards version 1.0.0
 - Multitargeting:
   * Tests.
   * How to handle PublicAPI.XXX.txt?
-  * [NetStandardImplicitPackageVersion](https://docs.microsoft.com/en-us/dotnet/core/packages)
+  * NetStandardImplicitPackageVersion
+    https://docs.microsoft.com/en-us/dotnet/core/packages
 - Strong name? How to avoid binding redirects? Prerequesite: assembly version.
   MUST be done before v1.0.0.
-  * [Strong Name Signing](https://github.com/dotnet/runtime/blob/master/docs/project/strong-name-signing.md)
-  * [Strong naming](https://docs.microsoft.com/en-gb/dotnet/standard/library-guidance/strong-naming)
+  * https://github.com/dotnet/runtime/blob/master/docs/project/strong-name-signing.md
+  * https://docs.microsoft.com/en-gb/dotnet/standard/library-guidance/strong-naming
 - Publish symbols? SourceLink?
   * `<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>`
-  * [NuGet#4142](https://github.com/NuGet/Home/issues/4142)
+  * https://github.com/NuGet/Home/issues/4142
 - MSBuild:
-  * Improve NuGet package description, `PackageLicenseFile`;
-    see [here](https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets)
+  * Improve NuGet package description, `PackageLicenseFile`.
+    https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets
   * `Deterministic`, `Title`, `AssemblyTitle`, `VersionPrefix`.
 
 TODOs
@@ -48,6 +49,7 @@ Async:
 - https://codeblog.jonskeet.uk/2010/11/01/control-flow-redux-exceptions-in-asynchronous-code/
 - https://devblogs.microsoft.com/dotnet/configureawait-faq/
 - https://ericlippert.com/2020/03/10/passing-awaited-tasks/
+- https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/november/async-programming-unit-testing-asynchronous-code
 
 Operations:
 - XML comments with complete examples.
@@ -69,7 +71,7 @@ Guidelines
 - Tag any use of the null-forgiving operator (!) with `BONSANG!`.
 
 Editor config
-See [here](https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-language-conventions?view=vs-2019)
+https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-language-conventions?view=vs-2019
 - IDE0060 (Remove unused parameter) covered by CA1801.
 
 Future plans?

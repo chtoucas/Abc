@@ -14,7 +14,7 @@ namespace Abc
 
     // We do not need to be comprehensive, the May helpers only wrap BCL methods.
 
-    // FIXME: more test data, default parsers are culture-dependent.
+    // TODO: more test data, default parsers are culture-dependent.
 
     public static partial class MayTests { }
 

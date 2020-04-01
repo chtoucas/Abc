@@ -1,5 +1,3 @@
-:: Will crash if the packages were not restored before.
-
 @echo off
 @setlocal
 
@@ -18,7 +16,8 @@
 )
 
 @echo Building report and badges.
-@call :OnError %ReportGenerator% -verbosity:Warning -reporttypes:HtmlInline;Badges;TextSummary ^
+@call :OnError %ReportGenerator% -verbosity:Warning ^
+    -reporttypes:HtmlInline;Badges;TextSummary ^
     -reports:__coverage\coverlet.xml -targetdir:__coverage
 
 @move /Y __coverage\badge_combined.svg coverage.svg > nul

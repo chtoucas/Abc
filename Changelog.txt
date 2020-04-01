@@ -30,6 +30,6 @@ First public release.
 2017-04-07, version 0.28.0
 --------------------------
 
-Still available on nuget.org but under a different
-[name](https://www.nuget.org/packages/Narvalo.Fx/),
+Still available on nuget.org but under a different name,
+https://www.nuget.org/packages/Narvalo.Fx/,
 now deprecated. It is broken, please do NOT use.
