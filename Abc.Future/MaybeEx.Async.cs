@@ -17,20 +17,11 @@ namespace Abc
     public partial class MaybeEx
     {
         [Pure]
-        public static async Task<Maybe<TResult>> BindAsync<T, TResult>(
+        public static Task<Maybe<TResult>> BindAsync<T, TResult>(
             Maybe<T> maybe,
             Func<T, Task<Maybe<TResult>>> binder)
         {
-            if (binder is null) { throw new Anexn(nameof(binder)); }
-
-            if (maybe.TryGetValue(out T value))
-            {
-                return await binder(value).ConfigureAwait(false);
-            }
-            else
-            {
-                return Maybe<TResult>.None;
-            }
+            return BindAsync(maybe, binder, false);
         }
 
         [Pure]
@@ -41,33 +32,17 @@ namespace Abc
         {
             if (binder is null) { throw new Anexn(nameof(binder)); }
 
-            if (maybe.TryGetValue(out T value))
-            {
-                return await binder(value)
-                    .ConfigureAwait(continueOnCapturedContext);
-            }
-            else
-            {
-                return Maybe<TResult>.None;
-            }
+            return maybe.TryGetValue(out T value)
+                ? await binder(value).ConfigureAwait(continueOnCapturedContext)
+                : Maybe<TResult>.None;
         }
 
         [Pure]
-        public static async Task<Maybe<TResult>> SelectAsync<T, TResult>(
+        public static Task<Maybe<TResult>> SelectAsync<T, TResult>(
             Maybe<T> maybe,
             Func<T, Task<TResult>> selector)
         {
-            if (selector is null) { throw new Anexn(nameof(selector)); }
-
-            if (maybe.TryGetValue(out T value))
-            {
-                TResult result = await selector(value).ConfigureAwait(false);
-                return Maybe.Of(result);
-            }
-            else
-            {
-                return Maybe<TResult>.None;
-            }
+            return SelectAsync(maybe, selector, false);
         }
 
         [Pure]
@@ -78,26 +53,17 @@ namespace Abc
         {
             if (selector is null) { throw new Anexn(nameof(selector)); }
 
-            if (maybe.TryGetValue(out T value))
-            {
-                TResult result = await selector(value)
-                    .ConfigureAwait(continueOnCapturedContext);
-                return Maybe.Of(result);
-            }
-            else
-            {
-                return Maybe<TResult>.None;
-            }
+            return maybe.TryGetValue(out T value)
+                ? Maybe.Of(await selector(value).ConfigureAwait(continueOnCapturedContext))
+                : Maybe<TResult>.None;
         }
 
         [Pure]
-        public static async Task<Maybe<T>> OrElseAsync<T>(
+        public static Task<Maybe<T>> OrElseAsync<T>(
             Maybe<T> maybe,
             Func<Task<Maybe<T>>> other)
         {
-            if (other is null) { throw new Anexn(nameof(other)); }
-
-            return maybe.IsNone ? await other().ConfigureAwait(false) : maybe;
+            return OrElseAsync(maybe, other, false);
         }
 
         [Pure]

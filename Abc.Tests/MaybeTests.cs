@@ -355,8 +355,7 @@ namespace Abc
     {
         [Fact]
         public static void Switch_None_NullCaseNone_Throws() =>
-            Assert.ThrowsAnexn("caseNone", () =>
-                Ø.Switch(Funk<int, AnyResult>.Any, Funk<AnyResult>.Null));
+            Assert.ThrowsAnexn("caseNone", () => Ø.Switch(Funk<int, AnyResult>.Any, Funk<AnyResult>.Null));
 
         [Fact]
         public static void Switch_None_NullCaseSome_DoesNotThrow()
@@ -370,11 +369,8 @@ namespace Abc
         [Fact]
         public static void Switch_Some_NullCaseSome_Throws()
         {
-            Assert.ThrowsAnexn("caseSome", () =>
-                One.Switch(Funk<int, AnyResult>.Null, Funk<AnyResult>.Any));
-
-            Assert.ThrowsAnexn("caseSome", () =>
-                One.Switch(Funk<int, AnyResult>.Null, AnyResult.Value));
+            Assert.ThrowsAnexn("caseSome", () => One.Switch(Funk<int, AnyResult>.Null, Funk<AnyResult>.Any));
+            Assert.ThrowsAnexn("caseSome", () => One.Switch(Funk<int, AnyResult>.Null, AnyResult.Value));
         }
 
         [Fact]
