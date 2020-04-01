@@ -53,6 +53,8 @@ Async:
   * https://blog.stephencleary.com/2016/12/eliding-async-await.html
   * https://stackoverflow.com/questions/18656379/validate-parameters-in-async-method
   * https://codeblog.jonskeet.uk/2010/11/01/control-flow-redux-exceptions-in-asynchronous-code/
+  * https://devblogs.microsoft.com/dotnet/configureawait-faq/
+  * https://ericlippert.com/2020/03/10/passing-awaited-tasks/
 
 Operations:
 - Tests. Currently, there are many cases where we don't go beyond smoke tests.

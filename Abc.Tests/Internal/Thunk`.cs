@@ -2,23 +2,6 @@
 
 using System;
 using System.Diagnostics.Contracts;
-using System.Threading.Tasks;
-
-using Abc;
-
-internal static class Thunk
-{
-    [Pure]
-    public static Func<Task<Maybe<T>>> ReturnAsync_<T>(T result)
-        where T : notnull
-    {
-        return async () =>
-        {
-            await Task.Yield();
-            return Maybe.Of(result);
-        };
-    }
-}
 
 internal static class Thunk<T>
     where T : notnull

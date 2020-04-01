@@ -40,6 +40,17 @@ namespace Abc
 #pragma warning restore CA1810
 
         [Pure]
+        public static Func<Task<Maybe<T>>> ReturnAsync_<T>(T result)
+            where T : notnull
+        {
+            return async () =>
+            {
+                await Task.Yield();
+                return Maybe.Of(result);
+            };
+        }
+
+        [Pure]
         private static T Ident<T>(T x) where T : notnull => x;
         [Pure]
         private static async Task<T> IdentAsync<T>(T x)

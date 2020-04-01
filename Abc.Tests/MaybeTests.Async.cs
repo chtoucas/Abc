@@ -9,15 +9,12 @@ namespace Abc
 
     using Assert = AssertEx;
 
-    // TODO: figure out async tests.
-    // https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/november/async-programming-unit-testing-asynchronous-code
-    // https://bradwilson.typepad.com/blog/2012/01/xunit19.html
-
     // Async methods.
     // Notes:
     // - do not append ConfigureAwait(false), this is not necessary; see
     //   https://github.com/xunit/xunit/issues/1215
     // - use Task.Yield() to force asynchronicity.
+    // https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/november/async-programming-unit-testing-asynchronous-code
     public partial class MaybeTests { }
 
     // Instance methods (eager validation).
@@ -26,14 +23,30 @@ namespace Abc
         #region BindAsync()
 
         [Fact]
-        public static void BindAsync_None_NullBinder() =>
+        public static void BindAsync_None_NullBinder()
+        {
             Assert.ThrowsAnexn("binder", () =>
-                Ø.BindAsync(Kunc<int, AnyT>.NullAsync));
+                Ø.BindAsync(Kunc<int, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("binder", () =>
+                NoText.BindAsync(Kunc<string, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("binder", () =>
+                NoUri.BindAsync(Kunc<Uri, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("binder", () =>
+                AnyT.None.BindAsync(Kunc<AnyT, AnyResult>.NullAsync));
+        }
 
         [Fact]
-        public static void BindAsync_Some_NullBinder() =>
+        public static void BindAsync_Some_NullBinder()
+        {
             Assert.ThrowsAnexn("binder", () =>
-                One.BindAsync(Kunc<int, AnyT>.NullAsync));
+                One.BindAsync(Kunc<int, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("binder", () =>
+                SomeText.BindAsync(Kunc<string, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("binder", () =>
+                SomeUri.BindAsync(Kunc<Uri, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("binder", () =>
+                AnyT.Some.BindAsync(Kunc<AnyT, AnyResult>.NullAsync));
+        }
 
         [Fact]
         public static async Task BindAsync_None()
@@ -151,18 +164,18 @@ namespace Abc
         public static async Task OrElseAsync_None()
         {
             await Assert.Async.Some(3,
-                Ø.OrElseAsync(Thunk.ReturnAsync_(3)));
+                Ø.OrElseAsync(ReturnAsync_(3)));
 
             await Assert.Async.Some("other",
-                NoText.OrElseAsync(Thunk.ReturnAsync_("other")));
+                NoText.OrElseAsync(ReturnAsync_("other")));
 
             var otherUri = new Uri("https://source.dot.net/");
             await Assert.Async.Some(otherUri,
-                NoUri.OrElseAsync(Thunk.ReturnAsync_(otherUri)));
+                NoUri.OrElseAsync(ReturnAsync_(otherUri)));
 
             var otherAnyT = AnyT.Value;
             await Assert.Async.Some(otherAnyT,
-                AnyT.None.OrElseAsync(Thunk.ReturnAsync_(otherAnyT)));
+                AnyT.None.OrElseAsync(ReturnAsync_(otherAnyT)));
         }
 
         [Fact]
@@ -170,25 +183,25 @@ namespace Abc
         {
             var anyT = AnyT.New();
             await Assert.Async.Some(anyT.Value,
-                anyT.Some.OrElseAsync(Thunk.ReturnAsync_(AnyT.Value)));
+                anyT.Some.OrElseAsync(ReturnAsync_(AnyT.Value)));
         }
 
         [Fact]
         public static async Task OrElseAsync_SomeInt32() =>
             await Assert.Async.Some(1,
-                One.OrElseAsync(Thunk.ReturnAsync_(3)));
+                One.OrElseAsync(ReturnAsync_(3)));
 
         [Fact]
         public static async Task OrElseAsync_SomeText() =>
             await Assert.Async.Some(MyText,
-                SomeText.OrElseAsync(Thunk.ReturnAsync_("other")));
+                SomeText.OrElseAsync(ReturnAsync_("other")));
 
         [Fact]
         public static async Task OrElseAsync_SomeUri()
         {
             var otherUri = new Uri("https://source.dot.net/");
             await Assert.Async.Some(MyUri,
-                SomeUri.OrElseAsync(Thunk.ReturnAsync_(otherUri)));
+                SomeUri.OrElseAsync(ReturnAsync_(otherUri)));
         }
 
         #endregion
@@ -204,35 +217,27 @@ namespace Abc
             [Fact]
             public static async Task BindAsync_None_NullBinder()
             {
-                await Assert.Async
-                    .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(Ø, Kunc<int, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(NoText, Kunc<string, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(NoUri, Kunc<Uri, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(AnyT.None, Kunc<AnyT, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("binder", () =>
+                    MaybeEx.BindAsync(Ø, Kunc<int, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("binder", () =>
+                    MaybeEx.BindAsync(NoText, Kunc<string, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("binder", () =>
+                    MaybeEx.BindAsync(NoUri, Kunc<Uri, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("binder", () =>
+                    MaybeEx.BindAsync(AnyT.None, Kunc<AnyT, AnyResult>.NullAsync));
             }
 
             [Fact]
             public static async Task BindAsync_Some_NullBinder()
             {
-                await Assert.Async
-                    .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(One, Kunc<int, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(SomeText, Kunc<string, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(SomeUri, Kunc<Uri, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("binder", () =>
-                        MaybeEx.BindAsync(AnyT.Some, Kunc<AnyT, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("binder", () =>
+                    MaybeEx.BindAsync(One, Kunc<int, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("binder", () =>
+                    MaybeEx.BindAsync(SomeText, Kunc<string, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("binder", () =>
+                    MaybeEx.BindAsync(SomeUri, Kunc<Uri, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("binder", () =>
+                    MaybeEx.BindAsync(AnyT.Some, Kunc<AnyT, AnyResult>.NullAsync));
             }
 
             #endregion
@@ -242,35 +247,27 @@ namespace Abc
             [Fact]
             public static async Task SelectAsync_None_NullSelector()
             {
-                await Assert.Async
-                    .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(Ø, Funk<int, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(NoText, Funk<string, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(NoUri, Funk<Uri, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(AnyT.None, Funk<AnyT, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("selector", () =>
+                    MaybeEx.SelectAsync(Ø, Funk<int, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("selector", () =>
+                    MaybeEx.SelectAsync(NoText, Funk<string, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("selector", () =>
+                    MaybeEx.SelectAsync(NoUri, Funk<Uri, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("selector", () =>
+                    MaybeEx.SelectAsync(AnyT.None, Funk<AnyT, AnyResult>.NullAsync));
             }
 
             [Fact]
             public static async Task SelectAsync_Some_NullSelector()
             {
-                await Assert.Async
-                    .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(One, Funk<int, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(SomeText, Funk<string, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(SomeUri, Funk<Uri, AnyResult>.NullAsync));
-                await Assert.Async
-                    .ThrowsAnexn("selector", () =>
-                        MaybeEx.SelectAsync(AnyT.Some, Funk<AnyT, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("selector", () =>
+                    MaybeEx.SelectAsync(One, Funk<int, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("selector", () =>
+                    MaybeEx.SelectAsync(SomeText, Funk<string, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("selector", () =>
+                    MaybeEx.SelectAsync(SomeUri, Funk<Uri, AnyResult>.NullAsync));
+                await Assert.Async.ThrowsAnexn("selector", () =>
+                    MaybeEx.SelectAsync(AnyT.Some, Funk<AnyT, AnyResult>.NullAsync));
             }
 
             #endregion
