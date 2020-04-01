@@ -786,14 +786,17 @@ namespace Abc
         }
 
         [Fact]
-        public static void GetEnumerator_None()
+        public static void GetEnumerator_None_ForEach()
         {
             foreach (string _ in NoText)
             {
                 Assert.Fails("An empty maybe should create an empty iterator.");
             }
+        }
 
-            // Using an explicit iterator.
+        [Fact]
+        public static void GetEnumerator_None_ExplicitIterator()
+        {
             var iter = NoText.GetEnumerator();
 
             Assert.False(iter.MoveNext());
@@ -802,7 +805,7 @@ namespace Abc
         }
 
         [Fact]
-        public static void GetEnumerator_Some()
+        public static void GetEnumerator_Some_ForEach()
         {
             // Arrange
             int count = 0;
@@ -815,8 +818,11 @@ namespace Abc
             count = 0;
             foreach (string x in SomeText) { count++; Assert.Equal(MyText, x); }
             Assert.Equal(1, count);
+        }
 
-            // Using an explicit iterator.
+        [Fact]
+        public static void GetEnumerator_Some_ExplicitIterator()
+        {
             var iter = SomeText.GetEnumerator();
 
             Assert.True(iter.MoveNext());
@@ -831,30 +837,36 @@ namespace Abc
         }
 
         [Fact]
-        public static void Yield_None()
+        public static void Yield_None() =>
+            Assert.Empty(NoText.Yield());
+
+        [Fact]
+        public static void Yield_None_WithCount()
         {
             Assert.Empty(NoText.Yield(0));
             Assert.Empty(NoText.Yield(10));
             Assert.Empty(NoText.Yield(100));
             Assert.Empty(NoText.Yield(1000));
-
-            Assert.Empty(NoText.Yield());
         }
 
         [Fact]
         public static void Yield_Some()
+        {
+            Assert.Equal(Enumerable.Repeat(MyText, 0), SomeText.Yield().Take(0));
+            Assert.Equal(Enumerable.Repeat(MyText, 1), SomeText.Yield().Take(1));
+            Assert.Equal(Enumerable.Repeat(MyText, 10), SomeText.Yield().Take(10));
+            Assert.Equal(Enumerable.Repeat(MyText, 100), SomeText.Yield().Take(100));
+            Assert.Equal(Enumerable.Repeat(MyText, 1000), SomeText.Yield().Take(1000));
+        }
+
+        [Fact]
+        public static void Yield_Some_WithCount()
         {
             Assert.Equal(Enumerable.Repeat(MyText, 0), SomeText.Yield(0));
             Assert.Equal(Enumerable.Repeat(MyText, 1), SomeText.Yield(1));
             Assert.Equal(Enumerable.Repeat(MyText, 10), SomeText.Yield(10));
             Assert.Equal(Enumerable.Repeat(MyText, 100), SomeText.Yield(100));
             Assert.Equal(Enumerable.Repeat(MyText, 1000), SomeText.Yield(1000));
-
-            Assert.Equal(Enumerable.Repeat(MyText, 0), SomeText.Yield().Take(0));
-            Assert.Equal(Enumerable.Repeat(MyText, 1), SomeText.Yield().Take(1));
-            Assert.Equal(Enumerable.Repeat(MyText, 10), SomeText.Yield().Take(10));
-            Assert.Equal(Enumerable.Repeat(MyText, 100), SomeText.Yield().Take(100));
-            Assert.Equal(Enumerable.Repeat(MyText, 1000), SomeText.Yield().Take(1000));
         }
 
         [Fact]
@@ -866,29 +878,41 @@ namespace Abc
             Assert.ThrowsAnexn("comparer", () => One.Contains(1, null!));
 
         [Fact]
-        public static void Contains_None()
+        public static void Contains_None_Int32()
         {
             Assert.False(Ø.Contains(0));
             Assert.False(Ø.Contains(1));
             Assert.False(Ø.Contains(2));
+        }
 
+        [Fact]
+        public static void Contains_None_Text()
+        {
             Assert.False(NoText.Contains("XXX"));
             Assert.False(NoText.Contains("XXX", StringComparer.Ordinal));
             Assert.False(NoText.Contains("XXX", StringComparer.OrdinalIgnoreCase));
         }
 
         [Fact]
-        public static void Contains_Some()
+        public static void Contains_SomeInt32()
         {
             Assert.False(One.Contains(0));
             Assert.True(One.Contains(1));
             Assert.False(One.Contains(2));
+        }
 
+        [Fact]
+        public static void Contains_SomeText()
+        {
             Assert.True(Maybe.SomeOrNone("XXX").Contains("XXX"));
             // Default comparison does NOT ignore case.
             Assert.False(Maybe.SomeOrNone("XXX").Contains("xxx"));
             Assert.False(Maybe.SomeOrNone("XXX").Contains("yyy"));
+        }
 
+        [Fact]
+        public static void Contains_SomeText_WithComparer()
+        {
             Assert.True(Maybe.SomeOrNone("XXX").Contains("XXX", StringComparer.Ordinal));
             Assert.False(Maybe.SomeOrNone("XXX").Contains("xxx", StringComparer.Ordinal));
             Assert.False(Maybe.SomeOrNone("XXX").Contains("yyy", StringComparer.Ordinal));

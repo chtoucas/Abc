@@ -10,26 +10,40 @@ namespace Abc
     public partial class MaybeTests
     {
         [Fact]
-        public static void Squash()
+        public static void Squash_None()
         {
             // Arrange
             Maybe<int?> none = Maybe<int?>.None;
-            Maybe<int?> one = One.Select(x => (int?)x);
             // Act & Assert
             Assert.Equal(Ø, none.Squash());
+        }
+
+        [Fact]
+        public static void Squash_Some()
+        {
+            // Arrange
+            Maybe<int?> one = One.Select(x => (int?)x);
+            // Act & Assert
             Assert.Equal(One, one.Squash());
         }
 
         [Fact]
-        public static void ToNullable()
+        public static void ToNullable_None()
         {
             // Arrange
             Maybe<int?> none = Maybe<int?>.None;
-            Maybe<int?> one = One.Select(x => (int?)x);
             // Act & Assert
             Assert.Null(Ø.ToNullable());
-            Assert.Equal(1, One.ToNullable());
             Assert.Null(none.ToNullable());
+        }
+
+        [Fact]
+        public static void ToNullable_Some()
+        {
+            // Arrange
+            Maybe<int?> one = One.Select(x => (int?)x);
+            // Act & Assert
+            Assert.Equal(1, One.ToNullable());
             Assert.Equal(1, one.ToNullable());
         }
     }
@@ -64,12 +78,13 @@ namespace Abc
         public static void Unknown() => Assert.None(Maybe.Unknown);
 
         [Fact]
-        public static void Negate()
-        {
-            Assert.Some(false, Maybe.True.Negate());
-            Assert.Some(true, Maybe.False.Negate());
-            Assert.Unknown(Maybe.Unknown.Negate());
-        }
+        public static void Negate_True() => Assert.Some(false, Maybe.True.Negate());
+
+        [Fact]
+        public static void Negate_False() => Assert.Some(true, Maybe.False.Negate());
+
+        [Fact]
+        public static void Negate_Unknown() => Assert.Unknown(Maybe.Unknown.Negate());
 
         [Fact]
         public static void Or()
