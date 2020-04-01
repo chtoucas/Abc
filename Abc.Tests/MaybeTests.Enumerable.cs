@@ -33,14 +33,27 @@ namespace Abc
         }
 
         [Fact]
-        public static void CollectAny_WithEmpty() =>
-            Assert.Empty(Maybe.CollectAny(Enumerable.Empty<Maybe<int>>()));
-
-        // Start w/ None, end w/ None.
-        private static IEnumerable<Maybe<int>> Seq_None2None
+        public static void CollectAny_WithEmpty()
         {
-            get
+            // Act
+            var q = Maybe.CollectAny(Enumerable.Empty<Maybe<int>>());
+            // Assert
+            Assert.Empty(q);
+        }
+
+        [Fact]
+        public static void CollectAny_None2None()
+        {
+            // Arrange
+            var expected = new List<int> { 1, 2 };
+            // Act
+            var q = Maybe.CollectAny(__iter());
+            // Assert
+            Assert.Equal(expected, q);
+
+            static IEnumerable<Maybe<int>> __iter()
             {
+                // Start w/ None, end w/ None.
                 yield return Maybe<int>.None;
                 yield return Maybe<int>.None;
                 yield return Maybe.Some(1);
@@ -49,11 +62,19 @@ namespace Abc
             }
         }
 
-        // Start w/ None, end w/ Some.
-        private static IEnumerable<Maybe<int>> Seq_None2Some
+        [Fact]
+        public static void CollectAny_None2Some()
         {
-            get
+            // Arrange
+            var expected = new List<int> { 1, 1, 3 };
+            // Act
+            var q = Maybe.CollectAny(__iter());
+            // Assert
+            Assert.Equal(expected, q);
+
+            static IEnumerable<Maybe<int>> __iter()
             {
+                // Start w/ None, end w/ Some.
                 yield return Maybe<int>.None;
                 yield return Maybe.Some(1);
                 yield return Maybe<int>.None;
@@ -64,11 +85,19 @@ namespace Abc
             }
         }
 
-        // Start w/ Some, end w/ None.
-        private static IEnumerable<Maybe<int>> Seq_Some2None
+        [Fact]
+        public static void CollectAny_Some2None()
         {
-            get
+            // Arrange
+            var expected = new List<int> { 1, 2 };
+            // Act
+            var q = Maybe.CollectAny(__iter());
+            // Assert
+            Assert.Equal(expected, q);
+
+            static IEnumerable<Maybe<int>> __iter()
             {
+                // Start w/ Some, end w/ None.
                 yield return Maybe.Some(1);
                 yield return Maybe<int>.None;
                 yield return Maybe<int>.None;
@@ -77,11 +106,19 @@ namespace Abc
             }
         }
 
-        // Start w/ Some, end w/ Some.
-        private static IEnumerable<Maybe<int>> Seq_Some2Some
+        [Fact]
+        public static void CollectAny_Some2Some()
         {
-            get
+            // Arrange
+            var expected = new List<int> { 1, 2, 3 };
+            // Act
+            var q = Maybe.CollectAny(__iter());
+            // Assert
+            Assert.Equal(expected, q);
+
+            static IEnumerable<Maybe<int>> __iter()
             {
+                // Start w/ Some, end w/ Some.
                 yield return Maybe.Some(1);
                 yield return Maybe.Some(2);
                 yield return Maybe<int>.None;
@@ -90,11 +127,19 @@ namespace Abc
             }
         }
 
-        // Only Some.
-        private static IEnumerable<Maybe<int>> Seq_OnlySome
+        [Fact]
+        public static void CollectAny_OnlySome()
         {
-            get
+            // Arrange
+            var expected = new List<int> { 1, 2, 3, 314, 413, 7, 5, 3 };
+            // Act
+            var q = Maybe.CollectAny(__iter());
+            // Assert
+            Assert.Equal(expected, q);
+
+            static IEnumerable<Maybe<int>> __iter()
             {
+                // Only Some.
                 yield return Maybe.Some(1);
                 yield return Maybe.Some(2);
                 yield return Maybe.Some(3);
@@ -106,11 +151,17 @@ namespace Abc
             }
         }
 
-        // Only None.
-        private static IEnumerable<Maybe<int>> Seq_OnlyNone
+        [Fact]
+        public static void CollectAny_OnlyNone()
         {
-            get
+            // Act
+            var q = Maybe.CollectAny(__iter());
+            // Assert
+            Assert.Empty(q);
+
+            static IEnumerable<Maybe<int>> __iter()
             {
+                // Only None.
                 yield return Maybe<int>.None;
                 yield return Maybe<int>.None;
                 yield return Maybe<int>.None;
@@ -120,54 +171,5 @@ namespace Abc
                 yield return Maybe<int>.None;
             }
         }
-
-        [Fact]
-        public static void CollectAny_None2None()
-        {
-            // Arrange
-            var expected = new List<int> { 1, 2 };
-            // Act & Assert
-            Assert.Equal(expected, Maybe.CollectAny(Seq_None2None));
-        }
-
-        [Fact]
-        public static void CollectAny_None2Some()
-        {
-            // Arrange
-            var expected = new List<int> { 1, 1, 3 };
-            // Act & Assert
-            Assert.Equal(expected, Maybe.CollectAny(Seq_None2Some));
-        }
-
-        [Fact]
-        public static void CollectAny_Some2None()
-        {
-            // Arrange
-            var expected = new List<int> { 1, 2 };
-            // Act & Assert
-            Assert.Equal(expected, Maybe.CollectAny(Seq_Some2None));
-        }
-
-        [Fact]
-        public static void CollectAny_Some2Some()
-        {
-            // Arrange
-            var expected = new List<int> { 1, 2, 3 };
-            // Act & Assert
-            Assert.Equal(expected, Maybe.CollectAny(Seq_Some2Some));
-        }
-
-        [Fact]
-        public static void CollectAny_OnlySome()
-        {
-            // Arrange
-            var expected = new List<int> { 1, 2, 3, 314, 413, 7, 5, 3 };
-            // Act & Assert
-            Assert.Equal(expected, Maybe.CollectAny(Seq_OnlySome));
-        }
-
-        [Fact]
-        public static void CollectAny_OnlyNone() =>
-            Assert.Empty(Maybe.CollectAny(Seq_OnlyNone));
     }
 }

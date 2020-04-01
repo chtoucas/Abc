@@ -172,8 +172,12 @@ namespace Abc
         }
 
         [Fact]
-        public static void Square() =>
+        public static void Square()
+        {
             Assert.Some(One, Maybe.Square(1));
+            Assert.Some(Two, Maybe.Square(2));
+            Assert.Some(TwoL, Maybe.Square(2L));
+        }
 
         [Fact]
         public static void SquareOrNone_WithValueType()
@@ -745,7 +749,8 @@ namespace Abc
             Assert.True(onNoneCalled);
 
             // Does not throw.
-            NoText.When(true, null, null);
+            var ex = Record.Exception(() => NoText.When(true, null, null));
+            Assert.Null(ex);
         }
 
         [Fact]
@@ -769,7 +774,8 @@ namespace Abc
             Assert.False(onNoneCalled);
 
             // Does not throw.
-            SomeText.When(true, null, null);
+            var ex = Record.Exception(() => SomeText.When(true, null, null));
+            Assert.Null(ex);
         }
     }
 
