@@ -2,6 +2,7 @@
 :: Slow when compared to coverlet, but we get:
 :: - report for risk hotspots.
 :: - report for unvisited methods.
+:: furthermore and more importantly, the results are different.
 
 @echo off
 @setlocal
