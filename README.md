@@ -17,7 +17,7 @@ Abc features a rich option type for C#.
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
 - [Version History](#version-history)
-- [Changelog](Changelog.md)
+- [Changelog](Changelog.txt)
 - [Developer Notes](NOTES.md)
 - [License](LICENSE.txt)
 
