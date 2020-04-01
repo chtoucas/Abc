@@ -2,7 +2,6 @@
 
 using System;
 using System.Diagnostics.Contracts;
-using System.Threading.Tasks;
 
 internal static class Thunk<T>
     where T : notnull
@@ -15,15 +14,6 @@ internal static class Thunk<T>
     public static Func<T, TResult> Return<TResult>(TResult result)
         where TResult : notnull
         => _ => result;
-
-    public static Func<T, Task<TResult>> ReturnAsync<TResult>(TResult result)
-        where TResult : notnull
-        => async _ => { await Task.Yield(); return result; };
-
-    // Completes synchronously.
-    public static Func<T, Task<TResult>> ReturnSync<TResult>(TResult result)
-        where TResult : notnull
-        => _ => Task.FromResult(result);
 }
 
 internal static class Thunk<T1, T2>
