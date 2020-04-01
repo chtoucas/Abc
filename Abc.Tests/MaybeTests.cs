@@ -39,6 +39,11 @@ namespace Abc
 #pragma warning restore CA1810
 
         private static T Ident<T>(T x) => x;
+        private static async Task<T> IdentAsync<T>(T x)
+        {
+            await Task.Yield();
+            return x;
+        }
 
         private static int Times3(int x) => 3 * x;
         private static async Task<int> Times3Async(int x)
@@ -82,8 +87,25 @@ namespace Abc
             return Maybe.SomeOrNone(x.AbsoluteUri);
         }
 
+        private static async Task<AnyResult> ReturnAsync<T>(T _)
+        {
+            await Task.Yield();
+            return AnyResult.Value;
+        }
+
         private static Maybe<AnyResult> ReturnNone<T>(T _) => AnyResult.None;
+        private static async Task<Maybe<AnyResult>> ReturnNoneAsync<T>(T _)
+        {
+            await Task.Yield();
+            return AnyResult.None;
+        }
+
         private static Maybe<AnyResult> ReturnSome<T>(T _) => AnyResult.Some;
+        private static async Task<Maybe<AnyResult>> ReturnSomeAsync<T>(T _)
+        {
+            await Task.Yield();
+            return AnyResult.Some;
+        }
     }
 
     // Factories.

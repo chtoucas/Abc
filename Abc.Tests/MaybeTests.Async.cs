@@ -22,111 +22,6 @@ namespace Abc
 
     public partial class MaybeTests
     {
-        #region Switch()
-
-        //[Fact]
-        //public static void SwitchAsync_None_NullCaseSome() =>
-        //    Assert.ThrowsAnexn("caseSome", () =>
-        //        Ø.SwitchAsync(
-        //            caseSome: Funk<int, AnyResult>.NullAsync,
-        //            caseNone: () => AsyncFakes.AsyncValue));
-
-        //[Fact]
-        //public static void SwitchAsync_None_NullCaseNone() =>
-        //    Assert.ThrowsAnexn("caseNone", () =>
-        //        Ø.SwitchAsync(
-        //            caseSome: Funk<int, AnyT>.AnyAsync,
-        //            caseNone: null!));
-
-        [Fact]
-        public static void Switch_Some_NullCaseSome_Throws_Async()
-        {
-            Assert.ThrowsAnexn("caseSome", () =>
-                One.Switch(Funk<int, AnyResult>.NullAsync, Funk<AnyResult>.AnyAsync));
-            Assert.ThrowsAnexn("caseSome", () =>
-                One.Switch(Funk<int, AnyResult>.NullAsync, Task.FromResult(AnyResult.Value)));
-        }
-
-        [Fact]
-        public static async Task Switch_Some_NullCaseNone_DoesNotThrow_Async()
-        {
-            // Act
-            AnyResult v = await One.Switch(
-                caseSome: Thunk<int>.ReturnAsync(AnyResult.Value),
-                caseNone: Funk<Task<AnyResult>>.Null);
-            // Assert
-            Assert.Same(AnyResult.Value, v);
-        }
-
-        //[Fact]
-        //public static async Task SwitchAsync_None()
-        //{
-        //    // Arrange
-        //    bool onSomeCalled = false;
-        //    bool onNoneCalled = false;
-        //    // Act
-        //    int v = await NoText.SwitchAsync(
-        //        caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
-        //        caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
-        //    // Assert
-        //    Assert.False(onSomeCalled);
-        //    Assert.True(onNoneCalled);
-        //    Assert.Equal(0, v);
-        //}
-
-        //[Fact]
-        //public static async Task SwitchAsync_Some()
-        //{
-        //    // Arrange
-        //    bool onSomeCalled = false;
-        //    bool onNoneCalled = false;
-        //    // Act
-        //    int v = await SomeText.SwitchAsync(
-        //        caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
-        //        caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
-        //    // Assert
-        //    Assert.True(onSomeCalled);
-        //    Assert.False(onNoneCalled);
-        //    Assert.Equal(4, v);
-        //}
-
-        [Fact]
-        public static async Task Switch_None_Async()
-        {
-            // Arrange
-            bool onSomeCalled = false;
-            bool onNoneCalled = false;
-            // Act
-            int v = await NoText.Switch(
-                caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
-                caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
-            // Assert
-            Assert.False(onSomeCalled);
-            Assert.True(onNoneCalled);
-            Assert.Equal(0, v);
-        }
-
-        [Fact]
-        public static async Task Switch_Some_Async()
-        {
-            // Arrange
-            bool onSomeCalled = false;
-            bool onNoneCalled = false;
-            // Act
-            int v = await SomeText.Switch(
-                caseSome: async x => { await Task.Yield(); onSomeCalled = true; return x.Length; },
-                caseNone: async () => { await Task.Yield(); onNoneCalled = true; return 0; });
-            // Assert
-            Assert.True(onSomeCalled);
-            Assert.False(onNoneCalled);
-            Assert.Equal(4, v);
-        }
-
-        #endregion
-    }
-
-    public partial class MaybeTests
-    {
         #region BindAsync()
 
         [Fact]
@@ -142,49 +37,28 @@ namespace Abc
         [Fact]
         public static async Task BindAsync_None()
         {
-            await Assert.Async.None(
-                Ø.BindAsync(Thunk<int>.ReturnAsync(AnyResult.Some)));
-
-            await Assert.Async.None(
-                NoText.BindAsync(Thunk<string>.ReturnAsync(AnyResult.Some)));
-
-            await Assert.Async.None(
-                NoUri.BindAsync(Thunk<Uri>.ReturnAsync(AnyResult.Some)));
-
-            await Assert.Async.None(
-                AnyT.None.BindAsync(Thunk<AnyT>.ReturnAsync(AnyResult.Some)));
+            await Assert.Async.None(Ø.BindAsync(ReturnSomeAsync));
+            await Assert.Async.None(NoText.BindAsync(ReturnSomeAsync));
+            await Assert.Async.None(NoUri.BindAsync(ReturnSomeAsync));
+            await Assert.Async.None(AnyT.None.BindAsync(ReturnSomeAsync));
         }
 
         [Fact]
         public static async Task BindAsync_Some_ReturnsNone()
         {
-            await Assert.Async.None(
-                One.BindAsync(Thunk<int>.ReturnAsync(AnyResult.None)));
-
-            await Assert.Async.None(
-                SomeText.BindAsync(Thunk<string>.ReturnAsync(AnyResult.None)));
-
-            await Assert.Async.None(
-                SomeUri.BindAsync(Thunk<Uri>.ReturnAsync(AnyResult.None)));
-
-            await Assert.Async.None(
-                AnyT.Some.BindAsync(Thunk<AnyT>.ReturnAsync(AnyResult.None)));
+            await Assert.Async.None(One.BindAsync(ReturnNoneAsync));
+            await Assert.Async.None(SomeText.BindAsync(ReturnNoneAsync));
+            await Assert.Async.None(SomeUri.BindAsync(ReturnNoneAsync));
+            await Assert.Async.None(AnyT.Some.BindAsync(ReturnNoneAsync));
         }
 
         [Fact]
         public static async Task BindAsync_Some_ReturnsSome()
         {
-            await Assert.Async.Some(AnyResult.Value,
-                One.BindAsync(Thunk<int>.ReturnAsync(AnyResult.Some)));
-
-            await Assert.Async.Some(AnyResult.Value,
-                SomeText.BindAsync(Thunk<string>.ReturnAsync(AnyResult.Some)));
-
-            await Assert.Async.Some(AnyResult.Value,
-                SomeUri.BindAsync(Thunk<Uri>.ReturnAsync(AnyResult.Some)));
-
-            await Assert.Async.Some(AnyResult.Value,
-                AnyT.Some.BindAsync(Thunk<AnyT>.ReturnAsync(AnyResult.Some)));
+            await Assert.Async.Some(AnyResult.Value, One.BindAsync(ReturnSomeAsync));
+            await Assert.Async.Some(AnyResult.Value, SomeText.BindAsync(ReturnSomeAsync));
+            await Assert.Async.Some(AnyResult.Value, SomeUri.BindAsync(ReturnSomeAsync));
+            await Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(ReturnSomeAsync));
         }
 
         [Fact]
@@ -204,25 +78,38 @@ namespace Abc
         #region SelectAsync()
 
         [Fact]
-        public static void SelectAsync_None_NullSelector() =>
+        public static void SelectAsync_None_NullSelector()
+        {
             Assert.ThrowsAnexn("selector", () =>
-                Ø.SelectAsync(Funk<int, AnyT>.NullAsync));
+                Ø.SelectAsync(Funk<int, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("selector", () =>
+                NoText.SelectAsync(Funk<string, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("selector", () =>
+                NoUri.SelectAsync(Funk<Uri, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("selector", () =>
+                AnyT.None.SelectAsync(Funk<AnyT, AnyResult>.NullAsync));
+        }
 
         [Fact]
-        public static void SelectAsync_Some_NullSelector() =>
+        public static void SelectAsync_Some_NullSelector()
+        {
             Assert.ThrowsAnexn("selector", () =>
-                One.SelectAsync(Funk<int, AnyT>.NullAsync));
+                One.SelectAsync(Funk<int, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("selector", () =>
+                SomeText.SelectAsync(Funk<string, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("selector", () =>
+                SomeUri.SelectAsync(Funk<Uri, AnyResult>.NullAsync));
+            Assert.ThrowsAnexn("selector", () =>
+                AnyT.Some.SelectAsync(Funk<AnyT, AnyResult>.NullAsync));
+        }
 
         [Fact]
         public static async Task SelectAsync_None()
         {
-            await Assert.Async.None(Ø.SelectAsync(__selector));
-
-            static async Task<long> __selector(int x)
-            {
-                await Task.Yield();
-                return x;
-            }
+            await Assert.Async.None(Ø.SelectAsync(IdentAsync));
+            await Assert.Async.None(NoText.SelectAsync(IdentAsync));
+            await Assert.Async.None(NoUri.SelectAsync(IdentAsync));
+            await Assert.Async.None(AnyT.None.SelectAsync(IdentAsync));
         }
 
         [Fact]
@@ -242,12 +129,22 @@ namespace Abc
         #region OrElseAsync()
 
         [Fact]
-        public static void OrElseAsync_None_NullOther() =>
+        public static void OrElseAsync_None_NullOther()
+        {
             Assert.ThrowsAnexn("other", () => Ø.OrElseAsync(null!));
+            Assert.ThrowsAnexn("other", () => NoText.OrElseAsync(null!));
+            Assert.ThrowsAnexn("other", () => NoUri.OrElseAsync(null!));
+            Assert.ThrowsAnexn("other", () => AnyT.None.OrElseAsync(null!));
+        }
 
         [Fact]
-        public static void OrElseAsync_Some_NullOther() =>
+        public static void OrElseAsync_Some_NullOther()
+        {
             Assert.ThrowsAnexn("other", () => One.OrElseAsync(null!));
+            Assert.ThrowsAnexn("other", () => SomeText.OrElseAsync(null!));
+            Assert.ThrowsAnexn("other", () => SomeUri.OrElseAsync(null!));
+            Assert.ThrowsAnexn("other", () => AnyT.Some.OrElseAsync(null!));
+        }
 
         #endregion
     }
