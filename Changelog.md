@@ -2,17 +2,16 @@
 
 ### vNEXT
 
-- Async methods:
-  * Eager validation.
-  * `OrElseAsync()` now expects a factory rather than a task.
-  * Removed `SwitchAsync()`; use `Switch()` instead.
-- Changed signature of `Maybe.Compose()` and `Maybe.ComposeBack()`.
-  Now both methods return a _maybe_ rather than an anonymous function.
+- [Changed] Async methods now use eager validation.
+- [Changed] `OrElseAsync()` now expects a factory rather than a task.
+- [Changed] `Maybe.Compose()` and `Maybe.ComposeBack()` now return a _maybe_
+  rather than an anonymous function.
+- [Removed] `SwitchAsync()`; use `Switch()` instead.
 
 Internal Changes.
-- Code coverage: replace OpenCover by coverlet.
+- Replaced OpenCover by coverlet.
 - New project Narvalo.Future for experimental code.
-- Clean up project files.
+- Cleaned up project files.
   * No longer define compiler symbols `NETSTANDARD2_0` and `NETSTANDARD2_1` as
     this is already done by MSBuild;
     see [here](https://docs.microsoft.com/en-us/dotnet/core/tutorials/libraries).

@@ -52,13 +52,6 @@ namespace Abc
 
         [Pure]
         private static T Ident<T>(T x) where T : notnull => x;
-        [Pure]
-        private static async Task<T> IdentAsync<T>(T x)
-            where T : notnull
-        {
-            await Task.Yield();
-            return x;
-        }
 
         [Pure]
         private static int Times3(int x) => 3 * x;
