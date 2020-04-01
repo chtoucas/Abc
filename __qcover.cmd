@@ -1,4 +1,7 @@
-:: Will crash if the packages were not restored before.
+:: Test coverage w/ OpenCover.
+:: Slow when compared to coverlet, but we get:
+:: - report for risk hotspots.
+:: - report for unvisited methods.
 
 @echo off
 @setlocal
