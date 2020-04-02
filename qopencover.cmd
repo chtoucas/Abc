@@ -33,8 +33,10 @@
 @rem Voir https://github.com/opencover/opencover/wiki/Usage
 @call %OpenCover% -showunvisited -oldStyle -register:user -hideskipped:All ^
     -output:%opencover_xml% ^
-    -filter:%filter% -target:%target% ^
-    -targetargs:%targetargs% -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
+    -filter:%filter% ^
+    -target:%target% ^
+    -targetargs:%targetargs% ^
+    -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
 
 @endlocal
 @exit /b %ERRORLEVEL%

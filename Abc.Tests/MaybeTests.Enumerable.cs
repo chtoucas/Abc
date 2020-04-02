@@ -47,11 +47,11 @@ namespace Abc
             // Arrange
             var expected = new List<int> { 1, 2 };
             // Act
-            var q = Maybe.CollectAny(__iter());
+            var q = Maybe.CollectAny(__());
             // Assert
             Assert.Equal(expected, q);
 
-            static IEnumerable<Maybe<int>> __iter()
+            static IEnumerable<Maybe<int>> __()
             {
                 // Start w/ None, end w/ None.
                 yield return Maybe<int>.None;
@@ -68,11 +68,11 @@ namespace Abc
             // Arrange
             var expected = new List<int> { 1, 1, 3 };
             // Act
-            var q = Maybe.CollectAny(__iter());
+            var q = Maybe.CollectAny(__());
             // Assert
             Assert.Equal(expected, q);
 
-            static IEnumerable<Maybe<int>> __iter()
+            static IEnumerable<Maybe<int>> __()
             {
                 // Start w/ None, end w/ Some.
                 yield return Maybe<int>.None;
@@ -91,11 +91,11 @@ namespace Abc
             // Arrange
             var expected = new List<int> { 1, 2 };
             // Act
-            var q = Maybe.CollectAny(__iter());
+            var q = Maybe.CollectAny(__());
             // Assert
             Assert.Equal(expected, q);
 
-            static IEnumerable<Maybe<int>> __iter()
+            static IEnumerable<Maybe<int>> __()
             {
                 // Start w/ Some, end w/ None.
                 yield return Maybe.Some(1);
@@ -112,11 +112,11 @@ namespace Abc
             // Arrange
             var expected = new List<int> { 1, 2, 3 };
             // Act
-            var q = Maybe.CollectAny(__iter());
+            var q = Maybe.CollectAny(__());
             // Assert
             Assert.Equal(expected, q);
 
-            static IEnumerable<Maybe<int>> __iter()
+            static IEnumerable<Maybe<int>> __()
             {
                 // Start w/ Some, end w/ Some.
                 yield return Maybe.Some(1);
@@ -133,11 +133,11 @@ namespace Abc
             // Arrange
             var expected = new List<int> { 1, 2, 3, 314, 413, 7, 5, 3 };
             // Act
-            var q = Maybe.CollectAny(__iter());
+            var q = Maybe.CollectAny(__());
             // Assert
             Assert.Equal(expected, q);
 
-            static IEnumerable<Maybe<int>> __iter()
+            static IEnumerable<Maybe<int>> __()
             {
                 // Only Some.
                 yield return Maybe.Some(1);
@@ -155,11 +155,11 @@ namespace Abc
         public static void CollectAny_OnlyNone()
         {
             // Act
-            var q = Maybe.CollectAny(__iter());
+            var q = Maybe.CollectAny(__());
             // Assert
             Assert.Empty(q);
 
-            static IEnumerable<Maybe<int>> __iter()
+            static IEnumerable<Maybe<int>> __()
             {
                 // Only None.
                 yield return Maybe<int>.None;

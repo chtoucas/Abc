@@ -19,8 +19,8 @@ namespace Abc.Linq
             if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
             return from x in source
-                   let result = predicate(x)
-                   where result.IsSome && result.Value
+                   let m = predicate(x)
+                   where m.IsSome && m.Value
                    select x;
         }
     }
