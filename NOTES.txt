@@ -13,6 +13,7 @@ Version 1.0.0-alpha-3 or beta-1
 - Remove `MaybeComparer<T>`?
 
 Towards version 1.0.0
+- README.
 - Test NuGet package.
 - Multitargeting:
   * Tests.
@@ -57,7 +58,7 @@ Operations:
 - XML comments with complete examples.
   https://github.com/dotnet/dotnet-api-docs/wiki
 - Perf tool (LINQ, nulls, iterable).
-- Rewrite scripts in PowerShell?
+- Rewrite scripts in PowerShell? (not useful for qcoverlet.cmd and qtest.cmd).
 - Cleanup scripts, eg `dotnet nuget locals --clear all`.
 
 Release Process
