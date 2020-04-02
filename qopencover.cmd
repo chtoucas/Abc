@@ -2,8 +2,8 @@
 :: Slow when compared to coverlet, but we get:
 :: - risk hotspots (NPath complexity,  crap score).
 :: - list of unvisited methods.
-:: More importantly, the results differ slightly which make the two tools
-:: complementary.
+:: More importantly, the results differ slightly (LINQ and async so far) which
+:: make the two tools complementary.
 ::
 :: Note to myself: do not use a separate directory for building.
 :: Build warnings w/ OpenCover (MSB3277).
