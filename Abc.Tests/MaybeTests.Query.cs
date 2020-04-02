@@ -258,7 +258,8 @@ namespace Abc
             Assert.ThrowsAnexn("resultSelector", () =>
                 Ø.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Null));
             // With a comparer.
-            Assert.ThrowsAnexn("resultSelector", () => Ø.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Null, null));
+            Assert.ThrowsAnexn("resultSelector", () =>
+                Ø.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Null, null));
         }
 
         [Fact]

@@ -8,6 +8,7 @@ Version 1.0.0-alpha-2
 
 Version 1.0.0-alpha-3 or beta-1
 - More functional tests.
+- Fix all TODOs and FIXMEs.
 - Add overloads w/ `IEqualityComparer<T>`? Ops `Maybe<T> == T`?
 - Remove `MaybeComparer<T>`?
 
@@ -54,6 +55,7 @@ Async:
 
 Operations:
 - XML comments with complete examples.
+  https://github.com/dotnet/dotnet-api-docs/wiki
 - Perf tool (LINQ, nulls, iterable).
 - Rewrite scripts in PowerShell?
 - Cleanup scripts, eg `dotnet nuget locals --clear all`.
