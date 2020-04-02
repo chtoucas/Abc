@@ -1,4 +1,7 @@
-﻿// See LICENSE.txt in the project root for license information.
+﻿// See LICENSE.dotnet.txt in the project root for license information.
+//
+// Largely inspired by
+// https://github.com/dotnet/runtime/blob/master/src/libraries/System.Linq/tests/SelectTests.cs
 
 namespace Abc.Linq
 {
