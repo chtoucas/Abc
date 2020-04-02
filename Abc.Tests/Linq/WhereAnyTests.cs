@@ -41,7 +41,7 @@ namespace Abc.Linq
     public partial class WhereAnyTests
     {
         [Fact]
-        public static void IsDeferred()
+        public static void Enumerable_Deferred()
         {
             // Arrange
             bool called = false;
@@ -242,7 +242,7 @@ namespace Abc.Linq
     public partial class WhereAnyTests
     {
         [Fact]
-        public void Array_TrueOrFalseOrUnknown()
+        public void Array_BooleanOrUnknown()
         {
             // Arrange
             int[] source = new[] { 1, 2, 3, 4, 5 };
@@ -254,7 +254,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void List_TrueOrFalseOrUnknown()
+        public void List_BooleanOrUnknown()
         {
             // Arrange
             var source = new List<int> { 1, 2, 3, 4, 5 };
@@ -266,7 +266,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void ReadOnlyCollection_TrueOrFalseOrUnknown()
+        public void ReadOnlyCollection_BooleanOrUnknown()
         {
             // Arrange
             var source = new ReadOnlyCollection<int>(new List<int> { 1, 2, 3, 4, 5 });
@@ -278,7 +278,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void Collection_TrueOrFalseOrUnknown()
+        public void Collection_BooleanOrUnknown()
         {
             // Arrange
             var source = new LinkedList<int>(new List<int> { 1, 2, 3, 4, 5 });
@@ -290,7 +290,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void Enumerable_TrueOrFalseOrUnknown()
+        public void Enumerable_BooleanOrUnknown()
         {
             // Arrange
             var source = Enumerable.Range(1, 5);

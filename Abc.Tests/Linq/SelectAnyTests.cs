@@ -38,7 +38,7 @@ namespace Abc.Linq
     public partial class SelectAnyTests
     {
         [Fact]
-        public static void IsDeferred()
+        public static void Enumerable_Deferred()
         {
             // Arrange
             bool called = false;
@@ -244,7 +244,7 @@ namespace Abc.Linq
     public partial class SelectAnyTests
     {
         [Fact]
-        public void Array_CurrentIsDefault_AfterEnumeration()
+        public void Array_CurrentAfterEnumeration()
         {
             // Arrange
             int[] source = new[] { 1 };
@@ -257,7 +257,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void List_CurrentIsDefault_AfterEnumeration()
+        public void List_CurrentAfterEnumeration()
         {
             // Arrange
             var source = new List<int> { 1 };
@@ -270,7 +270,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void ReadOnlyCollection_CurrentIsDefault_AfterEnumeration()
+        public void ReadOnlyCollection_CurrentAfterEnumeration()
         {
             // Arrange
             var source = new ReadOnlyCollection<int>(new List<int> { 1 });
@@ -283,7 +283,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void Collection_CurrentIsDefault_AfterEnumeration()
+        public void Collection_CurrentAfterEnumeration()
         {
             // Arrange
             var source = new LinkedList<int>(new List<int> { 1 });
@@ -296,7 +296,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void Enumerable_CurrentIsDefault_AfterEnumeration()
+        public void Enumerable_CurrentAfterEnumeration()
         {
             // Arrange
             var source = Enumerable.Range(1, 1);

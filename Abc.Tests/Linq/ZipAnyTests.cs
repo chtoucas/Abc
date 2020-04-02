@@ -49,7 +49,7 @@ namespace Abc.Linq
     public partial class ZipAnyTests
     {
         [Fact]
-        public static void IsDeferred()
+        public static void Enumerable_Deferred()
         {
             // Arrange
             bool called = false;
