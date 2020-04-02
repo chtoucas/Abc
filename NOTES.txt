@@ -71,9 +71,10 @@ Guidelines
 - _Seal classes_ unless they are designed with extensibility in mind.
 - Tag any use of the null-forgiving operator (!) with `BONSANG!`.
 
-Editor config
+Editor config (does not affect the compilation).
+- IDE0039 - csharp_style_pattern_local_over_anonymous_function
+- IDE0060 - dotnet_code_quality_unused_parameters, (Remove unused parameter) covered by CA1801.
 https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-language-conventions?view=vs-2019
-- IDE0060 (Remove unused parameter) covered by CA1801.
 
 Future plans?
 -------------

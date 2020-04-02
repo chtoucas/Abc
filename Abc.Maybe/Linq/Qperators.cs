@@ -23,9 +23,10 @@ namespace Abc.Linq
     /// - ZipAny()          deferred streaming execution
     ///
     /// Element operations:
+    /// - ElementAtOrNone() immediate execution
     /// - FirstOrNone()     immediate execution
     /// - LastOrNone()      immediate execution
-    /// - ElementAtOrNone() immediate execution
+    /// - SingleOrNone()    immediate execution
     ///
     /// Reference:
     /// https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/classification-of-standard-query-operators-by-manner-of-execution
