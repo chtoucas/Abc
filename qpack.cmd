@@ -17,6 +17,7 @@
 @call :OnError dotnet pack .\Abc.Maybe -c Release --nologo ^
     --output __packages ^
     -p:TargetFrameworks=\"netstandard2.0;netstandard2.1;netcoreapp3.1\" ^
+    -p:Deterministic=true ^
     -p:PackageVersion=%Version%
 
 @endlocal

@@ -22,8 +22,6 @@
 
     <Nullable>enable</Nullable>
 
-    <Deterministic>True</Deterministic>
-
     <!-- Analyzers by Microsoft -->
     <Features>$(Features);flow-analysis</Features>
 
