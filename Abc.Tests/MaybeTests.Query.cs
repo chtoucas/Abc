@@ -2,6 +2,8 @@
 
 namespace Abc
 {
+    using System;
+
     using Xunit;
 
     using Assert = AssertEx;
@@ -204,8 +206,23 @@ namespace Abc
         [Fact]
         public static void Join()
         {
-            Assert.None(One.Join(Two, i => i, i => i, (i, j) => i + j));
+            Assert.None(One.Join(Two, Ident, Ident, (i, j) => i + j));
             Assert.None(from i in One join j in Two on i equals j select i + j);
+        }
+
+        [Fact]
+        public static void Join_WithComparer()
+        {
+            // Arrange
+            var outer = Maybe.SomeOrNone("chicane");
+            var inner = Maybe.SomeOrNone("caniche");
+            string expected = "chicane est un anagramme de caniche";
+            // Act
+            var q = outer.Join(inner, Ident, Ident,
+                (x, y) => $"{x} est un anagramme de {y}",
+                new AnagramEqualityComparer());
+            // Assert
+            Assert.Some(expected, q);
         }
 
         #endregion
@@ -270,6 +287,21 @@ namespace Abc
             // With a comparer.
             Assert.ThrowsAnexn("resultSelector", () =>
                 One.GroupJoin(TwoL, Funk<int, AnyT1>.Any, Funk<long, AnyT1>.Any, Funk<int, Maybe<long>, AnyT2>.Null, null));
+        }
+
+        [Fact]
+        public static void GroupJoin_WithComparer()
+        {
+            // Arrange
+            var outer = Maybe.SomeOrNone("chicane");
+            var inner = Maybe.SomeOrNone("caniche");
+            string expected = "chicane est un anagramme de caniche";
+            // Act
+            var q = outer.GroupJoin(inner, Ident, Ident,
+                (x, y) => y.Switch(s => $"{x} est un anagramme de {s}", Funk<string>.Any),
+                new AnagramEqualityComparer());
+            // Assert
+            Assert.Some(expected, q);
         }
 
         #endregion
