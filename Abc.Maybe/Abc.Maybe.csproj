@@ -28,6 +28,6 @@
     </PackageReference>
   </ItemGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)..\CustomAfter.props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Common.After.props" />
 
 </Project>

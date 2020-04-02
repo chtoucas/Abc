@@ -19,6 +19,8 @@
       CS1591      Missing XML comment for publicly visible type or member 'Type_or_Member'
     -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <DefineConstants>$(DefineConstants);PLAIN_LINQ</DefineConstants>
   </PropertyGroup>
 
 </Project>
