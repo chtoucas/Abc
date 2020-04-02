@@ -8,6 +8,7 @@ namespace Abc.Linq
     using System.Linq;
 
     // REVIEW: TSource? and Maybe<TSource>.
+    // TODO: compare to ElementAtOrDefault for nullable's.
 
     public static partial class Qperators
     {
@@ -26,7 +27,6 @@ namespace Abc.Linq
         {
             if (source is null) { throw new ArgumentNullException(nameof(source)); }
 
-            // FIXME: throw.
             if (index < 0) { return Maybe<TSource>.None; }
 
             // Fast track.

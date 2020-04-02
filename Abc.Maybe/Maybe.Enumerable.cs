@@ -38,6 +38,7 @@ namespace Abc
         [Pure]
         public static IEnumerable<T> CollectAny<T>(IEnumerable<Maybe<T>> source)
         {
+            // TODO: optimize this.
             return from x in source where x.IsSome select x.Value;
         }
     }
