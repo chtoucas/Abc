@@ -15,7 +15,7 @@ namespace Abc.Linq
             IEnumerable<T2> second,
             Func<T1, T2, Maybe<TResult>> resultSelector)
         {
-#if PLAIN_LINQ
+#if true || PLAIN_LINQ
             return Maybe.CollectAny(first.Zip(second, resultSelector));
 #else
             return from x in first.Zip(second, resultSelector)

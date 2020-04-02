@@ -3,6 +3,9 @@
 namespace Abc.Linq
 {
     /// <_text><![CDATA[
+    /// Joining:
+    /// - ZipAny()          deferred streaming execution
+    ///
     /// Aggregation operations:
     /// - FoldAny()         immediate execution
     /// - ReduceAny()       immediate execution

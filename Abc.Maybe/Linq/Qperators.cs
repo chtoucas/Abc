@@ -19,9 +19,6 @@ namespace Abc.Linq
     /// Filtering:
     /// - WhereAny()        deferred streaming execution
     ///
-    /// Joining:
-    /// - ZipAny()          deferred streaming execution
-    ///
     /// Element operations:
     /// - ElementAtOrNone() immediate execution
     /// - FirstOrNone()     immediate execution
