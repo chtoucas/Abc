@@ -27,6 +27,8 @@ namespace Abc
         private async Task<Maybe<TResult>> BindAsyncImpl<TResult>(
             Func<T, Task<Maybe<TResult>>> binder)
         {
+            // REVIEW: OpenCover believes that the await branch is not covered,
+            // Coverlet does not. Idem w/ SelectAsync() & OrElseAsync().
             return _isSome ? await binder(_value).ConfigureAwait(false)
                 : Maybe<TResult>.None;
         }

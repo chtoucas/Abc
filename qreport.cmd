@@ -23,8 +23,8 @@
     -reporttypes:HtmlInline;Badges;TextSummary ^
     -reports:__coverage\%ReportType%.xml -targetdir:__coverage
 
-@move /Y __coverage\badge_combined.svg coverage.svg > nul
-@move /Y __coverage\Summary.txt coverage.txt > nul
+@move /Y __coverage\badge_combined.svg %ReportType%.svg > nul
+@move /Y __coverage\Summary.txt %ReportType%.txt > nul
 
 @endlocal
 @exit /b %ERRORLEVEL%

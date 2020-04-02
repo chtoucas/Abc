@@ -10,16 +10,17 @@ Abc features a rich option type for C#.
   * .NET Standard 2.1 w/ nullable annotations
   * .NET Core 3.1.
 
-|NuGet|OpenCover|
-|-----|---------|
-| [![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/) | ![Code Coverage](coverage.svg) |
+|NuGet|OpenCover|Coverlet|
+|-----|---------|--------|
+| [![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/) | ![OpenCover](opencover.svg) |![Coverlet](coverlet.svg) |
 
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
 - [Version History](#version-history)
 - [Changelog](Changelog.txt)
 - [Developer Notes](NOTES.txt)
-- [Coverage Report](coverage.txt)
+- [OpenCover Report](opencover.txt)
+- [Coverlet Report](coverlet.txt)
 - [License](LICENSE.txt)
 
 Quick Start with `Maybe<T>`
