@@ -40,12 +40,16 @@ namespace Abc.Linq
         [Fact]
         public static void IsDeferred()
         {
-            bool notCalled = true;
-            Func<Maybe<int>> fun = () => { notCalled = false; return Maybe.Of(1); };
-            var q = Enumerable.Repeat(fun, 1).SelectAny(f => f());
+            // Arrange
+            bool called = false;
+            var source = Enumerable.Repeat((Func<Maybe<int>>)__, 1);
+            // Act
+            var q = source.SelectAny(f => f());
+            // Assert
+            Assert.False(called);
+            Assert.CalledOnNext(q, ref called);
 
-            Assert.True(notCalled);
-            Assert.CalledOnNext(q, ref notCalled);
+            Maybe<int> __() { called = true; return Maybe.Of(1); }
         }
     }
 

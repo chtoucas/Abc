@@ -27,16 +27,16 @@ namespace Abc
             Throws<InvalidOperationException>(() => iter.MoveNext());
         }
 
-        public static void CalledOnNext<T>(IEnumerable<T> seq, ref bool notCalled)
+        public static void CalledOnNext<T>(IEnumerable<T> seq, ref bool called)
         {
             if (seq is null) { throw new Anexn(nameof(seq)); }
 
             using var iter = seq.GetEnumerator();
             iter.MoveNext();
-            False(notCalled);
+            True(called);
         }
 
-        public static void CalledAfter<T>(IEnumerable<T> seq, int count, ref bool notCalled)
+        public static void CalledAfter<T>(IEnumerable<T> seq, int count, ref bool called)
         {
             if (seq is null) { throw new Anexn(nameof(seq)); }
 
@@ -44,7 +44,7 @@ namespace Abc
             using var iter = seq.GetEnumerator();
             while (i < count) { True(iter.MoveNext()); i++; }
             iter.MoveNext();
-            False(notCalled);
+            True(called);
         }
     }
 }

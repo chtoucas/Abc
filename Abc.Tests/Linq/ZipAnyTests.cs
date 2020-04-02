@@ -7,6 +7,7 @@ namespace Abc.Linq
 {
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.Linq;
 
     using Xunit;
 
@@ -42,6 +43,26 @@ namespace Abc.Linq
         public static void NullResultSelector() =>
             Assert.ThrowsAnexn("resultSelector", () =>
                 AnySeq.ZipAny(AnySeq, Kunc<int, int, int>.Null));
+    }
+
+    // Deferred execution.
+    public partial class ZipAnyTests
+    {
+        [Fact]
+        public static void IsDeferred()
+        {
+            // Arrange
+            bool called = false;
+            var first = Enumerable.Range(1, 5);
+            var second = Enumerable.Range(10, 5);
+            // Act
+            var q = first.ZipAny(second, __);
+            // Assert
+            Assert.False(called);
+            Assert.CalledOnNext(q, ref called);
+
+            Maybe<int> __(int x, int y) { called = true; return Maybe.Some(x + y); }
+        }
     }
 
     public partial class ZipAnyTests
