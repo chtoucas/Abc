@@ -15,10 +15,13 @@ namespace Abc.Linq
             IEnumerable<T2> second,
             Func<T1, T2, Maybe<TResult>> resultSelector)
         {
-            // Identical to Maybe.CollectAny(first.Zip(second, resultSelector)).
+#if PLAIN_LINQ
+            return Maybe.CollectAny(first.Zip(second, resultSelector));
+#else
             return from x in first.Zip(second, resultSelector)
                    where x.IsSome
                    select x.Value;
+#endif
         }
     }
 }
