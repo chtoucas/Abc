@@ -7,7 +7,7 @@ namespace Abc.Linq
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-    public partial class Qperators
+    public partial class QperatorsEx
     {
         [Pure]
         public static IEnumerable<TResult> ZipAny<T1, T2, TResult>(

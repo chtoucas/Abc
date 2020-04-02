@@ -11,6 +11,7 @@ Changed
 
 Removed
 - Maybe<T>.SwitchAsync(); use Maybe<T>.Switch() instead.
+- Qperators.ZipAny(); use plain LINQ and Maybe.CollectAny().
 
 Internal Changes
 - Replaced OpenCover by coverlet as the default tool for test coverage.
