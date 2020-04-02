@@ -6,11 +6,13 @@ vNEXT
 Version 1.0.0-alpha-2
 - Full test coverage.
 
-Version 1.0.0-alpha-3 or beta-1
-- More functional tests.
-- Fix all TODOs and FIXMEs.
+Version 1.0.0-alpha-3
 - Add overloads w/ `IEqualityComparer<T>`? Ops `Maybe<T> == T`?
 - Remove `MaybeComparer<T>`?
+
+Version 1.0.0-beta-1
+- Fix all TODOs and FIXMEs.
+- More functional tests.
 
 Towards version 1.0.0
 - README.
