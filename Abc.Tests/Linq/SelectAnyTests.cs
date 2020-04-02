@@ -5,6 +5,7 @@ namespace Abc.Linq
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     using Xunit;
@@ -13,10 +14,9 @@ namespace Abc.Linq
 
     public sealed partial class SelectAnyTests : QperatorsTests
     {
-        private static Maybe<int> ReturnNone(int i) => Maybe<int>.None;
-        private static Maybe<int> AddOne(int i) => Maybe.Some(i + 1);
-        private static Maybe<int> AddOneUnless3(int i) =>
-            i == 3 ? Maybe<int>.None : Maybe.Some(i + 1);
+        [Pure] private static Maybe<int> ReturnNone(int i) => Maybe<int>.None;
+        [Pure] private static Maybe<int> AddOne(int i) => Maybe.Some(i + 1);
+        [Pure] private static Maybe<int> AddOneUnless3(int i) => i == 3 ? Maybe<int>.None : Maybe.Some(i + 1);
     }
 
     // Arg check.
@@ -50,7 +50,7 @@ namespace Abc.Linq
     public partial class SelectAnyTests
     {
         [Fact]
-        public void WithArray_OnlyNone()
+        public void Array_OnlyNone()
         {
             // Arrange
             int[] source = new[] { 1, 2, 3, 4, 5 };
@@ -61,7 +61,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithList_OnlyNone()
+        public void List_OnlyNone()
         {
             // Arrange
             var source = new List<int> { 1, 2, 3, 4, 5 };
@@ -72,7 +72,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithReadOnlyCollection_OnlyNone()
+        public void ReadOnlyCollection_OnlyNone()
         {
             // Arrange
             var source = new ReadOnlyCollection<int>(new List<int> { 1, 2, 3, 4, 5 });
@@ -83,7 +83,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithCollection_OnlyNone()
+        public void Collection_OnlyNone()
         {
             // Arrange
             var source = new LinkedList<int>(new List<int> { 1, 2, 3, 4, 5 });
@@ -94,7 +94,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithEnumerable_OnlyNone()
+        public void Enumerable_OnlyNone()
         {
             // Arrange
             var source = Enumerable.Range(1, 5);
@@ -109,7 +109,7 @@ namespace Abc.Linq
     public partial class SelectAnyTests
     {
         [Fact]
-        public void WithArray_OnlySome()
+        public void Array_OnlySome()
         {
             // Arrange
             int[] source = new[] { 1, 2, 3, 4, 5 };
@@ -121,7 +121,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithList_OnlySome()
+        public void List_OnlySome()
         {
             // Arrange
             var source = new List<int> { 1, 2, 3, 4, 5 };
@@ -133,7 +133,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithReadOnlyCollection_OnlySome()
+        public void ReadOnlyCollection_OnlySome()
         {
             // Arrange
             var source = new ReadOnlyCollection<int>(new List<int> { 1, 2, 3, 4, 5 });
@@ -145,7 +145,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithCollection_OnlySome()
+        public void Collection_OnlySome()
         {
             // Arrange
             var source = new LinkedList<int>(new List<int> { 1, 2, 3, 4, 5 });
@@ -157,7 +157,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithEnumerable_OnlySome()
+        public void Enumerable_OnlySome()
         {
             // Arrange
             var source = Enumerable.Range(1, 5);
@@ -169,11 +169,11 @@ namespace Abc.Linq
         }
     }
 
-    // Selector returns Some, always.
+    // Selector returns Some or None.
     public partial class SelectAnyTests
     {
         [Fact]
-        public void WithArray_Mixed()
+        public void Array_Mixed()
         {
             // Arrange
             int[] source = new[] { 1, 2, 3, 4, 5 };
@@ -185,7 +185,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithList_Mixed()
+        public void List_Mixed()
         {
             // Arrange
             var source = new List<int> { 1, 2, 3, 4, 5 };
@@ -197,7 +197,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithReadOnlyCollection_Mixed()
+        public void ReadOnlyCollection_Mixed()
         {
             // Arrange
             var source = new ReadOnlyCollection<int>(new List<int> { 1, 2, 3, 4, 5 });
@@ -209,7 +209,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithCollection_Mixed()
+        public void Collection_Mixed()
         {
             // Arrange
             var source = new LinkedList<int>(new List<int> { 1, 2, 3, 4, 5 });
@@ -221,7 +221,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithEnumerable_Mixed()
+        public void Enumerable_Mixed()
         {
             // Arrange
             var source = Enumerable.Range(1, 5);
@@ -233,11 +233,11 @@ namespace Abc.Linq
         }
     }
 
-    // Returns default after enumeration.
+    // Current is default after enumeration.
     public partial class SelectAnyTests
     {
         [Fact]
-        public void WithArray_CurrentIsDefault_AfterEnumeration()
+        public void Array_CurrentIsDefault_AfterEnumeration()
         {
             // Arrange
             int[] source = new[] { 1 };
@@ -250,7 +250,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithList_CurrentIsDefault_AfterEnumeration()
+        public void List_CurrentIsDefault_AfterEnumeration()
         {
             // Arrange
             var source = new List<int> { 1 };
@@ -263,7 +263,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithReadOnlyCollection_CurrentIsDefault_AfterEnumeration()
+        public void ReadOnlyCollection_CurrentIsDefault_AfterEnumeration()
         {
             // Arrange
             var source = new ReadOnlyCollection<int>(new List<int> { 1 });
@@ -276,7 +276,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithCollection_CurrentIsDefault_AfterEnumeration()
+        public void Collection_CurrentIsDefault_AfterEnumeration()
         {
             // Arrange
             var source = new LinkedList<int>(new List<int> { 1 });
@@ -289,7 +289,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithEnumerable_CurrentIsDefault_AfterEnumeration()
+        public void Enumerable_CurrentIsDefault_AfterEnumeration()
         {
             // Arrange
             var source = Enumerable.Range(1, 1);
@@ -302,11 +302,11 @@ namespace Abc.Linq
         }
     }
 
-    // Call SelectAny() twice in a row.
+    // SelectAny() called twice in a row.
     public partial class SelectAnyTests
     {
         [Fact]
-        public void WithArray_Twice()
+        public void Array_Twice()
         {
             // Arrange
             int[] source = new[] { 1, 2, 3, 4, 5 };
@@ -318,7 +318,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithList_Twice()
+        public void List_Twice()
         {
             // Arrange
             var source = new List<int> { 1, 2, 3, 4, 5 };
@@ -330,7 +330,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithReadOnlyCollection_Twice()
+        public void ReadOnlyCollection_Twice()
         {
             // Arrange
             var source = new ReadOnlyCollection<int>(new List<int> { 1, 2, 3, 4, 5 });
@@ -342,7 +342,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithCollection_Twice()
+        public void Collection_Twice()
         {
             // Arrange
             var source = new LinkedList<int>(new List<int> { 1, 2, 3, 4, 5 });
@@ -354,7 +354,7 @@ namespace Abc.Linq
         }
 
         [Fact]
-        public void WithEnumerable_Twice()
+        public void Enumerable_Twice()
         {
             // Arrange
             var source = Enumerable.Range(1, 5);
