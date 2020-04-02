@@ -1,4 +1,7 @@
 <Project>
+  <!--
+    Only loaded by library projs.
+  -->
 
   <!--
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -21,6 +24,8 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
 
     <DefineConstants>$(DefineConstants);PLAIN_LINQ</DefineConstants>
+
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
 </Project>

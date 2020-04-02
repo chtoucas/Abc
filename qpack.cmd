@@ -14,8 +14,8 @@
 @call :OnError dotnet test .\Abc.Tests\ -c Release --nologo
 
 :Pack
-@call :OnError dotnet pack .\Abc.Maybe -c Release --include-symbols ^
-    -o __packages ^
+@call :OnError dotnet pack .\Abc.Maybe -c Release --nologo ^
+    --output __packages ^
     -p:TargetFrameworks=\"netstandard2.0;netstandard2.1;netcoreapp3.1\" ^
     -p:PackageVersion=%Version%
 
