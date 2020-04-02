@@ -9,8 +9,9 @@
 @set Version=1.0.0-alpha-1
 
 :Test
+@echo Cleaning...
 @call :OnError dotnet clean -c Release -v minimal
-@call :OnError dotnet test .\Abc.Tests\ %* -c Release --no-restore --nologo
+@call :OnError dotnet test .\Abc.Tests\ -c Release --nologo
 
 :Pack
 @call :OnError dotnet pack .\Abc.Maybe -c Release --include-symbols ^
