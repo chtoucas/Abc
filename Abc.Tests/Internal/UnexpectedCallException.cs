@@ -5,7 +5,7 @@
 
 using System;
 
-internal sealed class InvalidCallException : InvalidOperationException
+internal sealed class UnexpectedCallException : InvalidOperationException
 {
-    public InvalidCallException() : base("Unexpected call.") { }
+    public UnexpectedCallException() : base("Unexpected call.") { }
 }

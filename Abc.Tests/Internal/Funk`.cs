@@ -8,7 +8,7 @@ internal static class Funk<TResult>
 {
     public static readonly Func<TResult> Null = null!;
 
-    public static readonly Func<TResult> Any = () => throw new InvalidCallException();
+    public static readonly Func<TResult> Any = () => throw new UnexpectedCallException();
 }
 
 internal static class Funk<T, TResult>
@@ -17,14 +17,14 @@ internal static class Funk<T, TResult>
 {
     public static readonly Func<T, TResult> Null = null!;
 
-    public static readonly Func<T, TResult> Any = _ => throw new InvalidCallException();
+    public static readonly Func<T, TResult> Any = _ => throw new UnexpectedCallException();
 
     public static readonly Func<T, Task<TResult>> NullAsync = null!;
 
     public static readonly Func<T, Task<TResult>> AnyAsync = async _ =>
     {
         await Task.Yield();
-        throw new InvalidCallException();
+        throw new UnexpectedCallException();
     };
 }
 
@@ -35,7 +35,7 @@ internal static class Funk<T1, T2, TResult>
 {
     public static readonly Func<T1, T2, TResult> Null = null!;
 
-    public static readonly Func<T1, T2, TResult> Any = (x, y) => throw new InvalidCallException();
+    public static readonly Func<T1, T2, TResult> Any = (x, y) => throw new UnexpectedCallException();
 }
 
 internal static class Funk<T1, T2, T3, TResult>

@@ -12,7 +12,7 @@ internal static class Kunc<T, TResult>
     // Kleisli null.
     public static readonly Func<T, Maybe<TResult>> Null = null!;
 
-    public static readonly Func<T, Maybe<TResult>> Any = _ => throw new InvalidCallException();
+    public static readonly Func<T, Maybe<TResult>> Any = _ => throw new UnexpectedCallException();
 
     public static readonly Func<T, Task<Maybe<TResult>>> NullAsync = null!;
 }
@@ -24,5 +24,5 @@ internal static class Kunc<T1, T2, TResult>
 {
     public static readonly Func<T1, T2, Maybe<TResult>> Null = null!;
 
-    public static readonly Func<T1, T2, Maybe<TResult>> Any = (x, y) => throw new InvalidCallException();
+    public static readonly Func<T1, T2, Maybe<TResult>> Any = (x, y) => throw new UnexpectedCallException();
 }
