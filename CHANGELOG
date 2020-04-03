@@ -3,11 +3,16 @@ Changelog for Abc.
 vNEXT
 -----
 
+2020-04-03, version 1.0.0-alpha-2
+---------------------------------
+
 Changed
 - Async methods now use eager validation.
 - Maybe<T>.OrElseAsync() now expects a factory rather than a task.
 - Maybe.Compose() and Maybe.ComposeBack() now return a "maybe" rather than
   an anonymous function.
+- The NuGet package now includes the pdb.
+- Full test coverage.
 
 Removed
 - Maybe<T>.GroupJoin(); it made no sense, use Maybe<T>.Join() instead.

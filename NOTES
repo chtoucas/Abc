@@ -3,9 +3,6 @@ Developer Notes.
 vNEXT
 -----
 
-Version 1.0.0-alpha-2
-- Full test coverage.
-
 Version 1.0.0-alpha-3
 - Add overloads w/ IEqualityComparer<T>? Ops Maybe<T> == T?
 - Remove MaybeComparer<T>?

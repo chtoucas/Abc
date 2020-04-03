@@ -5,8 +5,7 @@
 @setlocal
 
 :Settings
-:: Last update 27/03/2020
-@set Version=1.0.0-alpha-1
+@set Version=1.0.0-alpha-2
 
 :Test
 @echo Cleaning...

@@ -3,7 +3,7 @@
 Abc features a rich option type for C#.
 
 **Status:** _unstable_
-- The API should be stable except for the LINQ ops.
+- The API should be stable.
 - Testing is well underway but there is still a lot to be done.
 - Supported frameworks:
   * .NET Standard 2.0
