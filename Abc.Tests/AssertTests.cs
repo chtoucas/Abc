@@ -15,9 +15,9 @@ namespace Abc
         {
             if (arg is null) { throw new ArgumentNullException(nameof(arg)); }
 
-            return __impl();
+            return __();
 
-            async Task __impl() => await Task.Yield();
+            static async Task __() => await Task.Yield();
         }
 
         private static async Task AsyncValidation(string arg)
@@ -33,9 +33,8 @@ namespace Abc
 
         [Fact]
         public static async Task EagerValidationTestAsync() =>
-            await Assert
-                .ThrowsAsync<InvalidOperationException>(() =>
-                    Assert.Async.ThrowsAnexn("arg", () => EagerValidation(null!)));
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                Assert.Async.ThrowsAnexn("arg", () => EagerValidation(null!)));
 
         [Fact]
         public static void AsyncValidationTest_NotAwaited_DoesNotThrow() =>
@@ -45,7 +44,6 @@ namespace Abc
 
         [Fact]
         public static async Task AsyncValidationTest() =>
-            await Assert.Async
-                .ThrowsAnexn("arg", () => AsyncValidation(null!));
+            await Assert.Async.ThrowsAnexn("arg", () => AsyncValidation(null!));
     }
 }

@@ -25,7 +25,7 @@ namespace Abc
         public static void CollectAny_IsDeferred()
         {
             // Arrange
-            IEnumerable<Maybe<int>> source = new ThrowingCollection<Maybe<int>>();
+            var source = new ThrowingCollection<Maybe<int>>();
             // Act
             var q = Maybe.CollectAny(source);
             // Assert
@@ -35,8 +35,10 @@ namespace Abc
         [Fact]
         public static void CollectAny_WithEmpty()
         {
+            // Arrange
+            var source = Enumerable.Empty<Maybe<int>>();
             // Act
-            var q = Maybe.CollectAny(Enumerable.Empty<Maybe<int>>());
+            var q = Maybe.CollectAny(source);
             // Assert
             Assert.Empty(q);
         }

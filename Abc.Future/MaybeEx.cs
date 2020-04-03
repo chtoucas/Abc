@@ -121,6 +121,8 @@ namespace Abc
         // Simple solution: since IsNone is public, we do not really need to
         // bother w/ ReplaceWith(), same thing with AndThen() in fact.
 
+        // REVIEW: OrElse(T)
+
 #if true
         /// <remarks>
         /// <see cref="ReplaceWith"/> is a <see cref="Maybe{T}.Select"/> with a
@@ -195,9 +197,9 @@ namespace Abc
         [Pure]
         public static Maybe<IEnumerable<T>> Replicate<T>(this Maybe<T> @this)
         {
-            return @this.Select(__selector);
+            return @this.Select(__);
 
-            static IEnumerable<T> __selector(T value)
+            static IEnumerable<T> __(T value)
             {
                 //// BONSANG! Select() guarantees that "value" won't be null.
                 //=> new NeverEndingIterator<T>(value!);
