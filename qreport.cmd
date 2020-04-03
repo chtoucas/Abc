@@ -5,7 +5,7 @@
 @set Version=4.5.3
 
 @set ReportType=coverlet
-@rem @set ReportType=opencover
+@rem ReportType=opencover
 
 :Report
 @set ReportGenerator=%USERPROFILE%\.nuget\packages\reportgenerator\%Version%\tools\net47\ReportGenerator.exe
