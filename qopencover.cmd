@@ -8,8 +8,8 @@
 :: makes the two tools complementary.
 ::
 :: Note to myself: do not use a separate directory for building.
-:: Build warnings w/ OpenCover (MSB3277).
-:: The problem is that we would build all platforms within the same dir.
+:: Build warnings MSB3277, the problem is that we then build all platforms
+:: within the same dir.
 
 @echo off
 @setlocal
