@@ -12,15 +12,15 @@ Abc features a rich option type for C#.
 
 |NuGet|OpenCover|Coverlet|
 |-----|---------|--------|
-| [![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/) | ![OpenCover](opencover.svg) |![Coverlet](coverlet.svg) |
+| [![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/) | ![OpenCover](./__/opencover.svg) |![Coverlet](./__/coverlet.svg) |
 
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
 - [Version History](#version-history)
 - [Changelog](CHANGELOG)
 - [Developer Notes](NOTES)
-- [OpenCover Report](opencover.txt)
-- [Coverlet Report](coverlet.txt)
+- [OpenCover Report](./__/opencover.txt)
+- [Coverlet Report](./__/coverlet.txt)
 - [License](LICENSE.txt)
 
 Quick Start with `Maybe<T>`
