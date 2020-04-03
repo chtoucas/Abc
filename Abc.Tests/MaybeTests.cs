@@ -13,8 +13,11 @@ namespace Abc
 
     public static partial class MaybeTests
     {
-        public const string NullString = null;
-        public const string? NullNullString = null;
+        private const string NullString = null;
+        private const string? NullNullString = null;
+
+        private const string Anagram = "chicane";
+        private const string Margana = "caniche";
 
         private static readonly Maybe<int> Ø = Maybe<int>.None;
         private static readonly Maybe<long> ØL = Maybe<long>.None;
@@ -932,6 +935,20 @@ namespace Abc
             Assert.True(Maybe.SomeOrNone("XXX").Contains("XXX", StringComparer.OrdinalIgnoreCase));
             Assert.True(Maybe.SomeOrNone("XXX").Contains("xxx", StringComparer.OrdinalIgnoreCase));
             Assert.False(Maybe.SomeOrNone("XXX").Contains("yyy", StringComparer.OrdinalIgnoreCase));
+        }
+
+        [Fact]
+        public static void Contains_SomeText_Anagram()
+        {
+            // Arrange
+            var comparer = new AnagramEqualityComparer();
+            // Act & Assert
+            Assert.False(Maybe.SomeOrNone(Anagram).Contains(Margana));
+            Assert.False(Maybe.SomeOrNone(Anagram).Contains(Margana, StringComparer.Ordinal));
+            Assert.False(Maybe.SomeOrNone(Anagram).Contains(Margana, StringComparer.OrdinalIgnoreCase));
+
+            Assert.True(Maybe.SomeOrNone(Anagram).Contains(Margana, comparer));
+            Assert.True(Maybe.SomeOrNone(Margana).Contains(Anagram, comparer));
         }
     }
 }

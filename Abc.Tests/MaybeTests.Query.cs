@@ -212,9 +212,9 @@ namespace Abc
         public static void Join_WithComparer()
         {
             // Arrange
-            var outer = Maybe.SomeOrNone("chicane");
-            var inner = Maybe.SomeOrNone("caniche");
-            string expected = "chicane est un anagramme de caniche";
+            var outer = Maybe.SomeOrNone(Anagram);
+            var inner = Maybe.SomeOrNone(Margana);
+            string expected = $"{Anagram} est un anagramme de {Margana}";
             // Act
             var q = outer.Join(inner, Ident, Ident,
                 (x, y) => $"{x} est un anagramme de {y}",
@@ -291,9 +291,9 @@ namespace Abc
         public static void GroupJoin_WithComparer()
         {
             // Arrange
-            var outer = Maybe.SomeOrNone("chicane");
-            var inner = Maybe.SomeOrNone("caniche");
-            string expected = "chicane est un anagramme de caniche";
+            var outer = Maybe.SomeOrNone(Anagram);
+            var inner = Maybe.SomeOrNone(Margana);
+            string expected = $"{Anagram} est un anagramme de {Margana}";
             // Act
             var q = outer.GroupJoin(inner, Ident, Ident,
                 (x, y) => y.Switch(s => $"{x} est un anagramme de {s}", Funk<string>.Any),
