@@ -7,7 +7,7 @@
 @call dotnet test -c Debug --no-restore ^
     /p:CollectCoverage=true ^
     /p:CoverletOutputFormat=opencover ^
-    /p:CoverletOutput="..\__\coverage\coverlet.xml" ^
+    /p:CoverletOutput="..\__\coverlet\coverlet.xml" ^
     /p:Include="[Abc.Maybe]*" ^
     /p:Exclude=\"[Abc*]System.Diagnostics.CodeAnalysis.*,[Abc*]System.Runtime.CompilerServices.*,[Abc*]Microsoft.CodeAnalysis.*\"
 

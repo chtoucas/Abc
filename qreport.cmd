@@ -13,7 +13,7 @@
 @echo Building report and badges.
 @call :OnError %ReportGenerator% -verbosity:Warning ^
     -reporttypes:HtmlInline;Badges;TextSummary ^
-    -reports:__\coverage\%ReportType%.xml -targetdir:__\%ReportType%
+    -reports:__\%ReportType%\%ReportType%.xml -targetdir:__\%ReportType%
 
 @move /Y __\%ReportType%\badge_combined.svg __\%ReportType%.svg > nul
 @move /Y __\%ReportType%\Summary.txt __\%ReportType%.txt > nul

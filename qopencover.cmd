@@ -16,18 +16,14 @@
 
 @set OpenCover=%USERPROFILE%\.nuget\packages\opencover\%Version%\tools\OpenCover.Console.exe
 
-@set target="dotnet.exe"
-@set proj="%~dp0\Abc.Tests\Abc.Tests.csproj"
-@set targetargs="test %proj% -v quiet -c Debug /p:DebugType=Full"
-@set filter="+[Abc.Maybe]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*"
-@set opencover_xml="%~dp0\__\coverage\opencover.xml"
+@set filter="+[Abc.Maybe]* -[Abc]* -[Abc.Future]* -[Abc.Test*]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*"
 
 :: See https://github.com/opencover/opencover/wiki/Usage
 @call %OpenCover% -showunvisited -oldStyle -register:user -hideskipped:All ^
-    -output:%opencover_xml% ^
+    -output:"%~dp0\__\opencover\opencover.xml" ^
+    -target:dotnet.exe ^
+    -targetargs:"test %~dp0\Abc.Tests\Abc.Tests.csproj -v quiet -c Debug /p:DebugType=Full" ^
     -filter:%filter% ^
-    -target:%target% ^
-    -targetargs:%targetargs% ^
     -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
 
 @endlocal
