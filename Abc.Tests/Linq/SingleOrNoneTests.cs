@@ -1,6 +1,5 @@
-﻿// See LICENSE.dotnet.txt in the project root for license information.
+﻿// See LICENSE.dotnet in the project root for license information.
 //
-// Largely inspired by
 // https://github.com/dotnet/corefx/blob/master/src/System.Linq/tests/SingleOrDefaultTests.cs
 
 namespace Abc.Linq

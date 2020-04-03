@@ -1,6 +1,5 @@
-﻿// See LICENSE.dotnet.txt in the project root for license information.
+﻿// See LICENSE.dotnet in the project root for license information.
 //
-// Largely inspired by
 // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Linq/tests/ZipTests.cs
 
 namespace Abc.Linq

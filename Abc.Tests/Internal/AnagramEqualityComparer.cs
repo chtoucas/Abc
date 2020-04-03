@@ -1,6 +1,5 @@
-﻿// See LICENSE.dotnet.txt in the project root for license information.
+﻿// See LICENSE.dotnet in the project root for license information.
 //
-// Inspired by
 // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Linq/tests/EnumerableTests.cs
 
 using System.Collections.Generic;

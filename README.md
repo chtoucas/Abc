@@ -19,8 +19,7 @@ Abc features a rich option type for C#.
 - [Version History](#version-history)
 - [Changelog](CHANGELOG)
 - [Developer Notes](NOTES)
-- [OpenCover Report](./__/opencover.txt)
-- [Coverlet Report](./__/coverlet.txt)
+- Coverage Reports: [OpenCover](./__/opencover.txt) and [Coverlet](./__/coverlet.txt)
 - [License](LICENSE.txt)
 
 Quick Start with `Maybe<T>`

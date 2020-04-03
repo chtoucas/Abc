@@ -1,6 +1,5 @@
-﻿// See LICENSE.dotnet.txt in the project root for license information.
+﻿// See LICENSE.dotnet in the project root for license information.
 //
-// This test file is largely adapted from code found in
 // https://github.com/dotnet/runtime
 
 namespace Abc

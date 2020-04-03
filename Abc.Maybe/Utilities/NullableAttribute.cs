@@ -1,4 +1,4 @@
-﻿// See LICENSE.dotnet.txt in the project root for license information.
+﻿// See LICENSE.dotnet in the project root for license information.
 
 #if NETSTANDARD2_0
 #define INTERNAL_NULLABLE_ATTRIBUTES
