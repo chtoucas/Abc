@@ -42,10 +42,19 @@ namespace Abc
         [Fact]
         public static async Task BindAsync_None()
         {
-            await Assert.Async.None(Ø.BindAsync(ReturnSomeAsync));
-            await Assert.Async.None(NoText.BindAsync(ReturnSomeAsync));
-            await Assert.Async.None(NoUri.BindAsync(ReturnSomeAsync));
-            await Assert.Async.None(AnyT.None.BindAsync(ReturnSomeAsync));
+            await Assert.Async.None(Ø.BindAsync(Kunc<int, AnyResult>.AnyAsync));
+            await Assert.Async.None(NoText.BindAsync(Kunc<string, AnyResult>.AnyAsync));
+            await Assert.Async.None(NoUri.BindAsync(Kunc<Uri, AnyResult>.AnyAsync));
+            await Assert.Async.None(AnyT.None.BindAsync(Kunc<AnyT, AnyResult>.AnyAsync));
+        }
+
+        [Fact]
+        public static async Task BindAsync_None_Sync()
+        {
+            await Assert.Async.None(Ø.BindAsync(Kunc<int, AnyResult>.AnySync));
+            await Assert.Async.None(NoText.BindAsync(Kunc<string, AnyResult>.AnySync));
+            await Assert.Async.None(NoUri.BindAsync(Kunc<Uri, AnyResult>.AnySync));
+            await Assert.Async.None(AnyT.None.BindAsync(Kunc<AnyT, AnyResult>.AnySync));
         }
 
         [Fact]
@@ -58,6 +67,15 @@ namespace Abc
         }
 
         [Fact]
+        public static async Task BindAsync_Some_WithBinderReturningNone_Sync()
+        {
+            await Assert.Async.None(One.BindAsync(ReturnNoneSync));
+            await Assert.Async.None(SomeText.BindAsync(ReturnNoneSync));
+            await Assert.Async.None(SomeUri.BindAsync(ReturnNoneSync));
+            await Assert.Async.None(AnyT.Some.BindAsync(ReturnNoneSync));
+        }
+
+        [Fact]
         public static async Task BindAsync_Some_WithBinderReturningSome()
         {
             await Assert.Async.Some(AnyResult.Value, One.BindAsync(ReturnSomeAsync));
@@ -67,16 +85,37 @@ namespace Abc
         }
 
         [Fact]
+        public static async Task BindAsync_Some_WithBinderReturningSome_Sync()
+        {
+            await Assert.Async.Some(AnyResult.Value, One.BindAsync(ReturnSomeSync));
+            await Assert.Async.Some(AnyResult.Value, SomeText.BindAsync(ReturnSomeSync));
+            await Assert.Async.Some(AnyResult.Value, SomeUri.BindAsync(ReturnSomeSync));
+            await Assert.Async.Some(AnyResult.Value, AnyT.Some.BindAsync(ReturnSomeSync));
+        }
+
+        [Fact]
         public static async Task BindAsync_SomeInt32() =>
             await Assert.Async.Some(6, Two.BindAsync(Times3Async_));
+
+        [Fact]
+        public static async Task BindAsync_SomeInt32_Sync() =>
+            await Assert.Async.Some(6, Two.BindAsync(Times3Sync_));
 
         [Fact]
         public static async Task BindAsync_SomeInt64() =>
             await Assert.Async.Some(8L, TwoL.BindAsync(Times4Async_));
 
         [Fact]
+        public static async Task BindAsync_SomeInt64_Sync() =>
+            await Assert.Async.Some(8L, TwoL.BindAsync(Times4Sync_));
+
+        [Fact]
         public static async Task BindAsync_SomeUri() =>
             await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.BindAsync(GetAbsoluteUriAsync_));
+
+        [Fact]
+        public static async Task BindAsync_SomeUri_Sync() =>
+            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.BindAsync(GetAbsoluteUriSync_));
 
         #endregion
 
@@ -110,16 +149,37 @@ namespace Abc
         }
 
         [Fact]
+        public static async Task SelectAsync_None_Sync()
+        {
+            await Assert.Async.None(Ø.SelectAsync(Funk<int, AnyResult>.AnySync));
+            await Assert.Async.None(NoText.SelectAsync(Funk<string, AnyResult>.AnySync));
+            await Assert.Async.None(NoUri.SelectAsync(Funk<Uri, AnyResult>.AnySync));
+            await Assert.Async.None(AnyT.None.SelectAsync(Funk<AnyT, AnyResult>.AnySync));
+        }
+
+        [Fact]
         public static async Task SelectAsync_SomeInt32() =>
             await Assert.Async.Some(6, Two.SelectAsync(Times3Async));
+
+        [Fact]
+        public static async Task SelectAsync_SomeInt32_Sync() =>
+            await Assert.Async.Some(6, Two.SelectAsync(Times3Sync));
 
         [Fact]
         public static async Task SelectAsync_SomeInt64() =>
             await Assert.Async.Some(8L, TwoL.SelectAsync(Times4Async));
 
         [Fact]
+        public static async Task SelectAsync_SomeInt64_Sync() =>
+            await Assert.Async.Some(8L, TwoL.SelectAsync(Times4Sync));
+
+        [Fact]
         public static async Task SelectAsync_SomeUri() =>
             await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.SelectAsync(GetAbsoluteUriAsync));
+
+        [Fact]
+        public static async Task SelectAsync_SomeUri_Sync() =>
+            await Assert.Async.Some(MyUri.AbsoluteUri, SomeUri.SelectAsync(GetAbsoluteUriSync));
 
         #endregion
 
@@ -157,6 +217,19 @@ namespace Abc
         }
 
         [Fact]
+        public static async Task OrElseAsync_None_Sync()
+        {
+            await Assert.Async.Some(3, Ø.OrElseAsync(ReturnSync_(3)));
+            await Assert.Async.Some("other", NoText.OrElseAsync(ReturnSync_("other")));
+
+            var otherUri = new Uri("https://source.dot.net/");
+            await Assert.Async.Some(otherUri, NoUri.OrElseAsync(ReturnSync_(otherUri)));
+
+            var otherAnyT = AnyT.Value;
+            await Assert.Async.Some(otherAnyT, AnyT.None.OrElseAsync(ReturnSync_(otherAnyT)));
+        }
+
+        [Fact]
         public static async Task OrElseAsync_Some()
         {
             var anyT = AnyT.New();
@@ -164,18 +237,40 @@ namespace Abc
         }
 
         [Fact]
+        public static async Task OrElseAsync_Some_Sync()
+        {
+            var anyT = AnyT.New();
+            await Assert.Async.Some(anyT.Value, anyT.Some.OrElseAsync(ReturnSync_(AnyT.Value)));
+        }
+
+        [Fact]
         public static async Task OrElseAsync_SomeInt32() =>
             await Assert.Async.Some(1, One.OrElseAsync(ReturnAsync_(3)));
+
+        [Fact]
+        public static async Task OrElseAsync_SomeInt32_Sync() =>
+            await Assert.Async.Some(1, One.OrElseAsync(ReturnSync_(3)));
 
         [Fact]
         public static async Task OrElseAsync_SomeText() =>
             await Assert.Async.Some(MyText, SomeText.OrElseAsync(ReturnAsync_("other")));
 
         [Fact]
+        public static async Task OrElseAsync_SomeText_Sync() =>
+            await Assert.Async.Some(MyText, SomeText.OrElseAsync(ReturnSync_("other")));
+
+        [Fact]
         public static async Task OrElseAsync_SomeUri()
         {
             var otherUri = new Uri("https://source.dot.net/");
             await Assert.Async.Some(MyUri, SomeUri.OrElseAsync(ReturnAsync_(otherUri)));
+        }
+
+        [Fact]
+        public static async Task OrElseAsync_SomeUri_Sync()
+        {
+            var otherUri = new Uri("https://source.dot.net/");
+            await Assert.Async.Some(MyUri, SomeUri.OrElseAsync(ReturnSync_(otherUri)));
         }
 
         #endregion
@@ -209,10 +304,19 @@ namespace Abc
             [Fact]
             public static async Task BindAsync_None()
             {
-                await Assert.Async.None(MaybeEx.BindAsync(Ø, ReturnSomeAsync));
-                await Assert.Async.None(MaybeEx.BindAsync(NoText, ReturnSomeAsync));
-                await Assert.Async.None(MaybeEx.BindAsync(NoUri, ReturnSomeAsync));
-                await Assert.Async.None(MaybeEx.BindAsync(AnyT.None, ReturnSomeAsync));
+                await Assert.Async.None(MaybeEx.BindAsync(Ø, Kunc<int, AnyResult>.AnyAsync));
+                await Assert.Async.None(MaybeEx.BindAsync(NoText, Kunc<string, AnyResult>.AnyAsync));
+                await Assert.Async.None(MaybeEx.BindAsync(NoUri, Kunc<Uri, AnyResult>.AnyAsync));
+                await Assert.Async.None(MaybeEx.BindAsync(AnyT.None, Kunc<AnyT, AnyResult>.AnyAsync));
+            }
+
+            [Fact]
+            public static async Task BindAsync_None_Sync()
+            {
+                await Assert.Async.None(MaybeEx.BindAsync(Ø, Kunc<int, AnyResult>.AnySync));
+                await Assert.Async.None(MaybeEx.BindAsync(NoText, Kunc<string, AnyResult>.AnySync));
+                await Assert.Async.None(MaybeEx.BindAsync(NoUri, Kunc<Uri, AnyResult>.AnySync));
+                await Assert.Async.None(MaybeEx.BindAsync(AnyT.None, Kunc<AnyT, AnyResult>.AnySync));
             }
 
             [Fact]
@@ -225,6 +329,15 @@ namespace Abc
             }
 
             [Fact]
+            public static async Task BindAsync_Some_WithBinderReturningNone_Sync()
+            {
+                await Assert.Async.None(MaybeEx.BindAsync(One, ReturnNoneSync));
+                await Assert.Async.None(MaybeEx.BindAsync(SomeText, ReturnNoneSync));
+                await Assert.Async.None(MaybeEx.BindAsync(SomeUri, ReturnNoneSync));
+                await Assert.Async.None(MaybeEx.BindAsync(AnyT.Some, ReturnNoneSync));
+            }
+
+            [Fact]
             public static async Task BindAsync_Some_WithBinderReturningSome()
             {
                 await Assert.Async.Some(AnyResult.Value, MaybeEx.BindAsync(One, ReturnSomeAsync));
@@ -234,17 +347,39 @@ namespace Abc
             }
 
             [Fact]
+            public static async Task BindAsync_Some_WithBinderReturningSome_Sync()
+            {
+                await Assert.Async.Some(AnyResult.Value, MaybeEx.BindAsync(One, ReturnSomeSync));
+                await Assert.Async.Some(AnyResult.Value, MaybeEx.BindAsync(SomeText, ReturnSomeSync));
+                await Assert.Async.Some(AnyResult.Value, MaybeEx.BindAsync(SomeUri, ReturnSomeSync));
+                await Assert.Async.Some(AnyResult.Value, MaybeEx.BindAsync(AnyT.Some, ReturnSomeSync));
+            }
+
+            [Fact]
             public static async Task BindAsync_SomeInt32() =>
                 await Assert.Async.Some(6, MaybeEx.BindAsync(Two, Times3Async_));
+
+            [Fact]
+            public static async Task BindAsync_SomeInt32_Sync() =>
+                await Assert.Async.Some(6, MaybeEx.BindAsync(Two, Times3Sync_));
 
             [Fact]
             public static async Task BindAsync_SomeInt64() =>
                 await Assert.Async.Some(8L, MaybeEx.BindAsync(TwoL, Times4Async_));
 
             [Fact]
+            public static async Task BindAsync_SomeInt64_Sync() =>
+                await Assert.Async.Some(8L, MaybeEx.BindAsync(TwoL, Times4Sync_));
+
+            [Fact]
             public static async Task BindAsync_SomeUri() =>
                 await Assert.Async.Some(MyUri.AbsoluteUri,
                     MaybeEx.BindAsync(SomeUri, GetAbsoluteUriAsync_));
+
+            [Fact]
+            public static async Task BindAsync_SomeUri_Sync() =>
+                await Assert.Async.Some(MyUri.AbsoluteUri,
+                    MaybeEx.BindAsync(SomeUri, GetAbsoluteUriSync_));
 
             #endregion
 
@@ -278,17 +413,39 @@ namespace Abc
             }
 
             [Fact]
+            public static async Task SelectAsync_None_Sync()
+            {
+                await Assert.Async.None(MaybeEx.SelectAsync(Ø, Funk<int, AnyResult>.AnySync));
+                await Assert.Async.None(MaybeEx.SelectAsync(NoText, Funk<string, AnyResult>.AnySync));
+                await Assert.Async.None(MaybeEx.SelectAsync(NoUri, Funk<Uri, AnyResult>.AnySync));
+                await Assert.Async.None(MaybeEx.SelectAsync(AnyT.None, Funk<AnyT, AnyResult>.AnySync));
+            }
+
+            [Fact]
             public static async Task SelectAsync_SomeInt32() =>
                 await Assert.Async.Some(6, MaybeEx.SelectAsync(Two, Times3Async));
+
+            [Fact]
+            public static async Task SelectAsync_SomeInt32_Sync() =>
+                await Assert.Async.Some(6, MaybeEx.SelectAsync(Two, Times3Sync));
 
             [Fact]
             public static async Task SelectAsync_SomeInt64() =>
                 await Assert.Async.Some(8L, MaybeEx.SelectAsync(TwoL, Times4Async));
 
             [Fact]
+            public static async Task SelectAsync_SomeInt64_Sync() =>
+                await Assert.Async.Some(8L, MaybeEx.SelectAsync(TwoL, Times4Sync));
+
+            [Fact]
             public static async Task SelectAsync_SomeUri() =>
                 await Assert.Async.Some(MyUri.AbsoluteUri,
                     MaybeEx.SelectAsync(SomeUri, GetAbsoluteUriAsync));
+
+            [Fact]
+            public static async Task SelectAsync_SomeUri_Sync() =>
+                await Assert.Async.Some(MyUri.AbsoluteUri,
+                    MaybeEx.SelectAsync(SomeUri, GetAbsoluteUriSync));
 
             #endregion
 
@@ -326,6 +483,19 @@ namespace Abc
             }
 
             [Fact]
+            public static async Task OrElseAsync_None_Sync()
+            {
+                await Assert.Async.Some(3, MaybeEx.OrElseAsync(Ø, ReturnSync_(3)));
+                await Assert.Async.Some("other", MaybeEx.OrElseAsync(NoText, ReturnSync_("other")));
+
+                var otherUri = new Uri("https://source.dot.net/");
+                await Assert.Async.Some(otherUri, MaybeEx.OrElseAsync(NoUri, ReturnSync_(otherUri)));
+
+                var otherAnyT = AnyT.Value;
+                await Assert.Async.Some(otherAnyT, MaybeEx.OrElseAsync(AnyT.None, ReturnSync_(otherAnyT)));
+            }
+
+            [Fact]
             public static async Task OrElseAsync_Some()
             {
                 var anyT = AnyT.New();
@@ -333,18 +503,40 @@ namespace Abc
             }
 
             [Fact]
+            public static async Task OrElseAsync_Some_Sync()
+            {
+                var anyT = AnyT.New();
+                await Assert.Async.Some(anyT.Value, MaybeEx.OrElseAsync(anyT.Some, ReturnSync_(AnyT.Value)));
+            }
+
+            [Fact]
             public static async Task OrElseAsync_SomeInt32() =>
                 await Assert.Async.Some(1, MaybeEx.OrElseAsync(One, ReturnAsync_(3)));
+
+            [Fact]
+            public static async Task OrElseAsync_SomeInt32_Sync() =>
+                await Assert.Async.Some(1, MaybeEx.OrElseAsync(One, ReturnSync_(3)));
 
             [Fact]
             public static async Task OrElseAsync_SomeText() =>
                 await Assert.Async.Some(MyText, MaybeEx.OrElseAsync(SomeText, ReturnAsync_("other")));
 
             [Fact]
+            public static async Task OrElseAsync_SomeText_Sync() =>
+                await Assert.Async.Some(MyText, MaybeEx.OrElseAsync(SomeText, ReturnSync_("other")));
+
+            [Fact]
             public static async Task OrElseAsync_SomeUri()
             {
                 var otherUri = new Uri("https://source.dot.net/");
                 await Assert.Async.Some(MyUri, MaybeEx.OrElseAsync(SomeUri, ReturnAsync_(otherUri)));
+            }
+
+            [Fact]
+            public static async Task OrElseAsync_SomeUri_Sync()
+            {
+                var otherUri = new Uri("https://source.dot.net/");
+                await Assert.Async.Some(MyUri, MaybeEx.OrElseAsync(SomeUri, ReturnSync_(otherUri)));
             }
 
             #endregion

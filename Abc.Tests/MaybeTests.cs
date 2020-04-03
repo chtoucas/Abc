@@ -40,33 +40,45 @@ namespace Abc
 #pragma warning restore CA1810
 
         [Pure]
+        public static Func<Task<Maybe<T>>> ReturnSync_<T>(T result) where T : notnull
+            => () => Task.FromResult(Maybe.Of(result));
+
+        [Pure]
         public static Func<Task<Maybe<T>>> ReturnAsync_<T>(T result) where T : notnull
             => async () => { await Task.Yield(); return Maybe.Of(result); };
 
         [Pure] private static T Ident<T>(T x) where T : notnull => x;
 
         [Pure] private static int Times3(int x) => 3 * x;
+        [Pure] private static Task<int> Times3Sync(int x) => Task.FromResult(3 * x);
         [Pure] private static async Task<int> Times3Async(int x) { await Task.Yield(); return 3 * x; }
 
         [Pure] private static Maybe<int> Times3_(int x) => Maybe.Some(3 * x);
+        [Pure] private static Task<Maybe<int>> Times3Sync_(int x) => Task.FromResult(Maybe.Some(3 * x));
         [Pure] private static async Task<Maybe<int>> Times3Async_(int x) { await Task.Yield(); return Maybe.Some(3 * x); }
 
         [Pure] private static long Times4(long x) => 4L * x;
+        [Pure] private static Task<long> Times4Sync(long x) => Task.FromResult(4L * x);
         [Pure] private static async Task<long> Times4Async(long x) { await Task.Yield(); return 4L * x; }
 
         [Pure] private static Maybe<long> Times4_(long x) => Maybe.Some(4L * x);
+        [Pure] private static Task<Maybe<long>> Times4Sync_(long x) => Task.FromResult(Maybe.Some(4L * x));
         [Pure] private static async Task<Maybe<long>> Times4Async_(long x) { await Task.Yield(); return Maybe.Some(4L * x); }
 
         [Pure] private static string GetAbsoluteUri(Uri x) => x.AbsoluteUri;
+        [Pure] private static Task<string> GetAbsoluteUriSync(Uri x) => Task.FromResult(x.AbsoluteUri);
         [Pure] private static async Task<string> GetAbsoluteUriAsync(Uri x) { await Task.Yield(); return x.AbsoluteUri; }
 
         [Pure] private static Maybe<string> GetAbsoluteUri_(Uri x) => Maybe.SomeOrNone(x.AbsoluteUri);
+        [Pure] private static Task<Maybe<string>> GetAbsoluteUriSync_(Uri x) => Task.FromResult(Maybe.SomeOrNone(x.AbsoluteUri));
         [Pure] private static async Task<Maybe<string>> GetAbsoluteUriAsync_(Uri x) { await Task.Yield(); return Maybe.SomeOrNone(x.AbsoluteUri); }
 
         [Pure] private static Maybe<AnyResult> ReturnNone<T>(T _) => AnyResult.None;
+        [Pure] private static Task<Maybe<AnyResult>> ReturnNoneSync<T>(T _) => Task.FromResult(AnyResult.None);
         [Pure] private static async Task<Maybe<AnyResult>> ReturnNoneAsync<T>(T _) { await Task.Yield(); return AnyResult.None; }
 
         [Pure] private static Maybe<AnyResult> ReturnSome<T>(T _) => AnyResult.Some;
+        [Pure] private static Task<Maybe<AnyResult>> ReturnSomeSync<T>(T _) => Task.FromResult(AnyResult.Some);
         [Pure] private static async Task<Maybe<AnyResult>> ReturnSomeAsync<T>(T _) { await Task.Yield(); return AnyResult.Some; }
     }
 

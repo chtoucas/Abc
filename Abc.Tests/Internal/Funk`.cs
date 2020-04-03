@@ -21,6 +21,8 @@ internal static class Funk<T, TResult>
 
     public static readonly Func<T, Task<TResult>> NullAsync = null!;
 
+    public static readonly Func<T, Task<TResult>> AnySync = _ => throw new UnexpectedCallException();
+
     public static readonly Func<T, Task<TResult>> AnyAsync = async _ =>
     {
         await Task.Yield();

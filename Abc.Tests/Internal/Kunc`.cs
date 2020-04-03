@@ -15,6 +15,14 @@ internal static class Kunc<T, TResult>
     public static readonly Func<T, Maybe<TResult>> Any = _ => throw new UnexpectedCallException();
 
     public static readonly Func<T, Task<Maybe<TResult>>> NullAsync = null!;
+
+    public static readonly Func<T, Task<Maybe<TResult>>> AnySync = _ => throw new UnexpectedCallException();
+
+    public static readonly Func<T, Task<Maybe<TResult>>> AnyAsync = async _ =>
+    {
+        await Task.Yield();
+        throw new UnexpectedCallException();
+    };
 }
 
 internal static class Kunc<T1, T2, TResult>
