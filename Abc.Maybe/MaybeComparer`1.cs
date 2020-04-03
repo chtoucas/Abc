@@ -13,7 +13,7 @@ namespace Abc
     // DO NOT FORGET TO UPDATE MaybeTests.StructuralComparable().
     // Same thing w/ IStructuralEquatable.
     // Implement IEqualityComparer<Maybe<T>>?
-    // Implement IEqualityComparer or remove IComparer?
+    // TODO: implement IEqualityComparer?
 
     // A total order for maybe's. Identical to what Maybe<T>.Compare() does,
     // but made available separately.
