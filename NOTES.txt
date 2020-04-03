@@ -7,11 +7,11 @@ Version 1.0.0-alpha-2
 - Full test coverage.
 
 Version 1.0.0-alpha-3
-- Add overloads w/ `IEqualityComparer<T>`? Ops `Maybe<T> == T`?
-- Remove `MaybeComparer<T>`?
+- Add overloads w/ IEqualityComparer<T>? Ops Maybe<T> == T?
+- Remove MaybeComparer<T>?
 
 Version 1.0.0-beta-1
-- Fix all TODOs and FIXMEs.
+- Fix all FIXMEs and TODOs.
 - More functional tests.
 
 Towards version 1.0.0
@@ -24,45 +24,45 @@ Towards version 1.0.0
     https://docs.microsoft.com/en-us/dotnet/core/packages
 - Strong name? How to avoid binding redirects? Prerequesite: assembly version.
   MUST be done before v1.0.0.
-  * https://github.com/dotnet/runtime/blob/master/docs/project/strong-name-signing.md
-  * https://docs.microsoft.com/en-gb/dotnet/standard/library-guidance/strong-naming
-- Publish symbols? SourceLink?
-  * `<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>`
-  * https://github.com/NuGet/Home/issues/4142
+  https://github.com/dotnet/runtime/blob/master/docs/project/strong-name-signing.md
+  https://docs.microsoft.com/en-gb/dotnet/standard/library-guidance/strong-naming
+- SourceLink?
+  https://github.com/NuGet/Home/issues/4142
 - MSBuild:
-  * Improve NuGet package description, `PackageLicenseFile`.
+  * Improve NuGet package description, PackageLicenseFile.
     https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets
-  * `Deterministic`, `ContinuousIntegrationBuild` `Title`, `AssemblyTitle`, `VersionPrefix`.
+  * Deterministic, ContinuousIntegrationBuild, Title, AssemblyTitle, VersionPrefix.
     https://blog.paranoidcoding.com/2016/04/05/deterministic-builds-in-roslyn.html
 
 TODOs
 -----
 
-See `FIXME`, `TODO` and `REVIEW` within the code.
+See FIXME, TODO and REVIEW within the code.
 - LINQ: optimize, more ops.
 - .NET Standard 2.1 & .NET Core 3.1
-  * More `May` helpers w/ `Span<T>`.
-  * `System.HashCode`
+  * More May helpers w/ Span<T>.
+  * System.HashCode
 
 Async:
 - Microsoft.Bcl.AsyncInterfaces
 - Async enumerables.
-- https://markheath.net/post/async-antipatterns
-- https://github.com/StephenCleary/AsyncEx
-- https://stackoverflow.com/questions/19098143/what-is-the-purpose-of-return-await-in-c
-- https://blog.stephencleary.com/2016/12/eliding-async-await.html
-- https://stackoverflow.com/questions/18656379/validate-parameters-in-async-method
-- https://codeblog.jonskeet.uk/2010/11/01/control-flow-redux-exceptions-in-asynchronous-code/
-- https://devblogs.microsoft.com/dotnet/configureawait-faq/
-- https://ericlippert.com/2020/03/10/passing-awaited-tasks/
-- https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/november/async-programming-unit-testing-asynchronous-code
+- References
+  https://markheath.net/post/async-antipatterns
+  https://github.com/StephenCleary/AsyncEx
+  https://stackoverflow.com/questions/19098143/what-is-the-purpose-of-return-await-in-c
+  https://blog.stephencleary.com/2016/12/eliding-async-await.html
+  https://stackoverflow.com/questions/18656379/validate-parameters-in-async-method
+  https://codeblog.jonskeet.uk/2010/11/01/control-flow-redux-exceptions-in-asynchronous-code/
+  https://devblogs.microsoft.com/dotnet/configureawait-faq/
+  https://ericlippert.com/2020/03/10/passing-awaited-tasks/
+  https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/november/async-programming-unit-testing-asynchronous-code
 
 Operations:
 - XML comments with complete examples.
   https://github.com/dotnet/dotnet-api-docs/wiki
 - Perf tool (LINQ, nulls, iterable).
 - Rewrite scripts in PowerShell? (not useful for qcoverlet.cmd and qtest.cmd).
-- Cleanup scripts, eg `dotnet nuget locals --clear all`.
+- Cleanup scripts, eg: dotnet nuget locals --clear all.
 
 Release Process
 ---------------
@@ -70,12 +70,12 @@ Release Process
 Guidelines
 ----------
 
-- Methods that return something should have the attribure `Pure`. It is not
+- Methods that return something should have the attribure Pure. It is not
   mandatory but it clearly states that the result should not be ignored.
   It might seem superfluous, but "ça ne mange pas de pain".
 - Add _nullable annotations_ whenever necessary.
 - _Seal classes_ unless they are designed with extensibility in mind.
-- Tag any use of the null-forgiving operator (!) with `BONSANG!`.
+- Tag any use of the null-forgiving operator (!) with BONSANG!.
 
 Editor config (does not affect the compilation).
 - IDE0039 - csharp_style_pattern_local_over_anonymous_function
@@ -85,7 +85,7 @@ https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-language-conventi
 Future plans?
 -------------
 
-[Narvalo.NET](https://github.com/chtoucas/Narvalo.NET)
+Narvalo.NET (https://github.com/chtoucas/Narvalo.NET)
 - utilities to write code in the ROP style (Railway Oriented Programming).
 - a fast Gregorian date type
 - country codes
@@ -98,7 +98,11 @@ Future plans?
 Numerics:
 - port of hypercalc to .NET (WinUI)
 - big decimal
-- [Integer](https://en.wikipedia.org/wiki/Integer_(computer_science))
-- [Minifloat](https://en.wikipedia.org/wiki/Minifloat)
-- [Signed number representations](https://en.wikipedia.org/wiki/Signed_number_representations)
-- [Binary-coded decimal](https://en.wikipedia.org/wiki/Binary-coded_decimal)
+- Integer
+  https://en.wikipedia.org/wiki/Integer_(computer_science)
+- Minifloat
+  https://en.wikipedia.org/wiki/Minifloat
+- Signed number representations
+  https://en.wikipedia.org/wiki/Signed_number_representations
+- Binary-coded decimal
+  https://en.wikipedia.org/wiki/Binary-coded_decimal
