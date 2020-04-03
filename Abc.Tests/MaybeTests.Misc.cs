@@ -15,8 +15,6 @@ namespace Abc
         public static void ZipWith_None_NullZipper()
         {
             Assert.ThrowsAnexn("zipper", () => Ø.ZipWith(TwoL, Funk<int, long, AnyResult>.Null));
-            Assert.ThrowsAnexn("zipper", () => NoText.ZipWith(TwoL, Funk<string, long, AnyResult>.Null));
-            Assert.ThrowsAnexn("zipper", () => NoUri.ZipWith(TwoL, Funk<Uri, long, AnyResult>.Null));
             Assert.ThrowsAnexn("zipper", () => AnyT.None.ZipWith(TwoL, Funk<AnyT, long, AnyResult>.Null));
         }
 
@@ -24,8 +22,6 @@ namespace Abc
         public static void ZipWith_Some_NullZipper()
         {
             Assert.ThrowsAnexn("zipper", () => One.ZipWith(TwoL, Funk<int, long, AnyResult>.Null));
-            Assert.ThrowsAnexn("zipper", () => SomeText.ZipWith(TwoL, Funk<string, long, AnyResult>.Null));
-            Assert.ThrowsAnexn("zipper", () => SomeUri.ZipWith(TwoL, Funk<Uri, long, AnyResult>.Null));
             Assert.ThrowsAnexn("zipper", () => AnyT.Some.ZipWith(TwoL, Funk<AnyT, long, AnyResult>.Null));
         }
 
