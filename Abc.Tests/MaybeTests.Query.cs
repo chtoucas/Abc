@@ -34,7 +34,7 @@ namespace Abc
         [Fact]
         public static void Select_None()
         {
-            Assert.None(Ø.Select(Ident));
+            Assert.None(Ø.Select(Funk<int, int>.Any));
             Assert.None(from x in Ø select x);
         }
 
@@ -82,18 +82,21 @@ namespace Abc
         }
 
         [Fact]
-        public static void Where()
+        public static void Where_None()
         {
-            // None.Where(false) -> None
-            Assert.None(Ø.Where(_ => true));
-            Assert.None(from x in Ø where true select x);
-            // None.Where(true) -> None
-            Assert.None(Ø.Where(_ => false));
-            Assert.None(from x in Ø where false select x);
+            Assert.None(Ø.Where(Funk<int, bool>.Any));
 
+            Assert.None(from x in Ø where true select x);
+            Assert.None(from x in Ø where false select x);
+        }
+
+        [Fact]
+        public static void Where_Some()
+        {
             // Some.Where(false) -> None
             Assert.None(One.Where(x => x == 2));
             Assert.None(from x in One where x == 2 select x);
+
             // Some.Where(true) -> Some
             Assert.Some(1, One.Where(x => x == 1));
             Assert.Some(1, from x in One where x == 1 select x);
@@ -156,14 +159,20 @@ namespace Abc
         }
 
         [Fact]
-        public static void SelectMany()
+        public static void SelectMany_None()
         {
             // None.SelectMany(None) -> None
             Assert.None(Ø.SelectMany(_ => Ø, (i, j) => i + j));
             Assert.None(from i in Ø from j in Ø select i + j);
+
             // None.SelectMany(Some) -> None
             Assert.None(Ø.SelectMany(i => Maybe.Some(2 * i), (i, j) => i + j));
             Assert.None(from i in Ø from j in Maybe.Some(2 * i) select i + j);
+        }
+
+        [Fact]
+        public static void SelectMany_Some()
+        {
             // Some.SelectMany(None) -> None
             Assert.None(One.SelectMany(_ => Ø, (i, j) => i + j));
             Assert.None(from i in One from j in Ø select i + j);
@@ -250,10 +259,39 @@ namespace Abc
         }
 
         [Fact]
-        public static void Join()
+        public static void Join_None()
+        {
+            Assert.None(Ø.Join(One, Ident, Ident, (i, j) => i + j));
+            Assert.None(from i in Ø join j in One on i equals j select i + j);
+        }
+
+        [Fact]
+        public static void Join_Some_WithNone()
+        {
+            Assert.None(One.Join(Ø, Ident, Ident, (i, j) => i + j));
+            Assert.None(from i in One join j in Ø on i equals j select i + j);
+        }
+
+        [Fact]
+        public static void Join_Some_WithSome_Unmatched()
         {
             Assert.None(One.Join(Two, Ident, Ident, (i, j) => i + j));
             Assert.None(from i in One join j in Two on i equals j select i + j);
+        }
+
+        [Fact]
+        public static void Join_Some_WithSome_Matched()
+        {
+            Assert.Some(2, One.Join(One, Ident, Ident, (i, j) => i + j));
+            Assert.Some(2, from i in One join j in One on i equals j select i + j);
+
+            Assert.Some(3, One.Join(Two, x => 2 * x, Ident, (i, j) => i + j));
+            Assert.Some(3, from i in One join j in Two on 2 * i equals j select i + j);
+
+            var outer = Maybe.Some(3);
+            var inner = Maybe.Some(5);
+            Assert.Some(8, outer.Join(inner, x => 5 * x, x => 3 * x, (i, j) => i + j));
+            Assert.Some(8, from i in outer join j in inner on 5 * i equals 3 * j select i + j);
         }
 
         [Fact]
