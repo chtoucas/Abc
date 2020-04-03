@@ -10,7 +10,7 @@ Version 1.0.0-alpha-3
 - Add overloads w/ IEqualityComparer<T>? Ops Maybe<T> == T?
 - Remove MaybeComparer<T>?
 
-Version 1.0.0-beta-1
+Version 1.0.0-beta1
 - Fix all FIXMEs and TODOs.
 - More functional tests.
 
