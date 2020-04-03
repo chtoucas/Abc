@@ -10,12 +10,12 @@
 
 :Test
 @echo Cleaning...
-@call :OnError dotnet clean -c Release -v minimal
-@call :OnError dotnet test .\Abc.Tests\ -c Release --nologo
+@call :OnError dotnet clean -c Release -v minimal --nologo
+@call :OnError dotnet test .\Abc.Tests\ -c Release
 
 :Pack
 @call :OnError dotnet pack .\Abc.Maybe -c Release --nologo ^
-    --output __packages ^
+    --output __\packages ^
     -p:TargetFrameworks=\"netstandard2.0;netstandard2.1;netcoreapp3.1\" ^
     -p:Deterministic=true ^
     -p:PackageVersion=%Version%
