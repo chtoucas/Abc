@@ -296,20 +296,25 @@ We already saw `Select` and `Where`, but there is more.
 // Cross join.
 var q = from i in maybe1
         from j in maybe2
-        select i + j
+        select i + j;
 // But it is better written without a (hidden) lambda function.
 var q = maybe1.ZipWith(maybe2, (i, j) => i + j);
 
+// Binding can be written using the query syntax...
+var q = from x in maybe
+        from y in binder(x)
+        select y;
+
 var q = from i in maybe
         from j in Maybe.Some(2 * i)
-        select i + j
+        select i + j;
 
 // Pythagorean triple? q is a Maybe<(int, int, int)>.
 var q = from x in maybe1
         from y in maybe2
         from z in maybe3
         where x * x + y * y == z * z
-        select (x, y, z)
+        select (x, y, z);
 ```
 
 ### Specialized types
