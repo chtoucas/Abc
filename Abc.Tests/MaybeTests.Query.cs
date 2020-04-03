@@ -28,6 +28,13 @@ namespace Abc
             public string Name;
             public string Description;
         }
+
+        private struct MyData2
+        {
+            public int Id;
+            public string Name;
+            public Maybe<MyInfo> Info;
+        }
     }
 
     // Select()
@@ -542,6 +549,47 @@ namespace Abc
                 Funk<string>.Any),
                 new AnagramEqualityComparer());
             // Assert
+            Assert.Some(expected, q);
+        }
+
+        [Fact]
+        public static void GroupJoin_Some_WithSome_ComplexType_Unmatched()
+        {
+            // Arrange
+            var item = new MyItem { Id = 1, Name = "Name" };
+            var info = new MyInfo { Id = 2, Description = "Description" };
+            var outer = Maybe.Some(item);
+            var inner = Maybe.Some(info);
+            // Act
+            var q = from x in outer
+                    join y in inner on x.Id equals y.Id into m
+                    select new MyData2
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Info = m
+                    };
+            Assert.None(q);
+        }
+
+        [Fact]
+        public static void GroupJoin_Some_WithSome_ComplexType_Matched()
+        {
+            // Arrange
+            var item = new MyItem { Id = 1, Name = "Name" };
+            var info = new MyInfo { Id = 1, Description = "Description" };
+            var outer = Maybe.Some(item);
+            var inner = Maybe.Some(info);
+            var expected = new MyData2 { Id = 1, Name = "Name", Info = inner };
+            // Act
+            var q = from x in outer
+                    join y in inner on x.Id equals y.Id into m
+                    select new MyData2
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Info = m
+                    };
             Assert.Some(expected, q);
         }
     }

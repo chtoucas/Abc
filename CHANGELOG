@@ -10,6 +10,7 @@ Changed
   an anonymous function.
 
 Removed
+- Maybe<T>.GroupJoin(); it made no sense, use Maybe<T>.Join() instead.
 - Maybe<T>.SwitchAsync(); use Maybe<T>.Switch() instead.
 - Qperators.ZipAny(); use LINQ Zip followed by Maybe.CollectAny().
 

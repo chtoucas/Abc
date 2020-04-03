@@ -30,7 +30,6 @@ namespace Abc
     //   https://devblogs.microsoft.com/dotnet/embracing-nullable-reference-types/
     // - IEquatable<T> (T == Maybe<T>), IComparable<T> but a bit missleading?
     //   Overloads w/ IEqualityComparer<T>.
-    // - Move Join() and GroupJoin() to Maybe? We need compelling examples.
     // - Serializable? Binary serialization only.
     //   https://docs.microsoft.com/en-us/dotnet/standard/serialization/binary-serialization
     // - Set ops POV.

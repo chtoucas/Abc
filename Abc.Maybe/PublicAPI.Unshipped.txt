@@ -12,8 +12,6 @@ Abc.Maybe<T>.Contains(T value, System.Collections.Generic.IEqualityComparer<T> c
 Abc.Maybe<T>.Do(System.Action<T> onSome, System.Action onNone) -> void
 Abc.Maybe<T>.Equals(Abc.Maybe<T> other) -> bool
 Abc.Maybe<T>.GetEnumerator() -> System.Collections.Generic.IEnumerator<T>
-Abc.Maybe<T>.GroupJoin<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, Abc.Maybe<TInner>, TResult> resultSelector) -> Abc.Maybe<TResult>
-Abc.Maybe<T>.GroupJoin<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, Abc.Maybe<TInner>, TResult> resultSelector, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.IsNone.get -> bool
 Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector) -> Abc.Maybe<TResult>
 Abc.Maybe<T>.Join<TInner, TKey, TResult>(Abc.Maybe<TInner> inner, System.Func<T, TKey> outerKeySelector, System.Func<TInner, TKey> innerKeySelector, System.Func<T, TInner, TResult> resultSelector, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> Abc.Maybe<TResult>
