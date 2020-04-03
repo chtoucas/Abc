@@ -308,7 +308,7 @@ var q = from i in maybe
 var q = from x in maybe1
         from y in maybe2
         from z in maybe3
-        where x ^ 2 + y ^ 2 == z ^ 2
+        where x * x + y * y == z * z
         select (x, y, z)
 ```
 
