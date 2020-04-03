@@ -1,5 +1,5 @@
 :: Quickly run the test suite.
-:: Will crash if the packages were not restored before.
+:: Beware, will crash if the packages were not restored before.
 ::
 :: Examples:
 :: > qtest --filter Category=XXXX

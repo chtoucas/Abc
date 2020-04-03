@@ -1,4 +1,5 @@
-:: Will crash if the packages were not restored before.
+:: Test coverage w/ Coverlet.
+:: Beware, will crash if the packages were not restored before.
 
 @echo off
 @setlocal
