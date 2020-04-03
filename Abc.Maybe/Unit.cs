@@ -1,4 +1,4 @@
-﻿// See LICENSE.txt in the project root for license information.
+﻿// See LICENSE in the project root for license information.
 
 #pragma warning disable CA1801 // -Review unused parameters
 

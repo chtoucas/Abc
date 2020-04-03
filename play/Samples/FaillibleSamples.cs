@@ -1,4 +1,4 @@
-﻿// See LICENSE.txt in the project root for license information.
+﻿// See LICENSE in the project root for license information.
 
 #pragma warning disable CA1000 // Do not declare static members on generic types
 
