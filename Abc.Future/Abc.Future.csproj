@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(MSBuildThisFileDirectory)..\Common.props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\eng\Common.props" />
 
   <PropertyGroup>
     <!-- See explanations in Abc.csproj -->
@@ -18,6 +18,6 @@
     <ProjectReference Include="..\Abc.Maybe\Abc.Maybe.csproj" />
   </ItemGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)..\Common.After.props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\eng\Common.After.props" />
 
 </Project>
