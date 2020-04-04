@@ -3,6 +3,7 @@
 namespace Abc
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
     using Anexn = System.ArgumentNullException;
@@ -85,6 +86,91 @@ namespace Abc
             if (!middle._isSome) { return Maybe<TResult>.None; }
 
             return Maybe.Of(resultSelector(_value, middle._value));
+        }
+
+        /// <example>
+        /// Query expression syntax (outer = this):
+        /// <code><![CDATA[
+        ///   from x in outer
+        ///   join y in inner
+        ///   on outerKeySelector(x) equals innerKeySelector(y)
+        ///   select resultSelector(x, y)
+        /// ]]></code>
+        /// </example>
+        /// <remarks>
+        /// The same can be achieved by using <see cref="Maybe{T}.SelectMany"/>
+        /// and <see cref="Maybe{T}.Where"/>:
+        /// <code><![CDATA[
+        ///   from x in outer
+        ///   from y in inner
+        ///   where outerKeySelector(x) == innerKeySelector(y)
+        ///   select resultSelector(x, y)
+        /// ]]></code>
+        /// Even if <c>join</c> is a <c>select many</c> in disguise, it seems to
+        /// be faster and more memory efficient (maybe because the later must be
+        /// combined with a <c>where</c> clause).
+        /// </remarks>
+        [Pure]
+        public Maybe<TResult> Join<TInner, TKey, TResult>(
+            Maybe<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector)
+        {
+            if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+            return JoinImpl(
+                inner,
+                outerKeySelector,
+                innerKeySelector,
+                resultSelector,
+                EqualityComparer<TKey>.Default);
+        }
+
+        // No query expression syntax.
+        // If "comparer" is null, the default equality comparer is used instead.
+        [Pure]
+        public Maybe<TResult> Join<TInner, TKey, TResult>(
+            Maybe<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector,
+            IEqualityComparer<TKey>? comparer)
+        {
+            if (outerKeySelector is null) { throw new Anexn(nameof(outerKeySelector)); }
+            if (innerKeySelector is null) { throw new Anexn(nameof(innerKeySelector)); }
+            if (resultSelector is null) { throw new Anexn(nameof(resultSelector)); }
+
+            return JoinImpl(
+                inner,
+                outerKeySelector,
+                innerKeySelector,
+                resultSelector,
+                comparer ?? EqualityComparer<TKey>.Default);
+        }
+
+        [Pure]
+        private Maybe<TResult> JoinImpl<TInner, TKey, TResult>(
+            Maybe<TInner> inner,
+            Func<T, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<T, TInner, TResult> resultSelector,
+            IEqualityComparer<TKey> comparer)
+        {
+            if (_isSome && inner._isSome)
+            {
+                TKey outerKey = outerKeySelector(_value);
+                TKey innerKey = innerKeySelector(inner._value);
+
+                if (comparer.Equals(outerKey, innerKey))
+                {
+                    return Maybe.Of(resultSelector(_value, inner._value));
+                }
+            }
+
+            return Maybe<TResult>.None;
         }
     }
 }
