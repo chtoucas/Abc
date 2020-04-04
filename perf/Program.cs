@@ -31,7 +31,7 @@ namespace PerfTool
                 //.With(new EtwProfiler())
                 ;
 
-            BenchmarkRunner.Run<Comparisons.SelectManyPerf>(config);
+            BenchmarkRunner.Run<Comparisons.SelectMany_Join>(config);
         }
 #endif
 

@@ -10,8 +10,14 @@ namespace PerfTool.Comparisons
 
     [ShortRunJob]
     [MemoryDiagnoser]
-    public partial class SelectManyPerf
+    public partial class SelectMany_Join
     {
+        private static readonly Maybe<MyItem> s_Outer =
+            Maybe.SomeOrNone(new MyItem { Id = 1, Name = "Name" });
+
+        private static readonly Maybe<MyInfo> s_Inner =
+            Maybe.SomeOrNone(new MyInfo { Id = 1, Description = "Description" });
+
         public class MyItem
         {
             public int Id = 0;
@@ -32,19 +38,12 @@ namespace PerfTool.Comparisons
         }
     }
 
-    public partial class SelectManyPerf
+    public partial class SelectMany_Join
     {
-        private static readonly Maybe<MyItem> s_Outer =
-            Maybe.SomeOrNone(new MyItem { Id = 1, Name = "Name" });
-
-        private static readonly Maybe<MyInfo> s_Inner =
-            Maybe.SomeOrNone(new MyInfo { Id = 1, Description = "Description" });
-
         [Benchmark(Baseline = true)]
-        public static Maybe<MyData> SelectMany() =>
+        public Maybe<MyData> Join() =>
             from x in s_Outer
-            from y in s_Inner
-            where x.Id == y.Id
+            join y in s_Inner on x.Id equals y.Id
             select new MyData
             {
                 Id = x.Id,
@@ -53,9 +52,10 @@ namespace PerfTool.Comparisons
             };
 
         [Benchmark]
-        public static Maybe<MyData> Join() =>
+        public Maybe<MyData> SelectMany() =>
             from x in s_Outer
-            join y in s_Inner on x.Id equals y.Id
+            from y in s_Inner
+            where x.Id == y.Id
             select new MyData
             {
                 Id = x.Id,
