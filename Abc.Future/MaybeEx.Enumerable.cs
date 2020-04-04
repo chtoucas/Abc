@@ -65,9 +65,9 @@ namespace Abc
 
             Maybe<IEnumerable<T>> aggr = Collect(source);
 
-            return aggr.Select(__sum);
+            return aggr.Select(__);
 
-            T __sum(IEnumerable<T> seq)
+            T __(IEnumerable<T> seq)
             {
                 T sum = zero;
                 foreach (var item in seq)

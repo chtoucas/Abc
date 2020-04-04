@@ -10,7 +10,11 @@ namespace Abc
 
     // It seems pretty clear that Join() and GroupJoin() are SelectMany() in
     // disguise. We shall need compelling examples before considering this
-    // seriously.
+    // seriously. So far, the only advantage has Join() over SelectMany() is
+    // that we don't need a lambda function to specify the inner part --- maybe
+    // also Join() is a single method call (SelectMany() must be combined with a
+    // where clause). As for GroupJoin(), it is just a Join() with an
+    // unnecessary into clause.
 
     // Join()
     public partial class MaybeEx
@@ -20,7 +24,7 @@ namespace Abc
         /// <code><![CDATA[
         ///   from x in outer
         ///   join y in inner
-        ///     on outerKeySelector(x) equals innerKeySelector(y)
+        ///   on outerKeySelector(x) equals innerKeySelector(y)
         ///   select resultSelector(x, y)
         /// ]]></code>
         /// </example>
@@ -122,6 +126,14 @@ namespace Abc
         ///   from x in outer
         ///   from y in inner
         ///   where outerKeySelector(x) == innerKeySelector(y)
+        ///   select resultSelector(x, inner)
+        /// ]]></code>
+        /// Furthermore, <see cref="Maybe{T}"/> being "flat", a group join is
+        /// nothing but a join, the <c>into</c> clause is obviously unnecessary:
+        /// <code><![CDATA[
+        ///   from x in outer
+        ///   join y in inner
+        ///   on outerKeySelector(x) equals innerKeySelector(y)
         ///   select resultSelector(x, inner)
         /// ]]></code>
         /// </remarks>

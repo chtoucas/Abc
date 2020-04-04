@@ -44,9 +44,9 @@ namespace Abc.Extensions
             //// Check args eagerly.
             //if (@this is null) { throw new ArgumentNullException(nameof(@this)); }
 
-            //return __iterator();
+            //return __();
 
-            //IEnumerable<T> __iterator()
+            //IEnumerable<T> __()
             //{
             //    foreach (string item in @this.GetValues(name))
             //    {

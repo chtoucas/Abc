@@ -89,9 +89,9 @@ namespace Abc
         {
             if (predicate is null) { throw new Anexn(nameof(predicate)); }
 
-            return await maybe.BindAsync(__binder).ConfigureAwait(false);
+            return await maybe.BindAsync(__).ConfigureAwait(false);
 
-            async Task<Maybe<T>> __binder(T x)
+            async Task<Maybe<T>> __(T x)
                 => await predicate(x).ConfigureAwait(false) ? maybe : Maybe<T>.None;
         }
     }
