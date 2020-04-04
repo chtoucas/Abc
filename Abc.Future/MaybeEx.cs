@@ -121,7 +121,9 @@ namespace Abc
         // Simple solution: since IsNone is public, we do not really need to
         // bother w/ ReplaceWith(), same thing with AndThen() in fact.
 
-        // REVIEW: OrElse(T)
+        // REVIEW: OrElse(T other)? but under a diff name. I doubt it, it's so
+        // easy to write...
+        //   _isSome ? this : Maybe.Of(other)
 
 #if true
         /// <remarks>

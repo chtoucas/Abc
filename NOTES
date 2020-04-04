@@ -5,9 +5,12 @@ vNEXT
 
 Version 1.0.0-alpha-3
 - Add overloads w/ IEqualityComparer<T>? Ops Maybe<T> == T?
-- Remove MaybeComparer<T>?
+- Finish MaybeComparer<T>.
+- Further test IStructuralComparable.
+- Testing is well underway but there is still a lot to be done.
 
 Version 1.0.0-beta1
+- Stable API.
 - Fix all FIXMEs and TODOs.
 - More functional tests.
 

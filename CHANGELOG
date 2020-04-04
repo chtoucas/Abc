@@ -12,14 +12,14 @@ Changed
 - Maybe.Compose() and Maybe.ComposeBack() now return a "maybe" rather than
   an anonymous function.
 - The NuGet package now includes the pdb.
-- Full test coverage.
 
 Removed
 - Maybe<T>.GroupJoin(); it made no sense, use Maybe<T>.Join() instead.
 - Maybe<T>.SwitchAsync(); use Maybe<T>.Switch() instead.
 - Qperators.ZipAny(); use LINQ Zip followed by Maybe.CollectAny().
 
-Internal Changes
+Internals
+- Full test coverage.
 - Replaced OpenCover by coverlet as the default tool for test coverage.
 - New project Narvalo.Future for experimental code.
 - Cleaned up project files.
@@ -32,11 +32,10 @@ Internal Changes
 2020-03-27, version 1.0.0-alpha-1
 ---------------------------------
 
-First public release.
+First alpha release.
 
 2017-04-07, version 0.28.0
 --------------------------
 
 Still available on nuget.org but under a different name
-(https://www.nuget.org/packages/Narvalo.Fx/) now deprecated. It is broken,
-please do NOT use.
+(https://www.nuget.org/packages/Narvalo.Fx/) now deprecated.

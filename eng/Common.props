@@ -5,10 +5,12 @@
     <Company>Narvalo.Org</Company>
     <Product>Abc</Product>
     <Copyright>Copyright © 2013 Narvalo.Org</Copyright>
-    <RepositoryUrl>https://github.com/chtoucas/Abc</RepositoryUrl>
-    <PackageLicenseFile></PackageLicenseFile>
     <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/chtoucas/Abc</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/chtoucas/Abc/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/chtoucas/Abc/blob/master/LICENSE</PackageLicenseUrl>
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
+    <PackageReleaseNotes>See https://github.com/chtoucas/Abc/blob/master/CHANGELOG.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>

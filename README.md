@@ -1,10 +1,6 @@
 # Abécédaire
 
 Abc features a rich option type for C#.
-
-**Status:** _unstable_
-- The API should be stable.
-- Testing is well underway but there is still a lot to be done.
 - Supported frameworks:
   * .NET Standard 2.0
   * .NET Standard 2.1 w/ nullable annotations
@@ -12,14 +8,11 @@ Abc features a rich option type for C#.
 
 |NuGet|OpenCover|Coverlet|
 |-----|---------|--------|
-| [![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/) | ![OpenCover](./__/opencover.svg) |![Coverlet](./__/coverlet.svg) |
+| [![NuGet](https://img.shields.io/nuget/v/Abc.Maybe.svg)](https://www.nuget.org/packages/Abc.Maybe/) | [![OpenCover](./__/opencover.svg)](./__/opencover.txt) | [![Coverlet](./__/coverlet.svg)](./__/coverlet.txt) |
 
 - [Quick Start with `Maybe<T>`](#quick-start-with-maybet)
 - [Usage Guidelines](#usage-guidelines)
-- [Version History](#version-history)
 - [Changelog](CHANGELOG)
-- [Developer Notes](NOTES)
-- Coverage Reports w/ [OpenCover](./__/opencover.txt) and [Coverlet](./__/coverlet.txt)
 - [License](LICENSE)
 
 Quick Start with `Maybe<T>`
@@ -300,21 +293,17 @@ var q = from i in maybe1
 // But it is better written without a (hidden) lambda function.
 var q = maybe1.ZipWith(maybe2, (i, j) => i + j);
 
-// Binding can be written using the query syntax...
-var q = from x in maybe
-        from y in binder(x)
-        select y;
-
+//
 var q = from i in maybe
         from j in Maybe.Some(2 * i)
         select i + j;
+```
 
-// Pythagorean triple? q is a Maybe<(int, int, int)>.
-var q = from x in maybe1
-        from y in maybe2
-        from z in maybe3
-        where x * x + y * y == z * z
-        select (x, y, z);
+Binding can be written using the query syntax...
+```csharp
+var q = from x in maybe
+        from y in binder(x)
+        select y;
 ```
 
 ### Specialized types
@@ -413,9 +402,3 @@ otherwise I would not have written this library. _Maybe_'s should be
 
 For reference types, a _maybe_ offers a better paradigm than a `null` to express
 the inability to return a meaningful result.
-
-Version History
----------------
-
-- 2020-03-27, v[1.0.0-alpha-1](Changelog.md#100-alpha-1-2020-03-27) First public release.
-

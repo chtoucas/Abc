@@ -7,13 +7,12 @@ namespace Abc
 
     using EF = Abc.Utilities.ExceptionFactory;
 
+    // TODO: implement IEqualityComparer.
     // REVIEW: should we make it work with a comparer w/ Maybe<T>.
     //   return comparer.Compare(this, maybe);
-    // Should we esnure that MaybeComparer<T> works with T?
+    // Simply inherit EqualityComparer<T>?
+    // Should we ensure that MaybeComparer<T> works with T? IEqualityComparer<T>?
     // DO NOT FORGET TO UPDATE MaybeTests.StructuralComparable().
-    // Same thing w/ IStructuralEquatable.
-    // Implement IEqualityComparer<Maybe<T>>?
-    // TODO: implement IEqualityComparer?
 
     // A total order for maybe's. Identical to what Maybe<T>.Compare() does,
     // but made available separately.

@@ -8,6 +8,8 @@ namespace Abc
 
     using Anexn = System.ArgumentNullException;
 
+    // We will need compelling examples to consider this seriously.
+
     public partial class MaybeEx
     {
         /// <example>
