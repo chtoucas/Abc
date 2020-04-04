@@ -9,6 +9,9 @@ Removed
   comparisons are already structural. I don't think that we need to implement
   the structural comparison interfaces.
 
+Internals
+- New perf project.
+
 2020-04-03, version 1.0.0-alpha-2
 ---------------------------------
 
