@@ -4,7 +4,8 @@ vNEXT
 -----
 
 Version 1.0.0-alpha-3
-- Add overloads w/ IEqualityComparer<T>? Ops Maybe<T> == T?
+- Pluggable comparison at the Maybe<T> level.
+  Add overloads w/ IEqualityComparer<T>? Ops Maybe<T> == T?
 - Finish MaybeComparer<T>.
 - Testing is well underway but there is still a lot to be done.
 

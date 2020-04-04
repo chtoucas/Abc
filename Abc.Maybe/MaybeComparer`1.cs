@@ -14,6 +14,7 @@ namespace Abc
     // Should we ensure that MaybeComparer<T> works with T? IEqualityComparer<T>?
     // DO NOT FORGET TO UPDATE MaybeTests.StructuralComparable().
 
+    // Pluggable comparison.
     // A total order for maybe's. Identical to what Maybe<T>.Compare() does,
     // but made available separately.
     // The convention is that the empty maybe is strictly less than any other
