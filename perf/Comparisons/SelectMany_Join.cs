@@ -12,38 +12,39 @@ namespace PerfTool.Comparisons
     [MemoryDiagnoser]
     public partial class SelectMany_Join
     {
-        private static readonly Maybe<MyItem> s_Outer =
+        private static readonly Maybe<MyItem> s_OuterObj =
             Maybe.SomeOrNone(new MyItem { Id = 1, Name = "Name" });
 
-        private static readonly Maybe<MyInfo> s_Inner =
+        private static readonly Maybe<MyInfo> s_InnerObj =
             Maybe.SomeOrNone(new MyInfo { Id = 1, Description = "Description" });
 
-        public class MyItem
+        public sealed class MyItem
         {
-            public int Id = 0;
+            public int Id;
             public string Name = String.Empty;
         }
 
-        public class MyInfo
+        public sealed class MyInfo
         {
-            public int Id { get; set; }
-            public string Description { get; set; } = String.Empty;
+            public int Id;
+            public string Description = String.Empty;
         }
 
-        public class MyData
+        public sealed class MyData
         {
-            public int Id { get; set; }
-            public string Name { get; set; } = String.Empty;
-            public string Description { get; set; } = String.Empty;
+            public int Id;
+            public string Name = String.Empty;
+            public string Description = String.Empty;
         }
     }
 
     public partial class SelectMany_Join
     {
-        [Benchmark(Baseline = true)]
-        public Maybe<MyData> Join() =>
-            from x in s_Outer
-            join y in s_Inner on x.Id equals y.Id
+        [Benchmark]
+        public Maybe<MyData> SelectMany_Class() =>
+            from x in s_OuterObj
+            from y in s_InnerObj
+            where x.Id == y.Id
             select new MyData
             {
                 Id = x.Id,
@@ -51,11 +52,10 @@ namespace PerfTool.Comparisons
                 Description = y.Description
             };
 
-        [Benchmark]
-        public Maybe<MyData> SelectMany() =>
-            from x in s_Outer
-            from y in s_Inner
-            where x.Id == y.Id
+        [Benchmark(Baseline = true)]
+        public Maybe<MyData> Join_Class() =>
+            from x in s_OuterObj
+            join y in s_InnerObj on x.Id equals y.Id
             select new MyData
             {
                 Id = x.Id,
