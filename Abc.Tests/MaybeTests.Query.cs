@@ -29,7 +29,7 @@ namespace Abc
             public string Description;
         }
 
-        private struct MyData2
+        private struct MyDataGroup
         {
             public int Id;
             public string Name;
@@ -306,6 +306,9 @@ namespace Abc
         {
             Assert.None(Ø.Join(One, Ident, Ident, (i, j) => i + j));
             Assert.None(from i in Ø join j in One on i equals j select i + j);
+
+            // With SelectMany().
+            Assert.None(from i in Ø from j in One where i == j select i + j);
         }
 
         [Fact]
@@ -313,6 +316,9 @@ namespace Abc
         {
             Assert.None(One.Join(Ø, Ident, Ident, (i, j) => i + j));
             Assert.None(from i in One join j in Ø on i equals j select i + j);
+
+            // With SelectMany().
+            Assert.None(from i in One from j in Ø where i == j select i + j);
         }
 
         [Fact]
@@ -320,6 +326,9 @@ namespace Abc
         {
             Assert.None(One.Join(Two, Ident, Ident, (i, j) => i + j));
             Assert.None(from i in One join j in Two on i equals j select i + j);
+
+            // With SelectMany().
+            Assert.None(from i in One from j in Two where i == j select i + j);
         }
 
         [Fact]
@@ -335,6 +344,11 @@ namespace Abc
             var inner = Maybe.Some(5);
             Assert.Some(8, outer.Join(inner, x => 5 * x, x => 3 * x, (i, j) => i + j));
             Assert.Some(8, from i in outer join j in inner on 5 * i equals 3 * j select i + j);
+
+            // With SelectMany().
+            Assert.Some(2, from i in One from j in One where i == j select i + j);
+            Assert.Some(3, from i in One from j in Two where 2 * i == j select i + j);
+            Assert.Some(8, from i in outer from j in inner where 5 * i == 3 * j select i + j);
         }
 
         [Fact]
@@ -347,6 +361,13 @@ namespace Abc
             var q = outer.Join(inner, Ident, Ident, (x, y) => $"{x} = {y}", null);
             // Assert
             Assert.None(q);
+
+            // With SelectMany().
+            Assert.None(
+                from x in outer
+                from y in inner
+                where x == y
+                select $"{x} == {y}");
         }
 
         [Fact]
@@ -355,13 +376,21 @@ namespace Abc
             // Arrange
             var outer = Maybe.SomeOrNone(Anagram);
             var inner = Maybe.SomeOrNone(Margana);
+            var comparer = new AnagramEqualityComparer();
             string expected = $"{Anagram} est un anagramme de {Margana}";
             // Act
             var q = outer.Join(inner, Ident, Ident,
                 (x, y) => $"{x} est un anagramme de {y}",
-                new AnagramEqualityComparer());
+                comparer);
             // Assert
             Assert.Some(expected, q);
+
+            // With SelectMany().
+            Assert.Some(expected,
+                from x in outer
+                from y in inner
+                where comparer.Equals(x, y)
+                select $"{x} est un anagramme de {y}");
         }
 
         [Fact]
@@ -381,7 +410,20 @@ namespace Abc
                         Name = x.Name,
                         Description = y.Description
                     };
+            // Assert
             Assert.None(q);
+
+            // With SelectMany().
+            Assert.None(
+                from x in outer
+                from y in inner
+                where x.Id == y.Id
+                select new MyData
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = y.Description
+                });
         }
 
         [Fact]
@@ -402,7 +444,20 @@ namespace Abc
                         Name = x.Name,
                         Description = y.Description
                     };
+            // Assert
             Assert.Some(expected, q);
+
+            // With SelectMany().
+            Assert.Some(expected,
+                from x in outer
+                from y in inner
+                where x.Id == y.Id
+                select new MyData
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = y.Description
+                });
         }
     }
 
@@ -562,13 +617,14 @@ namespace Abc
             var inner = Maybe.Some(info);
             // Act
             var q = from x in outer
-                    join y in inner on x.Id equals y.Id into m
-                    select new MyData2
+                    join y in inner on x.Id equals y.Id into g
+                    select new MyDataGroup
                     {
                         Id = x.Id,
                         Name = x.Name,
-                        Info = m
+                        Info = g
                     };
+            // Assert
             Assert.None(q);
         }
 
@@ -580,16 +636,17 @@ namespace Abc
             var info = new MyInfo { Id = 1, Description = "Description" };
             var outer = Maybe.Some(item);
             var inner = Maybe.Some(info);
-            var expected = new MyData2 { Id = 1, Name = "Name", Info = inner };
+            var expected = new MyDataGroup { Id = 1, Name = "Name", Info = inner };
             // Act
             var q = from x in outer
-                    join y in inner on x.Id equals y.Id into m
-                    select new MyData2
+                    join y in inner on x.Id equals y.Id into g
+                    select new MyDataGroup
                     {
                         Id = x.Id,
                         Name = x.Name,
-                        Info = m
+                        Info = g
                     };
+            // Assert
             Assert.Some(expected, q);
         }
     }
@@ -600,22 +657,26 @@ namespace Abc
         [Fact]
         public static void Query_PythagoreanTriple_KO()
         {
+            // Arrange
             var none = from i in Maybe.Some(1)
                        from j in Maybe.Some(2)
                        from k in Maybe.Some(3)
                        where i * i + j * j == k * k
                        select (i, j, k);
+            // Assert
             Assert.None(none);
         }
 
         [Fact]
         public static void Query_PythagoreanTriple_OK()
         {
+            // Arrange
             var some = from i in Maybe.Some(17)
                        from j in Maybe.Some(144)
                        from k in Maybe.Some(145)
                        where i * i + j * j == k * k
                        select (i, j, k);
+            // Assert
             Assert.Some(some);
         }
     }

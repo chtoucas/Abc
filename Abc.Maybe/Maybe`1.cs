@@ -88,8 +88,6 @@ namespace Abc
     /// - Select()              LINQ select
     /// - SelectMany()          LINQ select many
     /// - Where()               LINQ filter
-    /// - Join()                LINQ join
-    /// - GroupJoin()           LINQ group join
     /// - ZipWith()             cross join
     /// - OrElse()              logical OR; "none"-coalescing
     /// - AndThen()             logical AND

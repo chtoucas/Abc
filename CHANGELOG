@@ -3,6 +3,9 @@ Changelog for Abc.
 vNEXT
 -----
 
+Removed
+- Maybe<T>.Join(); use Maybe<T>.SelectMany() instead.
+
 2020-04-03, version 1.0.0-alpha-2
 ---------------------------------
 
@@ -14,7 +17,7 @@ Changed
 - The NuGet package now includes the pdb.
 
 Removed
-- Maybe<T>.GroupJoin(); it made no sense, use Maybe<T>.Join() instead.
+- Maybe<T>.GroupJoin(); use Maybe<T>.SelectMany() instead.
 - Maybe<T>.SwitchAsync(); use Maybe<T>.Switch() instead.
 - Qperators.ZipAny(); use LINQ Zip followed by Maybe.CollectAny().
 
