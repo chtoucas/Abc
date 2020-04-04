@@ -614,10 +614,9 @@ namespace Abc
             var item = new MyItem { Id = 1, Name = "Name" };
             var info = new MyInfo { Id = 2, Description = "Description" };
             var outer = Maybe.Some(item);
-            var inner = Maybe.Some(info);
             // Act
             var q = from x in outer
-                    join y in inner on x.Id equals y.Id into g
+                    join y in Maybe.Some(info) on x.Id equals y.Id into g
                     select new MyDataGroup
                     {
                         Id = x.Id,
@@ -635,11 +634,10 @@ namespace Abc
             var item = new MyItem { Id = 1, Name = "Name" };
             var info = new MyInfo { Id = 1, Description = "Description" };
             var outer = Maybe.Some(item);
-            var inner = Maybe.Some(info);
-            var expected = new MyDataGroup { Id = 1, Name = "Name", Info = inner };
+            var expected = new MyDataGroup { Id = 1, Name = "Name", Info = Maybe.Some(info) };
             // Act
             var q = from x in outer
-                    join y in inner on x.Id equals y.Id into g
+                    join y in Maybe.Some(info) on x.Id equals y.Id into g
                     select new MyDataGroup
                     {
                         Id = x.Id,

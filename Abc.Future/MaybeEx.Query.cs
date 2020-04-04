@@ -34,7 +34,7 @@ namespace Abc
         ///   select resultSelector(x, inner)
         /// ]]></code>
         /// Furthermore, <see cref="Maybe{T}"/> being "flat", a group join is
-        /// nothing but a join, the <c>into</c> clause is obviously unnecessary:
+        /// nothing but a join; the <c>into</c> clause is obviously unnecessary:
         /// <code><![CDATA[
         ///   from x in outer
         ///   join y in inner
