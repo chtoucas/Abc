@@ -3,7 +3,9 @@
 namespace Abc
 {
     using System;
+#if STRUCTURAL_COMPARISONS
     using System.Collections;
+#endif
     using System.Collections.Generic;
 
     using Xunit;
@@ -67,7 +69,7 @@ namespace Abc
         }
     }
 
-    // Comparison.
+    // Order comparison.
     //
     // Expected algebraic properties.
     //   1) Reflexivity
@@ -153,51 +155,6 @@ namespace Abc
             Assert.Equal(1, two.CompareTo(one));
             Assert.Equal(0, one.CompareTo(one));
             Assert.Equal(-1, one.CompareTo(two));
-        }
-
-        [Fact]
-        public static void CompareTo_Structural_None_NullComparer()
-        {
-            // Arrange
-            IStructuralComparable none = Ø;
-            // Act & Assert
-            Assert.ThrowsAnexn("comparer", () => none.CompareTo(One, null!));
-        }
-
-        [Fact]
-        public static void CompareTo_Structural_Some_NullComparer()
-        {
-            // Arrange
-            IStructuralComparable one = One;
-            // Act & Assert
-            Assert.ThrowsAnexn("comparer", () => one.CompareTo(One, null!));
-        }
-
-        [Fact]
-        public static void CompareTo_Structural()
-        {
-            // Arrange
-            var cmp = Comparer<int>.Default;
-            IStructuralComparable none = Ø;
-            IStructuralComparable one = One;
-            IStructuralComparable two = Two;
-
-            // Act & Assert
-            Assert.ThrowsArgexn("other", () => none.CompareTo(new object(), cmp));
-            Assert.ThrowsArgexn("other", () => one.CompareTo(new object(), cmp));
-
-            Assert.Equal(1, none.CompareTo(null, cmp));
-            Assert.Equal(1, one.CompareTo(null, cmp));
-
-            // With None
-            Assert.Equal(1, one.CompareTo(Ø, cmp));
-            Assert.Equal(-1, none.CompareTo(One, cmp));
-            Assert.Equal(0, none.CompareTo(Ø, cmp));
-
-            // Without None
-            Assert.Equal(1, two.CompareTo(One, cmp));
-            Assert.Equal(0, one.CompareTo(One, cmp));
-            Assert.Equal(-1, one.CompareTo(Two, cmp));
         }
     }
 
@@ -338,6 +295,84 @@ namespace Abc
         }
 
         [Fact]
+        public static void GetHashCode_None()
+        {
+            Assert.Equal(0, Ø.GetHashCode());
+            Assert.Equal(0, ØL.GetHashCode());
+            Assert.Equal(0, NoText.GetHashCode());
+            Assert.Equal(0, NoUri.GetHashCode());
+            Assert.Equal(0, AnyT.None.GetHashCode());
+        }
+
+        [Fact]
+        public static void GetHashCode_Some()
+        {
+            Assert.Equal(1.GetHashCode(), One.GetHashCode());
+            Assert.Equal(2.GetHashCode(), Two.GetHashCode());
+            Assert.Equal(2L.GetHashCode(), TwoL.GetHashCode());
+            Assert.Equal(MyText.GetHashCode(StringComparison.Ordinal), SomeText.GetHashCode());
+            Assert.Equal(MyUri.GetHashCode(), SomeUri.GetHashCode());
+
+            var anyT = AnyT.New();
+            Assert.Equal(anyT.Value.GetHashCode(), anyT.Some.GetHashCode());
+        }
+    }
+
+#if STRUCTURAL_COMPARISONS
+
+    // Structural order comparison.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void CompareTo_Structural_None_NullComparer()
+        {
+            // Arrange
+            IStructuralComparable none = Ø;
+            // Act & Assert
+            Assert.ThrowsAnexn("comparer", () => none.CompareTo(One, null!));
+        }
+
+        [Fact]
+        public static void CompareTo_Structural_Some_NullComparer()
+        {
+            // Arrange
+            IStructuralComparable one = One;
+            // Act & Assert
+            Assert.ThrowsAnexn("comparer", () => one.CompareTo(One, null!));
+        }
+
+        [Fact]
+        public static void CompareTo_Structural()
+        {
+            // Arrange
+            var cmp = Comparer<int>.Default;
+            IStructuralComparable none = Ø;
+            IStructuralComparable one = One;
+            IStructuralComparable two = Two;
+
+            // Act & Assert
+            Assert.ThrowsArgexn("other", () => none.CompareTo(new object(), cmp));
+            Assert.ThrowsArgexn("other", () => one.CompareTo(new object(), cmp));
+
+            Assert.Equal(1, none.CompareTo(null, cmp));
+            Assert.Equal(1, one.CompareTo(null, cmp));
+
+            // With None
+            Assert.Equal(1, one.CompareTo(Ø, cmp));
+            Assert.Equal(-1, none.CompareTo(One, cmp));
+            Assert.Equal(0, none.CompareTo(Ø, cmp));
+
+            // Without None
+            Assert.Equal(1, two.CompareTo(One, cmp));
+            Assert.Equal(0, one.CompareTo(One, cmp));
+            Assert.Equal(-1, one.CompareTo(Two, cmp));
+        }
+    }
+
+    // Structural equality.
+    public partial class MaybeTests
+    {
+        [Fact]
         public static void Equals_Structural_NullComparer()
         {
             // Arrange
@@ -427,29 +462,6 @@ namespace Abc
         }
 
         [Fact]
-        public static void GetHashCode_None()
-        {
-            Assert.Equal(0, Ø.GetHashCode());
-            Assert.Equal(0, ØL.GetHashCode());
-            Assert.Equal(0, NoText.GetHashCode());
-            Assert.Equal(0, NoUri.GetHashCode());
-            Assert.Equal(0, AnyT.None.GetHashCode());
-        }
-
-        [Fact]
-        public static void GetHashCode_Some()
-        {
-            Assert.Equal(1.GetHashCode(), One.GetHashCode());
-            Assert.Equal(2.GetHashCode(), Two.GetHashCode());
-            Assert.Equal(2L.GetHashCode(), TwoL.GetHashCode());
-            Assert.Equal(MyText.GetHashCode(StringComparison.Ordinal), SomeText.GetHashCode());
-            Assert.Equal(MyUri.GetHashCode(), SomeUri.GetHashCode());
-
-            var anyT = AnyT.New();
-            Assert.Equal(anyT.Value.GetHashCode(), anyT.Some.GetHashCode());
-        }
-
-        [Fact]
         public static void GetHashCode_Structural_NullComparer()
         {
             // Arrange
@@ -493,6 +505,43 @@ namespace Abc
 
             var anyT = AnyT.New();
             Assert.Equal(acmp.GetHashCode(anyT.Value), ((IStructuralEquatable)anyT.Some).GetHashCode(acmp));
+        }
+    }
+
+#endif
+
+    // Equality w/ composite objects.
+    public partial class MaybeTests
+    {
+        [Fact]
+        public static void Equality_CompositeObject()
+        {
+            // Arrange
+            var v1 = AnyT.Value;
+            var v2 = AnyT.Value;
+            var v3 = AnyT.Value;
+            var v4 = AnyT.Value;
+            var xs = new List<Maybe<AnyT>>
+            {
+                Maybe.SomeOrNone(v1),
+                Maybe.SomeOrNone(v2),
+                Maybe.SomeOrNone(v3),
+                Maybe.SomeOrNone(v4),
+            };
+            var ys = new List<Maybe<AnyT>>
+            {
+                Maybe.SomeOrNone(v1),
+                Maybe.SomeOrNone(v2),
+                Maybe.SomeOrNone(v3),
+                Maybe.SomeOrNone(v4),
+            };
+            // Assert
+            // The object references are different.
+            Assert.NotSame(xs, ys);
+            // The objets are different too using the types's default comparer.
+            Assert.NotStrictEqual(xs, ys);
+            // The objets are equal using the default comparer.
+            Assert.Equal(xs, ys);
         }
     }
 }

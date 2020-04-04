@@ -3,7 +3,9 @@
 namespace Abc
 {
     using System;
+#if STRUCTURAL_COMPARISONS
     using System.Collections;
+#endif
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -124,8 +126,10 @@ namespace Abc
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [DebuggerTypeProxy(typeof(Maybe<>.DebugView_))]
     public readonly partial struct Maybe<T>
-        : IEquatable<Maybe<T>>, IStructuralEquatable,
-            IComparable<Maybe<T>>, IComparable, IStructuralComparable
+        : IEquatable<Maybe<T>>, IComparable<Maybe<T>>, IComparable
+#if STRUCTURAL_COMPARISONS
+            , IStructuralEquatable, IStructuralComparable
+#endif
     {
         // We use explicit backing fields to find quickly all occurences of the
         // corresponding properties outside the struct.
@@ -667,6 +671,7 @@ namespace Abc
             return CompareTo(maybe);
         }
 
+#if STRUCTURAL_COMPARISONS
         /// <inheritdoc />
         int IStructuralComparable.CompareTo(object? other, IComparer comparer)
         {
@@ -685,6 +690,7 @@ namespace Abc
                 ? maybe._isSome ? comparer.Compare(_value, maybe._value) : 1
                 : maybe._isSome ? -1 : 0;
         }
+#endif
     }
 
     // Interface IEquatable<> and alike.
@@ -719,6 +725,7 @@ namespace Abc
         public override bool Equals(object? obj) =>
             obj is Maybe<T> maybe && Equals(maybe);
 
+#if STRUCTURAL_COMPARISONS
         /// <inheritdoc />
         [Pure]
         bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer)
@@ -732,12 +739,14 @@ namespace Abc
             return _isSome ? maybe._isSome && comparer.Equals(_value, maybe._value)
                 : !maybe._isSome;
         }
+#endif
 
         /// <inheritdoc />
         [Pure]
         public override int GetHashCode() =>
             _value?.GetHashCode() ?? 0;
 
+#if STRUCTURAL_COMPARISONS
         /// <inheritdoc />
         [Pure]
         int IStructuralEquatable.GetHashCode(IEqualityComparer comparer)
@@ -747,5 +756,6 @@ namespace Abc
             // BONSANG! When _isSome is true, _value is NOT null.
             return _isSome ? comparer.GetHashCode(_value!) : 0;
         }
+#endif
     }
 }

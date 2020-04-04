@@ -23,7 +23,9 @@
     -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
 
+    <!-- Optional symbols -->
     <!--<DefineConstants>$(DefineConstants);PLAIN_LINQ</DefineConstants>-->
+    <!--<DefineConstants>$(DefineConstants);STRUCTURAL_COMPARISONS</DefineConstants>-->
 
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>

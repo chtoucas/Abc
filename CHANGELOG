@@ -5,6 +5,9 @@ vNEXT
 
 Removed
 - Maybe<T>.Join(); use Maybe<T>.SelectMany() instead.
+- Explicit structural comparisons for Maybe<T>. The default equality and order
+  comparisons are already structural. I don't think that we need to implement
+  the structural comparison interfaces.
 
 2020-04-03, version 1.0.0-alpha-2
 ---------------------------------
