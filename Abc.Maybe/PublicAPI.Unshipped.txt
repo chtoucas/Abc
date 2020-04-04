@@ -38,9 +38,8 @@ Abc.Maybe<T>.Yield() -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.Yield(int count) -> System.Collections.Generic.IEnumerable<T>
 Abc.Maybe<T>.ZipWith<TOther, TResult>(Abc.Maybe<TOther> other, System.Func<T, TOther, TResult> zipper) -> Abc.Maybe<TResult>
 Abc.MaybeComparer<T>
-Abc.MaybeComparer<T>.Compare(Abc.Maybe<T> left, Abc.Maybe<T> right) -> int
-Abc.MaybeComparer<T>.Compare(object left, object right) -> int
-Abc.MaybeComparer<T>.Equals(Abc.Maybe<T> left, Abc.Maybe<T> right) -> bool
+Abc.MaybeComparer<T>.Compare(Abc.Maybe<T> x, Abc.Maybe<T> y) -> int
+Abc.MaybeComparer<T>.Equals(Abc.Maybe<T> x, Abc.Maybe<T> y) -> bool
 Abc.MaybeComparer<T>.GetHashCode(Abc.Maybe<T> obj) -> int
 Abc.Unit
 Abc.Unit.Equals(Abc.Unit other) -> bool
@@ -49,6 +48,8 @@ Abc.Unit.Unit() -> void
 override Abc.Maybe<T>.Equals(object obj) -> bool
 override Abc.Maybe<T>.GetHashCode() -> int
 override Abc.Maybe<T>.ToString() -> string
+override Abc.MaybeComparer<T>.Equals(object obj) -> bool
+override Abc.MaybeComparer<T>.GetHashCode() -> int
 override Abc.Unit.Equals(object obj) -> bool
 override Abc.Unit.GetHashCode() -> int
 override Abc.Unit.ToString() -> string

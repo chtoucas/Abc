@@ -29,7 +29,7 @@ namespace Abc.Utilities
                 paramName);
 
         public static readonly ArgumentException MaybeComparer_InvalidType
-            = new ArgumentException("Type of argument is not comparatible with MaybeComparer<T>.");
+            = new ArgumentException("Type of argument is not compatible with MaybeComparer<T>.");
 
         public static readonly InvalidOperationException Maybe_NoValue
             = new InvalidOperationException("The object does not contain any value.");

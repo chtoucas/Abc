@@ -3,6 +3,7 @@
 namespace Abc
 {
     using System;
+    using System.Collections;
 
     using Xunit;
 
@@ -33,7 +34,7 @@ namespace Abc
         public static void Compare_Objects()
         {
             // Arrange
-            var cmp = MaybeComparer<int>.Default;
+            IComparer cmp = MaybeComparer<int>.Default;
             object none = Maybe<int>.None;
             object one = Maybe.Some(1);
             object two = Maybe.Some(2);
