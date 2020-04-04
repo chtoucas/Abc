@@ -744,6 +744,7 @@ namespace Abc
         /// <inheritdoc />
         [Pure]
         public override int GetHashCode() =>
+            // REVIEW: use EqualityComparer<T>.Default?
             _value?.GetHashCode() ?? 0;
 
 #if STRUCTURAL_COMPARISONS

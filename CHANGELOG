@@ -9,11 +9,6 @@ Changed
   * continues to implement IComparer but this time explicitly.
   * agressive inlining.
 
-Removed
-- Explicit structural comparisons for Maybe<T>. The default equality and order
-  comparisons are already structural. I don't think that we need to implement
-  the structural comparison interfaces.
-
 Internals
 - New perf project.
 
