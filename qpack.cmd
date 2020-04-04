@@ -1,5 +1,7 @@
 :: To publish the result:
 :: > dotnet nuget push .\Abc.Maybe.XXX -k XXX -s https://www.nuget.org/
+::
+:: TODO: stop if the package already exists.
 
 @echo off
 @setlocal
