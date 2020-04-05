@@ -127,7 +127,7 @@ namespace Abc
             var lcmp = MaybeComparer<long>.Default;
             var scmp = MaybeComparer<string>.Default;
             var ucmp = MaybeComparer<Uri>.Default;
-            var text = "text";
+            string text = "text";
             var someText = Maybe.SomeOrNone(text);
             var uri = new Uri("http://www.narvalo.org");
             var someUri = Maybe.SomeOrNone(uri);

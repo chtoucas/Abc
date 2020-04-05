@@ -5,9 +5,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-internal class AnagramEqualityComparer : IEqualityComparer<string>
+internal sealed class AnagramEqualityComparer : EqualityComparer<string>
 {
-    public bool Equals(string x, string y)
+    public override bool Equals(string x, string y)
     {
         if (ReferenceEquals(x, y)) { return true; }
         if (x is null || y is null) { return false; }
@@ -24,9 +24,9 @@ internal class AnagramEqualityComparer : IEqualityComparer<string>
         return true;
     }
 
-    public int GetHashCode(string obj)
+    public override int GetHashCode(string obj)
     {
-        if (obj == null) { return 0; }
+        if (obj is null) { return 0; }
         int hash = obj.Length;
         foreach (char c in obj)
         {

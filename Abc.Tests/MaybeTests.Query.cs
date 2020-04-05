@@ -376,12 +376,12 @@ namespace Abc
             // Arrange
             var outer = Maybe.SomeOrNone(Anagram);
             var inner = Maybe.SomeOrNone(Margana);
-            var comparer = new AnagramEqualityComparer();
+            var cmp = new AnagramEqualityComparer();
             string expected = $"{Anagram} est un anagramme de {Margana}";
             // Act
             var q = outer.Join(inner, Ident, Ident,
                 (x, y) => $"{x} est un anagramme de {y}",
-                comparer);
+                cmp);
             // Assert
             Assert.Some(expected, q);
 
@@ -389,7 +389,7 @@ namespace Abc
             Assert.Some(expected,
                 from x in outer
                 from y in inner
-                where comparer.Equals(x, y)
+                where cmp.Equals(x, y)
                 select $"{x} est un anagramme de {y}");
         }
 

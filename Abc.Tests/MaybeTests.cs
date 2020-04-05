@@ -974,14 +974,14 @@ namespace Abc
         public static void Contains_SomeText_Anagram()
         {
             // Arrange
-            var comparer = new AnagramEqualityComparer();
+            var cmp = new AnagramEqualityComparer();
             // Act & Assert
             Assert.False(Maybe.SomeOrNone(Anagram).Contains(Margana));
             Assert.False(Maybe.SomeOrNone(Anagram).Contains(Margana, StringComparer.Ordinal));
             Assert.False(Maybe.SomeOrNone(Anagram).Contains(Margana, StringComparer.OrdinalIgnoreCase));
 
-            Assert.True(Maybe.SomeOrNone(Anagram).Contains(Margana, comparer));
-            Assert.True(Maybe.SomeOrNone(Margana).Contains(Anagram, comparer));
+            Assert.True(Maybe.SomeOrNone(Anagram).Contains(Margana, cmp));
+            Assert.True(Maybe.SomeOrNone(Margana).Contains(Anagram, cmp));
         }
     }
 }

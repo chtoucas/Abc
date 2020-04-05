@@ -39,7 +39,7 @@ namespace Abc
             int? one = 1;
             int? nil = null;
             // Default comparer for nullable int.
-            var comparer = Comparer<int?>.Default;
+            var cmp = Comparer<int?>.Default;
 
             // If one of the operand is null, the comparison returns false.
             // Important consequence: we can't say that "x >= y" is equivalent
@@ -63,9 +63,9 @@ namespace Abc
             Assert.False(nil != nil);   // false
 #pragma warning restore CS1718
 
-            Assert.Equal(1, comparer.Compare(one, nil));    // "one > nil"
-            Assert.Equal(-1, comparer.Compare(nil, one));   // "nil < one"
-            Assert.Equal(0, comparer.Compare(nil, nil));    // "nil >= nil"
+            Assert.Equal(1, cmp.Compare(one, nil));    // "one > nil"
+            Assert.Equal(-1, cmp.Compare(nil, one));   // "nil < one"
+            Assert.Equal(0, cmp.Compare(nil, nil));    // "nil >= nil"
         }
     }
 
@@ -234,9 +234,9 @@ namespace Abc
         public static void Equality_None_ReferenceType()
         {
             // Arrange
-            var none = Maybe<Uri>.None;
-            var same = Maybe<Uri>.None;
-            var notSame = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
+            var none = Maybe<AnyT>.None;
+            var same = Maybe<AnyT>.None;
+            var notSame = Maybe.SomeOrNone(AnyT.Value);
 
             // Act & Assert
             Assert.True(none == same);
@@ -266,9 +266,10 @@ namespace Abc
         public static void Equality_Some_ReferenceType()
         {
             // Arrange
-            var some = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
-            var same = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
-            var notSame = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
+            var anyT = AnyT.Value;
+            var some = Maybe.SomeOrNone(anyT);
+            var same = Maybe.SomeOrNone(anyT);
+            var notSame = Maybe.SomeOrNone(AnyT.Value);
 
             // Act & Assert
             Assert.True(some == same);
@@ -425,10 +426,10 @@ namespace Abc
         public static void Equals_Structural_None_ReferenceType()
         {
             // Arrange
-            IStructuralEquatable none = Maybe<Uri>.None;
-            var same = Maybe<Uri>.None;
-            var some = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
-            var cmp = EqualityComparer<Uri>.Default;
+            IStructuralEquatable none = Maybe<AnyT>.None;
+            var same = Maybe<AnyT>.None;
+            var some = Maybe.SomeOrNone(AnyT.Value);
+            var cmp = EqualityComparer<AnyT>.Default;
 
             // Act & Assert
             Assert.False(none.Equals(null, cmp));
@@ -441,14 +442,15 @@ namespace Abc
         }
 
         [Fact]
-        public static void Equals_Structural_Some_ReferenceType()
+        public static void Equals_Structural_Some_ReferenceType_WithDefaultComparer()
         {
             // Arrange
-            IStructuralEquatable some = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
-            var same = Maybe.SomeOrNone(new Uri("http://www.narvalo.org"));
-            var notSame = Maybe.SomeOrNone(new Uri("https://source.dot.net/"));
-            var none = Maybe<Uri>.None;
-            var cmp = EqualityComparer<Uri>.Default;
+            var anyT = AnyT.Value;
+            IStructuralEquatable some = Maybe.SomeOrNone(anyT);
+            var same = Maybe.SomeOrNone(anyT);
+            var notSame = Maybe.SomeOrNone(AnyT.Value);
+            var none = Maybe<AnyT>.None;
+            var cmp = EqualityComparer<AnyT>.Default;
 
             // Act & Assert
             Assert.False(some.Equals(null, cmp));
@@ -459,6 +461,32 @@ namespace Abc
             Assert.False(some.Equals(notSame, cmp));
 
             Assert.False(some.Equals(none, cmp));
+        }
+
+        [Fact]
+        public static void Equals_Structural_Some_ReferenceType_WithCustomComparer()
+        {
+            // Arrange
+            IStructuralEquatable anagram = Maybe.SomeOrNone(Anagram);
+            var margana = Maybe.SomeOrNone(Margana);
+            var other = Maybe.SomeOrNone("XXX");
+            var none = Maybe<string>.None;
+            var cmp = new AnagramEqualityComparer();
+
+            // Act & Assert
+            Assert.True(anagram.Equals(anagram));
+            Assert.False(anagram.Equals(margana));
+            Assert.False(anagram.Equals(other));
+            Assert.False(anagram.Equals(none));
+            Assert.False(anagram.Equals(null));
+            Assert.False(anagram!.Equals(new object())); // Why do we need the "!"?
+
+            Assert.True(anagram.Equals(anagram, cmp));
+            Assert.True(anagram.Equals(margana, cmp));
+            Assert.False(anagram.Equals(other, cmp));
+            Assert.False(anagram.Equals(none, cmp));
+            Assert.False(anagram.Equals(null, cmp));
+            Assert.False(anagram.Equals(new object(), cmp));
         }
 
         [Fact]
@@ -477,12 +505,14 @@ namespace Abc
             var icmp = EqualityComparer<int>.Default;
             var lcmp = EqualityComparer<long>.Default;
             var scmp = EqualityComparer<string>.Default;
+            var ccmp = new AnagramEqualityComparer();
             var ucmp = EqualityComparer<Uri>.Default;
             var acmp = EqualityComparer<AnyT>.Default;
             // Act & Assert
             Assert.Equal(0, ((IStructuralEquatable)Ø).GetHashCode(icmp));
             Assert.Equal(0, ((IStructuralEquatable)ØL).GetHashCode(lcmp));
             Assert.Equal(0, ((IStructuralEquatable)NoText).GetHashCode(scmp));
+            Assert.Equal(0, ((IStructuralEquatable)NoText).GetHashCode(ccmp));
             Assert.Equal(0, ((IStructuralEquatable)NoUri).GetHashCode(ucmp));
             Assert.Equal(0, ((IStructuralEquatable)AnyT.None).GetHashCode(acmp));
         }
@@ -494,6 +524,7 @@ namespace Abc
             var icmp = EqualityComparer<int>.Default;
             var lcmp = EqualityComparer<long>.Default;
             var scmp = EqualityComparer<string>.Default;
+            var ccmp = new AnagramEqualityComparer();
             var ucmp = EqualityComparer<Uri>.Default;
             var acmp = EqualityComparer<AnyT>.Default;
             // Act & Assert
@@ -501,6 +532,7 @@ namespace Abc
             Assert.Equal(icmp.GetHashCode(2), ((IStructuralEquatable)Two).GetHashCode(icmp));
             Assert.Equal(lcmp.GetHashCode(2L), ((IStructuralEquatable)TwoL).GetHashCode(lcmp));
             Assert.Equal(scmp.GetHashCode(MyText), ((IStructuralEquatable)SomeText).GetHashCode(scmp));
+            Assert.Equal(ccmp.GetHashCode(MyText), ((IStructuralEquatable)SomeText).GetHashCode(ccmp));
             Assert.Equal(ucmp.GetHashCode(MyUri), ((IStructuralEquatable)SomeUri).GetHashCode(ucmp));
 
             var anyT = AnyT.New();
