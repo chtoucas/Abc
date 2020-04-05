@@ -89,6 +89,7 @@ namespace Abc
     /// - Bind()                unwrap then map to another maybe
     /// - Select()              LINQ select
     /// - SelectMany()          LINQ select many
+    /// - Join()                LINQ join
     /// - Where()               LINQ filter
     /// - ZipWith()             cross join
     /// - OrElse()              logical OR; "none"-coalescing
@@ -744,7 +745,6 @@ namespace Abc
         /// <inheritdoc />
         [Pure]
         public override int GetHashCode() =>
-            // REVIEW: use EqualityComparer<T>.Default?
             _value?.GetHashCode() ?? 0;
 
 #if STRUCTURAL_COMPARISONS

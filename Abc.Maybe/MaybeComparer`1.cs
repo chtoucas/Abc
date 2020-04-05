@@ -17,8 +17,7 @@ namespace Abc
 
     // Pluggable comparison.
     public abstract class MaybeComparer<T>
-        : IEqualityComparer<Maybe<T>>, IEqualityComparer,
-            IComparer<Maybe<T>>, IComparer
+        : IEqualityComparer<Maybe<T>>, IEqualityComparer, IComparer<Maybe<T>>, IComparer
     {
         protected MaybeComparer() { }
 
@@ -29,8 +28,8 @@ namespace Abc
         private static MaybeComparer<T>? s_Default;
         private static MaybeComparer<T> InitialiseDefault()
         {
-            var comparer = new DefaultMaybeComparer<T>();
-            Interlocked.CompareExchange(ref s_Default, comparer, null);
+            var cmp = new DefaultMaybeComparer<T>();
+            Interlocked.CompareExchange(ref s_Default, cmp, null);
             return s_Default!;
         }
 
@@ -39,19 +38,20 @@ namespace Abc
         private static MaybeComparer<T>? s_Structural;
         private static MaybeComparer<T> InitialiseStructural()
         {
-            var comparer = new StructuralMaybeComparer<T>();
-            Interlocked.CompareExchange(ref s_Structural, comparer, null);
+            var cmp = new StructuralMaybeComparer<T>();
+            Interlocked.CompareExchange(ref s_Structural, cmp, null);
             return s_Structural!;
         }
 
 #pragma warning restore CA1000
 
-        //
-        // IEqualityComparer<>
-        //
-
         [Pure] public abstract bool Equals(Maybe<T> x, Maybe<T> y);
 
+        [Pure] public abstract int GetHashCode(Maybe<T> obj);
+
+        [Pure] public abstract int Compare(Maybe<T> x, Maybe<T> y);
+
+        /// <inheritdoc />
         bool IEqualityComparer.Equals(object? x, object? y)
         {
             if (x == y) { return true; }
@@ -60,8 +60,7 @@ namespace Abc
             throw EF.MaybeComparer_InvalidType;
         }
 
-        [Pure] public abstract int GetHashCode(Maybe<T> obj);
-
+        /// <inheritdoc />
         int IEqualityComparer.GetHashCode(object? obj)
         {
             if (obj is null) { return 0; }
@@ -69,12 +68,7 @@ namespace Abc
             throw EF.MaybeComparer_InvalidType;
         }
 
-        //
-        // IComparer<>
-        //
-
-        [Pure] public abstract int Compare(Maybe<T> x, Maybe<T> y);
-
+        /// <inheritdoc />
         int IComparer.Compare(object? x, object? y)
         {
             if (x is null) { return y is null ? 0 : -1; }
