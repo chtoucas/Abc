@@ -14,7 +14,6 @@ Set-StrictMode -Version Latest
 trap {
     Write-Host ('An unexpected error occured: {0}' -f $_.Exception.Message) `
         -BackgroundColor Red -ForegroundColor Yellow
-
     Exit 1
 }
 
@@ -22,10 +21,14 @@ Write-Host "Code Coverage w/ $Tool.`n"
 
 . '.\eng\helpers.ps1'
 
+# Find the versions of OpenCover and ReportGenerator.
 $proj = [Xml] (Get-Content ".\Abc.Tests\Abc.Tests.csproj")
-$packages = $proj.Project.ItemGroup
 
-Write-Host $packages
+$openCoverVersion = $proj | Get-ToolVersion -ToolName "OpenCover"
+$reportGeneratorVersion = $proj | Get-ToolVersion -ToolName "ReportGenerator"
+
+Write-Host $openCoverVersion
+Write-Host $reportGeneratorVersion
 
 Exit 0
 
