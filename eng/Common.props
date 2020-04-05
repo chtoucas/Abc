@@ -46,7 +46,6 @@
     <!-- Optional symbols -->
     <!--<DefineConstants>$(DefineConstants);PURE_MAYBE</DefineConstants>-->
     <!--<DefineConstants>$(DefineConstants);PLAIN_LINQ</DefineConstants>-->
-    <DefineConstants>$(DefineConstants);STRUCTURAL_COMPARISONS</DefineConstants>
   </PropertyGroup>
 
   <!-- DEBUG configuration ################################################# -->

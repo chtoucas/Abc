@@ -3,9 +3,7 @@
 namespace Abc
 {
     using System;
-#if STRUCTURAL_COMPARISONS
     using System.Collections;
-#endif
     using System.Collections.Generic;
 
     using Xunit;
@@ -319,8 +317,6 @@ namespace Abc
         }
     }
 
-#if STRUCTURAL_COMPARISONS
-
     // Structural order comparison.
     public partial class MaybeTests
     {
@@ -539,8 +535,6 @@ namespace Abc
             Assert.Equal(acmp.GetHashCode(anyT.Value), ((IStructuralEquatable)anyT.Some).GetHashCode(acmp));
         }
     }
-
-#endif
 
     // Equality w/ composite objects.
     public partial class MaybeTests
