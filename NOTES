@@ -47,15 +47,16 @@ TODOs
 -----
 
 See FIXME, TODO and REVIEW within the code.
-- Multitargeting:
+- Multitargeting.
   * Tests.
+  * .NET Standard 2.1 & .NET Core 3.1 only:
+    - More May helpers w/ Span<T>.
+    - Use System.HashCode
+- API.
+  * BannedApiAnalyzers
   * How to handle PublicAPI.XXX.txt?
     https://github.com/dotnet/roslyn-analyzers/blob/master/src/PublicApiAnalyzers/PublicApiAnalyzers.Help.md
-    A
-- .NET Standard 2.1 & .NET Core 3.1 only:
-  * More May helpers w/ Span<T>.
-  * Use System.HashCode
-- API, add BannedApiAnalyzers? tag *REMOVED*
+
 Async:
 - Microsoft.Bcl.AsyncInterfaces
 - Async enumerables.
@@ -83,7 +84,7 @@ Release Process
 Version
 
 API, update the files PublicAPI.Shipped.txt & PublicAPI.Unshipped.txt.
-Obsolete member: move from Shipped to Unshipped and add the prefix *REMOVED*.
+Obsolete member: move from Shipped to Unshipped and prefix w/ *REMOVED*.
 
 Guidelines
 ----------

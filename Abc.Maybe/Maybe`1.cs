@@ -440,7 +440,7 @@ namespace Abc
     }
 
     // Misc methods.
-    // Some can be built from Select() or Bind(), but we prefer not to since
+    // They can be built from Select() or Bind(), but we prefer not to since
     // this forces us to use (unnecessary) lambda functions.
     public partial struct Maybe<T>
     {

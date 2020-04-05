@@ -3,6 +3,7 @@
 namespace PerfTool.Comparisons
 {
     using System;
+
     using Abc;
 
     using BenchmarkDotNet.Attributes;
