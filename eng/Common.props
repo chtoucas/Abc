@@ -40,7 +40,7 @@
   <PropertyGroup>
     <WarningsAsErrors>NU1605</WarningsAsErrors>
 
-    <!-- CONTRACTS_FULL for the attr Pure -->
+    <!-- CONTRACTS_FULL necessary to enable the attribute Pure -->
     <DefineConstants>$(DefineConstants);TRACE;CONTRACTS_FULL</DefineConstants>
 
     <!-- Optional symbols -->
