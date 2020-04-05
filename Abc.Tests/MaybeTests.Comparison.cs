@@ -459,6 +459,11 @@ namespace Abc
             Assert.False(some.Equals(none, cmp));
         }
 
+        [Fact(Skip = "TODO")]
+        public static void Equals_Structural_Some_ReferenceType_WithStructuralComparer()
+        {
+        }
+
         [Fact]
         public static void Equals_Structural_Some_ReferenceType_WithCustomComparer()
         {
@@ -495,32 +500,38 @@ namespace Abc
         }
 
         [Fact]
-        public static void GetHashCode_Structural_None()
+        public static void GetHashCode_Structural_None_WithDefaultComparer()
         {
             // Arrange
             var icmp = EqualityComparer<int>.Default;
             var lcmp = EqualityComparer<long>.Default;
             var scmp = EqualityComparer<string>.Default;
-            var ccmp = new AnagramEqualityComparer();
             var ucmp = EqualityComparer<Uri>.Default;
             var acmp = EqualityComparer<AnyT>.Default;
             // Act & Assert
             Assert.Equal(0, ((IStructuralEquatable)Ø).GetHashCode(icmp));
             Assert.Equal(0, ((IStructuralEquatable)ØL).GetHashCode(lcmp));
             Assert.Equal(0, ((IStructuralEquatable)NoText).GetHashCode(scmp));
-            Assert.Equal(0, ((IStructuralEquatable)NoText).GetHashCode(ccmp));
             Assert.Equal(0, ((IStructuralEquatable)NoUri).GetHashCode(ucmp));
             Assert.Equal(0, ((IStructuralEquatable)AnyT.None).GetHashCode(acmp));
         }
 
         [Fact]
-        public static void GetHashCode_Structural_Some()
+        public static void GetHashCode_Structural_None_WithCustomComparer()
+        {
+            // Arrange
+            var cmp = new AnagramEqualityComparer();
+            // Act & Assert
+            Assert.Equal(0, ((IStructuralEquatable)NoText).GetHashCode(cmp));
+        }
+
+        [Fact]
+        public static void GetHashCode_Structural_Some_WithDefaultComparer()
         {
             // Arrange
             var icmp = EqualityComparer<int>.Default;
             var lcmp = EqualityComparer<long>.Default;
             var scmp = EqualityComparer<string>.Default;
-            var ccmp = new AnagramEqualityComparer();
             var ucmp = EqualityComparer<Uri>.Default;
             var acmp = EqualityComparer<AnyT>.Default;
             // Act & Assert
@@ -528,11 +539,19 @@ namespace Abc
             Assert.Equal(icmp.GetHashCode(2), ((IStructuralEquatable)Two).GetHashCode(icmp));
             Assert.Equal(lcmp.GetHashCode(2L), ((IStructuralEquatable)TwoL).GetHashCode(lcmp));
             Assert.Equal(scmp.GetHashCode(MyText), ((IStructuralEquatable)SomeText).GetHashCode(scmp));
-            Assert.Equal(ccmp.GetHashCode(MyText), ((IStructuralEquatable)SomeText).GetHashCode(ccmp));
             Assert.Equal(ucmp.GetHashCode(MyUri), ((IStructuralEquatable)SomeUri).GetHashCode(ucmp));
 
             var anyT = AnyT.New();
             Assert.Equal(acmp.GetHashCode(anyT.Value), ((IStructuralEquatable)anyT.Some).GetHashCode(acmp));
+        }
+
+        [Fact]
+        public static void GetHashCode_Structural_Some_WithCustomComparer()
+        {
+            // Arrange
+            var cmp = new AnagramEqualityComparer();
+            // Act & Assert
+            Assert.Equal(cmp.GetHashCode(MyText), ((IStructuralEquatable)SomeText).GetHashCode(cmp));
         }
     }
 
