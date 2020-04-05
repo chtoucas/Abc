@@ -193,7 +193,6 @@ namespace Abc
         // Implicit conversion: test ImplicitToMaybe, see Square() and
         // SquareOrNone() too.
         //
-        // Friendly name: Maybe.Of(value).
         // Implicit conversion to Maybe<T> for equality comparison, very much
         // like what we have will nullable values: (int?)1 == 1 works.
         // NB: maybe (= Some(x)) == y is equivalent to maybe.Contains(y).
@@ -201,8 +200,7 @@ namespace Abc
         //public static implicit operator Maybe<T>([AllowNull] T value) =>
         //    Maybe.Of(value);
 
-        // REVIEW: explicit conversion.
-        // Friendly name: value.ValueOrThrow().
+        // TODO: explicit conversion.
         // ??? exception or null ???
         // with null, we can write maybe == null, which is odd for a struct
         // but at the same time we can write Maybe<string> maybe = s where s is

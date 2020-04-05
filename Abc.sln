@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc.Maybe", "Abc.Maybe\Abc.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc.Future", "Abc.Future\Abc.Future.csproj", "{DA63B71E-0362-48E0-B889-897CBDC3CC67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "perf", "perf\perf.csproj", "{12530C57-F625-4348-A431-C3913518390A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "perf", "perf\perf.csproj", "{12530C57-F625-4348-A431-C3913518390A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

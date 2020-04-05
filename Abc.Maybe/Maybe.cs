@@ -60,7 +60,7 @@ namespace Abc
         public static Maybe<T> Flatten<T>(this in Maybe<Maybe<T>> @this)
             => @this.IsSome ? @this.Value : Maybe<T>.None;
 
-        // REVIEW: Flatten() w/ NRT.
+        // TODO: Flatten() w/ NRT.
         [Pure]
         public static Maybe<T> Flatten<T>(this in Maybe<Maybe<T?>> @this)
             where T : struct
@@ -144,7 +144,7 @@ namespace Abc
     public partial class Maybe
     {
         // Conversion from Maybe<T?> to Maybe<T>.
-        // REVIEW: for ref types, Maybe<T?> is compiled to Maybe<T>, but in VS
+        // TODO: for ref types, Maybe<T?> is compiled to Maybe<T>, but in VS
         // or .NET Core?
         [Pure]
         public static Maybe<T> Squash<T>(this in Maybe<T?> @this) where T : struct
