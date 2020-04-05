@@ -2,13 +2,14 @@
 @setlocal
 
 :Settings
-@set Version=4.5.3
+@set Version=4.5.4
 
 @set ReportType=coverlet
 @rem ReportType=opencover
 
 :Report
-@set ReportGenerator=%USERPROFILE%\.nuget\packages\reportgenerator\%Version%\tools\net47\ReportGenerator.exe
+@rem ReportGenerator=%USERPROFILE%\.nuget\packages\reportgenerator\%Version%\tools\net47\ReportGenerator.exe
+@set ReportGenerator=%~dp0\.nuget\packages\ReportGenerator.%Version%\tools\net47\ReportGenerator.exe
 
 @echo Building report and badges.
 @call :OnError %ReportGenerator% -verbosity:Warning ^

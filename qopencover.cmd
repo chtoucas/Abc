@@ -16,7 +16,8 @@
 
 @set Version=4.7.922
 
-@set OpenCover=%USERPROFILE%\.nuget\packages\opencover\%Version%\tools\OpenCover.Console.exe
+@rem OpenCover=%USERPROFILE%\.nuget\packages\opencover\%Version%\tools\OpenCover.Console.exe
+@set OpenCover=%~dp0\.nuget\packages\OpenCover.%Version%\tools\OpenCover.Console.exe
 @set filter="+[Abc.Maybe]* -[Abc]* -[Abc.Future]* -[Abc.Test*]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*"
 @set artifacts_dir=%~dp0\__\opencover
 
