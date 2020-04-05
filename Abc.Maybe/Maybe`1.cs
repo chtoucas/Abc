@@ -128,8 +128,8 @@ namespace Abc
         : IEquatable<Maybe<T>>, IComparable<Maybe<T>>, IComparable,
             IStructuralEquatable, IStructuralComparable
     {
-        // We use explicit backing fields to find quickly all occurences of the
-        // corresponding properties outside the struct.
+        // We use explicit backing fields to be able to quickly find outside the
+        // struct all occurences of the corresponding properties .
 
         private readonly bool _isSome;
 
@@ -186,8 +186,7 @@ namespace Abc
         /// Returns a string representation of the current instance.
         /// </summary>
         [Pure]
-        public override string ToString() =>
-            _isSome ? $"Maybe({_value})" : "Maybe(None)";
+        public override string ToString() => _isSome ? $"Maybe({_value})" : "Maybe(None)";
 
         // REVIEW: implicit conversion.
         // Implicit conversion: test ImplicitToMaybe, see Square() and
@@ -197,8 +196,7 @@ namespace Abc
         // like what we have will nullable values: (int?)1 == 1 works.
         // NB: maybe (= Some(x)) == y is equivalent to maybe.Contains(y).
         //[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Maybe.Of()")]
-        //public static implicit operator Maybe<T>([AllowNull] T value) =>
-        //    Maybe.Of(value);
+        //public static implicit operator Maybe<T>([AllowNull] T value) => Maybe.Of(value);
 
         // TODO: explicit conversion.
         // ??? exception or null ???
@@ -329,8 +327,7 @@ namespace Abc
         /// <seealso cref="TryGetValue"/>
         [Pure]
         [return: MaybeNull]
-        public T ValueOrDefault() =>
-            _isSome ? _value : default;
+        public T ValueOrDefault() => _isSome ? _value : default;
 
         /// <summary>
         /// Obtains the enclosed value if any; otherwise this method returns
@@ -339,8 +336,7 @@ namespace Abc
         /// <seealso cref="TryGetValue"/>
         [Pure]
         // It does work with null but then one should really use ValueOrDefault().
-        public T ValueOrElse([DisallowNull] T other) =>
-            _isSome ? _value : other;
+        public T ValueOrElse([DisallowNull] T other) => _isSome ? _value : other;
 
         [Pure]
         public T ValueOrElse(Func<T> valueFactory)
@@ -357,8 +353,7 @@ namespace Abc
         }
 
         [Pure]
-        public T ValueOrThrow() =>
-            _isSome ? _value : throw EF.Maybe_NoValue;
+        public T ValueOrThrow() => _isSome ? _value : throw EF.Maybe_NoValue;
 
         [Pure]
         public T ValueOrThrow(Exception exception)
@@ -483,8 +478,7 @@ namespace Abc
         /// <see cref="IsNone"/>.
         /// </summary>
         [Pure]
-        public Maybe<Unit> Skip() =>
-            _isSome ? Maybe.Unit : Maybe.Zero;
+        public Maybe<Unit> Skip() => _isSome ? Maybe.Unit : Maybe.Zero;
     }
 
     // Iterable but **not** IEnumerable<>.
@@ -693,15 +687,13 @@ namespace Abc
         /// Determines whether two specified instances of <see cref="Maybe{T}"/>
         /// are equal.
         /// </summary>
-        public static bool operator ==(Maybe<T> left, Maybe<T> right) =>
-            left.Equals(right);
+        public static bool operator ==(Maybe<T> left, Maybe<T> right) => left.Equals(right);
 
         /// <summary>
         /// Determines whether two specified instances of <see cref="Maybe{T}"/>
         /// are not equal.
         /// </summary>
-        public static bool operator !=(Maybe<T> left, Maybe<T> right) =>
-            !left.Equals(right);
+        public static bool operator !=(Maybe<T> left, Maybe<T> right) => !left.Equals(right);
 
         /// <summary>
         /// Determines whether this instance is equal to the specified
@@ -715,8 +707,7 @@ namespace Abc
 
         /// <inheritdoc />
         [Pure]
-        public override bool Equals(object? obj) =>
-            obj is Maybe<T> maybe && Equals(maybe);
+        public override bool Equals(object? obj) => obj is Maybe<T> maybe && Equals(maybe);
 
         /// <inheritdoc />
         [Pure]
@@ -734,8 +725,7 @@ namespace Abc
 
         /// <inheritdoc />
         [Pure]
-        public override int GetHashCode() =>
-            _value?.GetHashCode() ?? 0;
+        public override int GetHashCode() => _value?.GetHashCode() ?? 0;
 
         /// <inheritdoc />
         [Pure]
