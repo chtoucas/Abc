@@ -26,6 +26,7 @@ namespace Abc
         public static MaybeComparer<T> Default => s_Default ??= InitialiseDefault();
 
         private static MaybeComparer<T>? s_Default;
+        [Pure]
         private static MaybeComparer<T> InitialiseDefault()
         {
             var cmp = new DefaultMaybeComparer<T>();
@@ -36,6 +37,7 @@ namespace Abc
         public static MaybeComparer<T> Structural => s_Structural ??= InitialiseStructural();
 
         private static MaybeComparer<T>? s_Structural;
+        [Pure]
         private static MaybeComparer<T> InitialiseStructural()
         {
             var cmp = new StructuralMaybeComparer<T>();
@@ -117,8 +119,7 @@ namespace Abc
             obj != null && GetType() == obj.GetType();
 
         [Pure]
-        public override int GetHashCode() =>
-            GetType().GetHashCode();
+        public override int GetHashCode() => GetType().GetHashCode();
     }
 
     internal sealed class StructuralMaybeComparer<T> : MaybeComparer<T>
@@ -154,7 +155,6 @@ namespace Abc
             obj != null && GetType() == obj.GetType();
 
         [Pure]
-        public override int GetHashCode() =>
-            GetType().GetHashCode();
+        public override int GetHashCode() => GetType().GetHashCode();
     }
 }

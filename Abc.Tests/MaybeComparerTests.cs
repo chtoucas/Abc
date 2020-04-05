@@ -7,8 +7,21 @@ namespace Abc
 
     using Xunit;
 
-    public static class MaybeComparerTests
+    public static partial class MaybeComparerTests { }
+
+    // Default.
+    public partial class MaybeComparerTests
     {
+        [Fact]
+        public static void Default_Repeated()
+        {
+            Assert.Same(MaybeComparer<int>.Default, MaybeComparer<int>.Default);
+            Assert.Same(MaybeComparer<long>.Default, MaybeComparer<long>.Default);
+            Assert.Same(MaybeComparer<string>.Default, MaybeComparer<string>.Default);
+            Assert.Same(MaybeComparer<Uri>.Default, MaybeComparer<Uri>.Default);
+            Assert.Same(MaybeComparer<AnyT>.Default, MaybeComparer<AnyT>.Default);
+        }
+
         [Fact]
         public static void Compare_ValueType()
         {
@@ -137,6 +150,20 @@ namespace Abc
             Assert.Equal(2L.GetHashCode(), lcmp.GetHashCode(Maybe.Some(2L)));
             Assert.Equal(text.GetHashCode(StringComparison.Ordinal), scmp.GetHashCode(someText));
             Assert.Equal(uri.GetHashCode(), ucmp.GetHashCode(someUri));
+        }
+    }
+
+    // Structural.
+    public partial class MaybeComparerTests
+    {
+        [Fact]
+        public static void Structural_Repeated()
+        {
+            Assert.Same(MaybeComparer<int>.Structural, MaybeComparer<int>.Structural);
+            Assert.Same(MaybeComparer<long>.Structural, MaybeComparer<long>.Structural);
+            Assert.Same(MaybeComparer<string>.Structural, MaybeComparer<string>.Structural);
+            Assert.Same(MaybeComparer<Uri>.Structural, MaybeComparer<Uri>.Structural);
+            Assert.Same(MaybeComparer<AnyT>.Structural, MaybeComparer<AnyT>.Structural);
         }
     }
 }
