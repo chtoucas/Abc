@@ -52,6 +52,7 @@ namespace Abc
         [Pure] public abstract int Compare(Maybe<T> x, Maybe<T> y);
 
         /// <inheritdoc />
+        [Pure]
         bool IEqualityComparer.Equals(object? x, object? y)
         {
             if (x == y) { return true; }
@@ -61,6 +62,7 @@ namespace Abc
         }
 
         /// <inheritdoc />
+        [Pure]
         int IEqualityComparer.GetHashCode(object? obj)
         {
             if (obj is null) { return 0; }
@@ -69,6 +71,7 @@ namespace Abc
         }
 
         /// <inheritdoc />
+        [Pure]
         int IComparer.Compare(object? x, object? y)
         {
             if (x is null) { return y is null ? 0 : -1; }
@@ -109,9 +112,11 @@ namespace Abc
         // Equals() & GetHashCode() for the comparer itself.
         //
 
+        [Pure]
         public override bool Equals(object? obj) =>
             obj != null && GetType() == obj.GetType();
 
+        [Pure]
         public override int GetHashCode() =>
             GetType().GetHashCode();
     }
@@ -144,9 +149,11 @@ namespace Abc
         // Equals() & GetHashCode() for the comparer itself.
         //
 
+        [Pure]
         public override bool Equals(object? obj) =>
             obj != null && GetType() == obj.GetType();
 
+        [Pure]
         public override int GetHashCode() =>
             GetType().GetHashCode();
     }
