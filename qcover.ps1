@@ -4,17 +4,12 @@
 param(
     [Parameter(Mandatory = $false, Position = 0)]
     [ValidateSet('coverlet', 'opencover')]
-    [Alias('t')] [string] $ToolName = 'coverlet',
+    [Alias('t')] [string] $Tool = 'coverlet',
 
-    [Alias('r')] [switch] $Report,
-
-    [switch] $NoLogo,
-    [Alias('q')] [switch] $Quiet
+    [Alias('r')] [switch] $Report
 )
 
 Set-StrictMode -Version Latest
-
-# ------------------------------------------------------------------------------
 
 trap {
     Write-Host ('An unexpected error occured: {0}' -f $_.Exception.Message) `
@@ -23,23 +18,22 @@ trap {
     Exit 1
 }
 
-# ------------------------------------------------------------------------------
-
-if ($Quiet) { $NoLogo = $true }
-
-if (!$NoLogo) {
-    Write-Host "Code Coverage  w/ $ToolName.`n"
-}
+Write-Host "Code Coverage w/ $Tool.`n"
 
 . '.\eng\helpers.ps1'
 
-# ------------------------------------------------------------------------------
+$proj = [Xml] (Get-Content ".\Abc.Tests\Abc.Tests.csproj")
+$packages = $proj.Project.ItemGroup
+
+Write-Host $packages
+
+Exit 0
 
 # The path is relative to the test project (..\).
-$output = "..\__\coverlet\coverlet.xml"
+$output = "..\__\$Tool\$Tool.xml"
 $exclude = '\"[Abc*]System.Diagnostics.CodeAnalysis.*,[Abc*]System.Runtime.CompilerServices.*,[Abc*]Microsoft.CodeAnalysis.*\"'
 
-. dotnet test -c Debug --no-restore `
+& dotnet test -c Debug --no-restore `
     /p:CollectCoverage=true `
     /p:CoverletOutputFormat=opencover `
     /p:CoverletOutput=$output `
@@ -47,5 +41,3 @@ $exclude = '\"[Abc*]System.Diagnostics.CodeAnalysis.*,[Abc*]System.Runtime.Compi
     /p:Exclude=$exclude
 
 # Write-Host "The report is here: ..." -BackgroundColor 'DarkGreen' -ForegroundColor Yellow
-
-# ------------------------------------------------------------------------------
