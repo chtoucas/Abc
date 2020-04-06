@@ -2,19 +2,17 @@
 
 <#
 .SYNOPSIS
-    Run the Code Coverage script and optionally build human-readable reports.
+    Run the Code Coverage script and build human-readable reports.
 .DESCRIPTION
-    Run the Code Coverage script w/ either Coverlet (default) or OpenCover,
-    then optionally build human-readable reports and badges.
+    Run the Code Coverage script w/ either Coverlet (default) or OpenCover, then
+    optionally build human-readable reports and badges.
 
     Prerequesites: NuGet packages and tools must have been restored before.
 
-    OpenCover is slow when compared to Coverlet, but we get:
-    - risk hotspots (NPath complexity, crap score).
-    - a list of unvisited methods.
-    More importantly, the results differ slightly (LINQ and async so far) which
-    makes the two tools complementary (the line count may differ too but that's
-    not important).
+    OpenCover is slow when compared to Coverlet, but we get risk hotspots (NPath
+    complexity, crap score) and the list of unvisited methods. Furthermore, the
+    results differ slightly (LINQ and async so far) which makes the two tools
+    complementary (line counts may differ too but that's a detail).
 .PARAMETER OpenCover
     Use OpenCover instead of Coverlet.
 .PARAMETER NoReport
@@ -24,13 +22,13 @@
 .OUTPUTS
     None.
 .EXAMPLE
-    PS>qcover.ps1
+    PS>cover.ps1
     Run Coverlet then build the human-readable reports.
 .EXAMPLE
-    PS>qcover.ps1 -x
+    PS>cover.ps1 -x
     Run OpenCover then build the human-readable reports.
 .EXAMPLE
-    PS>qcover.ps1 -x -n
+    PS>cover.ps1 -x -n
     Run OpenCover, do NOT build human-readable reports and badges.
 #>
 [CmdletBinding()]
@@ -66,8 +64,23 @@ if ($OpenCover) {
     $proj = [Xml] (Get-Content ".\Abc.Tests\Abc.Tests.csproj")
     $version = $proj | Get-ToolVersion -ToolName "OpenCover"
 
+    if (!(Test-Path $reportDir)) {
+        New-Item -ItemType Directory -Force -Path $reportDir | Out-Null
+    }
+
     Write-Host "Running OpenCover v$version." -ForegroundColor Green
-    Write-Host "Not done yet." -ForegroundColor Red
+
+    # See https://github.com/opencover/opencover/wiki/Usage
+    $openCoverExe = "$env:USERPROFILE\.nuget\packages\opencover\$version\tools\OpenCover.Console.exe"
+    $filter = "+[Abc.Maybe]* -[Abc]* -[Abc.Future]* -[Abc.Test*]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*"
+    $targetargs = "test $PSScriptRoot\Abc.Tests\Abc.Tests.csproj -v quiet -c Debug --no-restore /p:DebugType=Full"
+
+    & $openCoverExe -showunvisited -oldStyle -register:user -hideskipped:All `
+        "-output:$reportXml" `
+        "-target:dotnet.exe" `
+        "-targetargs:$targetargs" `
+        "-filter:$filter" `
+        "-excludebyattribute:*.ExcludeFromCodeCoverageAttribute"
 } else {
     $reportType = 'coverlet'
     $reportDir  = "$artifactsDir\$reportType"
@@ -89,7 +102,7 @@ if ($OpenCover) {
 
 # Build reports and badges.
 if ($NoReport) {
-    Write-Host "On user request, no human-readable reports will be generated." `
+    Write-Host "On user request, we do not run ReportGenerator." `
         -ForegroundColor Green
 } else {
     Write-Host "Building HTML/text reports and badge w/ ReportGenerator." `
@@ -103,9 +116,9 @@ if ($NoReport) {
 
     & dotnet tool run reportgenerator $args
 
-    Move-Item -Force -Path "$reportDir\badge_combined.svg" `
+    Copy-Item -Force -Path "$reportDir\badge_combined.svg" `
         -Destination "$artifactsDir\$reportType.svg"
-    Move-Item -Force -Path "$reportDir\Summary.txt" `
+    Copy-Item -Force -Path "$reportDir\Summary.txt" `
         -Destination "$artifactsDir\$reportType.txt"
 
     Write-Host "The HTML report can be found here: '$reportDir'." `

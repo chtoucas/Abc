@@ -8,6 +8,7 @@ Changed
 
 Internals
 - New perf project.
+- Merge all Code Coverage scripts into a single PowerShell script.
 
 2020-04-03, version 1.0.0-alpha-2
 ---------------------------------

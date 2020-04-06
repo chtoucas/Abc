@@ -1,21 +1,23 @@
 ﻿Summary
-  Generated on: 04/04/2020 - 19:01:29
+  Generated on: 06/04/2020 - 10:42:45
   Parser: OpenCoverParser
   Assemblies: 1
-  Classes: 10
+  Classes: 12
   Files: 20
-  Line coverage: 98.1%
-  Covered lines: 685
-  Uncovered lines: 13
-  Coverable lines: 698
-  Total lines: 2934
+  Line coverage: 96.9%
+  Covered lines: 696
+  Uncovered lines: 22
+  Coverable lines: 718
+  Total lines: 2984
 
-Abc.Maybe                               98.1%
+Abc.Maybe                               96.9%
+  Abc.DefaultMaybeComparer`1            75.0%
   Abc.Linq.Qperators                   100.0%
   Abc.May                              100.0%
   Abc.Maybe                            100.0%
   Abc.Maybe`1                          100.0%
-  Abc.MaybeComparer`1                   53.5%
+  Abc.MaybeComparer`1                   63.3%
+  Abc.StructuralMaybeComparer`1         10.0%
   Abc.Unit                             100.0%
   Abc.Utilities.EmptyIterator`1        100.0%
   Abc.Utilities.ExceptionFactory       100.0%
