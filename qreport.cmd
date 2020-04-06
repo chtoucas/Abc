@@ -1,18 +1,18 @@
 @echo off
 @setlocal
 
-:Settings
-@set Version=4.5.4
+@if [%1] == [] (@call set ReportType=coverlet) else (@call set ReportType=%1)
 
-@set ReportType=coverlet
-@rem ReportType=opencover
+@if not exist __\%ReportType% (
+    @echo.
+    @echo *** Code Coverage %ReportType% does not exist ***
+    @echo.
+    @goto ExitOnError
+)
 
-:Report
-@rem ReportGenerator=%USERPROFILE%\.nuget\packages\reportgenerator\%Version%\tools\net47\ReportGenerator.exe
-@set ReportGenerator=%~dp0\.nuget\packages\ReportGenerator.%Version%\tools\net47\ReportGenerator.exe
+@echo Building report and badges for '%ReportType%'.
 
-@echo Building report and badges.
-@call :OnError %ReportGenerator% -verbosity:Warning ^
+@call :OnError dotnet tool run reportgenerator -verbosity:Warning ^
     -reporttypes:HtmlInline;Badges;TextSummary ^
     -reports:__\%ReportType%\%ReportType%.xml -targetdir:__\%ReportType%
 

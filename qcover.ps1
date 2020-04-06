@@ -25,10 +25,8 @@ Write-Host "Code Coverage w/ $Tool.`n"
 $proj = [Xml] (Get-Content ".\Abc.Tests\Abc.Tests.csproj")
 
 $openCoverVersion = $proj | Get-ToolVersion -ToolName "OpenCover"
-$reportGeneratorVersion = $proj | Get-ToolVersion -ToolName "ReportGenerator"
 
 Write-Host $openCoverVersion
-Write-Host $reportGeneratorVersion
 
 Exit 0
 
