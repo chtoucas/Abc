@@ -23,7 +23,7 @@ Use OpenCover instead of Coverlet.
 Dot not build HTML/text reports and badges w/ ReportGenerator.
 
 .PARAMETER ReportOnly
-Dot not run the Code Coverage tool.
+Dot not run any Code Coverage tool.
 
 .EXAMPLE
 PS>cover.ps1
@@ -34,7 +34,7 @@ PS>cover.ps1 -x
 Run OpenCover then build the human-readable reports.
 
 .EXAMPLE
-PS>cover.ps1 -x -n
+PS>cover.ps1 -OpenCover -NoReport
 Run OpenCover, do NOT build human-readable reports and badges.
 #>
 [CmdletBinding()]
@@ -47,38 +47,40 @@ param(
 Set-StrictMode -Version Latest
 
 trap {
-    Write-Host ('An unexpected error occured: {0}' -f $_.Exception.Message) `
+    write-host ("An unexpected error occured: {0}" -f $_.Exception.Message) `
         -BackgroundColor Red -ForegroundColor Yellow
-    Exit 1
+    exit 1
 }
 
-. '.\eng\helpers.ps1'
+. "$PSScriptRoot\eng\helpers.ps1"
 
-# Note to myself: do not use a separate directory for building.
+# Note to myself: do not use a separate directory for build.
 # Build warnings MSB3277, the problem is that we then build all platforms
 # within the same dir.
 
-$reportType = if ($OpenCover) { 'opencover' } else { 'coverlet' }
-$artifactsDir = "__"
-$outdir = "$PSScriptRoot\$artifactsDir\$reportType"
-$outxml = "$outdir\$reportType.xml"
+$tool = if ($OpenCover) { 'opencover' } else { 'coverlet' }
+$artifacts = '__'
+$outdir = "$PSScriptRoot\$artifacts\$tool"
+$outxml = "$outdir\$tool.xml"
 
 # Run the Code Coverage tool.
-if (!$ReportOnly) {
+if ($ReportOnly) {
+    carp 'On your request, we do not run the Code Coverage tool.'
+} else {
   if ($OpenCover) {
-      Write-Host "Running OpenCover." -BackgroundColor DarkCyan -ForegroundColor Green
+      say-loud 'Running OpenCover.'
 
       # Find the OpenCover version.
       $proj = "$PSScriptRoot\Abc.Tests\Abc.Tests.csproj"
-      $version = [Xml] (Get-Content $proj) | Get-ToolVersion -ToolName 'OpenCover'
+      $version = [Xml] (get-content $proj) | Get-ToolVersion -ToolName 'OpenCover'
 
-      if (!(Test-Path $outdir)) {
-          New-Item -ItemType Directory -Force -Path $outdir | Out-Null
+      if (!(test-path $outdir)) {
+          mkdir -Force -Path $outdir | Out-Null
       }
 
       $openCoverExe = "$env:USERPROFILE\.nuget\packages\opencover\$version\tools\OpenCover.Console.exe"
       # See https://github.com/opencover/opencover/wiki/Usage
-      $filter = "+[Abc.Maybe]* -[Abc]* -[Abc.Future]* -[Abc.Test*]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*"
+      $filter = '+[Abc.Maybe]* -[Abc]* -[Abc.Future]* -[Abc.Test*]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*'
       $targetargs = "test $proj -v quiet -c Debug --no-restore /p:DebugType=Full"
 
       & $openCoverExe -showunvisited -oldStyle -register:user -hideskipped:All `
@@ -88,10 +90,10 @@ if (!$ReportOnly) {
           "-filter:$filter" `
           -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
   } else {
-      Write-Host "Running Coverlet." -BackgroundColor DarkCyan -ForegroundColor Green
+      say-loud 'Running Coverlet.'
 
       # The path is relative to the test project (..\).
-      $output = "$PSScriptRoot\$artifactsDir\$reportType\$reportType.xml"
+      $output = "$PSScriptRoot\$artifacts\$tool\$tool.xml"
       $exclude = '\"[Abc*]System.Diagnostics.CodeAnalysis.*,[Abc*]System.Runtime.CompilerServices.*,[Abc*]Microsoft.CodeAnalysis.*\"'
 
       & dotnet test -c Debug --no-restore `
@@ -105,11 +107,9 @@ if (!$ReportOnly) {
 
 # Build reports and badges.
 if ($NoReport) {
-    Write-Host "On user request, we do not run ReportGenerator." `
-         -BackgroundColor DarkCyan -ForegroundColor Green
+    carp 'On your request, we do not run ReportGenerator.'
 } else {
-    Write-Host "Building HTML/text reports and badge w/ ReportGenerator." `
-         -BackgroundColor DarkCyan -ForegroundColor Green
+    say-loud 'Running ReportGenerator.'
 
     $args = `
         '-verbosity:Warning',
@@ -119,15 +119,14 @@ if ($NoReport) {
 
     & dotnet tool run reportgenerator $args
 
-    Push-Location $outdir
+    pushd $outdir
 
     try {
-        Copy-Item -Force -Path badge_combined.svg -Destination "..\$reportType.svg"
-        Copy-Item -Force -Path Summary.txt -Destination "..\$reportType.txt"
+        cp -Force -Path badge_combined.svg -Destination "..\$tool.svg"
+        cp -Force -Path Summary.txt -Destination "..\$tool.txt"
     } finally {
-        Pop-Location
+        popd
     }
 
-    Write-Host "The HTML report can be found here: '$outdir'." `
-        -ForegroundColor Yellow
+    confess "The HTML report can be found here: '$outdir'."
 }
