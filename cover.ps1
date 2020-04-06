@@ -22,6 +22,9 @@ Use OpenCover instead of Coverlet.
 .PARAMETER NoReport
 Dot not build HTML/text reports and badges w/ ReportGenerator.
 
+.PARAMETER ReportOnly
+Dot not run the Code Coverage tool.
+
 .EXAMPLE
 PS>cover.ps1
 Run Coverlet then build the human-readable reports.
@@ -37,7 +40,8 @@ Run OpenCover, do NOT build human-readable reports and badges.
 [CmdletBinding()]
 param(
     [Alias('x')] [switch] $OpenCover,
-    [Alias('n')] [switch] $NoReport
+    [switch] $NoReport,
+    [switch] $ReportOnly
 )
 
 Set-StrictMode -Version Latest
@@ -60,50 +64,52 @@ $outdir = "$PSScriptRoot\$artifactsDir\$reportType"
 $outxml = "$outdir\$reportType.xml"
 
 # Run the Code Coverage tool.
-if ($OpenCover) {
-    Write-Host "Running OpenCover." -ForegroundColor Green
+if (!$ReportOnly) {
+  if ($OpenCover) {
+      Write-Host "Running OpenCover." -BackgroundColor DarkCyan -ForegroundColor Green
 
-    # Find the OpenCover version.
-    $proj = "$PSScriptRoot\Abc.Tests\Abc.Tests.csproj"
-    $version = [Xml] (Get-Content $proj) | Get-ToolVersion -ToolName 'OpenCover'
+      # Find the OpenCover version.
+      $proj = "$PSScriptRoot\Abc.Tests\Abc.Tests.csproj"
+      $version = [Xml] (Get-Content $proj) | Get-ToolVersion -ToolName 'OpenCover'
 
-    if (!(Test-Path $outdir)) {
-        New-Item -ItemType Directory -Force -Path $outdir | Out-Null
-    }
+      if (!(Test-Path $outdir)) {
+          New-Item -ItemType Directory -Force -Path $outdir | Out-Null
+      }
 
-    $openCoverExe = "$env:USERPROFILE\.nuget\packages\opencover\$version\tools\OpenCover.Console.exe"
-    # See https://github.com/opencover/opencover/wiki/Usage
-    $filter = "+[Abc.Maybe]* -[Abc]* -[Abc.Future]* -[Abc.Test*]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*"
-    $targetargs = "test $proj -v quiet -c Debug --no-restore /p:DebugType=Full"
+      $openCoverExe = "$env:USERPROFILE\.nuget\packages\opencover\$version\tools\OpenCover.Console.exe"
+      # See https://github.com/opencover/opencover/wiki/Usage
+      $filter = "+[Abc.Maybe]* -[Abc]* -[Abc.Future]* -[Abc.Test*]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*"
+      $targetargs = "test $proj -v quiet -c Debug --no-restore /p:DebugType=Full"
 
-    & $openCoverExe -showunvisited -oldStyle -register:user -hideskipped:All `
-        "-output:$outxml" `
-        -target:dotnet.exe `
-        "-targetargs:$targetargs" `
-        "-filter:$filter" `
-        -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
-} else {
-    Write-Host "Running Coverlet." -ForegroundColor Green
+      & $openCoverExe -showunvisited -oldStyle -register:user -hideskipped:All `
+          "-output:$outxml" `
+          -target:dotnet.exe `
+          "-targetargs:$targetargs" `
+          "-filter:$filter" `
+          -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
+  } else {
+      Write-Host "Running Coverlet." -BackgroundColor DarkCyan -ForegroundColor Green
 
-    # The path is relative to the test project (..\).
-    $output = "$PSScriptRoot\$artifactsDir\$reportType\$reportType.xml"
-    $exclude = '\"[Abc*]System.Diagnostics.CodeAnalysis.*,[Abc*]System.Runtime.CompilerServices.*,[Abc*]Microsoft.CodeAnalysis.*\"'
+      # The path is relative to the test project (..\).
+      $output = "$PSScriptRoot\$artifactsDir\$reportType\$reportType.xml"
+      $exclude = '\"[Abc*]System.Diagnostics.CodeAnalysis.*,[Abc*]System.Runtime.CompilerServices.*,[Abc*]Microsoft.CodeAnalysis.*\"'
 
-    & dotnet test -c Debug --no-restore `
-        /p:CollectCoverage=true `
-        /p:CoverletOutputFormat=opencover `
-        /p:CoverletOutput=$output `
-        /p:Include="[Abc.Maybe]*" `
-        /p:Exclude=$exclude
+      & dotnet test -c Debug --no-restore `
+          /p:CollectCoverage=true `
+          /p:CoverletOutputFormat=opencover `
+          /p:CoverletOutput=$output `
+          /p:Include="[Abc.Maybe]*" `
+          /p:Exclude=$exclude
+  }
 }
 
 # Build reports and badges.
 if ($NoReport) {
     Write-Host "On user request, we do not run ReportGenerator." `
-        -ForegroundColor Green
+         -BackgroundColor DarkCyan -ForegroundColor Green
 } else {
     Write-Host "Building HTML/text reports and badge w/ ReportGenerator." `
-        -ForegroundColor Green
+         -BackgroundColor DarkCyan -ForegroundColor Green
 
     $args = `
         '-verbosity:Warning',

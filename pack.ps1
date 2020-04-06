@@ -24,13 +24,16 @@ if (Test-Path "$outdir\Abc.Maybe.$version.nupkg") {
 }
 
 if ($Clean) {
+    Write-Host "Cleaning." -BackgroundColor DarkCyan -ForegroundColor Green
     & dotnet clean -c Release -v minimal --nologo
 }
 
 if ($Test) {
-    & dotnet test .\Abc.Tests -c Release
+    Write-Host "Testing." -BackgroundColor DarkCyan -ForegroundColor Green
+    & dotnet test .\Abc.Tests -c Release -v minimal --nologo
 }
 
+Write-Host "Packing." -BackgroundColor DarkCyan -ForegroundColor Green
 & dotnet pack .\Abc.Maybe -c Release --nologo `
     --output $outdir `
     -p:TargetFrameworks='\"netstandard2.0;netstandard2.1;netcoreapp3.1\"' `
