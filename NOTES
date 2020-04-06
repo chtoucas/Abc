@@ -7,6 +7,7 @@ Version 1.0.0-alpha-3
 - Add overloads w/ IEqualityComparer<T>? Maybe<T> == T?
 - Finish MaybeComparer<T>.
 - Testing is well underway but there is still a lot to be done.
+- Rewrite scripts in PowerShell. Move to coverlet-console?
 
 Version 1.0.0-beta1
 - Stable API.
@@ -75,8 +76,24 @@ Operations:
 - XML comments with complete examples.
   https://github.com/dotnet/dotnet-api-docs/wiki
 - Perf tool (LINQ, nulls, iterable).
-- Rewrite scripts in PowerShell? (not useful for qcoverlet.cmd and qtest.cmd).
+- Coverity
 - Cleanup scripts, eg: dotnet nuget locals --clear all.
+- dotnet-outdated
+
+Local tools
+  Initialize
+    dotnet new tool-manifest
+  Install
+    dotnet tool install dotnet-reportgenerator-globaltool
+  List
+    dotnet tool list
+  Find updates
+    ???
+  Update
+    dotnet tool update
+  Restore
+    dotnet tool restore
+https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools
 
 Release Process
 ---------------
