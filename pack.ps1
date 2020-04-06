@@ -9,7 +9,7 @@ param(
 Set-StrictMode -Version Latest
 
 trap {
-    Write-Host ('An unexpected error occured: {0}' -f $_.Exception.Message) `
+    Write-Host ('An unexpected error occured: {0}.' -f $_.Exception.Message) `
         -BackgroundColor Red -ForegroundColor Yellow
     Exit 1
 }
@@ -40,5 +40,6 @@ Write-Host "Packing." -BackgroundColor DarkCyan -ForegroundColor Green
     -p:Deterministic=true `
     -p:PackageVersion=$version
 
-# To publish the result:
-# > dotnet nuget push .\Abc.Maybe.XXX -k XXX -s https://www.nuget.org/
+Write-Host "To publish the package:" -ForegroundColor Green
+Write-Host "  dotnet nuget push .\__\packages\Abc.Maybe.$version.nupkg -s https://www.nuget.org/ -k KEY" `
+    -ForegroundColor Yellow
