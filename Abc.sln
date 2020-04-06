@@ -11,11 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		eng\Common.After.props = eng\Common.After.props
 		eng\Common.props = eng\Common.props
-		qcoverlet.cmd = qcoverlet.cmd
-		qopencover.cmd = qopencover.cmd
+		cover.ps1 = cover.ps1
 		qpack.cmd = qpack.cmd
 		qperf.cmd = qperf.cmd
-		qreport.cmd = qreport.cmd
 		qtest.cmd = qtest.cmd
 	EndProjectSection
 EndProject

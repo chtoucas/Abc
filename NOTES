@@ -7,7 +7,6 @@ Version 1.0.0-alpha-3
 - Add overloads w/ IEqualityComparer<T>? Maybe<T> == T?
 - Finish MaybeComparer<T>.
 - Testing is well underway but there is still a lot to be done.
-- Move to coverlet-console?
 
 Version 1.0.0-beta1
 - Stable API.
@@ -17,6 +16,8 @@ Version 1.0.0-beta1
 Towards version 1.0.0
 - README: some pub, compare to other option types.
 - Infra
+  * Move to coverlet-console?
+  * Pack script.
   * Versioning (MSBuild tool), NetStandardImplicitPackageVersion
     https://docs.microsoft.com/en-us/dotnet/core/packages
   * Strong name? How to avoid binding redirects? Prerequesite: assembly version.
