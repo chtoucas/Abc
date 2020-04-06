@@ -5,9 +5,16 @@
     Run the Code Coverage script and optionally build human-readable reports.
 .DESCRIPTION
     Run the Code Coverage script w/ either Coverlet (default) or OpenCover,
-    then optionally build human-readable reports.
+    then optionally build human-readable reports and badges.
 
     Prerequesites: NuGet packages and tools must have been restored before.
+
+    OpenCover is slow when compared to Coverlet, but we get:
+    - risk hotspots (NPath complexity, crap score).
+    - a list of unvisited methods.
+    More importantly, the results differ slightly (LINQ and async so far) which
+    makes the two tools complementary (the line count may differ too but that's
+    not important).
 .PARAMETER OpenCover
     Use OpenCover instead of Coverlet.
 .PARAMETER NoReport
@@ -42,12 +49,17 @@ trap {
 
 . '.\eng\helpers.ps1'
 
-$artifactsPath = "__"
+# Note to myself: do not use a separate directory for building.
+# Build warnings MSB3277, the problem is that we then build all platforms
+# within the same dir.
+
+$artifactsDirName = "__"
+$artifactsDir = "$PSScriptRoot\$artifactsDirName"
 
 # Run the Code Coverage tool.
 if ($OpenCover) {
     $reportType = 'opencover'
-    $reportDir  = "$artifactsPath\$reportType"
+    $reportDir  = "$artifactsDir\$reportType"
     $reportXml  = "$reportDir\$reportType.xml"
 
     # Find the OpenCover version.
@@ -58,13 +70,13 @@ if ($OpenCover) {
     Write-Host "Not done yet." -ForegroundColor Red
 } else {
     $reportType = 'coverlet'
-    $reportDir  = "$artifactsPath\$reportType"
+    $reportDir  = "$artifactsDir\$reportType"
     $reportXml  = "$reportDir\$reportType.xml"
 
     Write-Host "Running Coverlet." -ForegroundColor Green
 
     # The path is relative to the test project (..\).
-    $output = "..\$reportXml"
+    $output = "$PSScriptRoot\$artifactsDirName\$reportType\$reportType.xml"
     $exclude = '\"[Abc*]System.Diagnostics.CodeAnalysis.*,[Abc*]System.Runtime.CompilerServices.*,[Abc*]Microsoft.CodeAnalysis.*\"'
 
     & dotnet test -c Debug --no-restore `
@@ -75,7 +87,7 @@ if ($OpenCover) {
         /p:Exclude=$exclude
 }
 
-# Build report and badges.
+# Build reports and badges.
 if ($NoReport) {
     Write-Host "On user request, no human-readable reports will be generated." `
         -ForegroundColor Green
@@ -92,9 +104,9 @@ if ($NoReport) {
     & dotnet tool run reportgenerator $args
 
     Move-Item -Force -Path "$reportDir\badge_combined.svg" `
-        -Destination "$artifactsPath\$reportType.svg"
+        -Destination "$artifactsDir\$reportType.svg"
     Move-Item -Force -Path "$reportDir\Summary.txt" `
-        -Destination "$artifactsPath\$reportType.txt"
+        -Destination "$artifactsDir\$reportType.txt"
 
     Write-Host "The HTML report can be found here: '$reportDir'." `
         -ForegroundColor Yellow

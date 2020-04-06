@@ -1,15 +1,4 @@
 :: Test coverage w/ OpenCover.
-:: Beware, will crash if the packages were not restored before.
-::
-:: Slow when compared to coverlet, but we get:
-:: - risk hotspots (NPath complexity, crap score).
-:: - list of unvisited methods.
-:: More importantly, the results differ sligqhtly (LINQ and async so far) which
-:: makes the two tools complementary.
-::
-:: Note to myself: do not use a separate directory for building.
-:: Build warnings MSB3277, the problem is that we then build all platforms
-:: within the same dir.
 
 @echo off
 @setlocal
