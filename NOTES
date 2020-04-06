@@ -17,7 +17,6 @@ Towards version 1.0.0
 - README: some pub, compare to other option types.
 - Infra
   * Move to coverlet-console?
-  * Pack script.
   * Versioning (MSBuild tool), NetStandardImplicitPackageVersion
     https://docs.microsoft.com/en-us/dotnet/core/packages
   * Strong name? How to avoid binding redirects? Prerequesite: assembly version.
