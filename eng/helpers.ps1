@@ -1,6 +1,5 @@
 
-function Say-Loud
-{
+function Say-Loud {
   [CmdletBinding()]
   Param(
     [Parameter(Mandatory=$True, ValueFromPipeline=$False, ValueFromPipelineByPropertyName=$False)]
@@ -11,8 +10,7 @@ function Say-Loud
   Write-Host $Message -BackgroundColor DarkCyan -ForegroundColor Green
 }
 
-function Carp
-{
+function Carp {
   [CmdletBinding()]
   Param(
     [Parameter(Mandatory=$True, ValueFromPipeline=$False, ValueFromPipelineByPropertyName=$False)]
@@ -23,8 +21,7 @@ function Carp
   Write-Host $Message -BackgroundColor Red -ForegroundColor Yellow
 }
 
-function Confess
-{
+function Confess {
   [CmdletBinding()]
   Param(
     [Parameter(Mandatory=$True, ValueFromPipeline=$False, ValueFromPipelineByPropertyName=$False)]
@@ -36,14 +33,14 @@ function Confess
 }
 
 function Get-ToolVersion {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
-        [Xml] $Xml,
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true)]
+    [Xml] $Xml,
 
-        [string] $ToolName
-    )
+    [string] $ToolName
+  )
 
-    Select-Xml -Xml $Xml -XPath "//Project/ItemGroup/PackageReference[@Include='$ToolName']" `
-      | select -ExpandProperty Node | select -First 1 -ExpandProperty Version
+  Select-Xml -Xml $Xml -XPath "//Project/ItemGroup/PackageReference[@Include='$ToolName']" `
+    | select -ExpandProperty Node | select -First 1 -ExpandProperty Version
 }
