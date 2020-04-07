@@ -12,10 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		eng\Common.After.props = eng\Common.After.props
 		cover.ps1 = cover.ps1
 		Directory.Build.props = Directory.Build.props
-		eng\helpers.ps1 = eng\helpers.ps1
 		pack.ps1 = pack.ps1
 		qperf.cmd = qperf.cmd
 		qtest.cmd = qtest.cmd
+		eng\say.ps1 = eng\say.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc.Testing", "Abc.Testing\Abc.Testing.csproj", "{18EE8451-4EC1-4D48-A50F-A1D26BE7EADF}"
