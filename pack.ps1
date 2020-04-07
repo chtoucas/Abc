@@ -18,38 +18,77 @@ param(
 
 Set-StrictMode -Version Latest
 
-trap {
-  write-host ("An unexpected error occured: {0}." -f $_.Exception.Message) `
-    -BackgroundColor Red -ForegroundColor Yellow
-  exit 1
-}
+$PKGDIR = '__\packages'     # Relative path
 
-. "$PSScriptRoot\eng\helpers.ps1"
+. '.\eng\say.ps1'
 
-$version = '1.0.0-alpha-2'
+################################################################################
 
-$outdir  = "$PSScriptRoot\__\packages"
-
-if (test-path "$outdir\Abc.Maybe.$version.nupkg") {
-  carp "A package with the same version ($version) already exists."
-}
-
-if ($Clean) {
+function run-clean {
   say-loud 'Cleaning.'
+
   & dotnet clean -c Release -v minimal --nologo
+
+  if ($lastExitCode -ne 0) {
+    croak 'Clean task failed.'
+  }
 }
 
-if ($Test) {
+function run-test {
   say-loud 'Testing.'
-  & dotnet test .\Abc.Tests -c Release -v minimal --nologo
+
+  & dotnet clean -c Release -v minimal --nologo
+
+  if ($lastExitCode -ne 0) {
+    croak 'Test task failed.'
+  }
 }
 
-say-loud 'Packing.'
-& dotnet pack .\Abc.Maybe -c Release --nologo `
-  --output $outdir `
-  -p:TargetFrameworks='\"netstandard2.0;netstandard2.1;netcoreapp3.1\"' `
-  -p:Deterministic=true `
-  -p:PackageVersion=$version
+function run-pack([string] $proj, [string] $version) {
+  say-loud 'Packing.'
 
-confess 'To publish the package:'
-confess "> dotnet nuget push .\__\packages\Abc.Maybe.$version.nupkg -s https://www.nuget.org/ -k MYKEY"
+  $pkg = join-path $PKGDIR "$proj.$version.nupkg"
+
+  if (test-path $pkg) {
+    carp "A package with the same version ($version) already exists."
+
+    $question = 'Do you wish to proceed anyway? [y/n]'
+    $continue = read-host $question
+    while ($continue -ne 'y') {
+      if ($continue -eq 'n') { exit 0 }
+        $continue = read-host $question
+      }
+  }
+
+  & dotnet pack $proj -c Release --nologo `
+    --output $PKGDIR `
+    -p:TargetFrameworks='\"netstandard2.0;netstandard2.1;netcoreapp3.1\"' `
+    -p:Deterministic=true `
+    -p:PackageVersion=$version `
+    | out-host
+
+  if ($lastExitCode -ne 0) {
+    croak 'Pack task failed.'
+  }
+
+  $pkg
+}
+
+################################################################################
+
+try {
+  pushd $PSScriptRoot
+
+  if ($Clean) { run-clean }
+  if ($Test)  { run-test }
+
+  $pkg = run-pack 'Abc.Maybe' '1.0.0-alpha-2'
+
+  confess 'To publish the package:'
+  confess "> dotnet nuget push .\$pkg -s https://www.nuget.org/ -k MYKEY"
+} catch {
+  carp ("An unexpected error occured: {0}." -f $_.Exception.Message)
+  exit 1
+} finally {
+  popd
+}

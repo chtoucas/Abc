@@ -52,7 +52,8 @@ trap {
   exit 1
 }
 
-. "$PSScriptRoot\eng\helpers.ps1"
+. "$PSScriptRoot\eng\say.ps1"
+. "$PSScriptRoot\eng\coverage.ps1"
 
 # Note to myself: do not use a separate directory for build.
 # Build warnings MSB3277, the problem is that we then build all platforms
@@ -60,8 +61,8 @@ trap {
 
 $tool = if ($OpenCover) { 'opencover' } else { 'coverlet' }
 $artifacts = '__'
-$outdir = "$PSScriptRoot\$artifacts\$tool"
-$outxml = "$outdir\$tool.xml"
+$outdir = join-path $PSScriptRoot (join-path $artifacts $tool)
+$outxml = join-path $outdir "$tool.xml"
 
 # Run the Code Coverage tool.
 if ($ReportOnly) {
@@ -70,14 +71,14 @@ if ($ReportOnly) {
   say-loud 'Running OpenCover.'
 
   # Find the OpenCover version.
-  $proj = "$PSScriptRoot\Abc.Tests\Abc.Tests.csproj"
+  $proj = join-path $PSScriptRoot 'Abc.Tests\Abc.Tests.csproj'
   $version = [Xml] (get-content $proj) | Get-ToolVersion -ToolName 'OpenCover'
 
   if (!(test-path $outdir)) {
       mkdir -Force -Path $outdir | Out-Null
   }
 
-  $openCoverExe = "$env:USERPROFILE\.nuget\packages\opencover\$version\tools\OpenCover.Console.exe"
+  $openCoverExe = join-path $env:USERPROFILE '\.nuget\packages\opencover\$version\tools\OpenCover.Console.exe'
   # See https://github.com/opencover/opencover/wiki/Usage
   $filter = '+[Abc.Maybe]* -[Abc]* -[Abc.Future]* -[Abc.Test*]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*'
   $targetargs = "test $proj -v quiet -c Debug --no-restore /p:DebugType=Full"
@@ -117,11 +118,11 @@ if ($NoReport) {
 
   & dotnet tool run reportgenerator $args
 
-  pushd $outdir
-
   try {
-    cp -Force -Path badge_combined.svg -Destination "..\$tool.svg"
-    cp -Force -Path Summary.txt -Destination "..\$tool.txt"
+    pushd $outdir
+
+    cp -Force -Path badge_combined.svg -Destination (join-path '..' "$tool.svg")
+    cp -Force -Path Summary.txt -Destination (join-path '..' "$tool.txt")
   } finally {
     popd
   }
