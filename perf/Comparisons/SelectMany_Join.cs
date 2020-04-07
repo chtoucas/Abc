@@ -8,7 +8,6 @@ namespace PerfTool.Comparisons
 
     using BenchmarkDotNet.Attributes;
 
-    //[ShortRunJob]
     [MemoryDiagnoser]
     public partial class SelectMany_Join
     {

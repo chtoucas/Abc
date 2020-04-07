@@ -19,6 +19,8 @@ namespace PerfTool
 #if BENCHMARK_HARNESS
         public static void Main(string[] args)
         {
+            // TODO: config? Use a different value for ArtifactsPath eg
+            // "__\harness\TIMESTAMP".
             BenchmarkSwitcher
                 .FromAssembly(typeof(Program).Assembly)
                 .Run(args, DefaultConfig.Instance.WithLocalSettings());
@@ -26,7 +28,8 @@ namespace PerfTool
 #else
         public static void Main()
         {
-            var config = GetCustomConfig(shortRunJob: false)
+            string artifactsPath = GetArtifactsPath();
+            var config = GetCustomConfig(artifactsPath, shortRunJob: true)
                 .WithLocalSettings()
                 //.With(new EtwProfiler())
                 ;
@@ -34,6 +37,17 @@ namespace PerfTool
             BenchmarkRunner.Run<Comparisons.SelectMany_Join>(config);
         }
 #endif
+
+        public static string GetArtifactsPath()
+        {
+            // Other options:
+            // - typeof(Program).Assembly.Location
+            // - Process.GetCurrentProcess().MainModule.FileName
+            string baseDir = AppContext.BaseDirectory;
+            int len = baseDir.LastIndexOf("perf\\bin", StringComparison.OrdinalIgnoreCase);
+            if (len == -1) { throw new NotSupportedException(); }
+            return baseDir.Substring(0, len) + "__\\benchmarks";
+        }
 
         public static IConfig WithLocalSettings(this IConfig config)
         {
@@ -49,7 +63,7 @@ namespace PerfTool
         }
 
         // No exporter, less verbose logger.
-        public static IConfig GetCustomConfig(bool shortRunJob)
+        public static IConfig GetCustomConfig(string artifactsPath, bool shortRunJob)
         {
             var defaultConfig = DefaultConfig.Instance;
 
@@ -71,6 +85,8 @@ namespace PerfTool
             {
                 config.Add(Job.ShortRun);
             }
+
+            config.ArtifactsPath = artifactsPath;
 
             return config.With(new ConsoleLogger_());
         }
