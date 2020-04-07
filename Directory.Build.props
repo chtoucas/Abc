@@ -1,4 +1,7 @@
 <Project>
+  <!--
+    See https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2019
+  -->
 
   <PropertyGroup>
     <Authors>Chtoucas</Authors>
@@ -38,7 +41,11 @@
 
   <!-- All configurations ################################################## -->
   <PropertyGroup>
-    <WarningsAsErrors>NU1605</WarningsAsErrors>
+    <!--
+      I don't think this is necessary anymore.
+      NU1605 https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu1605
+    -->
+    <!--<WarningsAsErrors>$(WarningsAsErrors)</WarningsAsErrors>-->
 
     <!-- CONTRACTS_FULL necessary to enable the attribute Pure -->
     <DefineConstants>$(DefineConstants);TRACE;CONTRACTS_FULL</DefineConstants>

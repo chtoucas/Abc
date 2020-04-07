@@ -4,15 +4,15 @@
   -->
 
   <!--
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
   </PropertyGroup>
   -->
 
   <!-- RELEASE -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <!-- UNCHECKED arithmetic -->
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
 
@@ -22,6 +22,7 @@
       CS1591      Missing XML comment for publicly visible type or member 'Type_or_Member'
     -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <!--<WarningsNotAsErrors>$(WarningsNotAsErrors);CS1591</WarningsNotAsErrors>-->
 
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>

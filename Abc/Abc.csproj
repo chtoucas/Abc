@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(MSBuildThisFileDirectory)..\eng\Common.props" />
-
   <PropertyGroup>
     <!-- NB: the first listed framework is the one used by the VS editor.
       Full NRT-analysis requires .NET Core 3.0 or above, .NET Standard does
