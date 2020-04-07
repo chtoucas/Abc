@@ -46,21 +46,12 @@ param(
 
 Set-StrictMode -Version Latest
 
-trap {
-  write-host ("An unexpected error occured: {0}" -f $_.Exception.Message) `
-    -BackgroundColor Red -ForegroundColor Yellow
-  exit 1
-}
-
-. (join-path $PSScriptRoot '.\eng\say.ps1')
-
 # Note to myself: do not use a separate directory for build.
 # Build warnings MSB3277, the problem is that we then build all platforms
 # within the same dir.
-
-################################################################################
-
 $ARTIFACTS_DIR = '__'
+
+. (join-path $PSScriptRoot 'eng\say.ps1')
 
 ################################################################################
 
@@ -79,6 +70,17 @@ function opencover([string] $outxml) {
 
   $exe = join-path $env:USERPROFILE `
     ".nuget\packages\opencover\$version\tools\OpenCover.Console.exe"
+
+#  $filters = `
+#    '+[Abc.Maybe]*',
+#    '-[Abc]*',
+#    '-[Abc.Future]*',
+#    '-[Abc.Test*]*',
+#    '-[Abc*]System.Diagnostics.CodeAnalysis.*',
+#    '-[Abc*]System.Runtime.CompilerServices.*',
+#    '-[Abc*]Microsoft.CodeAnalysis.*'
+
+#  $filter = join-string $filters -Separator ' '
 
   $filter = '+[Abc.Maybe]* -[Abc]* -[Abc.Future]* -[Abc.Test*]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*'
 
@@ -143,7 +145,6 @@ try {
       mkdir -Force -Path $outdir | Out-Null
   }
 
-  # Run the Code Coverage tool.
   if ($ReportOnly) {
     carp 'On your request, we do not run the Code Coverage tool.'
   } elseif ($OpenCover) {
@@ -153,7 +154,6 @@ try {
     coverlet (join-path $PSScriptRoot $outxml)
   }
 
-  # Build reports and badges.
   if ($NoReport) {
     carp 'On your request, we do not run ReportGenerator.'
   } else {

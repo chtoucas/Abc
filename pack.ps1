@@ -20,7 +20,7 @@ Set-StrictMode -Version Latest
 
 $PKGDIR = '__\packages'     # Relative path
 
-. (join-path $PSScriptRoot '.\eng\say.ps1')
+. (join-path $PSScriptRoot 'eng\say.ps1')
 
 ################################################################################
 
