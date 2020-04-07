@@ -39,7 +39,7 @@ Run OpenCover, do NOT build human-readable reports and badges.
 #>
 [CmdletBinding()]
 param(
-  [Alias('x')] [switch] $OpenCover,
+  [Alias("x")] [switch] $OpenCover,
   [switch] $NoReport,
   [switch] $ReportOnly
 )
@@ -49,16 +49,16 @@ Set-StrictMode -Version Latest
 # Note to myself: do not use a separate directory for build.
 # Build warnings MSB3277, the problem is that we then build all platforms
 # within the same dir.
-$ARTIFACTS_DIR = '__'
+$ARTIFACTS_DIR = "__"
 
-. (join-path $PSScriptRoot 'eng\say.ps1')
+. (join-path $PSScriptRoot "eng\say.ps1")
 
 ################################################################################
 
-function opencover([string] $outxml) {
-  say-loud 'Running OpenCover.'
+function run-opencover([string] $outxml) {
+  say-loud "Running OpenCover."
 
-  $proj = 'Abc.Tests\Abc.Tests.csproj'
+  $proj = "Abc.Tests\Abc.Tests.csproj"
 
   # Find the OpenCover version.
   $xml = [Xml] (get-content $proj)
@@ -72,13 +72,14 @@ function opencover([string] $outxml) {
     ".nuget\packages\opencover\$version\tools\OpenCover.Console.exe"
 
   $filters = `
-    '+[Abc.Maybe]*',
-    '-[Abc]*',
-    '-[Abc.Future]*',
-    '-[Abc.Test*]*',
-    '-[Abc*]System.Diagnostics.CodeAnalysis.*',
-    '-[Abc*]System.Runtime.CompilerServices.*',
-    '-[Abc*]Microsoft.CodeAnalysis.*'
+    "+[Abc.Maybe]*",
+    "-[Abc]*",
+    "-[Abc.Future]*",
+    "-[Abc.Test*]*",
+    "-[Abc*]System.Diagnostics.CodeAnalysis.*",
+    "-[Abc*]System.Runtime.CompilerServices.*",
+    "-[Abc*]Microsoft.CodeAnalysis.*"
+  $filter = "$filters"
 
   # See https://github.com/opencover/opencover/wiki/Usage
   & $exe -oldStyle -register:user `
@@ -87,22 +88,20 @@ function opencover([string] $outxml) {
     -output:$outxml `
     -target:dotnet.exe `
     -targetargs:"test $proj -v quiet -c Debug --no-restore /p:DebugType=Full" `
-    -filter:"$filters" `
+    -filter:$filter `
     -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
 
-  if ($lastExitCode -ne 0) {
-    croak 'OpenCover failed.'
-  }
+  if ($LastExitCode -ne 0) { croak "OpenCover failed." }
 }
 
-function coverlet([string] $outxml) {
-  say-loud 'Running Coverlet.'
+function run-coverlet([string] $outxml) {
+  say-loud "Running Coverlet."
 
   $excludes = `
-    '[Abc*]System.Diagnostics.CodeAnalysis.*',
-    '[Abc*]System.Runtime.CompilerServices.*',
-    '[Abc*]Microsoft.CodeAnalysis.*'
-  $exclude = '\"' + ($excludes -join ',') + '\"'
+    "[Abc*]System.Diagnostics.CodeAnalysis.*",
+    "[Abc*]System.Runtime.CompilerServices.*",
+    "[Abc*]Microsoft.CodeAnalysis.*"
+  $exclude = '\"' + ($excludes -join ",") + '\"'
 
   & dotnet test -c Debug --no-restore `
     /p:CollectCoverage=true `
@@ -111,13 +110,11 @@ function coverlet([string] $outxml) {
     /p:Include="[Abc.Maybe]*" `
     /p:Exclude=$exclude
 
-  if ($lastExitCode -ne 0) {
-    croak 'Coverlet failed.'
-  }
+  if ($LastExitCode -ne 0) { croak "Coverlet failed." }
 }
 
-function reportgenerator([string] $reports, [string] $targetdir) {
-  say-loud 'Running ReportGenerator.'
+function run-rg([string] $reports, [string] $targetdir) {
+  say-loud "Running ReportGenerator."
 
   & dotnet tool run reportgenerator `
     -verbosity:Warning `
@@ -125,9 +122,7 @@ function reportgenerator([string] $reports, [string] $targetdir) {
     -reports:$reports `
     -targetdir:$outdir
 
-  if ($lastExitCode -ne 0) {
-    croak 'ReportGenerator failed.'
-  }
+  if ($LastExitCode -ne 0) { croak "ReportGenerator failed." }
 }
 
 ################################################################################
@@ -135,33 +130,33 @@ function reportgenerator([string] $reports, [string] $targetdir) {
 try {
   pushd $PSScriptRoot
 
-  $tool = if ($OpenCover) { 'opencover' } else { 'coverlet' }
+  $tool = if ($OpenCover) { "opencover" } else { "coverlet" }
   $outdir = join-path $ARTIFACTS_DIR $tool
   $outxml = join-path $outdir "$tool.xml"
 
   # Create the directory if it does not already exist.
   # Do not remove this, it must be done before calling OpenCover.
   if (!(test-path $outdir)) {
-      mkdir -Force -Path $outdir | Out-Null
+    mkdir -Force -Path $outdir | Out-Null
   }
 
   if ($ReportOnly) {
-    carp 'On your request, we do not run the Code Coverage tool.'
+    carp "On your request, we do not run the Code Coverage tool."
   } elseif ($OpenCover) {
-    opencover $outxml
+    run-opencover $outxml
   } else {
     # coverlet.msbuild uses the path relative to the test project.
-    coverlet (join-path $PSScriptRoot $outxml)
+    run-coverlet (join-path $PSScriptRoot $outxml)
   }
 
   if ($NoReport) {
-    carp 'On your request, we do not run ReportGenerator.'
+    carp "On your request, we do not run ReportGenerator."
   } else {
-    reportgenerator $outxml $outdir
+    run-rg $outxml $outdir
 
-    cp -Force -Path (join-path $outdir 'badge_combined.svg') `
+    cp -Force -Path (join-path $outdir "badge_combined.svg") `
       -Destination (join-path $ARTIFACTS_DIR "$tool.svg")
-    cp -Force -Path (join-path $outdir 'Summary.txt') `
+    cp -Force -Path (join-path $outdir "Summary.txt") `
       -Destination (join-path $ARTIFACTS_DIR "$tool.txt")
   }
 } catch {
