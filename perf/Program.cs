@@ -57,10 +57,10 @@ namespace PerfTool
                 MethodOrderPolicy.Alphabetical);
 
             return config
-                .With(ExecutionValidator.FailOnError)
-                .With(RankColumn.Roman)
-                .With(BaselineRatioColumn.RatioMean)
-                .With(orderer);
+                .AddValidator(ExecutionValidator.FailOnError)
+                .AddColumn(RankColumn.Roman)
+                .AddColumn(BaselineRatioColumn.RatioMean)
+                .WithOrderer(orderer);
         }
 
         // No exporter, less verbose logger.
@@ -69,27 +69,29 @@ namespace PerfTool
             var defaultConfig = DefaultConfig.Instance;
 
             var config = new ManualConfig();
-            config.Add(defaultConfig.GetAnalysers().ToArray());
-            config.Add(defaultConfig.GetColumnProviders().ToArray());
-            config.Add(defaultConfig.GetDiagnosers().ToArray());
-            //config.Add(defaultConfig.GetExporters().ToArray());
-            config.Add(defaultConfig.GetFilters().ToArray());
-            config.Add(defaultConfig.GetHardwareCounters().ToArray());
-            //config.Add(defaultConfig.GetJobs().ToArray());
-            config.Add(defaultConfig.GetLogicalGroupRules().ToArray());
-            //config.Add(defaultConfig.GetLoggers().ToArray());
-            config.Add(defaultConfig.GetValidators().ToArray());
+            config.AddAnalyser(defaultConfig.GetAnalysers().ToArray());
+            config.AddColumnProvider(defaultConfig.GetColumnProviders().ToArray());
+            config.AddDiagnoser(defaultConfig.GetDiagnosers().ToArray());
+            //config.AddExporter(defaultConfig.GetExporters().ToArray());
+            config.AddFilter(defaultConfig.GetFilters().ToArray());
+            config.AddHardwareCounters(defaultConfig.GetHardwareCounters().ToArray());
+            //config.AddJob(defaultConfig.GetJobs().ToArray());
+            config.AddLogicalGroupRules(defaultConfig.GetLogicalGroupRules().ToArray());
+            //config.AddLogger(defaultConfig.GetLoggers().ToArray());
+            config.AddValidator(defaultConfig.GetValidators().ToArray());
 
             config.UnionRule = ConfigUnionRule.AlwaysUseGlobal;
 
             if (shortRunJob)
             {
-                config.Add(Job.ShortRun);
+                config.AddJob(Job.ShortRun);
             }
 
             config.ArtifactsPath = artifactsPath;
 
-            return config.With(new ConsoleLogger_());
+            config.AddLogger(new ConsoleLogger_());
+
+            return config;
         }
 
         private sealed class ConsoleLogger_ : ILogger
@@ -110,6 +112,10 @@ namespace PerfTool
                 };
 
             private static volatile int s_Counter;
+
+            public string Id => nameof(ConsoleLogger_);
+
+            public int Priority => 1;
 
             public void Write(LogKind logKind, string text)
                 => Write(logKind, text, Console.Write);
