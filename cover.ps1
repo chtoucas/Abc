@@ -81,11 +81,13 @@ function opencover([string] $outxml) {
     '-[Abc*]Microsoft.CodeAnalysis.*'
 
   # See https://github.com/opencover/opencover/wiki/Usage
-  & $exe -showunvisited -oldStyle -register:user -hideskipped:All `
-    "-output:$outxml" `
+  & $exe -oldStyle -register:user `
+    -hideskipped:All `
+    -showunvisited `
+    -output:$outxml `
     -target:dotnet.exe `
-    "-targetargs:test $proj -v quiet -c Debug --no-restore /p:DebugType=Full" `
-    "-filter:$filters" `
+    -targetargs:"test $proj -v quiet -c Debug --no-restore /p:DebugType=Full" `
+    -filter:"$filters" `
     -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
 
   if ($lastExitCode -ne 0) {
@@ -117,13 +119,11 @@ function coverlet([string] $outxml) {
 function reportgenerator([string] $reports, [string] $targetdir) {
   say-loud 'Running ReportGenerator.'
 
-  $args = `
-    '-verbosity:Warning',
-    '-reporttypes:HtmlInline;Badges;TextSummary',
-    "-reports:$reports",
-    "-targetdir:$outdir"
-
-  & dotnet tool run reportgenerator $args
+  & dotnet tool run reportgenerator `
+    -verbosity:Warning `
+    -reporttypes:"HtmlInline;Badges;TextSummary" `
+    -reports:$reports `
+    -targetdir:$outdir
 
   if ($lastExitCode -ne 0) {
     croak 'ReportGenerator failed.'
