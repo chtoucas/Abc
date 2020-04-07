@@ -9,6 +9,7 @@ Changed
 Internals
 - New perf project.
 - Rewrite scripts into PowerShell.
+- Use Directory.Build.props.
 
 2020-04-03, version 1.0.0-alpha-2
 ---------------------------------

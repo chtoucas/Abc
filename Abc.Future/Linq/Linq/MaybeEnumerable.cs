@@ -8,9 +8,10 @@ namespace Abc.Linq.Linq
     using System.Linq;
 
     // Apply standard LINQ ops to an inner enumerable.
-    // Maybe not a good idea. For instance Select() will be confusing: is it
-    // the one from Maybe<T> or the LINQ one.
-    // Of course, it is OK when the signature differs, eg w/ SelectMany().
+    // Maybe not a good idea. For instance Select() will be very confusing (to
+    // say the least): is it the one from Maybe<T> or the LINQ op defined here?
+    // Of course, it is OK when the signatures differ which is for instance the
+    // case w/ SelectMany().
     public static partial class MaybeEnumerable { }
 
     public partial class MaybeEnumerable

@@ -17,8 +17,8 @@ Towards version 1.0.0
 - README: some pub, compare to other option types.
 - Infra
   * Use Directory.Build.props and Directory.Build.targets
-    https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2019
-  * Move to coverlet-console?
+    Move lib projects to src w/ custom props?
+  * Move to coverlet-console? runsettings.
   * Versioning (MSBuild tool), NetStandardImplicitPackageVersion
     https://docs.microsoft.com/en-us/dotnet/core/packages
   * Strong name? How to avoid binding redirects? Prerequesite: assembly version.
