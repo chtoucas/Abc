@@ -63,7 +63,7 @@ function opencover([string] $outxml) {
   # Find the OpenCover version.
   $xml = [Xml] (get-content $proj)
   $version = `
-    Select-Xml -Xml $xml `
+    select-xml -Xml $xml `
       -XPath "//Project/ItemGroup/PackageReference[@Include='OpenCover']" `
     | select -ExpandProperty Node `
     | select -First 1 -ExpandProperty Version
@@ -71,25 +71,21 @@ function opencover([string] $outxml) {
   $exe = join-path $env:USERPROFILE `
     ".nuget\packages\opencover\$version\tools\OpenCover.Console.exe"
 
-#  $filters = `
-#    '+[Abc.Maybe]*',
-#    '-[Abc]*',
-#    '-[Abc.Future]*',
-#    '-[Abc.Test*]*',
-#    '-[Abc*]System.Diagnostics.CodeAnalysis.*',
-#    '-[Abc*]System.Runtime.CompilerServices.*',
-#    '-[Abc*]Microsoft.CodeAnalysis.*'
-
-#  $filter = join-string $filters -Separator ' '
-
-  $filter = '+[Abc.Maybe]* -[Abc]* -[Abc.Future]* -[Abc.Test*]* -[Abc*]System.Diagnostics.CodeAnalysis.* -[Abc*]System.Runtime.CompilerServices.* -[Abc*]Microsoft.CodeAnalysis.*'
+  $filters = `
+    '+[Abc.Maybe]*',
+    '-[Abc]*',
+    '-[Abc.Future]*',
+    '-[Abc.Test*]*',
+    '-[Abc*]System.Diagnostics.CodeAnalysis.*',
+    '-[Abc*]System.Runtime.CompilerServices.*',
+    '-[Abc*]Microsoft.CodeAnalysis.*'
 
   # See https://github.com/opencover/opencover/wiki/Usage
   & $exe -showunvisited -oldStyle -register:user -hideskipped:All `
     "-output:$outxml" `
     -target:dotnet.exe `
     "-targetargs:test $proj -v quiet -c Debug --no-restore /p:DebugType=Full" `
-    "-filter:$filter" `
+    "-filter:$filters" `
     -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
 
   if ($lastExitCode -ne 0) {
@@ -100,7 +96,11 @@ function opencover([string] $outxml) {
 function coverlet([string] $outxml) {
   say-loud 'Running Coverlet.'
 
-  $exclude = '\"[Abc*]System.Diagnostics.CodeAnalysis.*,[Abc*]System.Runtime.CompilerServices.*,[Abc*]Microsoft.CodeAnalysis.*\"'
+  $excludes = `
+    '[Abc*]System.Diagnostics.CodeAnalysis.*',
+    '[Abc*]System.Runtime.CompilerServices.*',
+    '[Abc*]Microsoft.CodeAnalysis.*'
+  $exclude = '\"' + ($excludes -join ',') + '\"'
 
   & dotnet test -c Debug --no-restore `
     /p:CollectCoverage=true `
