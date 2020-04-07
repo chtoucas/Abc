@@ -59,6 +59,8 @@ trap {
 # Build warnings MSB3277, the problem is that we then build all platforms
 # within the same dir.
 
+################################################################################
+
 $tool = if ($OpenCover) { 'opencover' } else { 'coverlet' }
 $artifacts = '__'
 $outdir = join-path $PSScriptRoot (join-path $artifacts $tool)
@@ -129,3 +131,5 @@ if ($NoReport) {
 
   confess "The HTML report can be found here: '$outdir'."
 }
+
+################################################################################
