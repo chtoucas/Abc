@@ -13,12 +13,14 @@ Run the test suite.
 [CmdletBinding()]
 param(
   [switch] $Clean,
-  [switch] $Test
+  [switch] $NoTest
 )
 
 Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
 
 $PKGDIR = "__\packages"     # Relative path
+$CONFIGURATION = "Release"
 
 . (join-path $PSScriptRoot "eng\say.ps1")
 
@@ -27,7 +29,7 @@ $PKGDIR = "__\packages"     # Relative path
 function run-clean {
   say-loud "Cleaning."
 
-  & dotnet clean -c Release -v minimal --nologo
+  & dotnet clean -c $CONFIGURATION -v minimal --nologo
 
   if ($LastExitCode -ne 0) { croak "Clean task failed." }
 }
@@ -35,7 +37,7 @@ function run-clean {
 function run-test {
   say-loud "Testing."
 
-  & dotnet clean -c Release -v minimal --nologo
+  & dotnet test -c $CONFIGURATION -v minimal --nologo
 
   if ($LastExitCode -ne 0) { croak "Test task failed." }
 }
@@ -56,7 +58,7 @@ function run-pack([string] $proj, [string] $version) {
       }
   }
 
-  & dotnet pack $proj -c Release --nologo `
+  & dotnet pack $proj -c $CONFIGURATION --nologo `
     --output $PKGDIR `
     -p:TargetFrameworks='\"netstandard2.0;netstandard2.1;netcoreapp3.1\"' `
     -p:Deterministic=true `
@@ -74,7 +76,7 @@ try {
   pushd $PSScriptRoot
 
   if ($Clean) { run-clean }
-  if ($Test)  { run-test  }
+  if (-not $NoTest) { run-test }
 
   $pkg = run-pack "Abc.Maybe" "1.0.0-alpha-2"
 

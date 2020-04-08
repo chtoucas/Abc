@@ -45,11 +45,13 @@ param(
 )
 
 Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
 
 # Note to myself: do not use a separate directory for build.
 # Build warnings MSB3277, the problem is that we then build all platforms
 # within the same dir.
 $ARTIFACTS_DIR = "__"
+$CONFIGURATION = "Debug"
 
 . (join-path $PSScriptRoot "eng\say.ps1")
 
@@ -87,7 +89,7 @@ function run-opencover([string] $outxml) {
     -showunvisited `
     -output:$outxml `
     -target:dotnet.exe `
-    -targetargs:"test $proj -v quiet -c Debug --no-restore /p:DebugType=Full" `
+    -targetargs:"test $proj -v quiet -c $CONFIGURATION --no-restore /p:DebugType=Full" `
     -filter:$filter `
     -excludebyattribute:*.ExcludeFromCodeCoverageAttribute
 
@@ -103,7 +105,7 @@ function run-coverlet([string] $outxml) {
     "[Abc*]Microsoft.CodeAnalysis.*"
   $exclude = '\"' + ($excludes -join ",") + '\"'
 
-  & dotnet test -c Debug --no-restore `
+  & dotnet test -c $CONFIGURATION --no-restore `
     /p:CollectCoverage=true `
     /p:CoverletOutputFormat=opencover `
     /p:CoverletOutput=$outxml `
@@ -136,12 +138,12 @@ try {
 
   # Create the directory if it does not already exist.
   # Do not remove this, it must be done before calling OpenCover.
-  if (!(test-path $outdir)) {
+  if (-not (test-path $outdir)) {
     mkdir -Force -Path $outdir | Out-Null
   }
 
   if ($ReportOnly) {
-    carp "On your request, we do not run the Code Coverage tool."
+    carp "On your request, we do not run any Code Coverage tool."
   } elseif ($OpenCover) {
     run-opencover $outxml
   } else {
@@ -154,10 +156,14 @@ try {
   } else {
     run-rg $outxml $outdir
 
-    cp -Force -Path (join-path $outdir "badge_combined.svg") `
-      -Destination (join-path $ARTIFACTS_DIR "$tool.svg")
-    cp -Force -Path (join-path $outdir "Summary.txt") `
-      -Destination (join-path $ARTIFACTS_DIR "$tool.txt")
+    try {
+      pushd $outdir
+
+      cp -Force -Path "badge_combined.svg" -Destination (join-path ".." "$tool.svg")
+      cp -Force -Path "Summary.txt" -Destination (join-path ".." "$tool.txt")
+    } finally {
+      popd
+    }
   }
 } catch {
   carp ("An unexpected error occured: {0}." -f $_.Exception.Message)
