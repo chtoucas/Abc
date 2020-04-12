@@ -2,28 +2,26 @@
   <PropertyGroup>
     <Authors>Chtoucas</Authors>
     <Company>Narvalo.Org</Company>
-    <Product>Abc</Product>
-    <Copyright>Copyright © 2019 Narvalo.Org</Copyright>
+    <Product>Abécédaire Library</Product>
+    <Copyright>Copyright (c) 2019 Narvalo.Org</Copyright>
   </PropertyGroup>
 
   <PropertyGroup>
     <RootNamespace>Abc</RootNamespace>
+
     <LangVersion>latest</LangVersion>
+
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-  <PropertyGroup>
     <DefineConstants>$(DefineConstants);TRACE;CONTRACTS_FULL</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatSpecificWarningsAsErrors />
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
 </Project>

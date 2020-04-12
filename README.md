@@ -1,7 +1,7 @@
 # Abécédaire
 
-Future plans?
--------------
+Plans?
+------
 
 Narvalo.NET (https://github.com/chtoucas/Narvalo.NET)
 - a fast Gregorian date type
