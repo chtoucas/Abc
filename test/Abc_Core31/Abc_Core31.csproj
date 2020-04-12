@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abc.Maybe" Version="1.0.0-alpha-2" />
+    <PackageReference Include="Abc.Maybe" Version="1.0.0-alpha3" />
   </ItemGroup>
 
 </Project>
