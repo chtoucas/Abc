@@ -18,7 +18,7 @@
     <DefineConstants>$(DefineConstants);TRACE;CONTRACTS_FULL</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition=" $(Configuration) == 'Debug' ">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
