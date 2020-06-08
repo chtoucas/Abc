@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abc.Maybe" Version="1.0.0" />
+    <PackageReference Include="Abc.Maybe" Version="1.0.1" />
   </ItemGroup>
 
 </Project>
