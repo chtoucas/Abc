@@ -35,9 +35,10 @@ namespace Abc
                 get => throw EF.Faillible_NoInnerException;
             }
 
-            [return: MaybeNull]
+            // FIXME: [return: MaybeNull]
+            [return: NotNull]
             public override T ValueOrRethrow()
-                => Value;
+                => Value!;
 
             public override Maybe<T> ToMaybe()
                 => Maybe.Of(Value);

@@ -1,5 +1,11 @@
 <Project>
 
+  <!--
+    Command-line options (default = disabled, to enable /p:XXX=true):
+    - Retail          Meta-option
+    - PrintSettings   Enable target PrintSettingsBeforeCompile?
+  -->
+
   <PropertyGroup>
     <AssemblyTitle>$(AssemblyName) [$(TargetFramework)]</AssemblyTitle>
   </PropertyGroup>
@@ -15,10 +21,8 @@
 
   <!-- Compiler symbols -->
   <PropertyGroup>
-    <!-- CONTRACTS_FULL is necessary to enable the attribute Pure -->
     <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
 
-    <!-- Ranges of platforms -->
     <DefineConstants Condition=" $(TargetFramework.StartsWith('netstandard1.')) ">$(DefineConstants);NETSTANDARD1_x</DefineConstants>
     <DefineConstants Condition=" $(TargetFramework.StartsWith('netcoreapp2.')) ">$(DefineConstants);NETCOREAPP2_x</DefineConstants>
   </PropertyGroup>
@@ -33,7 +37,6 @@
   <PropertyGroup>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <!--<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>-->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
@@ -46,5 +49,16 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
+
+  <!-- Target for verbose settings -->
+  <Target Name="PrintSettingsBeforeCompile" BeforeTargets="Compile"
+          Condition=" '$(PrintSettings)' == 'true' and '$(TargetFramework)' != '' ">
+    <PropertyGroup>
+      <_MyMessage>| %24(NoWarn)    = "$(NoWarn)"</_MyMessage>
+      <_MyMessage>$(_MyMessage)%0A| %24(DefineConstants) = "$(DefineConstants)"</_MyMessage>
+    </PropertyGroup>
+
+    <Message Text="+ $(AssemblyName) for $(TargetFramework)%0A$(_MyMessage)" Importance="high" />
+  </Target>
 
 </Project>

@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>$(DefaultPlatform)</TargetFramework>
 
-    <NoWarn>$(NoWarn);CA1034;CA1303;CA1707;IDE0039;IDE1006</NoWarn>
+    <AssemblyTitle>$(AssemblyName) [$(TargetFramework)]</AssemblyTitle>
 
+    <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
     <DefineConstants>$(DefineConstants);STRICT_HASKELL</DefineConstants>
     <!--<DefineConstants>$(DefineConstants);MONADS_VIA_MAP_MULTIPLY</DefineConstants>-->
     <!--<DefineConstants>$(DefineConstants);COMONADS_VIA_MAP_COMULTIPLY</DefineConstants>-->

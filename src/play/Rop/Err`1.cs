@@ -33,7 +33,8 @@ namespace Abc
 
         public override bool IsError => true;
 
-        internal override T ValueIntern { [DoesNotReturn] get => throw EF.ControlFlow; }
+        // FIXME: DoesNotReturn
+        [NotNull] internal override T ValueIntern { /*[DoesNotReturn]*/ get => throw EF.ControlFlow; }
 
         public bool IsNone { get; }
 

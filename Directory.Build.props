@@ -46,16 +46,16 @@
 
   <!-- Warnings & errors -->
   <Choose>
-    <When Condition=" $(Configuration) == 'Debug' ">
+    <When Condition=" $(Configuration) == 'Release' ">
       <PropertyGroup>
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-        <TreatSpecificWarningsAsErrors />
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
       </PropertyGroup>
     </When>
 
     <Otherwise>
       <PropertyGroup>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <TreatSpecificWarningsAsErrors />
       </PropertyGroup>
     </Otherwise>
   </Choose>

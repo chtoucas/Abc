@@ -48,7 +48,7 @@ namespace Abc
         public abstract Maybe<T> ToMaybe();
 
         [Pure]
-        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
+        //[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Visual Basic: use an escaped name")]
         public abstract Faillible<T> OrElse(Faillible<T> other);
     }
 
@@ -56,7 +56,7 @@ namespace Abc
     public partial class Faillible<T>
     {
         [Pure]
-        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Query Expression Pattern")]
+        //[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Query Expression Pattern")]
         public abstract Faillible<TResult> Select<TResult>(Func<T, TResult> selector);
 
         [Pure]

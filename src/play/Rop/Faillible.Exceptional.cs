@@ -33,7 +33,8 @@ namespace Abc
                 => new Faillible<TOther>.Exceptional(InnerException);
 
 #if !(NETSTANDARD2_0 || NETFRAMEWORK) // Nullable attributes (DoesNotReturn)
-            [DoesNotReturn]
+            // FIXME: [DoesNotReturn]
+            [return: NotNull]
             public override T ValueOrRethrow()
             {
                 ExceptionDispatchInfo.Capture(InnerException).Throw();
