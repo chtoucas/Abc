@@ -1,5 +1,23 @@
 <Project>
 
+  <!-- Repository layout -->
+  <PropertyGroup>
+    <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
+    <SourceRoot>$(RepositoryRoot)src\</SourceRoot>
+  </PropertyGroup>
+
+  <!-- Global contexts -->
+  <PropertyGroup>
+    <ContinuousIntegrationBuild Condition=" '$(ContinuousIntegrationBuild)' == '' ">false</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild Condition=" '$(TF_BUILD)' == 'true' ">true</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild Condition=" '$(GITHUB_ACTIONS)' == 'true' ">true</ContinuousIntegrationBuild>
+
+    <SmokeBuild Condition=" '$(SmokeBuild)' == '' ">false</SmokeBuild>
+    <SmokeBuild Condition=" '$(SMOKE_BUILD)' == 'true' ">true</SmokeBuild>
+    <SmokeBuild Condition=" '$(BuildingInsideVisualStudio)' == 'true' ">true</SmokeBuild>
+  </PropertyGroup>
+
+  <!-- Main settings -->
   <PropertyGroup>
     <RootNamespace>Abc</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -8,8 +26,21 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <Nullable>enable</Nullable>
 
-    <!-- Fake version -->
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)Abc.snk</AssemblyOriginatorKeyFile>
+
+    <Authors>Chtoucas</Authors>
+    <Company>Narvalo.Org</Company>
+    <Product>Abécédaire Library</Product>
+    <Copyright>Copyright (c) 2019 Narvalo.Org</Copyright>
+
+    <PackageProjectUrl>https://github.com/chtoucas/Abc/</PackageProjectUrl>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <PackageReleaseNotes>See CHANGELOG in project root.</PackageReleaseNotes>
+
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/chtoucas/Abc/</RepositoryUrl>
+
+    <VersionPrefix>0.0.1</VersionPrefix>
     <VersionSuffix>DUMMY</VersionSuffix>
   </PropertyGroup>
 
@@ -29,11 +60,27 @@
     </Otherwise>
   </Choose>
 
+  <!-- Target frameworks -->
   <PropertyGroup>
-    <Authors>Chtoucas</Authors>
-    <Company>Narvalo.Org</Company>
-    <Product>Abécédaire Library</Product>
-    <Copyright>Copyright (c) 2019 Narvalo.Org</Copyright>
+    <DefaultPlatform>netcoreapp3.1</DefaultPlatform>
+    <SupportedStandards>netstandard2.1;netstandard2.0;netstandard1.1</SupportedStandards>
   </PropertyGroup>
+
+  <Choose>
+    <When Condition=" '$(SmokeBuild)' == 'true' ">
+      <PropertyGroup>
+        <LibraryPlatforms>$(DefaultPlatform);netstandard2.0</LibraryPlatforms>
+        <TestPlatforms>$(DefaultPlatform)</TestPlatforms>
+      </PropertyGroup>
+    </When>
+
+    <Otherwise>
+      <PropertyGroup>
+        <LibraryPlatforms>$(SupportedStandards);net461</LibraryPlatforms>
+        <TestPlatforms>netcoreapp3.1;netcoreapp2.1</TestPlatforms>
+        <TestPlatforms Condition=" '$(OS)' == 'Windows_NT' ">$(TestPlatforms);net461;net452</TestPlatforms>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
 
 </Project>
