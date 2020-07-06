@@ -32,22 +32,12 @@ namespace Abc
             public Faillible<TOther> WithGenericType<TOther>()
                 => new Faillible<TOther>.Exceptional(InnerException);
 
-#if !(NETSTANDARD2_0 || NETFRAMEWORK) // Nullable attributes (DoesNotReturn)
-            // FIXME: [DoesNotReturn]
             [return: NotNull]
             public override T ValueOrRethrow()
             {
                 ExceptionDispatchInfo.Capture(InnerException).Throw();
                 return default;
             }
-#else
-            public override T ValueOrRethrow()
-            {
-                ExceptionDispatchInfo.Capture(InnerException).Throw();
-                // BONSANG! .NET Framework.
-                return default!;
-            }
-#endif
 
             public override Maybe<T> ToMaybe()
                 => Maybe<T>.None;

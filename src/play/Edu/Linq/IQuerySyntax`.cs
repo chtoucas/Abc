@@ -13,9 +13,7 @@ namespace Abc.Edu.Linq
     {
         IQuerySyntax<T> Where(Func<T, bool> predicate);
 
-#pragma warning disable CA1716 // Identifiers should not match keywords
         IQuerySyntax<TResult> Select<TResult>(Func<T, TResult> selector);
-#pragma warning restore CA1716
 
         IQuerySyntax<TResult> SelectMany<TMiddle, TResult>(
             Func<T, IQuerySyntax<TMiddle>> selector,

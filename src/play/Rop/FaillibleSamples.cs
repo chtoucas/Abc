@@ -1,7 +1,5 @@
 ﻿// See LICENSE in the project root for license information.
 
-#pragma warning disable CA1000 // Do not declare static members on generic types
-
 namespace Abc
 {
     using System;
@@ -65,15 +63,7 @@ namespace Abc
             ExceptionDispatchInfo.Capture(ex).Throw();
         }
 
-#if !(NETSTANDARD2_0 || NETFRAMEWORK) // Nullable attributes (DoesNotReturn)
         [DoesNotReturn]
-        public static TResult Rethrow<TResult>(Exception ex)
-        {
-            Require.NotNull(ex, nameof(ex));
-            ExceptionDispatchInfo.Capture(ex).Throw();
-            return default;
-        }
-#else
         public static TResult Rethrow<TResult>(Exception ex)
         {
             Require.NotNull(ex, nameof(ex));
@@ -81,9 +71,6 @@ namespace Abc
             // BONSANG! .NET Framework.
             return default!;
         }
-#endif
-
-#pragma warning disable CA1031 // Do not catch general exception types
 
         [Pure]
         [Obsolete("Do not use as it, catching general exception types is an antipattern.")]
@@ -161,7 +148,5 @@ namespace Abc
                 finallyAction();
             }
         }
-
-#pragma warning restore CA1031
     }
 }

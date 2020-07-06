@@ -43,10 +43,8 @@ namespace Abc.Edu.Fx
     // Core methods.
     public partial struct Mayhap<T>
     {
-#pragma warning disable CA1000 // Do not declare static members on generic types
         /// <summary>Nothing / mzero</summary>
         public static Mayhap<T> None { get; } = default;
-#pragma warning restore CA1812
 
         /// <summary>Just</summary>
         public static Mayhap<T> Some(T value)
