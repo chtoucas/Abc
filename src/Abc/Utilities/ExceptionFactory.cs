@@ -12,7 +12,13 @@ namespace Abc.Utilities
     /// Provides static methods to create exceptions.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    internal static partial class ExceptionFactory { }
+    internal static partial class ExceptionFactory
+    {
+        public static InvalidOperationException ControlFlow
+            => new InvalidOperationException(
+                "The flow of execution just reached a section of the code that should have been unreachable."
+                + $"{Environment.NewLine}Most certainly signals a coding error. Please report.");
+    }
 
     // Argument exceptions.
     internal partial class ExceptionFactory
