@@ -29,6 +29,7 @@
 
   <!-- Shims for older platforms -->
   <ItemGroup>
+    <Compile Include="$(SourceRoot)FormattableString.Shim.cs" />
     <Compile Include="$(SourceRoot)MissingAttributes.cs" />
     <Compile Include="$(SourceRoot)NullableAttributes.cs" />
   </ItemGroup>

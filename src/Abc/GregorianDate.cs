@@ -330,8 +330,7 @@ namespace Abc
         public override string ToString()
         {
             Unpack(out int y, out int m, out int d);
-            // FIXME: return FormattableString.Invariant($"{y:D4}-{m:D2}-{d:D2}");
-            return $"{y:D4}-{m:D2}-{d:D2}";
+            return FormattableString.Invariant($"{y:D4}-{m:D2}-{d:D2}");
         }
 
         /// <summary>
