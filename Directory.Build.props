@@ -38,12 +38,12 @@
     <Product>Abécédaire Library</Product>
     <Copyright>Copyright (c) 2019 Narvalo.Org</Copyright>
 
-    <PackageProjectUrl>https://github.com/chtoucas/Abc/</PackageProjectUrl>
-    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
-    <PackageReleaseNotes>See CHANGELOG in project root.</PackageReleaseNotes>
-
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/chtoucas/Abc/</RepositoryUrl>
+
+    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <PackageReleaseNotes>See CHANGELOG in project root.</PackageReleaseNotes>
 
     <VersionPrefix>0.0.1</VersionPrefix>
     <VersionSuffix>DUMMY</VersionSuffix>
