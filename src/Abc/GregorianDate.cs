@@ -52,13 +52,13 @@ namespace Abc
 
         private GregorianDate(int bin)
         {
-            __VerifyBinaryData(bin);
+            __CheckBinaryData(bin);
             _bin = bin;
         }
 
         [Pure]
-        internal static GregorianDate CreateLenient(int y, int m, int d)
-            => new GregorianDate(Pack(y, m, d));
+        internal static GregorianDate CreateLenient(int y, int m, int d) =>
+            new GregorianDate(Pack(y, m, d));
 
         public static GregorianDate Today
         {
@@ -173,8 +173,8 @@ namespace Abc
             return FormattableString.Invariant($"{y:D4}-{m:D2}-{d:D2}");
         }
 
-        public void Deconstruct(out int year, out int month, out int day)
-            => Unpack(out year, out month, out day);
+        public void Deconstruct(out int year, out int month, out int day) =>
+            Unpack(out year, out month, out day);
 
         [Pure]
         public static GregorianDate FromOrdinalDate(int year, int dayOfYear)
@@ -247,7 +247,6 @@ namespace Abc
         [Pure]
         private static int GetIsoWeekdayAtStartOfYear(int y)
         {
-            // Calculation of IsoWeekday with m = d = 1.
             y--;
             int c = y / 100;
             return AdjustedModulo(1 + y + (y >> 2) - c + (c >> 2), 7);
@@ -259,22 +258,21 @@ namespace Abc
     {
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool IsLeapYear(int y)
-            => (y & 3) == 0 && (y % 100 != 0 || y % 400 == 0);
+        private static bool IsLeapYear(int y) =>
+            (y & 3) == 0 && (y % 100 != 0 || y % 400 == 0);
 
         [Pure]
-        private static int CountDaysInYear(int y)
-            => IsLeapYear(y) ? 366 : 365;
+        private static int CountDaysInYear(int y) => IsLeapYear(y) ? 366 : 365;
 
         [Pure]
-        private static int CountDaysInYearBeforeMonth(int y, int m)
-            => m < 3 ? 31 * (m - 1)
+        private static int CountDaysInYearBeforeMonth(int y, int m) =>
+            m < 3 ? 31 * (m - 1)
                 : IsLeapYear(y) ? (153 * m - 157) / 5
                 : (153 * m - 162) / 5;
 
         [Pure]
-        private static int CountDaysInMonth(int y, int m)
-            => m != 2 ? 30 + ((m + (m >> 3)) & 1)
+        private static int CountDaysInMonth(int y, int m) =>
+            m != 2 ? 30 + ((m + (m >> 3)) & 1)
                 : IsLeapYear(y) ? 29
                 : 28;
 
@@ -304,7 +302,6 @@ namespace Abc
         private const int MonthMask = (1 << 4) - 1;
         private const int DayMask = (1 << 5) - 1;
 
-        private const int __EndOfFebruary = (2 << 5) | 28;
         private const int __IntercalaryDay = (2 << 5) | 29;
         private const int __StartOfMarch = (3 << 5) | 1;
         private const int __StartOfYear = (1 << 5) | 1;
@@ -363,15 +360,15 @@ namespace Abc
 
         [Conditional("DEBUG")]
         [ExcludeFromCodeCoverage]
-        private static void __VerifyBinaryData(int bin) => ValidateBinaryData(bin);
+        private static void __CheckBinaryData(int bin) => ValidateBinaryData(bin);
     }
 
     // Conversions, adjustments...
     public partial struct GregorianDate
     {
         [Pure]
-        public static GregorianDate FromDateTime(DateTime date)
-           => new GregorianDate(date.Year, date.Month, date.Day);
+        public static GregorianDate FromDateTime(DateTime date) =>
+            new GregorianDate(date.Year, date.Month, date.Day);
 
         [Pure]
         public DateTime ToDateTime()
@@ -397,12 +394,12 @@ namespace Abc
         #region Year and month boundaries.
 
         [Pure]
-        public GregorianDate GetStartOfYear()
-            => new GregorianDate((Year << 9) | __StartOfYear);
+        public GregorianDate GetStartOfYear() =>
+            new GregorianDate((Year << 9) | __StartOfYear);
 
         [Pure]
-        public GregorianDate GetEndOfYear()
-            => new GregorianDate((Year << 9) | __EndOfYear);
+        public GregorianDate GetEndOfYear() =>
+            new GregorianDate((Year << 9) | __EndOfYear);
 
         [Pure]
         public GregorianDate GetStartOfMonth()
@@ -593,85 +590,78 @@ namespace Abc
     // Interface IEquatable<>.
     public partial struct GregorianDate
     {
-        public static bool operator ==(GregorianDate left, GregorianDate right)
-            => left._bin == right._bin;
+        public static bool operator ==(GregorianDate left, GregorianDate right) =>
+            left._bin == right._bin;
 
-        public static bool operator !=(GregorianDate left, GregorianDate right)
-            => left._bin != right._bin;
-
-        [Pure]
-        public bool Equals(GregorianDate other)
-            => _bin == other._bin;
+        public static bool operator !=(GregorianDate left, GregorianDate right) =>
+            left._bin != right._bin;
 
         [Pure]
-        public override bool Equals(object? obj)
-            => obj is GregorianDate date && _bin == date._bin;
+        public bool Equals(GregorianDate other) => _bin == other._bin;
 
         [Pure]
-        public override int GetHashCode()
-            => _bin;
+        public override bool Equals(object? obj) =>
+            obj is GregorianDate date && _bin == date._bin;
+
+        [Pure]
+        public override int GetHashCode() => _bin;
     }
 
     // Interface IComparable<>.
     public partial struct GregorianDate
     {
-        public static bool operator <(GregorianDate left, GregorianDate right)
-            => left._bin < right._bin;
+        public static bool operator <(GregorianDate left, GregorianDate right) =>
+            left._bin < right._bin;
 
-        public static bool operator <=(GregorianDate left, GregorianDate right)
-            => left._bin <= right._bin;
+        public static bool operator <=(GregorianDate left, GregorianDate right) =>
+            left._bin <= right._bin;
 
-        public static bool operator >(GregorianDate left, GregorianDate right)
-            => left._bin > right._bin;
+        public static bool operator >(GregorianDate left, GregorianDate right) =>
+            left._bin > right._bin;
 
-        public static bool operator >=(GregorianDate left, GregorianDate right)
-            => left._bin >= right._bin;
-
-        [Pure]
-        public static GregorianDate Min(GregorianDate left, GregorianDate right)
-            => left < right ? left : right;
+        public static bool operator >=(GregorianDate left, GregorianDate right) =>
+            left._bin >= right._bin;
 
         [Pure]
-        public static GregorianDate Max(GregorianDate left, GregorianDate right)
-            => left > right ? left : right;
+        public static GregorianDate Min(GregorianDate left, GregorianDate right) =>
+            left < right ? left : right;
 
         [Pure]
-        public int CompareTo(GregorianDate other)
-            => _bin.CompareTo(other._bin);
+        public static GregorianDate Max(GregorianDate left, GregorianDate right) =>
+            left > right ? left : right;
 
-        int IComparable.CompareTo(object? obj)
-            => obj is null ? 1
+        [Pure]
+        public int CompareTo(GregorianDate other) => _bin.CompareTo(other._bin);
+
+        int IComparable.CompareTo(object? obj) =>
+            obj is null ? 1
                 : obj is GregorianDate date ? _bin.CompareTo(date._bin)
                 : throw EF.InvalidType(nameof(obj), typeof(GregorianDate), obj);
     }
 
-    // Math ops.
+    // Natural math ops: no month or year manips.
     public partial struct GregorianDate
     {
-        #region Natural operations.
-
 #pragma warning disable CA2225 // Operator overloads have named alternates.
 
-        public static int operator -(GregorianDate left, GregorianDate right)
-            => left.CountDaysSince(right);
+        public static int operator -(GregorianDate left, GregorianDate right) =>
+            left.CountDaysSince(right);
 
-        public static GregorianDate operator +(GregorianDate value, int days)
-            => value.PlusDays(days);
+        public static GregorianDate operator +(GregorianDate value, int days) =>
+            value.PlusDays(days);
 
-        public static GregorianDate operator -(GregorianDate value, int days)
-            => value.PlusDays(-days);
+        public static GregorianDate operator -(GregorianDate value, int days) =>
+            value.PlusDays(-days);
 
-        public static GregorianDate operator ++(GregorianDate value)
-            => value.NextDay();
+        public static GregorianDate operator ++(GregorianDate value) => value.NextDay();
 
-        public static GregorianDate operator --(GregorianDate value)
-            => value.PreviousDay();
+        public static GregorianDate operator --(GregorianDate value) => value.PreviousDay();
 
 #pragma warning restore CA2225
 
         [Pure]
-        public int CountDaysSince(GregorianDate other)
-            => ObYearMonth == other.ObYearMonth ? Day - other.Day
+        public int CountDaysSince(GregorianDate other) =>
+            ObYearMonth == other.ObYearMonth ? Day - other.Day
                 : DaysSinceEpoch - other.DaysSinceEpoch;
 
         [Pure]
@@ -753,162 +743,5 @@ namespace Abc
 
             return FromOrdinalDateImpl(y, doy);
         }
-
-        #endregion
-
-        [Pure]
-        public static (int Years, int Months, int Days) Subtract(
-            GregorianDate left, GregorianDate right)
-        {
-            left.Unpack(out int y, out int m, out int d);
-            right.Unpack(out int y0, out int m0, out int d0);
-
-            int χ = left >= right ? ((d - d0) >> 31) : -((d0 - d) >> 31);
-            int months = 12 * (y - y0) + (m - m0) + χ;
-
-            int days = left - right.PlusMonths(months);
-
-            return (months / 12, months % 12, days);
-        }
-
-        #region AddYears(), PlusYears() & CountYearsSince()
-
-        [Pure]
-        public static GregorianDate AddYears(
-            GregorianDate date, int years, out int cutoff)
-        {
-            int y = checked(date.Year + years);
-
-            if (y < MinSupportedYear || y > MaxSupportedYear) { throw EF.YearOverflowOrUnderflow; }
-
-            int bMD = date.ObMonthDay;
-            if (bMD == __IntercalaryDay && !IsLeapYear(y))
-            {
-                bMD = __EndOfFebruary;
-                cutoff = 1;
-            }
-            else
-            {
-                cutoff = 0;
-            }
-
-            return new GregorianDate((y << 9) | bMD);
-        }
-
-        [Pure]
-        public int CountYearsSince(GregorianDate other)
-        {
-            int y = Year;
-            int y0 = other.Year;
-            int years = y - y0;
-
-            if (years == 0) { return 0; }
-
-            int bMD = ObMonthDay;
-            int bMD0 = other.ObMonthDay;
-
-            if (years > 0)
-            {
-                __patch(ref bMD0, y, bMD);
-                return years + ((bMD - bMD0) >> 31);
-            }
-            else
-            {
-                __patch(ref bMD, y0, bMD0);
-                return years - ((bMD0 - bMD) >> 31);
-            }
-
-            static void __patch(ref int md0, int y, int md)
-            {
-                if (md0 == __IntercalaryDay
-                    && md == __EndOfFebruary
-                    && !IsLeapYear(y))
-                {
-                    md0 = __EndOfFebruary;
-                }
-            }
-        }
-
-        [Pure]
-        public GregorianDate PlusYears(int years)
-        {
-            int y = checked(Year + years);
-
-            if (y < MinSupportedYear || y > MaxSupportedYear) { throw EF.YearOverflowOrUnderflow; }
-
-            int bMD = ObMonthDay;
-            if (bMD == __IntercalaryDay && !IsLeapYear(y))
-            {
-                bMD = __EndOfFebruary;
-            }
-
-            return new GregorianDate((y << 9) | bMD);
-        }
-
-        #endregion
-
-        #region AddMonths(), PlusMonths() & CountMonthsSince()
-
-        [Pure]
-        public static GregorianDate AddMonths(
-            GregorianDate date, int months, out int cutoff)
-        {
-            date.Unpack(out int y, out int m, out int d);
-
-            m = 1 + Modulo(checked(m - 1 + months), 12, out int y0);
-            y += y0;
-
-            if (y < MinSupportedYear || y > MaxSupportedYear) { throw EF.YearOverflowOrUnderflow; }
-
-            int daysInMonth = CountDaysInMonth(y, m);
-            cutoff = Math.Max(0, d - daysInMonth);
-
-            return CreateLenient(y, m, cutoff > 0 ? daysInMonth : d);
-        }
-
-        [Pure]
-        public int CountMonthsSince(GregorianDate other)
-        {
-            Unpack(out int y, out int m, out int d);
-            other.Unpack(out int y0, out int m0, out int d0);
-
-            int months = 12 * (y - y0) + (m - m0);
-
-            if (months == 0) { return 0; }
-
-            if (this >= other)
-            {
-                __patch(ref d0, y, m, d);
-                return months + ((d - d0) >> 31);
-            }
-            else
-            {
-                __patch(ref d, y0, m0, d0);
-                return months - ((d0 - d) >> 31);
-            }
-
-            static void __patch(ref int d0, int y, int m, int d)
-            {
-                if (d0 > d && d == CountDaysInMonth(y, m))
-                {
-                    d0 = d;
-                }
-            }
-        }
-
-        [Pure]
-        public GregorianDate PlusMonths(int months)
-        {
-            Unpack(out int y, out int m, out int d);
-
-            m = 1 + Modulo(checked(m - 1 + months), 12, out int y0);
-            y += y0;
-
-            if (y < MinSupportedYear || y > MaxSupportedYear) { throw EF.YearOverflowOrUnderflow; }
-
-            return CreateLenient(y, m, Math.Min(d, CountDaysInMonth(y, m)));
-        }
-
-        #endregion
     }
 }
