@@ -10,7 +10,7 @@ namespace Abc
     using System.Diagnostics.Contracts;
     using System.Runtime.CompilerServices;
 
-    using static Abc.Utilities.MathEx;
+    using static Abc.Utilities.MathOperations;
 
     using AoorException = System.ArgumentOutOfRangeException;
     using EF = Utilities.ExceptionFactory;
