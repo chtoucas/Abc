@@ -1,0 +1,14 @@
+<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)CompilerSymbols.props" />
+
+  <ItemGroup>
+    <FilesToExclude Include="$(MSBuildThisFileDirectory)AssemblyInfo.cs" />
+    <FilesToExclude Include="$(MSBuildThisFileDirectory)bin\**\*.*" />
+    <FilesToExclude Include="$(MSBuildThisFileDirectory)obj\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)**\*.cs"  Exclude="@(FilesToExclude)" />
+  </ItemGroup>
+
+</Project>
