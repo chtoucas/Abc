@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc", "src\Abc\Abc.csproj",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "play", "src\play\play.csproj", "{90C17FC2-56F6-4BE2-9584-7EF329E635B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abc.Tests", "src\Abc.Tests\Abc.Tests.csproj", "{543A0673-D6FE-4C4A-B560-4DFA04A87FCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc.Tests", "src\Abc.Tests\Abc.Tests.csproj", "{543A0673-D6FE-4C4A-B560-4DFA04A87FCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abc.Utilities", "src\Abc.Utilities\Abc.Utilities.csproj", "{5E0084D5-231F-4C13-AB70-DCE13AF3F66A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{543A0673-D6FE-4C4A-B560-4DFA04A87FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{543A0673-D6FE-4C4A-B560-4DFA04A87FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{543A0673-D6FE-4C4A-B560-4DFA04A87FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E0084D5-231F-4C13-AB70-DCE13AF3F66A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E0084D5-231F-4C13-AB70-DCE13AF3F66A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E0084D5-231F-4C13-AB70-DCE13AF3F66A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E0084D5-231F-4C13-AB70-DCE13AF3F66A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

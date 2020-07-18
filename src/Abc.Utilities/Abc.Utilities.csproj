@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.1</TargetFramework>
+    <IsPackable>true</IsPackable>
+
+    <SourcePacking Condition=" '$(SourcePacking)' == '' ">false</SourcePacking>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(SourcePacking)' == 'true' ">
+    <!--
+      Searching google for "source only nuget package" gives me
+        https://medium.com/@attilah/source-code-only-nuget-packages-8f34a8fb4738
+      but it seems to be a very complicate/fragile solution for something that can
+      be achieved by just using a nuspec.
+
+      https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec
+      https://docs.microsoft.com/en-us/nuget/create-packages/creating-a-package-msbuild
+    -->
+    <PackageOutputPath>$(ArtifactsRoot)</PackageOutputPath>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+
+    <__PackageVersion>$(VersionPrefix)</__PackageVersion>
+    <__PackageVersion Condition=" '$(VersionSuffix)' != '' ">$(__PackageVersion)-$(VersionSuffix)</__PackageVersion>
+
+    <NuspecFile>$(RepositoryRoot)Abc.Utilities.Sources.nuspec</NuspecFile>
+    <NuspecBasePath>$(MSBuildThisFileDirectory)</NuspecBasePath>
+    <NuspecProperties>
+        authors=$(Authors);
+        copyright=$(Copyright);
+        repositoryType=$(RepositoryType);
+        repositoryUrl=$(RepositoryUrl);
+        projectUrl=$(PackageProjectUrl);
+        licenseExpression=$(PackageLicenseExpression);
+        releaseNotes=$(PackageReleaseNotes);
+        version=$(__PackageVersion)
+    </NuspecProperties>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+  <!-- Compiler symbols -->
+  <PropertyGroup>
+    <DefineConstants Condition=" $(TargetFramework.StartsWith('netstandard1.')) ">$(DefineConstants);NETSTANDARD1_x</DefineConstants>
+    <DefineConstants Condition=" $(TargetFramework.StartsWith('netcoreapp2.')) ">$(DefineConstants);NETCOREAPP2_x</DefineConstants>
+  </PropertyGroup>
+
+</Project>
