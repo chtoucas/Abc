@@ -15,11 +15,13 @@
     <repository type="$repositoryType$" url="$repositoryUrl$" />
     <contentFiles>
       <!-- See https://docs.microsoft.com/en-us/nuget/reference/nuspec#using-the-contentfiles-element-for-content-files -->
-      <files include="cs/**/*.cs" buildAction="Compile" flatten="false" />
+      <files include="cs/any/**/*.cs" buildAction="Compile" flatten="false" />
+      <files include="cs/any/*.props" buildAction="None" flatten="true" />
     </contentFiles>
   </metadata>
   <files>
     <!-- See https://docs.microsoft.com/en-us/nuget/reference/nuspec#package-folder-structure -->
     <file src="**\*.cs" exclude="bin\**\*.*;obj\**\*.*" target="contentFiles\cs\any\" />
+    <file src="CompilerSymbols.props" target="contentFiles\cs\any\" />
   </files>
 </package>
