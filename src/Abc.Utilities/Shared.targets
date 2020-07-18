@@ -1,5 +1,7 @@
 <Project>
 
+  <!-- Kind of VS shared project -->
+
   <Import Project="$(MSBuildThisFileDirectory)CompilerSymbols.props" />
 
   <ItemGroup>
@@ -7,8 +9,11 @@
     <FilesToExclude Include="$(MSBuildThisFileDirectory)bin\**\*.*" />
     <FilesToExclude Include="$(MSBuildThisFileDirectory)obj\**\*.*" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)**\*.cs"  Exclude="@(FilesToExclude)" />
+    <Compile Include="$(MSBuildThisFileDirectory)**\*.cs" Exclude="@(FilesToExclude)">
+      <Visible>false</Visible>
+    </Compile>
   </ItemGroup>
 
 </Project>

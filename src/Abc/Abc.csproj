@@ -9,6 +9,6 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
-  <Import Project="$(SourceRoot)Abc.Utilities\ImportCSharpFiles.props" />
+  <Import Project="$(SourceRoot)Abc.Utilities\Shared.targets" />
 
 </Project>

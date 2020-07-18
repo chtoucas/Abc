@@ -4,13 +4,17 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>$(DefaultPlatform)</TargetFramework>
 
-    <AssemblyTitle>$(AssemblyName) [$(TargetFramework)]</AssemblyTitle>
+    <RunAnalyzers>false</RunAnalyzers>
+
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
 
     <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
     <DefineConstants>$(DefineConstants);STRICT_HASKELL</DefineConstants>
     <!--<DefineConstants>$(DefineConstants);MONADS_VIA_MAP_MULTIPLY</DefineConstants>-->
     <!--<DefineConstants>$(DefineConstants);COMONADS_VIA_MAP_COMULTIPLY</DefineConstants>-->
   </PropertyGroup>
+
+  <Import Project="$(SourceRoot)Abc.Utilities\Shared.targets" />
 
   <ItemGroup>
     <None Update="play.ini">

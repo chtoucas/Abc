@@ -9,7 +9,9 @@
       CA1707  Identifiers should not contain underscores (Naming)
       CA2007  Consider calling ConfigureAwait on the awaited task (Reliability)
     -->
-    <NoWarn>$(NoWarn);CA1034;CA1303;CA1707;CA2007</NoWarn>
+    <NoWarn>$(NoWarn);CA1034;CA1303;CA1707;CA2007;CS1591</NoWarn>
+
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -11,6 +11,9 @@ namespace Abc.Utilities
     /// Provides static methods for common mathematical operations.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
+#if NO_CODE_COVERAGE
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+#endif
     internal static partial class MathOperations { }
 
     // Euclidian division.
