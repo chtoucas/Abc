@@ -12,7 +12,9 @@ namespace Abc.Utilities
 #if !COVER_ABC_UTILITIES
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
-    internal static class DebugEx
+    internal static partial class DebugEx { }
+
+    internal partial class DebugEx
     {
         /// <summary>
         /// Checks that <paramref name="value"/> is not null.

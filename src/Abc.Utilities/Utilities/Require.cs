@@ -20,7 +20,7 @@ namespace Abc.Utilities
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
     internal sealed class ValidatedNotNullAttribute : Attribute { }
 
-    internal static class Require
+    internal static partial class Require
     {
         [DebuggerStepThrough]
         public static void NotNull<T>([ValidatedNotNull] T value, string paramName)

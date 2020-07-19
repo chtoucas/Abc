@@ -9,7 +9,15 @@ namespace Abc.Utilities
 #if !COVER_ABC_UTILITIES
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
-    internal static class Thunks
+    internal static partial class Thunks { }
+
+    [DebuggerNonUserCode]
+#if !COVER_ABC_UTILITIES
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+#endif
+    internal static partial class Thunks<T> { }
+
+    internal partial class Thunks
     {
         /// <summary>
         /// Represents the action that does nothing.
@@ -18,7 +26,7 @@ namespace Abc.Utilities
         public static readonly Action Noop = () => { };
     }
 
-    internal static class Thunks<T>
+    internal partial class Thunks<T>
     {
         /// <summary>
         /// Represents the identity map.

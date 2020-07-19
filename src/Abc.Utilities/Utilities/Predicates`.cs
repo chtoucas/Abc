@@ -9,7 +9,15 @@ namespace Abc.Utilities
 #if !COVER_ABC_UTILITIES
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
-    internal static class Predicates
+    internal static partial class Predicates { }
+
+    [DebuggerNonUserCode]
+#if !COVER_ABC_UTILITIES
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+#endif
+    internal static partial class Predicates<TSource> { }
+
+    internal partial class Predicates
     {
         /// <summary>
         /// Represents the function that always returns false.
@@ -24,7 +32,7 @@ namespace Abc.Utilities
         public static readonly Func<bool> True = () => true;
     }
 
-    internal static class Predicates<TSource>
+    internal partial class Predicates<TSource>
     {
         /// <summary>
         /// Represents the predicate that always evaluates to false.
