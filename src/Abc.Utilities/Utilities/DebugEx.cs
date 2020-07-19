@@ -3,13 +3,15 @@
 namespace Abc.Utilities
 {
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Provides static methods that help debug the code.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    [DebuggerNonUserCode]
+#if !COVER_ABC_UTILITIES
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+#endif
     internal static class DebugEx
     {
         /// <summary>

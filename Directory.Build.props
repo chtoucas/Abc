@@ -17,6 +17,8 @@
   <!-- Target frameworks -->
   <PropertyGroup>
     <DefaultPlatform>netcoreapp3.1</DefaultPlatform>
+    <SupportedStandards>netstandard2.1;netstandard2.0;netstandard1.1</SupportedStandards>
+
     <LibraryPlatforms>$(DefaultPlatform);netstandard2.1</LibraryPlatforms>
     <TestPlatforms>$(DefaultPlatform)</TestPlatforms>
   </PropertyGroup>
@@ -33,6 +35,7 @@
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)Abc.snk</AssemblyOriginatorKeyFile>
 
     <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
+    <DefineConstants>$(DefineConstants);INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>
 
     <Authors>Chtoucas</Authors>
     <Company>Narvalo.Org</Company>
@@ -42,6 +45,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/chtoucas/Abc/</RepositoryUrl>
 
+    <PackageOutputPath>$(ArtifactsRoot)packages\</PackageOutputPath>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <PackageReleaseNotes>See CHANGELOG in project root.</PackageReleaseNotes>

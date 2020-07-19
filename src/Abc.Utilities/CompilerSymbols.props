@@ -1,8 +1,8 @@
 <Project>
 
   <!--
-    Other compiler symbols:
-    - NO_CODE_COVERAGE      Add attr ExcludeFromCodeCoverage
+    Optional compiler symbols:
+    - COVER_ABC_UTILITIES             Enable code coverage
   -->
   <PropertyGroup>
     <DefineConstants Condition=" $(TargetFramework.StartsWith('netstandard1.')) ">$(DefineConstants);NETSTANDARD1_x</DefineConstants>

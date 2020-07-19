@@ -7,7 +7,7 @@
     <description><![CDATA[
 $description$
 
-This is a source-only package.
+This is a source code only package.
     ]]></description>
     <authors>$authors$</authors>
 
@@ -30,7 +30,7 @@ This is a source-only package.
 
   <files>
     <!-- See https://docs.microsoft.com/en-us/nuget/reference/nuspec#package-folder-structure -->
-    <file src="Utilities\**\*.cs" target="contentFiles\cs\any\Abc.Utilities\" />
-    <file src="CompilerSymbols.props" target="contentFiles\cs\any\Abc.Utilities\" />
+    <file src="Utilities\**\*.cs" target="contentFiles\cs\any\Abc\Utilities\" />
+    <file src="CompilerSymbols.props" target="contentFiles\cs\any\Abc\" />
   </files>
 </package>

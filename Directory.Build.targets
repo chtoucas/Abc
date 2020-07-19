@@ -2,13 +2,50 @@
 
   <PropertyGroup>
     <AssemblyTitle>$(AssemblyName) [$(TargetFramework)]</AssemblyTitle>
+
+    <DebugType Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">pdbonly</DebugType>
   </PropertyGroup>
 
-  <!-- Packages -->
-  <ItemGroup Condition=" '$(RunAnalyzers)' != 'false' ">
+  <!-- Source Link / Deterministic build -->
+  <PropertyGroup>
+    <EnableSourceLink>false</EnableSourceLink>
+    <EnableSourceLink Condition=" '$(ContinuousIntegrationBuild)' == 'true' ">true</EnableSourceLink>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
+    <DeterministicSourcePaths Condition=" '$(EnableSourceLink)' == 'true' ">true</DeterministicSourcePaths>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition=" '$(EnableSourceLink)' == 'true' ">
+      <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+      </ItemGroup>
+    </When>
+
+    <Otherwise>
+      <ItemGroup>
+        <SourceRoot Include="$(RepositoryRoot)"  Condition=" '$(ContinuousIntegrationBuild)' == 'true' " />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+
+  <!-- FxCop analyzers -->
+  <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- .NET Framework reference libraries
+       https://github.com/Microsoft/dotnet/tree/master/releases/reference-assemblies -->
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 

@@ -11,7 +11,8 @@ namespace Abc.Utilities
     /// Provides static methods for common mathematical operations.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-#if NO_CODE_COVERAGE
+    [DebuggerNonUserCode]
+#if !COVER_ABC_UTILITIES
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
     internal static partial class MathOperations { }

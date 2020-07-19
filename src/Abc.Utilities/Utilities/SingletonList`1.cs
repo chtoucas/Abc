@@ -25,7 +25,11 @@ namespace Abc.Utilities
     /// but then many LINQ operators are optimized for lists, and
     /// Enumerable.Repeat() does not seem to produce one.
     /// </remarks>
+    [DebuggerNonUserCode]
     [DebuggerDisplay("Count = 1")]
+#if !COVER_ABC_UTILITIES
+    [ExcludeFromCodeCoverage]
+#endif
     internal sealed class SingletonList<T> : IList<T>, IReadOnlyList<T>
     {
         [NotNull] private readonly T _element;

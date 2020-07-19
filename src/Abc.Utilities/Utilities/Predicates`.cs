@@ -3,7 +3,12 @@
 namespace Abc.Utilities
 {
     using System;
+    using System.Diagnostics;
 
+    [DebuggerNonUserCode]
+#if !COVER_ABC_UTILITIES
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+#endif
     internal static class Predicates
     {
         /// <summary>

@@ -3,14 +3,17 @@
 namespace Abc.Utilities
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics;
 
     /// <summary>
     /// Indicates that a method or a field has been made internal for testing
     /// purposes.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    [DebuggerNonUserCode]
+#if !COVER_ABC_UTILITIES
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+#endif
     [AttributeUsage(
         AttributeTargets.Constructor
         | AttributeTargets.Method

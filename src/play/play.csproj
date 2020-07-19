@@ -4,11 +4,16 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>$(DefaultPlatform)</TargetFramework>
 
-    <RunAnalyzers>false</RunAnalyzers>
+    <!-- FIXME: dotnet.exe still complains.
+      https://docs.microsoft.com/en-us/visualstudio/code-quality/disable-code-analysis?view=vs-2019
+    -->
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <!--<RunAnalyzers>false</RunAnalyzers>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>-->
 
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CA1000;CA1034;CA1303;CA1716;CA1812</NoWarn>
+    <NoWarn Condition=" '$(GenerateDocumentationFile)' == 'true' ">$(NoWarn);CS1591</NoWarn>
 
-    <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
     <DefineConstants>$(DefineConstants);STRICT_HASKELL</DefineConstants>
     <!--<DefineConstants>$(DefineConstants);MONADS_VIA_MAP_MULTIPLY</DefineConstants>-->
     <!--<DefineConstants>$(DefineConstants);COMONADS_VIA_MAP_COMULTIPLY</DefineConstants>-->
