@@ -2,15 +2,6 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
 
-  <PropertyGroup>
-    <IsPackable>true</IsPackable>
-
-    <!-- Warnings.
-      CA1812  Avoid uninstantiated internal classes (Performance)
-    -->
-    <NoWarn>$(NoWarn);CA1812</NoWarn>
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyInfo.Common.cs">
       <Visible>false</Visible>

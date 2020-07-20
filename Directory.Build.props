@@ -5,11 +5,6 @@
     <ContinuousIntegrationBuild Condition=" '$(ContinuousIntegrationBuild)' == '' ">false</ContinuousIntegrationBuild>
     <ContinuousIntegrationBuild Condition=" '$(TF_BUILD)' == 'true' ">true</ContinuousIntegrationBuild>
     <ContinuousIntegrationBuild Condition=" '$(GITHUB_ACTIONS)' == 'true' ">true</ContinuousIntegrationBuild>
-
-    <!-- WARNING: inside Visual Studio, SlimBuild is set to true -->
-    <SlimBuild Condition=" '$(SlimBuild)' == '' ">false</SlimBuild>
-    <SlimBuild Condition=" '$(SLIM_BUILD)' == 'true' ">true</SlimBuild>
-    <SlimBuild Condition=" '$(BuildingInsideVisualStudio)' == 'true' ">true</SlimBuild>
   </PropertyGroup>
 
   <!-- Repository layout -->
@@ -19,10 +14,14 @@
     <ArtifactsRoot>$(RepositoryRoot)__\</ArtifactsRoot>
   </PropertyGroup>
 
+  <!-- Default target framework (sync w/ global.json) -->
+  <PropertyGroup>
+    <DefaultTargetFramework>netcoreapp3.1</DefaultTargetFramework>
+  </PropertyGroup>
+
   <!-- Common settings -->
   <PropertyGroup>
     <RootNamespace>Abc</RootNamespace>
-    <IsPackable>false</IsPackable>
 
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -55,43 +54,18 @@
     <When Condition=" $(Configuration) == 'Release' ">
       <PropertyGroup>
         <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <WarningsNotAsErrors>$(WarningsNotAsErrors);CS1591</WarningsNotAsErrors>
+        <WarningsNotAsErrors />
       </PropertyGroup>
     </When>
 
     <Otherwise>
       <PropertyGroup>
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-        <GenerateDocumentationFile>false</GenerateDocumentationFile>
 
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <TreatSpecificWarningsAsErrors />
-      </PropertyGroup>
-    </Otherwise>
-  </Choose>
-
-  <!-- Supported frameworks -->
-  <PropertyGroup>
-    <DefaultPlatform>netcoreapp3.1</DefaultPlatform>
-    <SupportedStandards>netstandard2.1;netstandard2.0</SupportedStandards>
-  </PropertyGroup>
-
-  <Choose>
-    <When Condition=" '$(SlimBuild)' == 'true' ">
-      <PropertyGroup>
-        <LibraryPlatforms>$(DefaultPlatform);netstandard2.0</LibraryPlatforms>
-        <TestPlatforms>$(DefaultPlatform)</TestPlatforms>
-      </PropertyGroup>
-    </When>
-
-    <Otherwise>
-      <PropertyGroup>
-        <LibraryPlatforms>$(SupportedStandards);net461</LibraryPlatforms>
-        <TestPlatforms>netcoreapp3.1;netcoreapp2.1</TestPlatforms>
-        <TestPlatforms Condition=" '$(OS)' == 'Windows_NT' ">$(TestPlatforms);net461</TestPlatforms>
       </PropertyGroup>
     </Otherwise>
   </Choose>

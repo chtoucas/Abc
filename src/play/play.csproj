@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>$(DefaultPlatform)</TargetFramework>
+    <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
 
     <!-- FIXME: dotnet.exe still complains; see NoWarn below.
       See also RunAnalyzers & RunAnalyzersDuringLiveAnalysis.
