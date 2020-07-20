@@ -2,8 +2,6 @@
 
   <!-- Kind of VS shared project -->
 
-  <Import Project="$(MSBuildThisFileDirectory)CompilerSymbols.props" />
-
   <ItemGroup>
     <FilesToExclude Include="$(MSBuildThisFileDirectory)AssemblyInfo.cs" />
     <FilesToExclude Include="$(MSBuildThisFileDirectory)bin\**\*.*" />

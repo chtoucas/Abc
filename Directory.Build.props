@@ -5,6 +5,11 @@
     <ContinuousIntegrationBuild Condition=" '$(ContinuousIntegrationBuild)' == '' ">false</ContinuousIntegrationBuild>
     <ContinuousIntegrationBuild Condition=" '$(TF_BUILD)' == 'true' ">true</ContinuousIntegrationBuild>
     <ContinuousIntegrationBuild Condition=" '$(GITHUB_ACTIONS)' == 'true' ">true</ContinuousIntegrationBuild>
+
+    <!-- WARNING: inside Visual Studio, SlimBuild is set to true -->
+    <SlimBuild Condition=" '$(SlimBuild)' == '' ">false</SlimBuild>
+    <SlimBuild Condition=" '$(SLIM_BUILD)' == 'true' ">true</SlimBuild>
+    <SlimBuild Condition=" '$(BuildingInsideVisualStudio)' == 'true' ">true</SlimBuild>
   </PropertyGroup>
 
   <!-- Repository layout -->
@@ -72,9 +77,23 @@
   <PropertyGroup>
     <DefaultPlatform>netcoreapp3.1</DefaultPlatform>
     <SupportedStandards>netstandard2.1;netstandard2.0;netstandard1.1</SupportedStandards>
-
-    <LibraryPlatforms>$(DefaultPlatform);netstandard2.1</LibraryPlatforms>
-    <TestPlatforms>$(DefaultPlatform)</TestPlatforms>
   </PropertyGroup>
+
+  <Choose>
+    <When Condition=" '$(SlimBuild)' == 'true' ">
+      <PropertyGroup>
+        <LibraryPlatforms>$(DefaultPlatform);netstandard2.0</LibraryPlatforms>
+        <TestPlatforms>$(DefaultPlatform)</TestPlatforms>
+      </PropertyGroup>
+    </When>
+
+    <Otherwise>
+      <PropertyGroup>
+        <LibraryPlatforms>$(SupportedStandards);net461</LibraryPlatforms>
+        <TestPlatforms>netcoreapp3.1;netcoreapp2.1</TestPlatforms>
+        <TestPlatforms Condition=" '$(OS)' == 'Windows_NT' ">$(TestPlatforms);net461;net452</TestPlatforms>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
 
 </Project>

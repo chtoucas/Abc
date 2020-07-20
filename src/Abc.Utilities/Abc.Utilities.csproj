@@ -13,6 +13,19 @@
     <NoWarn Condition=" '$(GenerateDocumentationFile)' == 'true' ">$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
+  <!-- Package/assembly infos -->
+  <PropertyGroup>
+    <Version>0.1.0-alpha</Version>
+
+    <Title>Package Title</Title>
+
+    <Description>Assembly description.</Description>
+
+    <PackageDescription>Package description.</PackageDescription>
+
+    <PackageTags>Helpers Utilities</PackageTags>
+  </PropertyGroup>
+
   <!-- Target frameworks -->
   <Choose>
     <When Condition=" '$(SourceOnlyPackage)' == 'true' ">
@@ -26,13 +39,10 @@
     </When>
     <Otherwise>
       <PropertyGroup>
-        <TargetFrameworks>$(SupportedStandards);net461</TargetFrameworks>
+        <TargetFrameworks>$(LibraryPlatforms)</TargetFrameworks>
       </PropertyGroup>
     </Otherwise>
   </Choose>
-
-  <Import Project="$(MSBuildThisFileDirectory)CompilerSymbols.props" />
-  <Import Project="$(MSBuildThisFileDirectory)Retail.props" />
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
