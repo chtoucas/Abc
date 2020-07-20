@@ -7,8 +7,6 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
 
-[assembly: InternalsVisibleTo("Abc.Tests" + Abc.AssemblyInfo.PublicKeySuffix)]
-
 namespace Abc
 {
     /// <summary>

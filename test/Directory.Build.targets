@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
 
   <PropertyGroup>
-    <TargetFrameworks>$(TestPlatforms)</TargetFrameworks>
-
     <!-- Warnings.
       CA1034  Nested types should not be visible (Design)
       CA1303  Do not pass literals as localized parameters (Globalization)
@@ -12,6 +12,12 @@
     <NoWarn>$(NoWarn);CA1034;CA1303;CA1707;CA2007</NoWarn>
     <NoWarn Condition=" '$(GenerateDocumentationFile)' == 'true' ">$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
@@ -24,10 +30,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Abc\Abc.csproj" />
   </ItemGroup>
 
 </Project>

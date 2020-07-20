@@ -1,7 +1,5 @@
 ﻿// See LICENSE in the project root for license information.
 
-using System;
-using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
-[assembly: CLSCompliant(true)]
-[assembly: ComVisible(false)]
+[assembly: InternalsVisibleTo("Abc.Utilities.Tests" + Abc.AssemblyInfo.PublicKeySuffix)]

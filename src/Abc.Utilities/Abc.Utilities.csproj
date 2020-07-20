@@ -4,17 +4,7 @@
     <!-- One can build a "binary" package but it is pretty useless as everything is internal -->
     <SourceOnlyPackage Condition=" '$(SourceOnlyPackage)' == '' ">true</SourceOnlyPackage>
 
-    <IsPackable>true</IsPackable>
-
-    <!-- Warnings.
-      CA1812  Avoid uninstantiated internal classes (Performance)
-    -->
-    <NoWarn>$(NoWarn);CA1812</NoWarn>
-    <NoWarn Condition=" '$(GenerateDocumentationFile)' == 'true' ">$(NoWarn);CS1591</NoWarn>
-  </PropertyGroup>
-
-  <!-- Package/assembly infos -->
-  <PropertyGroup>
+    <!-- Package/assembly infos -->
     <Version>0.1.0-alpha</Version>
 
     <Title>Package Title</Title>
@@ -31,7 +21,7 @@
     <When Condition=" '$(SourceOnlyPackage)' == 'true' ">
       <PropertyGroup>
         <TargetFrameworks>
-          $(SupportedStandards);
+          netstandard2.1;netstandard2.0;netstandard1.1;
           netcoreapp3.1;netcoreapp2.1;
           net461;net452
         </TargetFrameworks>
@@ -39,7 +29,10 @@
     </When>
     <Otherwise>
       <PropertyGroup>
-        <TargetFrameworks>$(LibraryPlatforms)</TargetFrameworks>
+        <TargetFrameworks>
+          netstandard2.1;netstandard2.0;netstandard1.1;
+          net461
+        </TargetFrameworks>
       </PropertyGroup>
     </Otherwise>
   </Choose>

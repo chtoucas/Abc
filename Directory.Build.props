@@ -76,7 +76,7 @@
   <!-- Supported frameworks -->
   <PropertyGroup>
     <DefaultPlatform>netcoreapp3.1</DefaultPlatform>
-    <SupportedStandards>netstandard2.1;netstandard2.0;netstandard1.1</SupportedStandards>
+    <SupportedStandards>netstandard2.1;netstandard2.0</SupportedStandards>
   </PropertyGroup>
 
   <Choose>
@@ -91,7 +91,7 @@
       <PropertyGroup>
         <LibraryPlatforms>$(SupportedStandards);net461</LibraryPlatforms>
         <TestPlatforms>netcoreapp3.1;netcoreapp2.1</TestPlatforms>
-        <TestPlatforms Condition=" '$(OS)' == 'Windows_NT' ">$(TestPlatforms);net461;net452</TestPlatforms>
+        <TestPlatforms Condition=" '$(OS)' == 'Windows_NT' ">$(TestPlatforms);net461</TestPlatforms>
       </PropertyGroup>
     </Otherwise>
   </Choose>
