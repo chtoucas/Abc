@@ -3,7 +3,6 @@
   <!-- Global context -->
   <PropertyGroup>
     <ContinuousIntegrationBuild Condition=" '$(ContinuousIntegrationBuild)' == '' ">false</ContinuousIntegrationBuild>
-    <ContinuousIntegrationBuild Condition=" '$(TF_BUILD)' == 'true' ">true</ContinuousIntegrationBuild>
     <ContinuousIntegrationBuild Condition=" '$(GITHUB_ACTIONS)' == 'true' ">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
@@ -12,11 +11,6 @@
     <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
     <SourceRoot>$(RepositoryRoot)src\</SourceRoot>
     <ArtifactsRoot>$(RepositoryRoot)__\</ArtifactsRoot>
-  </PropertyGroup>
-
-  <!-- Default target framework (sync w/ global.json) -->
-  <PropertyGroup>
-    <DefaultTargetFramework>netcoreapp3.1</DefaultTargetFramework>
   </PropertyGroup>
 
   <!-- Common settings -->

@@ -2,21 +2,6 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
 
-  <Choose>
-    <When Condition=" '$(BuildingInsideVisualStudio)' == 'true' ">
-      <PropertyGroup>
-        <DefaultTargetFrameworks>$(DefaultTargetFramework)</DefaultTargetFrameworks>
-      </PropertyGroup>
-    </When>
-
-    <Otherwise>
-      <PropertyGroup>
-        <DefaultTargetFrameworks>netcoreapp3.1;netcoreapp2.1</DefaultTargetFrameworks>
-        <DefaultTargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(DefaultTargetFrameworks);net461</DefaultTargetFrameworks>
-      </PropertyGroup>
-    </Otherwise>
-  </Choose>
-
   <PropertyGroup>
     <IsPackable>false</IsPackable>
 
@@ -30,5 +15,9 @@
     -->
     <NoWarn>$(NoWarn);CA1034;CA1303;CA1707;CA2007</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <SourceRoot Include="$(RepositoryRoot)" />
+  </ItemGroup>
 
 </Project>

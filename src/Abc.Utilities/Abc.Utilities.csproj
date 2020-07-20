@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- One can build a "binary" package but it is pretty useless as everything is internal -->
-    <SourceOnlyPackage Condition=" '$(SourceOnlyPackage)' == '' ">true</SourceOnlyPackage>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1;net461</TargetFrameworks>
 
-    <!-- Package/assembly infos -->
-    <Version>0.1.0-alpha</Version>
+    <Version>0.1.0-alpha1</Version>
 
     <Title>Package Title</Title>
 
@@ -16,27 +14,6 @@
     <PackageTags>Helpers Utilities</PackageTags>
   </PropertyGroup>
 
-  <!-- Target frameworks -->
-  <Choose>
-    <When Condition=" '$(SourceOnlyPackage)' == 'true' ">
-      <PropertyGroup>
-        <TargetFrameworks>
-          netcoreapp3.1;netcoreapp2.1;
-          netstandard2.1;netstandard2.0;netstandard1.1;
-          net461;net452
-        </TargetFrameworks>
-      </PropertyGroup>
-    </When>
-    <Otherwise>
-      <PropertyGroup>
-        <TargetFrameworks>
-          netstandard2.1;netstandard2.0;netstandard1.1;
-          net461
-        </TargetFrameworks>
-      </PropertyGroup>
-    </Otherwise>
-  </Choose>
-
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
@@ -44,7 +21,7 @@
   </PropertyGroup>
 
   <!-- Source code only package -->
-  <PropertyGroup Condition=" '$(SourceOnlyPackage)' == 'true' ">
+  <PropertyGroup>
     <!--
       Searching google gives me
         https://medium.com/@attilah/source-code-only-nuget-packages-8f34a8fb4738

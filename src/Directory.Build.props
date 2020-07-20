@@ -2,20 +2,6 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
 
-  <Choose>
-    <When Condition=" '$(BuildingInsideVisualStudio)' == 'true' ">
-      <PropertyGroup>
-        <DefaultTargetFrameworks>$(DefaultTargetFramework);netstandard2.0</DefaultTargetFrameworks>
-      </PropertyGroup>
-    </When>
-
-    <Otherwise>
-      <PropertyGroup>
-        <DefaultTargetFrameworks>netstandard2.1;netstandard2.0;net461</DefaultTargetFrameworks>
-      </PropertyGroup>
-    </Otherwise>
-  </Choose>
-
   <PropertyGroup>
     <IsPackable>true</IsPackable>
 
