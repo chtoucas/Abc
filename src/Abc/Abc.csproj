@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(LibraryPlatforms)</TargetFrameworks>
+
+    <NoWarn Condition=" '$(GenerateDocumentationFile)' == 'true' ">$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <Import Project="$(SourceRoot)Abc.Utilities\Shared.targets" />

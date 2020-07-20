@@ -10,7 +10,7 @@
     -->
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 
-    <NoWarn>$(NoWarn);CA1000;CA1034;CA1303;CA1716;CA1812</NoWarn>
+    <NoWarn>$(NoWarn);CA1000;CA1034;CA1303;CA1716;CA1812;CS1591</NoWarn>
 
     <DefineConstants>$(DefineConstants);STRICT_HASKELL</DefineConstants>
     <!--<DefineConstants>$(DefineConstants);MONADS_VIA_MAP_MULTIPLY</DefineConstants>-->

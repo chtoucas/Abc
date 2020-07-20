@@ -9,7 +9,6 @@
       CA1812  Avoid uninstantiated internal classes (Performance)
     -->
     <NoWarn>$(NoWarn);CA1812</NoWarn>
-    <NoWarn Condition=" '$(GenerateDocumentationFile)' == 'true' ">$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
