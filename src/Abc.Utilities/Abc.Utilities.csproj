@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- One can build a "binary" package but it is pretty useless as everything is internal -->
     <SourceOnlyPackage Condition=" '$(SourceOnlyPackage)' == '' ">true</SourceOnlyPackage>
 
     <IsPackable>true</IsPackable>
@@ -23,7 +24,6 @@
         </TargetFrameworks>
       </PropertyGroup>
     </When>
-
     <Otherwise>
       <PropertyGroup>
         <TargetFrameworks>$(SupportedStandards);net461</TargetFrameworks>

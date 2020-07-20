@@ -1,12 +1,5 @@
 <Project>
 
-  <!-- Repository layout -->
-  <PropertyGroup>
-    <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
-    <SourceRoot>$(RepositoryRoot)src\</SourceRoot>
-    <ArtifactsRoot>$(RepositoryRoot)__\</ArtifactsRoot>
-  </PropertyGroup>
-
   <!-- Global context -->
   <PropertyGroup>
     <ContinuousIntegrationBuild Condition=" '$(ContinuousIntegrationBuild)' == '' ">false</ContinuousIntegrationBuild>
@@ -14,16 +7,14 @@
     <ContinuousIntegrationBuild Condition=" '$(GITHUB_ACTIONS)' == 'true' ">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <!-- Target frameworks -->
+  <!-- Repository layout -->
   <PropertyGroup>
-    <DefaultPlatform>netcoreapp3.1</DefaultPlatform>
-    <SupportedStandards>netstandard2.1;netstandard2.0;netstandard1.1</SupportedStandards>
-
-    <LibraryPlatforms>$(DefaultPlatform);netstandard2.1</LibraryPlatforms>
-    <TestPlatforms>$(DefaultPlatform)</TestPlatforms>
+    <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
+    <SourceRoot>$(RepositoryRoot)src\</SourceRoot>
+    <ArtifactsRoot>$(RepositoryRoot)__\</ArtifactsRoot>
   </PropertyGroup>
 
-  <!-- Main settings -->
+  <!-- Common settings -->
   <PropertyGroup>
     <RootNamespace>Abc</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -50,7 +41,7 @@
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <PackageReleaseNotes>See CHANGELOG in project root.</PackageReleaseNotes>
 
-    <VersionPrefix>0.0.1</VersionPrefix>
+    <VersionPrefix>0.0.0</VersionPrefix>
     <VersionSuffix>DUMMY</VersionSuffix>
   </PropertyGroup>
 
@@ -76,5 +67,14 @@
       </PropertyGroup>
     </Otherwise>
   </Choose>
+
+  <!-- Supported frameworks -->
+  <PropertyGroup>
+    <DefaultPlatform>netcoreapp3.1</DefaultPlatform>
+    <SupportedStandards>netstandard2.1;netstandard2.0;netstandard1.1</SupportedStandards>
+
+    <LibraryPlatforms>$(DefaultPlatform);netstandard2.1</LibraryPlatforms>
+    <TestPlatforms>$(DefaultPlatform)</TestPlatforms>
+  </PropertyGroup>
 
 </Project>

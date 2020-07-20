@@ -4,30 +4,31 @@
     <AssemblyTitle>$(AssemblyName) [$(TargetFramework)]</AssemblyTitle>
 
     <DebugType Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">pdbonly</DebugType>
-  </PropertyGroup>
 
-  <!-- Source Link / Deterministic build -->
-  <PropertyGroup>
+    <!-- Source Link -->
     <EnableSourceLink>false</EnableSourceLink>
     <EnableSourceLink Condition=" '$(ContinuousIntegrationBuild)' == 'true' ">true</EnableSourceLink>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-
-    <DeterministicSourcePaths Condition=" '$(EnableSourceLink)' == 'true' ">true</DeterministicSourcePaths>
   </PropertyGroup>
 
+  <!-- Deterministic build -->
   <Choose>
     <When Condition=" '$(EnableSourceLink)' == 'true' ">
+      <PropertyGroup>
+        <!-- Only necessary when ContinuousIntegrationBuild = false -->
+        <DeterministicSourcePaths>true</DeterministicSourcePaths>
+      </PropertyGroup>
       <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
       </ItemGroup>
     </When>
-
     <Otherwise>
       <ItemGroup>
-        <SourceRoot Include="$(RepositoryRoot)"  Condition=" '$(ContinuousIntegrationBuild)' == 'true' " />
+        <!-- Only necessary when ContinuousIntegrationBuild = true -->
+        <SourceRoot Include="$(RepositoryRoot)" />
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -40,24 +41,12 @@
     </PackageReference>
   </ItemGroup>
 
-  <!-- .NET Framework reference libraries
-       https://github.com/Microsoft/dotnet/tree/master/releases/reference-assemblies -->
+  <!-- .NET Framework reference libraries -->
   <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
-  <!-- Target for verbose settings -->
-  <Target Name="PrintSettingsBeforeCompile" BeforeTargets="Compile"
-          Condition=" '$(PrintSettings)' == 'true' and '$(TargetFramework)' != '' ">
-    <PropertyGroup>
-      <_MyMessage>| %24(NoWarn)    = "$(NoWarn)"</_MyMessage>
-      <_MyMessage>$(_MyMessage)%0A| %24(DefineConstants) = "$(DefineConstants)"</_MyMessage>
-    </PropertyGroup>
-
-    <Message Text="+ $(AssemblyName) for $(TargetFramework)%0A$(_MyMessage)" Importance="high" />
-  </Target>
 
 </Project>
