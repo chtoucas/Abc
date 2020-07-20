@@ -2,17 +2,11 @@
 
 namespace Abc.Utilities
 {
-    using System;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Runtime.CompilerServices;
 
-    /// <summary>
-    /// Provides static methods for common mathematical operations.
-    /// <para>This class cannot be inherited.</para>
-    /// </summary>
-    [Obsolete("Use MathOperations instead.")]
-    internal static class MathEx
+    internal partial class MathOperations
     {
         /// <summary>
         /// Calculates the remainder of the division of a 32-bit signed integer

@@ -9,6 +9,7 @@ namespace Abc.Utilities
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
+    // TODO: change name.
     [DebuggerNonUserCode]
     [DebuggerDisplay("Count = ∞")]
 #if !COVER_ABC_UTILITIES

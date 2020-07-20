@@ -27,7 +27,7 @@ namespace Abc.Utilities
         /// </summary>
         // On ne vérifie pas la valeur passée au "setter", mais a priori ce
         // dernier ne devrait accepter que les valeurs "Private" ou "Protected".
-        public AccessibilityLevel GenuineAccessibility { get; set; }
-            = AccessibilityLevel.Private;
+        public AccessibilityLevel GenuineAccessibility { get; set; } =
+            AccessibilityLevel.Private;
     }
 }

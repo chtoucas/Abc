@@ -38,8 +38,8 @@ namespace Abc.Utilities
         [Pure]
         [DebuggerStepThrough]
         public static ArgumentException InvalidType(
-            string paramName, Type expected, object obj)
-            => new ArgumentException(
+            string paramName, Type expected, object obj) =>
+            new ArgumentException(
                 $"The object should be of type {expected} but it is of type {obj.GetType()}.",
                 paramName);
     }

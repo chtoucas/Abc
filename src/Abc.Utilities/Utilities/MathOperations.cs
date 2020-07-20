@@ -260,12 +260,12 @@ namespace Abc.Utilities
     {
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double RoundAwayFromZero(double num)
+        public static double RoundAwayFromZero(double num) =>
 #if SOFAM
             // See sofam.h (dnint): round to nearest whole number (double)
-            => num < 0 ? Math.Ceiling(num - .5) : Math.Floor(num + .5);
+            num < 0 ? Math.Ceiling(num - .5) : Math.Floor(num + .5);
 #else
-            => Math.Round(num, MidpointRounding.AwayFromZero);
+            Math.Round(num, MidpointRounding.AwayFromZero);
 #endif
 
         //// "z is the result of x % y and is computed as x - n * y, where n is the
@@ -316,8 +316,8 @@ namespace Abc.Utilities
         // when performing a comparison between two doubles.
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool AreApproximatelyEqual(double x, double y, int precision = 7)
-            => Math.Round(x, precision, MidpointRounding.ToEven)
+        public static bool AreApproximatelyEqual(double x, double y, int precision = 7) =>
+            Math.Round(x, precision, MidpointRounding.ToEven)
                 == Math.Round(y, precision, MidpointRounding.ToEven);
 
         // Comparaison absolue puis comparaison relative.
@@ -391,8 +391,8 @@ namespace Abc.Utilities
     // Decimals.
     internal partial class MathOperations
     {
-        internal const int HalfOneMin = Int32.MinValue / 10;
-        internal const int HalfOneMax = Int32.MaxValue / 10;
+        public const int HalfOneMin = Int32.MinValue / 10;
+        public const int HalfOneMax = Int32.MaxValue / 10;
 
         // REVIEW: AddHalfOne/SubtractHalfOne en passer par un long quand on
         // sort des limites HalfOneMin/Max.
@@ -404,8 +404,8 @@ namespace Abc.Utilities
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static decimal AddHalfOne(int num)
-            => num < HalfOneMin || num > HalfOneMax
+        public static decimal AddHalfOne(int num) =>
+            num < HalfOneMin || num > HalfOneMax
                 ? num + .5m
                 : num >= 0
                     ? new decimal(10 * num + 5, 0x00000000, 0x00000000, false, 0x0001)
@@ -413,8 +413,8 @@ namespace Abc.Utilities
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static decimal SubtractHalfOne(int num)
-            => num < HalfOneMin || num > HalfOneMax
+        public static decimal SubtractHalfOne(int num) =>
+            num < HalfOneMin || num > HalfOneMax
                 ? num - .5m
                 : num > 0
                     ? new decimal(10 * num - 5, 0x00000000, 0x00000000, false, 0x0001)
@@ -448,7 +448,7 @@ namespace Abc.Utilities
         /// </summary>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static int AdjustedLog10(int num)
+        public static int AdjustedLog10(int num)
         {
             Debug.Assert(num >= 0);
 
@@ -470,7 +470,7 @@ namespace Abc.Utilities
         /// </summary>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static int AdjustedLog10(int num, int pow0, int n0)
+        public static int AdjustedLog10(int num, int pow0, int n0)
         {
             Debug.Assert(num >= pow0);
             Debug.Assert(pow0 == (int)Math.Pow(10, n0 - 1));
