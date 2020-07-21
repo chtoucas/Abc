@@ -1,5 +1,7 @@
 ﻿// See LICENSE in the project root for license information.
 
+#pragma warning disable CA1812 // Avoid uninstantiated internal classes
+
 namespace Abc.Utilities
 {
     using System;
@@ -9,7 +11,6 @@ namespace Abc.Utilities
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
-    // TODO: change name.
     [DebuggerNonUserCode]
     [DebuggerDisplay("Count = ∞")]
 #if !COVER_ABC_UTILITIES

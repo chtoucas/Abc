@@ -10,7 +10,7 @@
       When done, clean up NoWarn.
     -->
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-    <NoWarn>$(NoWarn);CA1000;CA1034;CA1303;CA1716;CA1812;CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CA1000;CA1034;CA1303;CA1716;CS1591</NoWarn>
 
     <!--<NoWarn>$(NoWarn);CS1591</NoWarn>-->
 
