@@ -1,0 +1,15 @@
+<Project>
+
+  <PropertyGroup>
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+
+  <!-- .NET Framework reference libraries -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

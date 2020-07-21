@@ -1,6 +1,6 @@
 <Project>
 
-  <!-- Kind of VS shared project -->
+  <!-- Kind of like a VS shared project -->
 
   <ItemGroup>
     <FilesToExclude Include="$(MSBuildThisFileDirectory)AssemblyInfo.cs" />
