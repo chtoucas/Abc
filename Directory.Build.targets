@@ -1,8 +1,8 @@
 <Project>
 
-  <Import Project="$(MSBuildThisFileDirectory)FrameworkRanges.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)eng\FrameworkRanges.targets" />
 
-  <Import Project="$(MSBuildThisFileDirectory)NETFramework.targets"
+  <Import Project="$(MSBuildThisFileDirectory)eng\NETFramework.targets"
           Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' " />
 
   <PropertyGroup>

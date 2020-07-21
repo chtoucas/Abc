@@ -27,6 +27,6 @@
   <files>
     <!-- See https://docs.microsoft.com/en-us/nuget/reference/nuspec#package-folder-structure -->
     <file src="Utilities\**\*.cs" target="contentFiles\cs\any\Abc\Utilities\" />
-    <file src="..\..\FrameworkRanges.targets" target="contentFiles\cs\any\Abc\" />
+    <file src="..\..\eng\FrameworkRanges.targets" target="contentFiles\cs\any\Abc\" />
   </files>
 </package>
