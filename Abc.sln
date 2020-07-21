@@ -8,9 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.rsp = Directory.Build.rsp
 		Directory.Build.targets = Directory.Build.targets
-		FrameworkRanges.targets = FrameworkRanges.targets
 		global.json = global.json
-		NETFramework.targets = NETFramework.targets
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc", "src\Abc\Abc.csproj", "{246C31A1-2F0B-4825-A3D6-8812D58A16D0}"
@@ -34,6 +32,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E1D42DE7-B95
 		src\Abc.Utilities.Sources.nuspec = src\Abc.Utilities.Sources.nuspec
 		src\AssemblyInfo.Common.cs = src\AssemblyInfo.Common.cs
 		src\Directory.Build.targets = src\Directory.Build.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{179F2796-B5A4-4D4E-955D-00231777E72D}"
+	ProjectSection(SolutionItems) = preProject
+		eng\FrameworkRanges.targets = eng\FrameworkRanges.targets
+		eng\NETFramework.targets = eng\NETFramework.targets
+		eng\reset.ps1 = eng\reset.ps1
 	EndProjectSection
 EndProject
 Global
@@ -72,6 +77,7 @@ Global
 		{5E0084D5-231F-4C13-AB70-DCE13AF3F66A} = {E1D42DE7-B953-46DC-9B21-637E018042E2}
 		{F59C882C-8F8F-4617-A81A-766BE9EB5B80} = {EDC1C313-BB31-4F35-B34B-A3DE0D94C0BF}
 		{0AC39E7A-0CBB-4B6C-B269-33DB05A4105B} = {EDC1C313-BB31-4F35-B34B-A3DE0D94C0BF}
+		{179F2796-B5A4-4D4E-955D-00231777E72D} = {4B926891-DAB0-4792-AB7B-E1A0C001843A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1739E5AC-504C-40F8-968B-64F1F620D3C3}
