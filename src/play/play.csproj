@@ -4,13 +4,15 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
-    <!-- FIXME: dotnet.exe still complains; see NoWarn below.
-      See also RunAnalyzers & RunAnalyzersDuringLiveAnalysis.
-      https://docs.microsoft.com/en-us/visualstudio/code-quality/disable-code-analysis?view=vs-2019
+    <!--
+      dotnet.exe ignores RunAnalyzers/RunAnalyzersDuringBuild/RunAnalyzersDuringLiveAnalysis,
+      this is a VS issue. Fixed in VS 16.7? see https://github.com/dotnet/roslyn/issues/40926
+      When done, clean up NoWarn.
     -->
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-
     <NoWarn>$(NoWarn);CA1000;CA1034;CA1303;CA1716;CA1812;CS1591</NoWarn>
+
+    <!--<NoWarn>$(NoWarn);CS1591</NoWarn>-->
 
     <DefineConstants>$(DefineConstants);STRICT_HASKELL</DefineConstants>
     <!--<DefineConstants>$(DefineConstants);MONADS_VIA_MAP_MULTIPLY</DefineConstants>-->

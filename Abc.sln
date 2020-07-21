@@ -5,7 +5,6 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4B926891-DAB0-4792-AB7B-E1A0C001843A}"
 	ProjectSection(SolutionItems) = preProject
-		Abc.Utilities.Sources.nuspec = Abc.Utilities.Sources.nuspec
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.rsp = Directory.Build.rsp
 		Directory.Build.targets = Directory.Build.targets
@@ -22,7 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc.Utilities.Tests", "test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{EDC1C313-BB31-4F35-B34B-A3DE0D94C0BF}"
 	ProjectSection(SolutionItems) = preProject
-		test\Directory.Build.props = test\Directory.Build.props
 		test\Directory.Build.targets = test\Directory.Build.targets
 		test\xunit.runner.json = test\xunit.runner.json
 	EndProjectSection
@@ -31,8 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc.Tests", "test\Abc.Tests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E1D42DE7-B953-46DC-9B21-637E018042E2}"
 	ProjectSection(SolutionItems) = preProject
+		src\Abc.Utilities.Sources.nuspec = src\Abc.Utilities.Sources.nuspec
 		src\AssemblyInfo.Common.cs = src\AssemblyInfo.Common.cs
-		src\Directory.Build.props = src\Directory.Build.props
 		src\Directory.Build.targets = src\Directory.Build.targets
 	EndProjectSection
 EndProject

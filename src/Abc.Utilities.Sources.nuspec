@@ -4,11 +4,7 @@
     <!-- Required elements -->
     <id>Abc.Utilities.Sources</id>
     <version>$version$</version>
-    <description><![CDATA[
-$description$
-
-This is a source code only package.
-    ]]></description>
+    <description>$description$</description>
     <authors>$authors$</authors>
 
     <!-- Optional elements -->

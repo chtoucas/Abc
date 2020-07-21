@@ -20,6 +20,8 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
 
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)Abc.snk</AssemblyOriginatorKeyFile>
 
@@ -34,6 +36,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/chtoucas/Abc/</RepositoryUrl>
 
+    <IsPackable>false</IsPackable>
     <PackageOutputPath>$(ArtifactsRoot)packages\</PackageOutputPath>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
