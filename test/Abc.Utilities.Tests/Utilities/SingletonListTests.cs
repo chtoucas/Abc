@@ -9,19 +9,7 @@ namespace Abc.Utilities
 
     using Assert = AssertEx;
 
-    public static partial class SingletonListTests
-    {
-        private static readonly AnyT Value;
-        private static readonly IEnumerable<AnyT> Iter;
-
-#pragma warning disable CA1810 // Initialize reference type static fields inline
-        static SingletonListTests()
-#pragma warning restore CA1810
-        {
-            Value = new AnyT();
-            Iter = new SingletonList<AnyT>(Value);
-        }
-    }
+    public static partial class SingletonListTests { }
 
     // IList<T>
     public partial class SingletonListTests
@@ -45,7 +33,8 @@ namespace Abc.Utilities
         public static void Indexer_Get_InvalidIndex(int index)
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var iter = new SingletonList<AnyT>(new AnyT());
+            var list = (IList<AnyT>)iter;
             // Act & Assert
             Assert.ThrowsAoorexn("index", () => list[index]);
         }
@@ -54,16 +43,19 @@ namespace Abc.Utilities
         public static void Indexer_Get()
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var value = new AnyT();
+            var iter = new SingletonList<AnyT>(value);
+            var list = (IList<AnyT>)iter;
             // Act & Assert
-            Assert.Equal(Value, list[0]);
+            Assert.Equal(value, list[0]);
         }
 
         [Theory, MemberData(nameof(IndexesForNotSupportedMethod))]
         public static void Indexer_Set(int index)
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var iter = new SingletonList<AnyT>(new AnyT());
+            var list = (IList<AnyT>)iter;
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list[index] = new AnyT());
         }
@@ -72,16 +64,19 @@ namespace Abc.Utilities
         public static void IndexOf_OK()
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var value = new AnyT();
+            var iter = new SingletonList<AnyT>(value);
+            var list = (IList<AnyT>)iter;
             // Act & Assert
-            Assert.Equal(0, list.IndexOf(Value));
+            Assert.Equal(0, list.IndexOf(value));
         }
 
         [Fact]
         public static void IndexOf_KO()
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var iter = new SingletonList<AnyT>(new AnyT());
+            var list = (IList<AnyT>)iter;
             // Act & Assert
             Assert.Equal(-1, list.IndexOf(new AnyT()));
         }
@@ -90,7 +85,8 @@ namespace Abc.Utilities
         public static void Insert(int index)
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var iter = new SingletonList<AnyT>(new AnyT());
+            var list = (IList<AnyT>)iter;
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list.Insert(index, new AnyT()));
         }
@@ -99,7 +95,8 @@ namespace Abc.Utilities
         public static void RemoveAt(int index)
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var iter = new SingletonList<AnyT>(new AnyT());
+            var list = (IList<AnyT>)iter;
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list.RemoveAt(index));
         }
@@ -112,7 +109,8 @@ namespace Abc.Utilities
         public static void Count()
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var iter = new SingletonList<AnyT>(new AnyT());
+            var list = (IList<AnyT>)iter;
             // Act & Assert
             Assert.Equal(1, list.Count);
         }
@@ -121,7 +119,8 @@ namespace Abc.Utilities
         public static void IsReadOnly()
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var iter = new SingletonList<AnyT>(new AnyT());
+            var list = (IList<AnyT>)iter;
             // Act & Assert
             Assert.True(list.IsReadOnly);
         }
@@ -130,7 +129,8 @@ namespace Abc.Utilities
         public static void Add()
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var iter = new SingletonList<AnyT>(new AnyT());
+            var list = (IList<AnyT>)iter;
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list.Add(new AnyT()));
         }
@@ -139,7 +139,8 @@ namespace Abc.Utilities
         public static void Clear()
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var iter = new SingletonList<AnyT>(new AnyT());
+            var list = (IList<AnyT>)iter;
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list.Clear());
         }
@@ -148,16 +149,19 @@ namespace Abc.Utilities
         public static void Contains_OK()
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var value = new AnyT();
+            var iter = new SingletonList<AnyT>(value);
+            var list = (IList<AnyT>)iter;
             // Act & Assert
-            Assert.True(list.Contains(Value));
+            Assert.True(list.Contains(value));
         }
 
         [Fact]
         public static void Contains_KO()
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var iter = new SingletonList<AnyT>(new AnyT());
+            var list = (IList<AnyT>)iter;
             // Act & Assert
             Assert.False(list.Contains(new AnyT()));
         }
@@ -176,7 +180,10 @@ namespace Abc.Utilities
         public static void CopyTo(int index)
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var value = new AnyT();
+            var iter = new SingletonList<AnyT>(value);
+
+            var list = (IList<AnyT>)iter;
             var arr = new AnyT[10]
             {
                 new AnyT(),
@@ -190,18 +197,20 @@ namespace Abc.Utilities
                 new AnyT(),
                 new AnyT(),
             };
+
             // Act
             list.CopyTo(arr, index);
+
             // Assert
             for (int i = 0; i < 10; i++)
             {
                 if (i == index)
                 {
-                    Assert.Same(Value, arr[index]);
+                    Assert.Same(value, arr[index]);
                 }
                 else
                 {
-                    Assert.NotSame(Value, arr[i]);
+                    Assert.NotSame(value, arr[i]);
                 }
             }
         }
@@ -210,9 +219,11 @@ namespace Abc.Utilities
         public static void Remove()
         {
             // Arrange
-            var list = (IList<AnyT>)Iter;
+            var value = new AnyT();
+            var iter = new SingletonList<AnyT>(value);
+            var list = (IList<AnyT>)iter;
             // Act & Assert
-            Assert.Throws<NotSupportedException>(() => list.Remove(Value));
+            Assert.Throws<NotSupportedException>(() => list.Remove(value));
         }
     }
 
@@ -222,27 +233,32 @@ namespace Abc.Utilities
         [Fact(DisplayName = "GetEnumerator() returns a new iterator.")]
         public static void GetEnumerator()
         {
-            Assert.NotSame(Iter.GetEnumerator(), Iter.GetEnumerator());
+            // Arrange
+            var iter = new SingletonList<AnyT>(new AnyT());
+            // Act & Assert
+            Assert.NotSame(iter.GetEnumerator(), iter.GetEnumerator());
         }
 
         [Fact]
         public static void Iterate()
         {
             // Arrange
-            IEnumerator<AnyT> it = Iter.GetEnumerator();
+            var value = new AnyT();
+            var iter = new SingletonList<AnyT>(value);
+            IEnumerator<AnyT> it = iter.GetEnumerator();
 
             // Act & Assert
             // Even before the first MoveNext(), Current already returns Value.
-            Assert.Same(Value, it.Current);
+            Assert.Same(value, it.Current);
 
             Assert.True(it.MoveNext());
-            Assert.Same(Value, it.Current);
+            Assert.Same(value, it.Current);
             Assert.False(it.MoveNext());
 
             it.Reset();
 
             Assert.True(it.MoveNext());
-            Assert.Same(Value, it.Current);
+            Assert.Same(value, it.Current);
             Assert.False(it.MoveNext());
 
             // Dispose() does nothing.
@@ -252,7 +268,7 @@ namespace Abc.Utilities
             it.Reset();
 
             Assert.True(it.MoveNext());
-            Assert.Same(Value, it.Current);
+            Assert.Same(value, it.Current);
             Assert.False(it.MoveNext());
         }
     }
