@@ -13,8 +13,8 @@ namespace Abc.Utilities
     {
         [Pure]
         [DebuggerStepThrough]
-        public static ArgumentException InvalidBinaryInput(string paramName)
-            => new ArgumentException(
+        public static ArgumentException InvalidBinaryInput(string paramName) =>
+            new ArgumentException(
                 "The binary data is not well-formed or is invalid.",
                 paramName);
     }
@@ -22,28 +22,28 @@ namespace Abc.Utilities
     // Overflow exceptions.
     internal partial class ExceptionFactory
     {
-        public static OverflowException YearOverflow
-            => new OverflowException(
+        public static OverflowException YearOverflow =>
+            new OverflowException(
                 "The computation would overflow the latest supported year.");
 
-        public static OverflowException YearOverflowOrUnderflow
-            => new OverflowException(
+        public static OverflowException YearOverflowOrUnderflow =>
+            new OverflowException(
                 "The computation would overflow the range of supported years.");
 
-        public static OverflowException YearUnderflow
-            => new OverflowException(
+        public static OverflowException YearUnderflow =>
+            new OverflowException(
                 "The computation would underflow the earliest supported year.");
 
-        public static OverflowException DayNumberOverflow
-            => new OverflowException(
+        public static OverflowException DayNumberOverflow =>
+            new OverflowException(
                 "The computation would overflow the latest supported date.");
 
-        public static OverflowException DayNumberOverflowOrUnderflow
-            => new OverflowException(
+        public static OverflowException DayNumberOverflowOrUnderflow =>
+            new OverflowException(
                 "The computation would overflow the calendar boundaries.");
 
-        public static OverflowException DayNumberUnderflow
-            => new OverflowException(
+        public static OverflowException DayNumberUnderflow =>
+            new OverflowException(
                 "The computation would underflow the earliest supported date.");
     }
 }
