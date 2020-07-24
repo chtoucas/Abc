@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net461;net452</TargetFrameworks>
+    
+    <!-- 
+      IDE0002   Simplify Member Access
+    -->
+    <NoWarn>$(NoWarn);IDE0002</NoWarn>
 
     <DefineConstants>$(DefineConstants);COVER_ABC_UTILITIES</DefineConstants>
   </PropertyGroup>

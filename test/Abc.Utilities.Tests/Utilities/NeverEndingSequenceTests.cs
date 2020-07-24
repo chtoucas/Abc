@@ -15,23 +15,23 @@ namespace Abc.Utilities
         public static void GetEnumerator()
         {
             // Arrange
-            using var iter = new NeverEndingSequence<AnyT>(new AnyT());
+            using var seq = new NeverEndingSequence<AnyT>(new AnyT());
             // Act
-            IEnumerator<AnyT> it = iter.GetEnumerator();
+            IEnumerator<AnyT> it = seq.GetEnumerator();
             // Assert
-            Assert.Same(iter, it);
+            Assert.Same(seq, it);
         }
 
         [Fact(DisplayName = "GetEnumerator() (untyped) always returns the same iterator.")]
         public static void GetEnumerator_Untyped()
         {
             // Arrange
-            using var iter = new NeverEndingSequence<AnyT>(new AnyT());
+            using var seq = new NeverEndingSequence<AnyT>(new AnyT());
             // Act
-            IEnumerable enumerable = iter;
+            IEnumerable enumerable = seq;
             IEnumerator it = enumerable.GetEnumerator();
             // Assert
-            Assert.Same(iter, it);
+            Assert.Same(seq, it);
         }
 
         [Fact]
@@ -39,13 +39,13 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            using var iter = new NeverEndingSequence<AnyT>(value);
+            using var seq = new NeverEndingSequence<AnyT>(value);
 
             // Act
-            IEnumerator<AnyT> it = iter.GetEnumerator();
+            IEnumerator<AnyT> it = seq.GetEnumerator();
 
             // Assert
-            // Even before the first MoveNext(), Current already returns Value.
+            // Even before the first MoveNext(), Current already returns "value".
             Assert.Same(value, it.Current);
 
             for (int i = 0; i < 100; i++)
@@ -60,13 +60,13 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            using var iter = new NeverEndingSequence<AnyT>(value);
+            using var seq = new NeverEndingSequence<AnyT>(value);
 
             // Act
-            IEnumerator it = iter.GetEnumerator();
+            IEnumerator it = seq.GetEnumerator();
 
             // Assert
-            // Even before the first MoveNext(), Current already returns Value.
+            // Even before the first MoveNext(), Current already returns "value".
             Assert.Same(value, it.Current);
 
             for (int i = 0; i < 100; i++)
@@ -80,9 +80,9 @@ namespace Abc.Utilities
         public static void MoveNext()
         {
             // Arrange
-            using var iter = new NeverEndingSequence<AnyT>(new AnyT());
+            using var seq = new NeverEndingSequence<AnyT>(new AnyT());
             // Act
-            IEnumerator it = iter.GetEnumerator();
+            IEnumerator it = seq.GetEnumerator();
             // Assert
             Assert.True(it.MoveNext());
         }
@@ -92,10 +92,10 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            using var iter = new NeverEndingSequence<AnyT>(value);
+            using var seq = new NeverEndingSequence<AnyT>(value);
 
             // Act
-            IEnumerator it = iter.GetEnumerator();
+            IEnumerator it = seq.GetEnumerator();
 
             // Assert
             for (int i = 0; i < 100; i++)
@@ -119,10 +119,10 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            using var iter = new NeverEndingSequence<AnyT>(value);
+            using var seq = new NeverEndingSequence<AnyT>(value);
 
             // Act
-            IEnumerator<AnyT> it = iter.GetEnumerator();
+            IEnumerator<AnyT> it = seq.GetEnumerator();
 
             // Assert
             for (int i = 0; i < 100; i++)

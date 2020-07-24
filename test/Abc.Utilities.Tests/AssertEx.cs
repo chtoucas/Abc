@@ -22,7 +22,10 @@ namespace Abc
         /// Async test helpers.
         /// </summary>
         public static partial class Async { }
+    }
 
+    public partial class AssertEx
+    {
         /// <summary>
         /// Fails with a user message.
         /// </summary>

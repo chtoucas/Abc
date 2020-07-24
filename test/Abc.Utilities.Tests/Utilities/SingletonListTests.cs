@@ -14,13 +14,13 @@ namespace Abc.Utilities
     // IList<T>
     public partial class SingletonListTests
     {
-        public static readonly TheoryData<int> IndexesForNotSupportedMethod
-            = new TheoryData<int>
+        public static readonly TheoryData<int> NotSupportedIndexes =
+            new TheoryData<int>
             {
                 // -1 is always invalid for a list.
                 -1,
-                // Only 0 is actually valid but we use this data to test not
-                // supported methods.
+                // Only 0 is actually valid but we use this data to test
+                // unsupported methods.
                 0, 1, 100, 1000, Int32.MaxValue
             };
 
@@ -33,8 +33,7 @@ namespace Abc.Utilities
         public static void Indexer_Get_InvalidIndex(int index)
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
-            var list = (IList<AnyT>)iter;
+            IList<AnyT> list = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.ThrowsAoorexn("index", () => list[index]);
         }
@@ -44,18 +43,16 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            var iter = new SingletonList<AnyT>(value);
-            var list = (IList<AnyT>)iter;
+            IList<AnyT> list = new SingletonList<AnyT>(value);
             // Act & Assert
             Assert.Equal(value, list[0]);
         }
 
-        [Theory, MemberData(nameof(IndexesForNotSupportedMethod))]
+        [Theory, MemberData(nameof(NotSupportedIndexes))]
         public static void Indexer_Set(int index)
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
-            var list = (IList<AnyT>)iter;
+            IList<AnyT> list = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list[index] = new AnyT());
         }
@@ -65,8 +62,7 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            var iter = new SingletonList<AnyT>(value);
-            var list = (IList<AnyT>)iter;
+            IList<AnyT> list = new SingletonList<AnyT>(value);
             // Act & Assert
             Assert.Equal(0, list.IndexOf(value));
         }
@@ -75,28 +71,25 @@ namespace Abc.Utilities
         public static void IndexOf_KO()
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
-            var list = (IList<AnyT>)iter;
+            IList<AnyT> list = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.Equal(-1, list.IndexOf(new AnyT()));
         }
 
-        [Theory, MemberData(nameof(IndexesForNotSupportedMethod))]
+        [Theory, MemberData(nameof(NotSupportedIndexes))]
         public static void Insert(int index)
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
-            var list = (IList<AnyT>)iter;
+            IList<AnyT> list = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list.Insert(index, new AnyT()));
         }
 
-        [Theory, MemberData(nameof(IndexesForNotSupportedMethod))]
+        [Theory, MemberData(nameof(NotSupportedIndexes))]
         public static void RemoveAt(int index)
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
-            var list = (IList<AnyT>)iter;
+            IList<AnyT> list = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list.RemoveAt(index));
         }
@@ -109,8 +102,7 @@ namespace Abc.Utilities
         public static void Count()
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
-            var list = (IList<AnyT>)iter;
+            ICollection<AnyT> list = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.Equal(1, list.Count);
         }
@@ -119,8 +111,7 @@ namespace Abc.Utilities
         public static void IsReadOnly()
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
-            var list = (IList<AnyT>)iter;
+            ICollection<AnyT> list = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.True(list.IsReadOnly);
         }
@@ -129,8 +120,7 @@ namespace Abc.Utilities
         public static void Add()
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
-            var list = (IList<AnyT>)iter;
+            ICollection<AnyT> list = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list.Add(new AnyT()));
         }
@@ -139,8 +129,7 @@ namespace Abc.Utilities
         public static void Clear()
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
-            var list = (IList<AnyT>)iter;
+            ICollection<AnyT> list = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list.Clear());
         }
@@ -150,8 +139,7 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            var iter = new SingletonList<AnyT>(value);
-            var list = (IList<AnyT>)iter;
+            ICollection<AnyT> list = new SingletonList<AnyT>(value);
             // Act & Assert
             Assert.True(list.Contains(value));
         }
@@ -160,8 +148,7 @@ namespace Abc.Utilities
         public static void Contains_KO()
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
-            var list = (IList<AnyT>)iter;
+            ICollection<AnyT> list = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.False(list.Contains(new AnyT()));
         }
@@ -181,9 +168,8 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            var iter = new SingletonList<AnyT>(value);
+            ICollection<AnyT> list = new SingletonList<AnyT>(value);
 
-            var list = (IList<AnyT>)iter;
             var arr = new AnyT[10]
             {
                 new AnyT(),
@@ -220,8 +206,7 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            var iter = new SingletonList<AnyT>(value);
-            var list = (IList<AnyT>)iter;
+            ICollection<AnyT> list = new SingletonList<AnyT>(value);
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => list.Remove(value));
         }
@@ -234,9 +219,9 @@ namespace Abc.Utilities
         public static void GetEnumerator()
         {
             // Arrange
-            var iter = new SingletonList<AnyT>(new AnyT());
+            IEnumerable<AnyT> seq = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
-            Assert.NotSame(iter.GetEnumerator(), iter.GetEnumerator());
+            Assert.NotSame(seq.GetEnumerator(), seq.GetEnumerator());
         }
 
         [Fact]
@@ -244,8 +229,8 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            var iter = new SingletonList<AnyT>(value);
-            IEnumerator<AnyT> it = iter.GetEnumerator();
+            IEnumerable<AnyT> seq = new SingletonList<AnyT>(value);
+            IEnumerator<AnyT> it = seq.GetEnumerator();
 
             // Act & Assert
             // Even before the first MoveNext(), Current already returns Value.
