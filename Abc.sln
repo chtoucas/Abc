@@ -37,6 +37,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{179F2796-B5A4-4D4E-955D-00231777E72D}"
 	ProjectSection(SolutionItems) = preProject
 		eng\FrameworkRanges.targets = eng\FrameworkRanges.targets
+		eng\pack-abc.utilities.cmd = eng\pack-abc.utilities.cmd
 		eng\reset.ps1 = eng\reset.ps1
 	EndProjectSection
 EndProject
