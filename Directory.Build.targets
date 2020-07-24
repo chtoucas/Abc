@@ -2,17 +2,21 @@
 
   <Import Project="$(MSBuildThisFileDirectory)eng\FrameworkRanges.targets" />
 
-  <Import Project="$(MSBuildThisFileDirectory)eng\NETFramework.targets"
-          Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' " />
-
   <PropertyGroup>
     <AssemblyTitle>$(AssemblyName) [$(TargetFramework)]</AssemblyTitle>
+    
+    <DebugType Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">pdbonly</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0"
+                      Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 

@@ -6,8 +6,6 @@
     <GenerateDocumentationFile Condition=" $(Configuration) == 'Release' ">true</GenerateDocumentationFile>
     <WarningsNotAsErrors>$(WarningsNotAsErrors);CS1591</WarningsNotAsErrors>
 
-    <DeterministicSourcePaths>true</DeterministicSourcePaths>
-
     <!-- Source Link -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
