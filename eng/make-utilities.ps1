@@ -12,37 +12,40 @@ param(
     [ValidateSet('Debug', 'Release')]
     [Alias('c')] [string] $Configuration = 'Debug',
 
-    [Alias('x')] [switch] $XPlat
+    [Parameter(Mandatory = $false)]
+    [ValidateNotNullOrEmpty()]
+    [Alias('x')] [string] $XPlat
 )
 
 try {
-    pushd (Get-Item $PSScriptRoot).Parent.FullName
+    $rootDir = (Get-Item $PSScriptRoot).Parent.FullName
+    pushd $rootDir
 
     $args = @("-c:$Configuration")
 
     switch ($Task.ToLowerInvariant()) {
         'test' {
-            if ($XPlat) {
-                $args += '--collect:"XPlat Code Coverage"', '-f:netcoreapp3.1'
-            }
-            
-            $outDir = '__\tests\'
-            if ($XPlat -and (Test-Path $outDir)) {
-                Remove-Item -LiteralPath $outDir -Force -Recurse
-            }
+            $outDir   = join-path $rootDir '__\tests\'
+            $coverXml = join-path $outDir 'opencover.xml'
+            $rgXml    = join-path $outDir "opencover.$XPlat.xml"
+            $rgDir    = Join-Path $outDir "html-$XPlat"
+
+            $args +=
+                '/p:SignAssembly=false', # Necessary for .NET Framework Full
+                "-f:$XPlat",
+                '/p:CollectCoverage=true',
+                '/p:CoverletOutputFormat=opencover',
+                "/p:CoverletOutput=$coverXml",
+                '/p:Include="[Abc.Utilities]*"',
+                '/p:Exclude="[Abc.Utilities]System.*"'
 
             & dotnet test 'test\Abc.Utilities.Tests\' $args
 
-            if ($XPlat) {
-                $reports   = Get-ChildItem $outDir -File -Recurse -Filter "*.opencover.xml"
-                $targetDir = Join-Path $outDir "html"
-
-                & dotnet tool run reportgenerator `
-                    -verbosity:Warning `
-                    -reporttypes:"HtmlInline" `
-                    -reports:$reports `
-                    -targetdir:$targetDir
-            }
+            & dotnet tool run reportgenerator `
+                -verbosity:Warning `
+                -reporttypes:"HtmlInline" `
+                -reports:$rgXml `
+                -targetdir:$rgDir
         }
         'pack' {
             & dotnet build 'src\Abc.Utilities\' $args /p:FatBuild=true

@@ -9,17 +9,4 @@
     <ResultsDirectory>..\__\tests\</ResultsDirectory>
     <SolutionDirectory>..\</SolutionDirectory>
   </RunConfiguration>
-
-  <DataCollectionRunSettings>
-    <DataCollectors>
-      <DataCollector friendlyName="XPlat Code Coverage">
-        <Configuration>
-          <Format>opencover</Format>
-          <Exclude>[Abc.Utilities]System.*</Exclude>
-          <Include>[Abc.Utilities]*</Include>
-          <UseSourceLink>false</UseSourceLink>
-        </Configuration>
-      </DataCollector>
-    </DataCollectors>
-  </DataCollectionRunSettings>
 </RunSettings>
