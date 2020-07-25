@@ -15,9 +15,6 @@ namespace Abc.Utilities
     /// </summary>
     [DebuggerNonUserCode]
     [DebuggerDisplay("Count = 0")]
-#if !COVER_ABC_UTILITIES
-    [ExcludeFromCodeCoverage]
-#endif
     internal sealed class EmptyIterator<T> : IEnumerator<T>
     {
         public static readonly IEnumerator<T> Instance = new EmptyIterator<T>();

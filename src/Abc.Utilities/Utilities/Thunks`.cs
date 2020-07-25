@@ -6,15 +6,9 @@ namespace Abc.Utilities
     using System.Diagnostics;
 
     [DebuggerNonUserCode]
-#if !COVER_ABC_UTILITIES
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-#endif
     internal static partial class Thunks { }
 
     [DebuggerNonUserCode]
-#if !COVER_ABC_UTILITIES
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-#endif
     internal static partial class Thunks<T> { }
 
     internal partial class Thunks

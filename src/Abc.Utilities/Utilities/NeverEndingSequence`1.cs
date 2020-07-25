@@ -13,9 +13,6 @@ namespace Abc.Utilities
 
     [DebuggerNonUserCode]
     [DebuggerDisplay("Count = ∞")]
-#if !COVER_ABC_UTILITIES
-    [ExcludeFromCodeCoverage]
-#endif
     internal sealed class NeverEndingSequence<T> : IEnumerable<T>, IEnumerator<T>
     {
         [NotNull] private readonly T _element;

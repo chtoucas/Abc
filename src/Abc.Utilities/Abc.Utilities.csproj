@@ -9,8 +9,6 @@
     </TargetFrameworks>
 
     <NoWarn>$(NoWarn);CS1591</NoWarn>
-    
-    <DefineConstants>$(DefineConstants);COVER_ABC_UTILITIES</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">

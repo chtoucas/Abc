@@ -6,9 +6,6 @@ namespace Abc.Utilities
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
 
-#if !COVER_ABC_UTILITIES
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-#endif
     internal static class Guard
     {
         [Pure]

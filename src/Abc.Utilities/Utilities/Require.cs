@@ -5,9 +5,6 @@ namespace Abc.Utilities
     using System;
     using System.Diagnostics;
 
-#if !COVER_ABC_UTILITIES
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-#endif
     internal static partial class Require
     {
         [DebuggerStepThrough]

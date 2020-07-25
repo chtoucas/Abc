@@ -27,9 +27,6 @@ namespace Abc.Utilities
     /// </remarks>
     [DebuggerNonUserCode]
     [DebuggerDisplay("Count = 1")]
-#if !COVER_ABC_UTILITIES
-    [ExcludeFromCodeCoverage]
-#endif
     internal sealed class SingletonList<T> : IList<T>, IReadOnlyList<T>
     {
         [NotNull] private readonly T _element;
