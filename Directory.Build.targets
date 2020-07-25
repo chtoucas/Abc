@@ -4,8 +4,8 @@
 
   <PropertyGroup>
     <AssemblyTitle>$(AssemblyName) [$(TargetFramework)]</AssemblyTitle>
-    
-    <DebugType Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">pdbonly</DebugType>
+
+    <!--<DebugType Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">pdbonly</DebugType>-->
   </PropertyGroup>
 
   <ItemGroup>

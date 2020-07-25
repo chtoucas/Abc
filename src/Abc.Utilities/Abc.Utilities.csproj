@@ -9,6 +9,8 @@
     </TargetFrameworks>
 
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+    
+    <DefineConstants>$(DefineConstants);COVER_ABC_UTILITIES</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
@@ -43,6 +45,7 @@ This is a source code only package providing various internal utilities.
     </PackageDescription>
 
     <PackageTags>Helpers Utilities</PackageTags>
+    
     <NuspecFile>$(SourceRoot)Abc.Utilities.Sources.nuspec</NuspecFile>
     <NuspecBasePath>$(MSBuildThisFileDirectory)</NuspecBasePath>
     <NuspecProperties>

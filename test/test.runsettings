@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <!--
+  https://github.com/Microsoft/vstest-docs/blob/master/docs/configure.md
+  https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019
+  -->
+
+  <RunConfiguration>
+    <ResultsDirectory>..\__\tests\</ResultsDirectory>
+    <SolutionDirectory>..\</SolutionDirectory>
+  </RunConfiguration>
+
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>opencover</Format>
+          <Exclude>[Abc.Utilities]System.*</Exclude>
+          <Include>[Abc.Utilities]*</Include>
+          <UseSourceLink>false</UseSourceLink>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

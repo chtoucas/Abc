@@ -22,6 +22,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{EDC1C313-BB31-4F35-B34B-A3DE0D94C0BF}"
 	ProjectSection(SolutionItems) = preProject
 		test\Directory.Build.targets = test\Directory.Build.targets
+		test\test.runsettings = test\test.runsettings
 		test\xunit.runner.json = test\xunit.runner.json
 	EndProjectSection
 EndProject
@@ -36,8 +37,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E1D42DE7-B95
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{179F2796-B5A4-4D4E-955D-00231777E72D}"
 	ProjectSection(SolutionItems) = preProject
+		eng\asm.ps1 = eng\asm.ps1
 		eng\FrameworkRanges.targets = eng\FrameworkRanges.targets
-		eng\pack-abc.utilities.cmd = eng\pack-abc.utilities.cmd
+		eng\make-utilities.ps1 = eng\make-utilities.ps1
 		eng\reset.ps1 = eng\reset.ps1
 	EndProjectSection
 EndProject
