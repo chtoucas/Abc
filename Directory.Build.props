@@ -28,6 +28,7 @@
 
     <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
     <DefineConstants>$(DefineConstants);INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>
+    <DefineConstants Condition=" '$(SignAssembly)' == 'true' ">$(DefineConstants);SIGNED_ASSEMBLY</DefineConstants>
 
     <Authors>Chtoucas</Authors>
     <Company>Narvalo.Org</Company>
