@@ -3,6 +3,7 @@
 namespace Abc.Utilities
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
 
     using Xunit;
@@ -215,11 +216,20 @@ namespace Abc.Utilities
     // IEnumerable<T>.
     public partial class SingletonListTests
     {
-        [Fact(DisplayName = "GetEnumerator() returns a new iterator.")]
+        [Fact(DisplayName = "GetEnumerator() returns a fresh iterator.")]
         public static void GetEnumerator()
         {
             // Arrange
             IEnumerable<AnyT> seq = new SingletonList<AnyT>(new AnyT());
+            // Act & Assert
+            Assert.NotSame(seq.GetEnumerator(), seq.GetEnumerator());
+        }
+
+        [Fact(DisplayName = "GetEnumerator() (untyped) returns a fresh iterator.")]
+        public static void GetEnumerator_Untyped()
+        {
+            // Arrange
+            IEnumerable seq = new SingletonList<AnyT>(new AnyT());
             // Act & Assert
             Assert.NotSame(seq.GetEnumerator(), seq.GetEnumerator());
         }
@@ -248,6 +258,29 @@ namespace Abc.Utilities
 
             // Dispose() does nothing.
             it.Dispose();
+            Assert.False(it.MoveNext());
+
+            it.Reset();
+
+            Assert.True(it.MoveNext());
+            Assert.Same(value, it.Current);
+            Assert.False(it.MoveNext());
+        }
+
+        [Fact]
+        public static void Iterate_Untyped()
+        {
+            // Arrange
+            var value = new AnyT();
+            IEnumerable seq = new SingletonList<AnyT>(value);
+            IEnumerator it = seq.GetEnumerator();
+
+            // Act & Assert
+            // Even before the first MoveNext(), Current already returns Value.
+            Assert.Same(value, it.Current);
+
+            Assert.True(it.MoveNext());
+            Assert.Same(value, it.Current);
             Assert.False(it.MoveNext());
 
             it.Reset();

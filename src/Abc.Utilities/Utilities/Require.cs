@@ -5,7 +5,7 @@ namespace Abc.Utilities
     using System;
     using System.Diagnostics;
 
-    internal static partial class Require
+    internal static class Require
     {
         [DebuggerStepThrough]
         public static void NotNull<T>([ValidatedNotNull] T value, string paramName)
