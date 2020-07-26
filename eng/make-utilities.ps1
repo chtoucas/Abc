@@ -14,8 +14,10 @@ param(
 
     [Parameter(Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
-    [Alias('x')] [string] $XPlat
+    [Alias('f')] [string] $Framework
 )
+
+function die([string] $message) { Write-Error $message ;  exit 1 }
 
 try {
     $rootDir = (Get-Item $PSScriptRoot).Parent.FullName
@@ -25,31 +27,55 @@ try {
 
     switch ($Task.ToLowerInvariant()) {
         'test' {
-            $outDir   = join-path $rootDir '__\tests\'
-            $coverXml = join-path $outDir 'opencover.xml'
-            $rgXml    = join-path $outDir "opencover.$XPlat.xml"
-            $rgDir    = Join-Path $outDir "html-$XPlat"
+            $proj     = 'test\Abc.Utilities.Tests\'
+            $format   = 'opencover'
+            $outDir   = join-path $rootDir "__\tests-$Configuration\".ToLowerInvariant()
+            $output   = join-path $outDir "$format.xml"
+            $rgInput  = join-path $outDir "$format.*.xml"
+            $rgOutput = Join-Path $outDir 'html'
 
-            $args +=
-                '/p:SignAssembly=false', # Necessary for .NET Framework Full
-                "-f:$XPlat",
-                '/p:CollectCoverage=true',
-                '/p:CoverletOutputFormat=opencover',
-                "/p:CoverletOutput=$coverXml",
-                '/p:Include="[Abc.Utilities]*"',
-                '/p:Exclude="[Abc.Utilities]System.*"'
+            if (Test-Path $rgOutput) {
+                Remove-Item $rgOutput -Force -Recurse
+            }
 
-            & dotnet test 'test\Abc.Utilities.Tests\' $args
+            if ($Framework) { $args += "-f:$Framework" }
 
+            Write-Host "Building..." -ForegroundColor Yellow
+            # To use Coverlet with .NET Framework Full:
+            # - Force the portable pdb format.
+            # - Do not sign the assembly: System.IO.FileLoadException.
+            & dotnet build $proj $args `
+                /p:DebugType=portable `
+                /p:SignAssembly=false
+                || die 'Failed to build the test project.'
+
+            Write-Host "`nTesting..." -ForegroundColor Yellow
+            & dotnet test $proj $args `
+                --no-build `
+                /p:CollectCoverage=true `
+                /p:CoverletOutputFormat=$format `
+                /p:CoverletOutput=$output `
+                /p:Include="[Abc.Utilities]*" `
+                /p:Exclude="[Abc.Utilities]System.*"
+                || die 'Failed to run the test project.'
+
+            Write-Host "Reporting..." -ForegroundColor Yellow
             & dotnet tool run reportgenerator `
-                -verbosity:Warning `
-                -reporttypes:"HtmlInline" `
-                -reports:$rgXml `
-                -targetdir:$rgDir
+                -reporttypes:"Html" `
+                -reports:$rgInput `
+                -targetdir:$rgOutput
+                || die 'Failed to create the reports.'
         }
         'pack' {
-            & dotnet build 'src\Abc.Utilities\' $args /p:FatBuild=true
-            & dotnet pack  'src\Abc.Utilities\' $args /p:NoBuild=true
+            $proj = 'src\Abc.Utilities\'
+
+            Write-Host "Building..." -ForegroundColor Yellow
+            & dotnet build $proj $args /p:FatBuild=true
+                || die 'Failed to build the project.'
+
+            Write-Host "`nPacking..." -ForegroundColor Yellow
+            & dotnet pack $proj $args /p:NoBuild=true
+                || die 'Failed to pack the project.'
         }
     }
 }
