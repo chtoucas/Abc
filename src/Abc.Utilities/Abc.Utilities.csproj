@@ -8,7 +8,20 @@
       net461;net452
     </TargetFrameworks>
 
+    <IsPackable>true</IsPackable>
+
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <Title></Title>
+    <Version>0.1.0-alpha1</Version>
+
+    <PackageDescription>
+      <![CDATA[
+This is a source code only package providing various utilities for internal use.
+    ]]>
+    </PackageDescription>
+
+    <PackageTags>Helpers Utilities</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
@@ -17,8 +30,14 @@
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
-  <!-- Source code only package -->
+  <!-- Source code only package? -->
   <PropertyGroup>
+    <!-- One can build a "binary" package but it is pretty useless as everything
+         is internal. NB: set ContinuousIntegrationBuild to true to produce
+         deterministic dll's. -->
+    <SourceOnlyPackage Condition=" '$(SourceOnlyPackage)' == '' ">true</SourceOnlyPackage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(SourceOnlyPackage)' == 'true' ">
     <!--
       Searching google gives me
         https://medium.com/@attilah/source-code-only-nuget-packages-8f34a8fb4738
@@ -30,20 +49,8 @@
       - https://docs.microsoft.com/en-us/nuget/create-packages/creating-a-package-msbuild
     -->
 
-    <IsPackable>true</IsPackable>
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
-    <Version>0.1.0-alpha1</Version>
-    <Title></Title>
-
-    <PackageDescription>
-      <![CDATA[
-This is a source code only package providing various internal utilities.
-    ]]>
-    </PackageDescription>
-
-    <PackageTags>Helpers Utilities</PackageTags>
-    
     <NuspecFile>$(SourceRoot)Abc.Utilities.Sources.nuspec</NuspecFile>
     <NuspecBasePath>$(MSBuildThisFileDirectory)</NuspecBasePath>
     <NuspecProperties>
