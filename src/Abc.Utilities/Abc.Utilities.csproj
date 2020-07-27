@@ -12,8 +12,6 @@
 
     <IsPackable>true</IsPackable>
 
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
-
     <Version>$(AbcUtilitiesVersion)</Version>
     <Title></Title>
 
