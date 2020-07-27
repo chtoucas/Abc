@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(SourceRoot)Abc.Utilities.Version.props" />
+
+  <PropertyGroup>
+    <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
+
+    <RestoreSources>$(LocalNuGetSource)</RestoreSources>
+    <RestorePackagesPath>$(LocalNuGetCache)</RestorePackagesPath>
+    <RestoreFallbackFolders>$(LocalNuGetCache)</RestoreFallbackFolders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Abc.Utilities.Sources" Version="$(AbcUtilitiesVersion)" />
+  </ItemGroup>
+
+</Project>

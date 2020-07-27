@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="$(SourceRoot)Abc.Utilities.Version.props" />
+
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
     <OutputType>Exe</OutputType>
 
     <!--
@@ -19,8 +21,6 @@
     <!--<DefineConstants>$(DefineConstants);COMONADS_VIA_MAP_COMULTIPLY</DefineConstants>-->
   </PropertyGroup>
 
-  <Import Project="$(SourceRoot)Abc.Utilities\Shared.targets" />
-
   <ItemGroup>
     <None Update="play.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="Abc.Maybe" Version="1.0.2" />
+    <PackageReference Include="Abc.Utilities.Sources" Version="$(AbcUtilitiesVersion)" />
   </ItemGroup>
 
 </Project>

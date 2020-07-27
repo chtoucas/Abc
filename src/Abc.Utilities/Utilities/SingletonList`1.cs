@@ -1,5 +1,7 @@
 ﻿// See LICENSE in the project root for license information.
 
+#pragma warning disable CA1812 // Avoid uninstantiated internal classes
+
 namespace Abc.Utilities
 {
     using System;

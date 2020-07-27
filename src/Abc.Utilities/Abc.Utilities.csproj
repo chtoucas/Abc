@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="$(SourceRoot)Abc.Utilities.Version.props" />
+
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1;net461</TargetFrameworks>
     <TargetFrameworks Condition=" '$(FatBuild)' == 'true' ">
@@ -12,8 +14,8 @@
 
     <NoWarn>$(NoWarn);CS1591</NoWarn>
 
+    <Version>$(AbcUtilitiesVersion)</Version>
     <Title></Title>
-    <Version>0.1.0-alpha1</Version>
 
     <PackageDescription>
       <![CDATA[

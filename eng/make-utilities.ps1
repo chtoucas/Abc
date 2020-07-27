@@ -5,7 +5,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0)]
-    [ValidateSet('test', 'pack')]
+    [ValidateSet('test', 'pack', 'push', 'cache')]
                  [string] $Task = 'test',
 
     [Parameter(Mandatory = $false)]
@@ -29,9 +29,9 @@ try {
         'test' {
             $proj     = 'test\Abc.Utilities.Tests\'
             $format   = 'opencover'
-            $outDir   = join-path $rootDir "__\tests-$Configuration\".ToLowerInvariant()
-            $output   = join-path $outDir "$format.xml"
-            $rgInput  = join-path $outDir "$format.*.xml"
+            $outDir   = Join-Path $rootDir "__\tests-$Configuration\".ToLowerInvariant()
+            $output   = Join-Path $outDir "$format.xml"
+            $rgInput  = Join-Path $outDir "$format.*.xml"
             $rgOutput = Join-Path $outDir 'html'
 
             if (Test-Path $rgOutput) {
@@ -76,6 +76,30 @@ try {
             Write-Host "`nPacking..." -ForegroundColor Yellow
             & dotnet pack $proj $args /p:NoBuild=true
                 || die 'Failed to pack the project.'
+        }
+        'push' {
+            Write-Host 'Disabled...' -ForegroundColor Red ; exit 1
+
+            $localSource = Join-Path $rootDir '__\nuget-feed\'
+
+            $package = gci (Join-Path $rootDir '__\packages\Abc.Utilities.Sources.*.nupkg') `
+                | sort LastWriteTime | select -Last 1
+
+            if ($package -eq $null) {
+                Write-Host "There is nothing to be published." -ForegroundColor Yellow
+                exit 0
+            }
+
+            Write-Host "Found package: ""$package""."
+
+            Write-Host "Pushing (local)..." -ForegroundColor Yellow
+            & dotnet nuget push $package -s $localSource --force-english-output
+                || die 'Failed to push the package.'
+        }
+        'cache' {
+            Write-Host "Caching package..." -ForegroundColor Yellow
+            & dotnet restore 'eng\Abc.Utilities.NuGetCaching\'
+                || die 'Failed to cache the package.'
         }
     }
 }
