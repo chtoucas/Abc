@@ -4,6 +4,29 @@
     <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
-  <Import Project="$(SourceRoot)Abc.Utilities\Shared.targets" />
+  <!-- Clear Abc.Utilities, then include only what's necessary -->
+  <PropertyGroup>
+    <PkgAbc_Utilities_ContentFiles>$(PkgAbc_Utilities_Sources)\contentFiles\</PkgAbc_Utilities_ContentFiles>
+    <PkgAbc_Utilities_CSharpFiles>$(PkgAbc_Utilities_ContentFiles)cs\any\</PkgAbc_Utilities_CSharpFiles>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="$(PkgAbc_Utilities_ContentFiles)**" />
+    <EmbeddedResource Remove="$(PkgAbc_Utilities_ContentFiles)**" />
+    <None Remove="$(PkgAbc_Utilities_ContentFiles)**" />
+
+    <Compile Include="$(PkgAbc_Utilities_CSharpFiles)Abc\Utilities\ExceptionFactory.cs">
+      <Link>Utilities\ExceptionFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(PkgAbc_Utilities_CSharpFiles)Abc\Utilities\MathOperations.cs">
+      <Link>Utilities\MathOperations.cs</Link>
+    </Compile>
+    <Compile Include="$(PkgAbc_Utilities_CSharpFiles)System\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha3" GeneratePathProperty="true" />
+  </ItemGroup>
 
 </Project>

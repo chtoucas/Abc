@@ -10,7 +10,7 @@
       When done, clean up NoWarn.
     -->
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-    <NoWarn>$(NoWarn);CA1000;CA1034;CA1303;CA1716</NoWarn>
+    <NoWarn>$(NoWarn);CA1000;CA1034;CA1303;CA1716;CA1812</NoWarn>
 
     <DefineConstants>$(DefineConstants);STRICT_HASKELL</DefineConstants>
     <!--<DefineConstants>$(DefineConstants);MONADS_VIA_MAP_MULTIPLY</DefineConstants>-->
@@ -23,29 +23,15 @@
     </None>
   </ItemGroup>
 
-  <!-- Clear Abc.Utilities, then include only what's necessary -->
-  <PropertyGroup>
-    <AbcUtilitiesContent>$(PkgAbc_Utilities_Sources)\contentFiles\</AbcUtilitiesContent>
-    <AbcUtilitiesPath>$(AbcUtilitiesContent)cs\any\Abc\</AbcUtilitiesPath>
-  </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="$(AbcUtilitiesContent)**" />
-    <!--
-    <EmbeddedResource Remove="$(AbcUtilitiesContent)**" />
-    <None Remove="$(AbcUtilitiesContent)**" />
-    -->
-
-    <Compile Include="$(AbcUtilitiesPath)Utilities\Require.cs">
-      <Link>Utilities\Require.cs</Link>
-    </Compile>
-    <Compile Include="$(AbcUtilitiesPath)Utilities\ValidatedNotNullAttribute.cs">
-      <Link>Utilities\ValidatedNotNullAttribute.cs</Link>
+    <Compile Update="$(PkgAbc_Utilities_Sources)\contentFiles\**">
+      <Visible>false</Visible>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Abc.Maybe" Version="1.0.2" />
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha2" GeneratePathProperty="true" />
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha3" GeneratePathProperty="true" />
   </ItemGroup>
 
 </Project>
