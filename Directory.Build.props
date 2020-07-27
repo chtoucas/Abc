@@ -55,10 +55,9 @@
       accordingly:
         <LocalNuGetSource>$(ArtifactsRoot)packages-feed\</LocalNuGetSource>
       TODO:
-      - clear cache.
-      - GeneratePathProperty = true in PackageReference
+      - remove Abc.Utilities.NuGetCaching, clean up make script.
       - RestoreIgnoreFailedSources for when "packages-cache" does not exist?
-      - publish to myget or GitHub?
+      - dotnet nuget push -s github XXX.nupkg => apikey warning.
     -->
     <PackageOutputPath>$(ArtifactsRoot)packages\</PackageOutputPath>
 

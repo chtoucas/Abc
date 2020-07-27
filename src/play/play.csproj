@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(SourceRoot)Abc.Utilities.Version.props" />
-
   <PropertyGroup>
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
     <OutputType>Exe</OutputType>
@@ -47,7 +45,7 @@
 
   <ItemGroup>
     <PackageReference Include="Abc.Maybe" Version="1.0.2" />
-    <PackageReference Include="Abc.Utilities.Sources" Version="$(AbcUtilitiesVersion)" GeneratePathProperty="true" />
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha2" GeneratePathProperty="true" />
   </ItemGroup>
 
 </Project>

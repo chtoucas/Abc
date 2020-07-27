@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(SourceRoot)Abc.Utilities.Version.props" />
-
   <PropertyGroup>
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
 
@@ -11,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abc.Utilities.Sources" Version="$(AbcUtilitiesVersion)" />
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha2" />
   </ItemGroup>
 
 </Project>

@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.rsp = Directory.Build.rsp
 		Directory.Build.targets = Directory.Build.targets
 		global.json = global.json
+		NuGet.Config = NuGet.Config
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc", "src\Abc\Abc.csproj", "{246C31A1-2F0B-4825-A3D6-8812D58A16D0}"
@@ -31,7 +32,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E1D42DE7-B953-46DC-9B21-637E018042E2}"
 	ProjectSection(SolutionItems) = preProject
 		src\Abc.Utilities.Sources.nuspec = src\Abc.Utilities.Sources.nuspec
-		src\Abc.Utilities.Version.props = src\Abc.Utilities.Version.props
 		src\AssemblyInfo.Common.cs = src\AssemblyInfo.Common.cs
 		src\Directory.Build.targets = src\Directory.Build.targets
 	EndProjectSection
@@ -39,7 +39,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{179F2796-B5A4-4D4E-955D-00231777E72D}"
 	ProjectSection(SolutionItems) = preProject
 		eng\asm.ps1 = eng\asm.ps1
-		eng\FrameworkRanges.targets = eng\FrameworkRanges.targets
 		eng\make-utilities.ps1 = eng\make-utilities.ps1
 		eng\reset.ps1 = eng\reset.ps1
 	EndProjectSection
