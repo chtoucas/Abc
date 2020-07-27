@@ -4,7 +4,11 @@
     <!-- Required elements -->
     <id>Abc.Utilities.Sources</id>
     <version>$version$</version>
-    <description>$description$</description>
+    <description><![CDATA[
+This is a source code only package providing various utilities for internal use.
+
+Optionally define a bunch of compiler symbols; see CompilerSymbols.targets.
+    ]]></description>
     <authors>$authors$</authors>
 
     <!-- Optional elements -->
@@ -14,13 +18,13 @@
     <releaseNotes>$releaseNotes$</releaseNotes>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <repository type="$repositoryType$" url="$repositoryUrl$" />
-    <tags>$tags$</tags>
-    <title>$title$</title>
+    <tags>Helpers Utilities</tags>
+    <title></title>
 
     <contentFiles>
       <!-- See https://docs.microsoft.com/en-us/nuget/reference/nuspec#using-the-contentfiles-element-for-content-files -->
       <files include="cs/any/**/*.cs" buildAction="Compile" flatten="false" />
-      <!--<files include="any/any/**/*.targets" buildAction="None" flatten="true" />-->
+      <files include="**/*.targets" buildAction="None" flatten="true" />
     </contentFiles>
   </metadata>
 
@@ -28,6 +32,6 @@
     <!-- See https://docs.microsoft.com/en-us/nuget/reference/nuspec#package-folder-structure -->
     <file src="System\**\*.cs" target="contentFiles\cs\any\System\" />
     <file src="Utilities\**\*.cs" target="contentFiles\cs\any\Abc\Utilities\" />
-    <!--<file src="..\..\XXX.targets" target="contentFiles\any\any\" />-->
+    <file src="CompilerSymbols.targets" target="contentFiles" />
   </files>
 </package>

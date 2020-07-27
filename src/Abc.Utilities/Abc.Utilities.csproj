@@ -11,15 +11,6 @@
     <IsPackable>true</IsPackable>
 
     <Version>0.1.0-alpha3</Version>
-    <Title></Title>
-
-    <PackageDescription>
-      <![CDATA[
-This is a source code only package providing various utilities for internal use.
-    ]]>
-    </PackageDescription>
-
-    <PackageTags>Helpers Utilities</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
@@ -54,14 +45,11 @@ This is a source code only package providing various utilities for internal use.
     <NuspecProperties>
       authors=$(Authors);
       copyright=$(Copyright);
-      description=$(PackageDescription);
       licenseExpression=$(PackageLicenseExpression);
       projectUrl=$(PackageProjectUrl);
       releaseNotes=$(PackageReleaseNotes);
       repositoryType=$(RepositoryType);
       repositoryUrl=$(RepositoryUrl);
-      tags=$(PackageTags);
-      title=$(Title);
       version=$(Version);
     </NuspecProperties>
   </PropertyGroup>
