@@ -37,32 +37,33 @@
     <Product>Abécédaire Library</Product>
     <Copyright>Copyright (c) 2019 Narvalo.Org</Copyright>
 
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/chtoucas/Abc/</RepositoryUrl>
-    <PackageReleaseNotes>See CHANGELOG in project root.</PackageReleaseNotes>
-
     <VersionPrefix>0.0.0</VersionPrefix>
     <VersionSuffix>DUMMY</VersionSuffix>
+
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/chtoucas/Abc/</RepositoryUrl>
 
     <IsPackable>false</IsPackable>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <PackageReleaseNotes>See CHANGELOG in project root.</PackageReleaseNotes>
 
     <!--
-      We don't publish a package locally, we use PackageOutputPath.
-      If the behaviour of nuget.exe changes (it has in the past), we will have
-      to re-enable "eng\make-utilities.ps1 push" and update "LocalNuGetSource"
+      We don't publish a package locally, we use PackageOutputPath directly.
+      If the behaviour of nuget.exe changed (it has in the past), we should
+      re-enable "eng\make-utilities.ps1 push" and update LocalNuGetSource
       accordingly:
-        <LocalNuGetSource>$(ArtifactsRoot)nuget-feed\</LocalNuGetSource>
+        <LocalNuGetSource>$(ArtifactsRoot)packages-feed\</LocalNuGetSource>
       TODO:
       - clear cache.
-      - RestoreIgnoreFailedSources for when "nuget-cache" does not exist?
+      - GeneratePathProperty = true in PackageReference
+      - RestoreIgnoreFailedSources for when "packages-cache" does not exist?
       - publish to myget or GitHub?
     -->
     <PackageOutputPath>$(ArtifactsRoot)packages\</PackageOutputPath>
 
     <LocalNuGetSource>$(PackageOutputPath)</LocalNuGetSource>
-    <LocalNuGetCache>$(ArtifactsRoot)nuget-cache\</LocalNuGetCache>
+    <LocalNuGetCache>$(ArtifactsRoot)packages-cache\</LocalNuGetCache>
 
     <RestoreAdditionalProjectSources>$(LocalNuGetSource)</RestoreAdditionalProjectSources>
     <RestoreAdditionalProjectFallbackFolders>$(LocalNuGetCache)</RestoreAdditionalProjectFallbackFolders>

@@ -80,7 +80,7 @@ try {
         'push' {
             Write-Host 'Disabled...' -ForegroundColor Red ; exit 1
 
-            $localSource = Join-Path $rootDir '__\nuget-feed\'
+            $localSource = Join-Path $rootDir '__\packages-feed\'
 
             $package = gci (Join-Path $rootDir '__\packages\Abc.Utilities.Sources.*.nupkg') `
                 | sort LastWriteTime | select -Last 1
