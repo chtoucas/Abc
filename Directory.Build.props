@@ -44,28 +44,10 @@
     <RepositoryUrl>https://github.com/chtoucas/Abc/</RepositoryUrl>
 
     <IsPackable>false</IsPackable>
+    <PackageOutputPath>$(ArtifactsRoot)packages\</PackageOutputPath>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <PackageReleaseNotes>See CHANGELOG in project root.</PackageReleaseNotes>
-
-    <!--
-      We don't publish a package locally, we use PackageOutputPath directly.
-      If the behaviour of nuget.exe changed (it has in the past), we should
-      re-enable "eng\make-utilities.ps1 push" and update LocalNuGetSource
-      accordingly:
-        <LocalNuGetSource>$(ArtifactsRoot)packages-feed\</LocalNuGetSource>
-      TODO:
-      - remove Abc.Utilities.NuGetCaching, clean up make script.
-      - RestoreIgnoreFailedSources for when "packages-cache" does not exist?
-      - dotnet nuget push -s github XXX.nupkg => apikey warning.
-    -->
-    <PackageOutputPath>$(ArtifactsRoot)packages\</PackageOutputPath>
-
-    <LocalNuGetSource>$(PackageOutputPath)</LocalNuGetSource>
-    <LocalNuGetCache>$(ArtifactsRoot)packages-cache\</LocalNuGetCache>
-
-    <RestoreAdditionalProjectSources>$(LocalNuGetSource)</RestoreAdditionalProjectSources>
-    <RestoreAdditionalProjectFallbackFolders>$(LocalNuGetCache)</RestoreAdditionalProjectFallbackFolders>
   </PropertyGroup>
 
   <!-- Release vs Debug -->
