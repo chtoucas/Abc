@@ -5,7 +5,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false, Position = 0)]
-    [ValidateSet('test', 'pack', 'push', 'cache')]
+    [ValidateSet('test', 'pack', 'push')]
                  [string] $Task = 'test',
 
     [Parameter(Mandatory = $false)]
@@ -78,8 +78,6 @@ try {
                 || die 'Failed to pack the project.'
         }
         'push' {
-            Write-Host 'Disabled...' -ForegroundColor Red ; exit 1
-
             $localSource = Join-Path $rootDir '__\packages-feed\'
 
             $package = gci (Join-Path $rootDir '__\packages\Abc.Utilities.Sources.*.nupkg') `
@@ -90,16 +88,16 @@ try {
                 exit 0
             }
 
-            Write-Host "Found package: ""$package""."
+            $answer = (Read-Host "Publish package: ""$package"".", "[y/N]")
+            if ($answer -eq "" -or $answer -eq "n") {
+                Write-Host "Discarded on your request." -ForegroundColor DarkCyan
+                exit 0
+            }
 
+            # TODO: apikey warning
             Write-Host "Pushing (local)..." -ForegroundColor Yellow
-            & dotnet nuget push $package -s $localSource --force-english-output
+            & dotnet nuget push $package -s github --force-english-output
                 || die 'Failed to push the package.'
-        }
-        'cache' {
-            Write-Host "Caching package..." -ForegroundColor Yellow
-            & dotnet restore 'eng\Abc.Utilities.NuGetCaching\'
-                || die 'Failed to cache the package.'
         }
     }
 }
