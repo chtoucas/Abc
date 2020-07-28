@@ -17,64 +17,23 @@ param(
     [Alias('f')] [string] $Framework
 )
 
-function die([string] $message) { Write-Error $message ;  exit 1 }
+. (Join-Path $PSScriptRoot 'common.ps1')
+
+New-Variable PROJECT_NAME 'Abc' -Scope Script -Option Constant
 
 try {
-    $rootDir = (Get-Item $PSScriptRoot).Parent.FullName
-    pushd $rootDir
-
-    $args = @("-c:$Configuration")
+    pushd $ROOT_DIR
 
     switch ($Task.ToLowerInvariant()) {
         'test' {
-            $proj     = 'test\Abc.Tests\'
-            $format   = 'opencover'
-            $outDir   = Join-Path $rootDir "__\tests-abc-$Configuration\".ToLowerInvariant()
-            $output   = Join-Path $outDir "$format.xml"
-            $rgInput  = Join-Path $outDir "$format.*.xml"
-            $rgOutput = Join-Path $outDir 'html'
-
-            if (Test-Path $rgOutput) {
-                Remove-Item $rgOutput -Force -Recurse
-            }
-
-            if ($Framework) { $args += "-f:$Framework" }
-
-            Write-Host "Building..." -ForegroundColor Yellow
-            # To use Coverlet with .NET Framework Full:
-            # - Force the portable pdb format.
-            # - Do not sign the assembly: System.IO.FileLoadException.
-            & dotnet build $proj $args `
-                /p:DebugType=portable `
-                /p:SignAssembly=false
-                || die 'Failed to build the test project.'
-
-            Write-Host "`nTesting..." -ForegroundColor Yellow
-            & dotnet test $proj $args `
-                --no-build `
-                /p:CollectCoverage=true `
-                /p:CoverletOutputFormat=$format `
-                /p:CoverletOutput=$output `
-                /p:Include="[Abc]*" `
-                /p:Exclude="[Abc]System.*"
-                || die 'Failed to run the test project.'
-
-            Write-Host "Reporting..." -ForegroundColor Yellow
-            & dotnet tool run reportgenerator `
-                -reporttypes:"Html" `
-                -reports:$rgInput `
-                -targetdir:$rgOutput
-                || die 'Failed to create the reports.'
+            Invoke-Coverlet `
+                -ProjectName   $PROJECT_NAME `
+                -Configuration $Configuration `
+                -Framework     $Framework
         }
         'pack' {
-            $proj = 'src\Abc\'
-
-            Write-Host "Building..." -ForegroundColor Yellow
-            & dotnet build $proj $args /p:ContinuousIntegrationBuild=true
-                || die 'Failed to build the project.'
-
-            Write-Host "`nPacking..." -ForegroundColor Yellow
-            & dotnet pack $proj $args --no-build
+            Write-Host "Packing ""$PROJECT_NAME""..." -ForegroundColor Yellow
+            & dotnet pack "src\$PROJECT_NAME\" -c $Configuration /p:ContinuousIntegrationBuild=true
                 || die 'Failed to pack the project.'
         }
     }
