@@ -3,6 +3,7 @@
 namespace Abc.Utilities
 {
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Runtime.CompilerServices;
 
@@ -11,7 +12,11 @@ namespace Abc.Utilities
     /// <para>This class cannot be inherited.</para>
     /// </summary>
     [DebuggerNonUserCode]
-    internal static partial class MathOperations { }
+    internal abstract partial class MathOperations
+    {
+        [ExcludeFromCodeCoverage]
+        protected MathOperations() { }
+    }
 
     // Euclidian division.
     //

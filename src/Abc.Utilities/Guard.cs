@@ -4,9 +4,17 @@ namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
-    internal static class Guard
+    [DebuggerNonUserCode]
+    internal abstract partial class Guard
+    {
+        [ExcludeFromCodeCoverage]
+        protected Guard() { }
+    }
+
+    internal partial class Guard
     {
         [Pure]
         [DebuggerStepThrough]

@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)Abc.Utilities.targets"
-          Condition=" '$(PkgAbc_Utilities_Sources)' != '' " />
+          Condition=" '$(TargetFramework)' != '' "/>
 
   <ItemGroup>
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha8" GeneratePathProperty="true" />
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha10" />
   </ItemGroup>
 
 </Project>

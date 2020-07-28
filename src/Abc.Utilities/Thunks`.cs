@@ -4,12 +4,21 @@ namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     [DebuggerNonUserCode]
-    internal static partial class Thunks { }
+    internal abstract partial class Thunks
+    {
+        [ExcludeFromCodeCoverage]
+        protected Thunks() { }
+    }
 
     [DebuggerNonUserCode]
-    internal static partial class Thunks<T> { }
+    internal abstract partial class Thunks<T>
+    {
+        [ExcludeFromCodeCoverage]
+        protected Thunks() { }
+    }
 
     internal partial class Thunks
     {

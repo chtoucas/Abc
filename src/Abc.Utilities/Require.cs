@@ -4,8 +4,16 @@ namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
-    internal static class Require
+    [DebuggerNonUserCode]
+    internal abstract partial class Require
+    {
+        [ExcludeFromCodeCoverage]
+        protected Require() { }
+    }
+
+    internal partial class Require
     {
         [DebuggerStepThrough]
         public static void NotNull<T>([ValidatedNotNull] T value, string paramName)

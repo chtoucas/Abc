@@ -6,6 +6,7 @@ namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -13,7 +14,11 @@ namespace Abc.Utilities
     /// <para>This class cannot be inherited.</para>
     /// </summary>
     [DebuggerNonUserCode]
-    internal static partial class ExceptionFactory { }
+    internal abstract partial class ExceptionFactory
+    {
+        [ExcludeFromCodeCoverage]
+        protected ExceptionFactory() { }
+    }
 
     internal partial class ExceptionFactory
     {

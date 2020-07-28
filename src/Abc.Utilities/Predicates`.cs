@@ -4,12 +4,21 @@ namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     [DebuggerNonUserCode]
-    internal static partial class Predicates { }
+    internal abstract partial class Predicates
+    {
+        [ExcludeFromCodeCoverage]
+        protected Predicates() { }
+    }
 
     [DebuggerNonUserCode]
-    internal static partial class Predicates<TSource> { }
+    internal abstract partial class Predicates<TSource>
+    {
+        [ExcludeFromCodeCoverage]
+        protected Predicates() { }
+    }
 
     internal partial class Predicates
     {

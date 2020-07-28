@@ -8,9 +8,9 @@
       net461;net452
     </TargetFrameworks>
 
+    <RootNamespace>Abc.Utilities</RootNamespace>
     <IsPackable>true</IsPackable>
-
-    <Version>0.1.0-alpha8</Version>
+    <Version>0.1.0-alpha10</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
