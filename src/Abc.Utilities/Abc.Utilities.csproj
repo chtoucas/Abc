@@ -10,7 +10,7 @@
 
     <IsPackable>true</IsPackable>
 
-    <Version>0.1.0-alpha3</Version>
+    <Version>0.1.0-alpha4</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">

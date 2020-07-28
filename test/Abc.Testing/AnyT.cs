@@ -3,7 +3,7 @@
 namespace Abc
 {
     // AnyT is a plain reference type; no special property whatsoever.
-    internal sealed class AnyT
+    public sealed class AnyT
     {
         public AnyT() { }
     }

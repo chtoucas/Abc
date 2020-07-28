@@ -95,6 +95,7 @@ try {
             }
 
             # TODO: apikey warning
+            # https://github.community/t/github-package-registry-not-compatible-with-dotnet-nuget-client/14392/6
             Write-Host "Pushing (local)..." -ForegroundColor Yellow
             & dotnet nuget push $package -s github --force-english-output
                 || die 'Failed to push the package.'

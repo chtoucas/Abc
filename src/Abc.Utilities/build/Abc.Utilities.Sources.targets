@@ -1,6 +1,6 @@
 <Project>
-
-  <PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(PkgAbc_Utilities_Sources_DefineConstants)' == 'true' ">
     <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
     <DefineConstants>$(DefineConstants);INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>
 

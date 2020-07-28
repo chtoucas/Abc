@@ -4,28 +4,27 @@
 
   <PropertyGroup>
     <!--
-      CA1034  Nested types should not be visible (Design)
-      CA1303  Do not pass literals as localized parameters (Globalization)
-      CA1707  Identifiers should not contain underscores (Naming)
-      CA2007  Consider calling ConfigureAwait on the awaited task (Reliability)
+      CA1034    Nested types should not be visible (Design)
+      CA1303    Do not pass literals as localized parameters (Globalization)
+      CA1707    Identifiers should not contain underscores (Naming)
+      CA2007    Consider calling ConfigureAwait on the awaited task (Reliability)
+      IDE0002   Simplify Member Access
     -->
-    <NoWarn>$(NoWarn);CA1034;CA1303;CA1707;CA2007</NoWarn>
+    <NoWarn>$(NoWarn);CA1034;CA1303;CA1707;CA2007;IDE0002</NoWarn>
 
-    <RunSettingsFilePath>$(MSBuildThisFileDirectory)test.runsettings</RunSettingsFilePath>
+    <!--<RunSettingsFilePath>$(MSBuildThisFileDirectory)test.runsettings</RunSettingsFilePath>-->
   </PropertyGroup>
 
   <ItemGroup>
     <SourceRoot Include="$(RepositoryRoot)" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
     <None Include="$(MSBuildThisFileDirectory)xunit.runner.json">
       <Visible>false</Visible>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
 
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="coverlet.msbuild" Version="2.9.0">
       <PrivateAssets>all</PrivateAssets>

@@ -1,0 +1,22 @@
+<Project>
+  
+  <!-- 
+    WARNING: Do not forget to set GeneratePathProperty to true,
+      <ItemGroup>
+        <PackageReference Include="Abc.Utilities.Sources" Version="X.Y.Z" GeneratePathProperty="true" />
+      </ItemGroup>
+    See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#generatepathproperty
+  -->
+  
+  <PropertyGroup>
+    <PkgAbc_Utilities_Sources_ContentFiles>$(PkgAbc_Utilities_Sources)\contentFiles\</PkgAbc_Utilities_Sources_ContentFiles>
+    <PkgAbc_Utilities_Sources_CSharpFiles>$(PkgAbc_Utilities_Sources_ContentFiles)cs\any\</PkgAbc_Utilities_Sources_CSharpFiles>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(PkgAbc_Utilities_Sources_Clear)' == 'true' ">
+    <Compile Remove="$(PkgAbc_Utilities_Sources_ContentFiles)**" />
+    <EmbeddedResource Remove="$(PkgAbc_Utilities_Sources_ContentFiles)**" />
+    <None Remove="$(PkgAbc_Utilities_Sources_ContentFiles)**" />
+  </ItemGroup>
+
+</Project>

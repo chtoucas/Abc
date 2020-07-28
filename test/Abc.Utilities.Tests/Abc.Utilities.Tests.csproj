@@ -2,15 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net461;net452</TargetFrameworks>
-    
-    <!-- 
-      IDE0002   Simplify Member Access
-    -->
-    <NoWarn>$(NoWarn);IDE0002</NoWarn>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Abc.Utilities</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Abc.Utilities\Abc.Utilities.csproj" />
+    <ProjectReference Include="..\Abc.Testing\Abc.Testing.csproj" />
   </ItemGroup>
 
 </Project>
