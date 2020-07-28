@@ -39,7 +39,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{179F2796-B5A4-4D4E-955D-00231777E72D}"
 	ProjectSection(SolutionItems) = preProject
 		eng\asm.ps1 = eng\asm.ps1
-		eng\make-utilities.ps1 = eng\make-utilities.ps1
+		eng\make-abc.ps1 = eng\make-abc.ps1
+		eng\make-abc.utilities.ps1 = eng\make-abc.utilities.ps1
 		eng\reset.ps1 = eng\reset.ps1
 	EndProjectSection
 EndProject

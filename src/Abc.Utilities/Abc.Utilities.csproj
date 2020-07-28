@@ -22,8 +22,7 @@
   <!-- Source code only package? -->
   <PropertyGroup>
     <!-- One can build a "binary" package but it is pretty useless as everything
-         is internal. NB: set ContinuousIntegrationBuild to true to produce
-         deterministic dll's. -->
+         is internal -->
     <SourceOnlyPackage Condition=" '$(SourceOnlyPackage)' == '' ">true</SourceOnlyPackage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(SourceOnlyPackage)' == 'true' ">

@@ -29,7 +29,7 @@ try {
         'test' {
             $proj     = 'test\Abc.Utilities.Tests\'
             $format   = 'opencover'
-            $outDir   = Join-Path $rootDir "__\tests-$Configuration\".ToLowerInvariant()
+            $outDir   = Join-Path $rootDir "__\tests-abc.utilities-$Configuration\".ToLowerInvariant()
             $output   = Join-Path $outDir "$format.xml"
             $rgInput  = Join-Path $outDir "$format.*.xml"
             $rgOutput = Join-Path $outDir 'html'
@@ -74,7 +74,7 @@ try {
                 || die 'Failed to build the project.'
 
             Write-Host "`nPacking..." -ForegroundColor Yellow
-            & dotnet pack $proj $args /p:NoBuild=true
+            & dotnet pack $proj $args --no-build
                 || die 'Failed to pack the project.'
         }
         'push' {
