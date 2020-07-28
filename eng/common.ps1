@@ -2,10 +2,10 @@
 
 #Requires -Version 7
 
-New-Variable ROOT_DIR (Get-Item $PSScriptRoot).Parent.FullName `
-    -Scope Script -Option Constant
-New-Variable ARTIFACTS_DIR (Join-Path $ROOT_DIR "__") `
-    -Scope Script -Option Constant
+New-Variable ROOT_DIR (Get-Item $PSScriptRoot).Parent.FullName -Scope Script -Option Constant
+New-Variable SRC_DIR       (Join-Path $ROOT_DIR 'src')  -Scope Script -Option Constant
+New-Variable TEST_DIR      (Join-Path $ROOT_DIR 'test') -Scope Script -Option Constant
+New-Variable ARTIFACTS_DIR (Join-Path $ROOT_DIR '__')   -Scope Script -Option Constant
 
 # ------------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ function Invoke-Coverlet {
         Remove-Item $rgOutput -Force -Recurse
     }
 
-    $project = Join-Path $ROOT_DIR "test\$projectName.Tests\"
+    $project = Join-Path $TEST_DIR "$projectName.Tests"
     $args    = @("-c:$Configuration")
     if ($framework) { $args += "-f:$Framework" }
 

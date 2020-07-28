@@ -32,7 +32,7 @@ try {
                 -Framework     $Framework
         }
         'pack' {
-            $project = "src\$PROJECT_NAME\"
+            $project = Join-Path $SRC_DIR $PROJECT_NAME
 
             Write-Host "Building ""$PROJECT_NAME""..." -ForegroundColor Yellow
             & dotnet build $project -c $Configuration /p:FatBuild=true
@@ -51,7 +51,7 @@ try {
                 exit 0
             }
 
-            $answer = (Read-Host "Publish package: ""$package"".", "[y/N]")
+            $answer = (Read-Host "Publish package: ""$package""?", "[y/N]")
             if ($answer -eq "" -or $answer -eq "n") {
                 Write-Host "Discarded on your request." -ForegroundColor DarkCyan
                 exit 0

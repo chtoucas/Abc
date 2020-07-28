@@ -20,3 +20,7 @@ Numerics:
 - Binary-coded decimal
   https://en.wikipedia.org/wiki/Binary-coded_decimal
 
+TODO Abc.Utilities.Sources
+- deterministic build
+- code coverage
+
