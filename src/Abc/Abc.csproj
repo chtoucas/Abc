@@ -2,36 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
-
-    <!--<PkgAbc_Utilities_Sources_Clear>true</PkgAbc_Utilities_Sources_Clear>-->
   </PropertyGroup>
 
-  <!--<Import Project="Abc.Utilities.Sources.props" />-->
-
-  <!-- Clear Abc.Utilities, then include only what's necessary -->
-  <PropertyGroup>
-    <PkgAbc_Utilities_Sources_ContentFiles>$(PkgAbc_Utilities_Sources)\contentFiles\</PkgAbc_Utilities_Sources_ContentFiles>
-    <PkgAbc_Utilities_Sources_CSharpFiles>$(PkgAbc_Utilities_Sources_ContentFiles)cs\any\</PkgAbc_Utilities_Sources_CSharpFiles>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <Compile Remove="$(PkgAbc_Utilities_Sources_ContentFiles)**" />
-    <EmbeddedResource Remove="$(PkgAbc_Utilities_Sources_ContentFiles)**" />
-    <None Remove="$(PkgAbc_Utilities_Sources_ContentFiles)**" />
-
-    <Compile Include="$(PkgAbc_Utilities_Sources_CSharpFiles)Abc\Utilities\ExceptionFactory.cs">
-      <Link>Utilities\ExceptionFactory.cs</Link>
-    </Compile>
-    <Compile Include="$(PkgAbc_Utilities_Sources_CSharpFiles)Abc\Utilities\MathOperations.cs">
-      <Link>Utilities\MathOperations.cs</Link>
-    </Compile>
-    <Compile Include="$(PkgAbc_Utilities_Sources_CSharpFiles)System\NullableAttributes.cs">
-      <Link>NullableAttributes.cs</Link>
-    </Compile>
-  </ItemGroup>
+  <Import Project="$(MSBuildThisFileDirectory)Abc.Utilities.targets"
+          Condition=" '$(PkgAbc_Utilities_Sources)' != '' " />
 
   <ItemGroup>
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha4" GeneratePathProperty="true" />
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha8" GeneratePathProperty="true" />
   </ItemGroup>
 
 </Project>

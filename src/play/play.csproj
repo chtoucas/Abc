@@ -23,7 +23,7 @@
     </None>
   </ItemGroup>
 
-  <!--<ItemGroup>
+  <!--<ItemGroup Condition=" '$(PkgAbc_Utilities_Sources)' != '' ">
     <Compile Update="$(PkgAbc_Utilities_Sources)\contentFiles\**">
       <Visible>false</Visible>
     </Compile>
@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="Abc.Maybe" Version="1.0.2" />
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha4" GeneratePathProperty="true" />
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha8" GeneratePathProperty="true" />
   </ItemGroup>
 
 </Project>
