@@ -64,8 +64,12 @@ namespace MyNamespace
 }
 ```
 
-## Code coverage
+## Miscs
+
+### NRTs
+
+### Code coverage
 
 Filter out "System" classes: [Abc.Utilities]System.*
 
-## Deterministic build
+### Deterministic build
