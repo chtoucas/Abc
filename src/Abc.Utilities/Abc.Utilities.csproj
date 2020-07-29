@@ -10,9 +10,9 @@
 
     <RootNamespace>Abc.Utilities</RootNamespace>
     <IsPackable>true</IsPackable>
-    <Version>0.1.0-alpha11</Version>
+    <Version>0.1.0-alpha13</Version>
 
-    <DefineConstants>$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
+    <DefineConstants Condition=" '$(DisableCodeCoverage)' != 'true' ">$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
