@@ -38,6 +38,9 @@ namespace Abc.Utilities
         // > For technical and historical reasons, the .NET toolset (compilers,
         // > NuGet client, MSBuild, …) is duplicated between Visual Studio and
         // > the .NET Core SDK.
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+        [ExcludeFromCodeCoverage]
+#endif
         [Conditional("DEBUG")]
         public static void NotNull<T>(T value) where T : class
             => Debug.Assert(value != null);

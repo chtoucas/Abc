@@ -16,6 +16,9 @@ namespace Abc.Utilities
 
     internal partial class Guard
     {
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+        [ExcludeFromCodeCoverage]
+#endif
         [Pure]
         [DebuggerStepThrough]
         public static T NotNull<T>(T? value, string paramName) where T : class

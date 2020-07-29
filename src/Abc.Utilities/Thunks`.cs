@@ -26,6 +26,9 @@ namespace Abc.Utilities
         /// Represents the action that does nothing.
         /// <para>This field is read-only.</para>
         /// </summary>
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+        [ExcludeFromCodeCoverage]
+#endif
         public static readonly Action Noop = () => { };
     }
 
@@ -35,12 +38,18 @@ namespace Abc.Utilities
         /// Represents the identity map.
         /// <para>This field is read-only.</para>
         /// </summary>
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+        [ExcludeFromCodeCoverage]
+#endif
         public static readonly Func<T, T> Ident = x => x;
 
         /// <summary>
         /// Represents the action that does nothing.
         /// <para>This field is read-only.</para>
         /// </summary>
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+        [ExcludeFromCodeCoverage]
+#endif
         public static readonly Action<T> Noop = _ => { };
     }
 }

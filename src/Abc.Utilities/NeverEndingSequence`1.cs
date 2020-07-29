@@ -9,6 +9,9 @@ namespace Abc.Utilities
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+    [ExcludeFromCodeCoverage]
+#endif
     [DebuggerNonUserCode]
     [DebuggerDisplay("Count = ∞")]
     internal sealed class NeverEndingSequence<T> : IEnumerable<T>, IEnumerator<T>

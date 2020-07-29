@@ -15,6 +15,9 @@ namespace Abc.Utilities
 
     internal partial class Require
     {
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+        [ExcludeFromCodeCoverage]
+#endif
         [DebuggerStepThrough]
         public static void NotNull<T>([ValidatedNotNull] T value, string paramName)
             where T : class
