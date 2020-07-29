@@ -25,6 +25,7 @@
 
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
 
+    <!-- REVIEW: only enable when IsPackable = true? see also RestoreLockedMode below -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
     <SignAssembly>true</SignAssembly>
@@ -52,11 +53,6 @@
     <PackageReleaseNotes>See CHANGELOG in project root.</PackageReleaseNotes>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(ContinuousIntegrationBuild)' == 'true' ">
-    <RestoreLockedMode>true</RestoreLockedMode>
-    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-  </PropertyGroup>
-
   <!-- Release vs Debug -->
   <Choose>
     <When Condition=" $(Configuration) == 'Release' ">
@@ -77,5 +73,22 @@
       </PropertyGroup>
     </Otherwise>
   </Choose>
+
+  <!-- Source roots -->
+  <ItemGroup>
+    <!-- 
+      Only necessary when ContinuousIntegrationBuild = true
+      and we don't enable Source Link:
+        "SourceRoot items must include at least one top-level (not nested) item
+         when DeterministicSourcePaths is true"
+    -->
+    <SourceRoot Include="$(RepositoryRoot)" />
+  </ItemGroup>
+
+  <!-- Continuous integration -->
+  <PropertyGroup Condition=" '$(ContinuousIntegrationBuild)' == 'true' ">
+    <RestoreLockedMode>true</RestoreLockedMode>
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+  </PropertyGroup>
 
 </Project>

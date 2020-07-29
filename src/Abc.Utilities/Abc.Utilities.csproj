@@ -10,7 +10,10 @@
 
     <RootNamespace>Abc.Utilities</RootNamespace>
     <IsPackable>true</IsPackable>
-    <Version>0.1.0-alpha10</Version>
+    <Version>0.1.0-alpha11</Version>
+    
+    <!-- One can build a package for the binaries but it's pretty useless -->
+    <SourceOnlyPackage Condition=" '$(SourceOnlyPackage)' == '' ">true</SourceOnlyPackage>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
@@ -20,11 +23,6 @@
   </PropertyGroup>
 
   <!-- Source code only package? -->
-  <PropertyGroup>
-    <!-- One can build a "binary" package but it is pretty useless as everything
-         is internal -->
-    <SourceOnlyPackage Condition=" '$(SourceOnlyPackage)' == '' ">true</SourceOnlyPackage>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(SourceOnlyPackage)' == 'true' ">
     <!--
       Searching google gives me

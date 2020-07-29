@@ -3,6 +3,8 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
 
   <PropertyGroup>
+    <IsTestProject Condition=" '$(IsTestProject)' == '' ">false</IsTestProject>
+    
     <!--
       CA1034    Nested types should not be visible (Design)
       CA1303    Do not pass literals as localized parameters (Globalization)
@@ -14,10 +16,6 @@
 
     <!--<RunSettingsFilePath>$(MSBuildThisFileDirectory)test.runsettings</RunSettingsFilePath>-->
   </PropertyGroup>
-
-  <ItemGroup>
-    <SourceRoot Include="$(RepositoryRoot)" />
-  </ItemGroup>
 
   <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
     <None Include="$(MSBuildThisFileDirectory)xunit.runner.json">

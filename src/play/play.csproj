@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="Abc.Maybe" Version="1.0.2" />
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha10" />
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha11" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

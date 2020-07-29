@@ -20,7 +20,6 @@ Numerics:
 - Binary-coded decimal
   https://en.wikipedia.org/wiki/Binary-coded_decimal
 
-TODO Abc.Utilities.Sources
-- deterministic build
-- code coverage
-
+TODO:
+- code coverage for a consumer library of a source only package.
+- review locking dependencies (CI).

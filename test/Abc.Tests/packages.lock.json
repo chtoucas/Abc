@@ -65,11 +65,6 @@
         "resolved": "2.4.2",
         "contentHash": "Trt9multph2KE3U0p9oBt0k4Fq6lUv4btUcONaQEeuFnMCak2k/b7PAArbLtMFW7HO1jxlBHUgIPKEqci3Y1dg=="
       },
-      "Abc.Utilities.Sources": {
-        "type": "Transitive",
-        "resolved": "0.1.0-alpha10",
-        "contentHash": "U9NefyUTn87KnKdtnEjVbbNquYMZPjBTf0oWml7WyUg1O87TeI+COxq8KT7b59gJl3FQb+jksTgoYOqQGRb5Pw=="
-      },
       "Microsoft.CodeAnalysis.VersionCheckAnalyzer": {
         "type": "Transitive",
         "resolved": "3.0.0",
@@ -641,10 +636,7 @@
         }
       },
       "abc": {
-        "type": "Project",
-        "dependencies": {
-          "Abc.Utilities.Sources": "0.1.0-alpha10"
-        }
+        "type": "Project"
       },
       "abc.testing": {
         "type": "Project",
@@ -705,11 +697,6 @@
         "requested": "[2.4.2, )",
         "resolved": "2.4.2",
         "contentHash": "Trt9multph2KE3U0p9oBt0k4Fq6lUv4btUcONaQEeuFnMCak2k/b7PAArbLtMFW7HO1jxlBHUgIPKEqci3Y1dg=="
-      },
-      "Abc.Utilities.Sources": {
-        "type": "Transitive",
-        "resolved": "0.1.0-alpha10",
-        "contentHash": "U9NefyUTn87KnKdtnEjVbbNquYMZPjBTf0oWml7WyUg1O87TeI+COxq8KT7b59gJl3FQb+jksTgoYOqQGRb5Pw=="
       },
       "Microsoft.CodeAnalysis.VersionCheckAnalyzer": {
         "type": "Transitive",
@@ -1785,10 +1772,7 @@
         }
       },
       "abc": {
-        "type": "Project",
-        "dependencies": {
-          "Abc.Utilities.Sources": "0.1.0-alpha10"
-        }
+        "type": "Project"
       },
       "abc.testing": {
         "type": "Project",
