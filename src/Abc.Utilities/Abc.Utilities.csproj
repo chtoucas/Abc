@@ -5,7 +5,7 @@
 
     <RootNamespace>Abc.Utilities</RootNamespace>
     <IsPackable>true</IsPackable>
-    <Version>0.1.0-alpha14</Version>
+    <Version>0.1.0-alpha15</Version>
 
     <DefineConstants Condition=" '$(DisableCodeCoverage)' != 'true' ">$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
   </PropertyGroup>
@@ -17,7 +17,8 @@
       net461;net452
     </TargetFrameworks>
 
-    <!-- Even if we don't want to use a lock file (error NU1505) -->
+    <!-- We don't want to use the default lock file and, even if we don't intend to use one, 
+         we must specify it (error NU1505) -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <NuGetLockFilePath>$(MSBuildThisFileDirectory)packages.fat.lock.json</NuGetLockFilePath>
   </PropertyGroup>
