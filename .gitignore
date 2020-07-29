@@ -363,6 +363,8 @@ FodyWeavers.xsd
 
 ## Local modifications #########################################################
 
+nuget.exe
+
 __/**
 
 !Directory.Build.rsp

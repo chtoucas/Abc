@@ -29,7 +29,7 @@ TODO:
 - Abc.Utilities:
   * code coverage for a consumer library of a source only package (should be OK).
   * nuspec: owners (for myget), add readme.txt.
-  * license info.
+  * license info. release notes, changelog
   * .g.cs extension?
   * disable warnings?
     #if ABC_UTILITIES_DISABLE_WARNINGS
