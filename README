@@ -6,7 +6,7 @@ Narvalo.NET (https://github.com/chtoucas/Narvalo.NET)
 - simple money type
 - BIC and IBAN
 - roman numerals
-- string builder & math extensions
+- string builder
 
 Numerics:
 - port of hypercalc to .NET (WinUI)

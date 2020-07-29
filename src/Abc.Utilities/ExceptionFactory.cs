@@ -22,15 +22,24 @@ namespace Abc.Utilities
 
     internal partial class ExceptionFactory
     {
-        public static readonly InvalidOperationException ControlFlow =
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+        [ExcludeFromCodeCoverage]
+#endif
+        public static InvalidOperationException ControlFlow =>
             new InvalidOperationException(
                 "The flow of execution just reached a section of the code that should have been unreachable."
                 + $"{Environment.NewLine}Most certainly signals a coding error. Please report.");
 
-        public static readonly InvalidOperationException EmptySequence =
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+        [ExcludeFromCodeCoverage]
+#endif
+        public static InvalidOperationException EmptySequence =>
             new InvalidOperationException("The sequence was empty.");
 
-        public static readonly NotSupportedException ReadOnlyCollection =
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+        [ExcludeFromCodeCoverage]
+#endif
+        public static NotSupportedException ReadOnlyCollection =>
             new NotSupportedException("The collection is read-only.");
     }
 

@@ -43,7 +43,7 @@ namespace System
 namespace System.Diagnostics.CodeAnalysis
 {
     [AttributeUsage(
-        AttributeTargets.Assembly 
+        AttributeTargets.Assembly
         | AttributeTargets.Class
         | AttributeTargets.Constructor
         | AttributeTargets.Event
