@@ -11,9 +11,8 @@
     <RootNamespace>Abc.Utilities</RootNamespace>
     <IsPackable>true</IsPackable>
     <Version>0.1.0-alpha11</Version>
-    
-    <!-- One can build a package for the binaries but it's pretty useless -->
-    <SourceOnlyPackage Condition=" '$(SourceOnlyPackage)' == '' ">true</SourceOnlyPackage>
+
+    <DefineConstants>$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
@@ -22,8 +21,8 @@
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
-  <!-- Source code only package? -->
-  <PropertyGroup Condition=" '$(SourceOnlyPackage)' == 'true' ">
+  <!-- Source code only package -->
+  <PropertyGroup>
     <!--
       Searching google gives me
         https://medium.com/@attilah/source-code-only-nuget-packages-8f34a8fb4738

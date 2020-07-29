@@ -21,5 +21,17 @@ Numerics:
   https://en.wikipedia.org/wiki/Binary-coded_decimal
 
 TODO:
-- code coverage for a consumer library of a source only package.
-- review locking dependencies (CI).
+- Do not commit the lock file for Abc.Testing? see the comments in.
+  https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository -->
+- Abc.Utilities:
+  * code coverage for a consumer library of a source only package.
+  * nuspec: owners (for myget), add readme.txt.
+  * license info.
+  * .g.cs extension? add #nullable enable
+  * disable warnings?
+    #if ABC_UTILITIES_DISABLE_WARNINGS
+    #pragma warning disable
+    #endif
+- github packages require auth, maybe move to myget.
+- set up CI.
+- use Nerdbank.GitVersioning?

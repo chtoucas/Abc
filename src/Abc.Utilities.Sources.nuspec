@@ -21,7 +21,7 @@ This is a source code only package providing various utilities used internally b
     <repository type="$repositoryType$" url="$repositoryUrl$" />
     <tags>Helpers Utilities</tags>
     <title></title>
-    
+
     <contentFiles>
       <!--
         The files within the directory "any\any\" won't be linked. Indeed,

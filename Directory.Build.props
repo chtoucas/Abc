@@ -25,9 +25,6 @@
 
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
 
-    <!-- REVIEW: only enable when IsPackable = true? see also RestoreLockedMode below -->
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)Abc.snk</AssemblyOriginatorKeyFile>
 
@@ -35,11 +32,12 @@
     <DefineConstants>$(DefineConstants);INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>
     <DefineConstants Condition=" '$(SignAssembly)' == 'true' ">$(DefineConstants);SIGNED_ASSEMBLY</DefineConstants>
 
-    <Authors>Chtoucas</Authors>
+    <Authors>chtoucas</Authors>
     <Company>Narvalo.Org</Company>
     <Product>Abécédaire Library</Product>
     <Copyright>Copyright (c) 2019 Narvalo.Org</Copyright>
 
+    <!-- Fake version -->
     <VersionPrefix>0.0.0</VersionPrefix>
     <VersionSuffix>DUMMY</VersionSuffix>
 
@@ -74,7 +72,10 @@
     </Otherwise>
   </Choose>
 
-  <!-- Source roots -->
+  <!-- Fully deterministic/reproducible/repeatable builds -->
+  <PropertyGroup>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
   <ItemGroup>
     <!-- 
       Only necessary when ContinuousIntegrationBuild = true
@@ -88,7 +89,7 @@
   <!-- Continuous integration -->
   <PropertyGroup Condition=" '$(ContinuousIntegrationBuild)' == 'true' ">
     <RestoreLockedMode>true</RestoreLockedMode>
-    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+    <!--<DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>-->
   </PropertyGroup>
 
 </Project>
