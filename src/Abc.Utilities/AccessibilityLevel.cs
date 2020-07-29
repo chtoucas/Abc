@@ -8,9 +8,6 @@ namespace Abc.Utilities
     /// <summary>
     /// Specify the accessibility level of a member or a type.
     /// </summary>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-#endif
     internal enum AccessibilityLevel
     {
         /// <summary>

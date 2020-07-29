@@ -11,7 +11,7 @@ namespace Abc.Utilities
     /// <para>This class cannot be inherited.</para>
     /// </summary>
 #if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
     [DebuggerNonUserCode]
     [AttributeUsage(
