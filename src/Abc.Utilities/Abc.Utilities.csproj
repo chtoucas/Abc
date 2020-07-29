@@ -2,17 +2,24 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1;net461</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(FatBuild)' == 'true' ">
+
+    <RootNamespace>Abc.Utilities</RootNamespace>
+    <IsPackable>true</IsPackable>
+    <Version>0.1.0-alpha14</Version>
+
+    <DefineConstants Condition=" '$(DisableCodeCoverage)' != 'true' ">$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(FatBuild)' == 'true' ">
+    <TargetFrameworks>
       netstandard2.1;netstandard2.0;netstandard1.1;
       netcoreapp3.1;netcoreapp2.1;
       net461;net452
     </TargetFrameworks>
 
-    <RootNamespace>Abc.Utilities</RootNamespace>
-    <IsPackable>true</IsPackable>
-    <Version>0.1.0-alpha13</Version>
-
-    <DefineConstants Condition=" '$(DisableCodeCoverage)' != 'true' ">$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
+    <!-- Even if we don't want to use a lock file (error NU1505) -->
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    <NuGetLockFilePath>$(MSBuildThisFileDirectory)packages.fat.lock.json</NuGetLockFilePath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
