@@ -2,38 +2,23 @@
 
 namespace Abc.Utilities
 {
-    using System;
-
     using Xunit;
 
+    using Assert = AssertEx;
     using EF = ExceptionFactory;
 
-    public static partial class ExceptionFactoryTests
-    {
-        private static void CheckException<T>(T ex) where T : Exception
-        {
-            Assert.IsType<T>(ex);
-            Assert.NotNull(ex);
-            Assert.NotNull(ex.Message);
-        }
-
-        private static void CheckArgumentException(ArgumentException ex)
-        {
-            Assert.NotNull(ex);
-            Assert.NotNull(ex.Message);
-            Assert.Equal("paramName", ex.ParamName);
-        }
-    }
+    public static partial class ExceptionFactoryTests { }
 
     public partial class ExceptionFactoryTests
     {
-        [Fact] public static void ControlFlow() => CheckException(EF.ControlFlow);
+        [Fact] public static void ControlFlow() => Assert.CheckException(EF.ControlFlow);
 
-        [Fact] public static void EmptySequence() => CheckException(EF.EmptySequence);
+        [Fact] public static void EmptySequence() => Assert.CheckException(EF.EmptySequence);
 
-        [Fact] public static void ReadOnlyCollection() => CheckException(EF.ReadOnlyCollection);
+        [Fact] public static void ReadOnlyCollection() => Assert.CheckException(EF.ReadOnlyCollection);
     }
 
+    // Argument exceptions.
     public partial class ExceptionFactoryTests
     {
         [Fact]
@@ -42,7 +27,7 @@ namespace Abc.Utilities
             // Act
             var ex = EF.InvalidType("paramName", typeof(string), 1);
             // Assert
-            CheckArgumentException(ex);
+            Assert.CheckArgumentException(ex);
         }
     }
 }

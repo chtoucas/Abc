@@ -30,6 +30,23 @@ namespace Abc
         /// Fails with a user message.
         /// </summary>
         public static void Failure(string userMessage) => True(false, userMessage);
+
+        // FIXME: better names.
+        public static void CheckException<T>(T ex) where T : Exception
+        {
+            if (ex is null) { throw new Anexn(nameof(ex)); }
+
+            IsType<T>(ex);
+            NotNull(ex.Message);
+        }
+
+        public static void CheckArgumentException(ArgumentException ex)
+        {
+            if (ex is null) { throw new Anexn(nameof(ex)); }
+
+            NotNull(ex.Message);
+            Equal("paramName", ex.ParamName);
+        }
     }
 
     public partial class AssertEx
