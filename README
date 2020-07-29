@@ -28,13 +28,12 @@ TODO:
   https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository -->
 - Abc.Utilities:
   * code coverage for a consumer library of a source only package (should be OK).
-  * nuspec: owners (for myget), add readme.txt.
-  * license info. release notes, changelog
+  * README.md
+  * license info, release notes (changelog).
   * .g.cs extension?
   * disable warnings?
     #if ABC_UTILITIES_DISABLE_WARNINGS
     #pragma warning disable
     #endif
-- github packages require auth, maybe move to myget.
-- set up CI.
+- set up CI / add badges (MyGet)
 - use Nerdbank.GitVersioning?

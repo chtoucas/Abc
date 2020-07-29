@@ -1,8 +1,11 @@
 
-## Automatic MSBuild properties
+## MSBuild properties
 
 - `PkgAbc_Utilities_Sources__Content`
 - `PkgAbc_Utilities_Sources__ContentCSharp`
+
+Optional properties.
+- `PkgAbc_Utilities_Sources_DefineConstants`
 
 There is also `PkgAbc_Utilities_Sources` if GeneratePathProperty = true.
 
