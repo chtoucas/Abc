@@ -1,5 +1,7 @@
 ﻿// See LICENSE in the project root for license information.
 
+#nullable enable
+
 namespace Abc.Utilities
 {
     // XML comments are copied from the following reference:

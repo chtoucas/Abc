@@ -1,5 +1,7 @@
 ﻿// See LICENSE.txt in the project root for license information.
 
+#nullable enable
+
 namespace Abc.Utilities
 {
     using System;

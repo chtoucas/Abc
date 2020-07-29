@@ -1,5 +1,7 @@
 ﻿// See LICENSE in the project root for license information.
 
+#nullable enable
+
 #pragma warning disable CA1303 // Do not pass literals as localized parameters.
 
 namespace Abc.Utilities
