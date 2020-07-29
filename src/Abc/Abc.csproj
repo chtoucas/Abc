@@ -5,10 +5,20 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)Abc.Utilities.targets" Condition=" '$(TargetFramework)' != '' " />
+  <!--
+    Only import Abc.Utilities.targets when Abc.Utilities.Sources.props
+    has been fully loaded, something we can detect by checking that the
+    prop  PkgAbc_Utilities_Sources__Content is not empty. Otherwise, the
+    Import within Abc.Utilities.targets will fail.
+  -->
+  <Import Project="$(MSBuildThisFileDirectory)Abc.Utilities.targets"
+          Condition=" '$(PkgAbc_Utilities_Sources__Content)' != '' " />
 
   <ItemGroup>
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha13" PrivateAssets="All" />
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha15">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
