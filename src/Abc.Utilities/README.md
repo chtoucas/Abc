@@ -5,7 +5,7 @@
 - `PkgAbc_Utilities_Sources__ContentCSharp`
 
 Optional properties.
-- `PkgAbc_Utilities_Sources_DefineConstants`
+- `PkgAbc_Utilities_Sources__EnableCodeCoverage`
 
 There is also `PkgAbc_Utilities_Sources` if GeneratePathProperty = true.
 
@@ -69,10 +69,15 @@ namespace MyNamespace
 
 ## Miscs
 
+All classes carry are marked with the attribute `DebuggerNonUserCode`.
+All files start with `#nullable enable`.
+Unless `ABC_UTILITIES_ENABLE_CODE_COVERAGE` is defined, all codes are
+marked with the attribute `ExcludeFromCodeCoverage`.
+
 ### NRTs
 
 ### Code coverage
 
-Filter out "System" classes: [Abc.Utilities]System.*
+Filter out "System" classes: `[Abc.Utilities]System.*`.
 
 ### Deterministic build
