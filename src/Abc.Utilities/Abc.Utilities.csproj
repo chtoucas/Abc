@@ -5,10 +5,10 @@
     <RootNamespace>Abc.Utilities</RootNamespace>
     <IsPackable>true</IsPackable>
 
-    <Version>0.1.0-alpha15</Version>
+    <Version>0.1.0-alpha16</Version>
 
-    <!-- Allow to build the project as seen by a customer of the package -->
-    <DefineConstants Condition=" '$(DisableCodeCoverage)' != 'true' ">$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
+    <!-- Build the project as seen by a customer of the package -->
+    <DefineConstants Condition=" '$(Retail)' == 'true' ">$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(FatBuild)' == 'true' ">

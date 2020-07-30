@@ -14,10 +14,18 @@
     <ArtifactsRoot>$(RepositoryRoot)__\</ArtifactsRoot>
   </PropertyGroup>
 
+  <!-- Local settings -->
+  <PropertyGroup>
+    <Retail Condition=" '$(Retail)' == '' ">false</Retail>
+    <!-- Keep "DefaultTargetFramework" in sync with "global.json" -->
+    <DefaultTargetFramework>netcoreapp3.1</DefaultTargetFramework>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Retail)' == 'true' ">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
   <!-- Common settings -->
   <PropertyGroup>
-    <DefaultTargetFramework>netcoreapp3.1</DefaultTargetFramework>
-
     <RootNamespace>Abc</RootNamespace>
 
     <LangVersion>latest</LangVersion>

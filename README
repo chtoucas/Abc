@@ -26,14 +26,12 @@ FIXME:
 TODO:
 - Do not commit the lock file for Abc.Testing? see the comments in.
   https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository -->
-- Option Retail.
 - Abc.Utilities:
   * README.md.
-  * option DisableCodeCoverage, replace by Retail?
   * some classes could be made public.
   * code coverage for a consumer library of a source only package,
     static readonly fields.
-  * .g.cs extension?
+  * use extension .g.cs?
   * disable warnings?
     #if ABC_UTILITIES_DISABLE_WARNINGS
     #pragma warning disable

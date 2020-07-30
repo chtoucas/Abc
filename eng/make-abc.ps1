@@ -35,7 +35,7 @@ try {
             $project = Join-Path $SRC_DIR $PROJECT_NAME
 
             Write-Host "Packing ""$PROJECT_NAME""..." -ForegroundColor Yellow
-            & dotnet pack $project -c $Configuration /p:ContinuousIntegrationBuild=true
+            & dotnet pack $project -c $Configuration /p:Retail=true
                 || die 'Failed to pack the project.'
         }
     }

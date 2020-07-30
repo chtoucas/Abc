@@ -35,7 +35,7 @@ try {
             $project = Join-Path $SRC_DIR $PROJECT_NAME
 
             Write-Host "Building ""$PROJECT_NAME""..." -ForegroundColor Yellow
-            & dotnet build $project -c $Configuration /p:FatBuild=true /p:DisableCodeCoverage=true
+            & dotnet build $project -c $Configuration /p:FatBuild=true /p:Retail=true
                 || die 'Failed to build the project.'
 
             Write-Host "`nPacking ""$PROJECT_NAME""..." -ForegroundColor Yellow

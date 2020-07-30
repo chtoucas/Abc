@@ -4,9 +4,9 @@
     ".NETStandard,Version=v2.0": {
       "Abc.Utilities.Sources": {
         "type": "Direct",
-        "requested": "[0.1.0-alpha15, )",
-        "resolved": "0.1.0-alpha15",
-        "contentHash": "T7tnSVHyqZfGQM0QKGinQzbh2Fpqa3/LrMZ4QZaK2N25qcp508SzZvmuOoU/XOXOTETDGodYdotUl5gJvHnIug=="
+        "requested": "[0.1.0-alpha16, )",
+        "resolved": "0.1.0-alpha16",
+        "contentHash": "4sXqupKr0IhPgY74bqGhqL+wi5zxpXo00goGFj2MRyp8UeayX8dkkaxfEZPCPof5ILQ41bdw50bDgiefBfNbqg=="
       },
       "Microsoft.CodeAnalysis.FxCopAnalyzers": {
         "type": "Direct",
@@ -84,9 +84,9 @@
     ".NETStandard,Version=v2.1": {
       "Abc.Utilities.Sources": {
         "type": "Direct",
-        "requested": "[0.1.0-alpha15, )",
-        "resolved": "0.1.0-alpha15",
-        "contentHash": "T7tnSVHyqZfGQM0QKGinQzbh2Fpqa3/LrMZ4QZaK2N25qcp508SzZvmuOoU/XOXOTETDGodYdotUl5gJvHnIug=="
+        "requested": "[0.1.0-alpha16, )",
+        "resolved": "0.1.0-alpha16",
+        "contentHash": "4sXqupKr0IhPgY74bqGhqL+wi5zxpXo00goGFj2MRyp8UeayX8dkkaxfEZPCPof5ILQ41bdw50bDgiefBfNbqg=="
       },
       "Microsoft.CodeAnalysis.FxCopAnalyzers": {
         "type": "Direct",
