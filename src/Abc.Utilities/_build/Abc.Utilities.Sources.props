@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PkgAbc_Utilities_Sources__Content>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\contentFiles\'))</PkgAbc_Utilities_Sources__Content>
-    <PkgAbc_Utilities_Sources__ContentCSharp>$(PkgAbc_Utilities_Sources__Content)cs\any\abc.utilities\</PkgAbc_Utilities_Sources__ContentCSharp>
+    <PkgAbc_Utilities_Sources__ContentCSharp>$(PkgAbc_Utilities_Sources__Content)cs\netstandard1.1\abc.utilities\</PkgAbc_Utilities_Sources__ContentCSharp>
   </PropertyGroup>
 
   <ItemGroup>
