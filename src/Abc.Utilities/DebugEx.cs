@@ -45,7 +45,7 @@ namespace Abc.Utilities
         [ExcludeFromCodeCoverage]
 #endif
         [Conditional("DEBUG")]
-        public static void NotNull<T>(T value) where T : class
-            => Debug.Assert(value != null);
+        public static void NotNull<T>(T value) where T : class => 
+            Debug.Assert(value != null);
     }
 }
