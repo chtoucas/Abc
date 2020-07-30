@@ -35,7 +35,7 @@
     <Authors>chtoucas</Authors>
     <Company>Narvalo.Org</Company>
     <Product>Abécédaire Library</Product>
-    <Copyright>Copyright (c) 2019 Narvalo.Org</Copyright>
+    <Copyright>Copyright (c) 2019 Narvalo.Org. All rights reserved.</Copyright>
 
     <!-- Fake version -->
     <VersionPrefix>0.0.0</VersionPrefix>
