@@ -42,12 +42,6 @@
           "NETStandard.Library": "2.0.3"
         }
       },
-      "Microsoft.NETFramework.ReferenceAssemblies": {
-        "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "7D2TMufjGiowmt0E941kVoTIS+GTNzaPopuzM1/1LSaJAdJdBrVP0SkZW7AgDd0a2U1DjsIeaKG1wxGVBNLDMw=="
-      },
       "xunit": {
         "type": "Direct",
         "requested": "[2.4.1, )",
@@ -674,12 +668,6 @@
           "Microsoft.CodeCoverage": "16.6.1",
           "Microsoft.TestPlatform.TestHost": "16.6.1"
         }
-      },
-      "Microsoft.NETFramework.ReferenceAssemblies": {
-        "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "7D2TMufjGiowmt0E941kVoTIS+GTNzaPopuzM1/1LSaJAdJdBrVP0SkZW7AgDd0a2U1DjsIeaKG1wxGVBNLDMw=="
       },
       "xunit": {
         "type": "Direct",
