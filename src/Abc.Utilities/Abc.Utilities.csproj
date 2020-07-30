@@ -8,7 +8,7 @@
     <Version>0.1.0-alpha16</Version>
 
     <!-- Build the project as seen by a customer of the package -->
-    <DefineConstants Condition=" '$(Retail)' == 'true' ">$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
+    <DefineConstants Condition=" '$(Retail)' != 'true' ">$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(FatBuild)' == 'true' ">
