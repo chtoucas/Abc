@@ -48,7 +48,7 @@
     <PackageOutputPath>$(ArtifactsRoot)packages\</PackageOutputPath>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
-    <PackageReleaseNotes>See CHANGELOG in project root.</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Release vs Debug -->
@@ -79,7 +79,7 @@
   <ItemGroup>
     <!-- 
       Only necessary when ContinuousIntegrationBuild = true
-      and we don't enable Source Link:
+      and when Source Link is not enabled (test projects for instance):
         "SourceRoot items must include at least one top-level (not nested) item
          when DeterministicSourcePaths is true"
     -->

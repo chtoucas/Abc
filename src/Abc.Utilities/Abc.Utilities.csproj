@@ -32,6 +32,8 @@
 
   <!-- Source code only package -->
   <PropertyGroup>
+    <PackageReleaseNotes>See $(RepositoryUrl)blob/master/src/Abc.Utilities/README.md#changelog.</PackageReleaseNotes>
+
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
     <NuspecFile>$(SourceRoot)Abc.Utilities.Sources.nuspec</NuspecFile>

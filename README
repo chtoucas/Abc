@@ -28,19 +28,18 @@ TODO:
   https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository -->
 - Option Retail.
 - Abc.Utilities:
-  * option DisableCodeCoverage.
-  * some classes could be made public
+  * README.md.
+  * option DisableCodeCoverage, replace by Retail?
+  * some classes could be made public.
   * code coverage for a consumer library of a source only package,
     static readonly fields.
-  * README.md, add changelog.
-  * release notes (changelog).
   * .g.cs extension?
   * disable warnings?
     #if ABC_UTILITIES_DISABLE_WARNINGS
     #pragma warning disable
     #endif
 - editorconfig
-- set up CI / add badges (MyGet)
+- set up CI
 - use Nerdbank.GitVersioning?
 References:
 - https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec

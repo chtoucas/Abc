@@ -1,5 +1,15 @@
+Abc.Utilities
+=============
 
-## MSBuild properties
+[![MyGet](https://img.shields.io/myget/narvalo-edge/v/Abc.Utilities.Sources.svg)](https://www.myget.org/feed/narvalo-edge/package/nuget/Abc.Utilities.Sources)
+
+- [Usage](#usage)
+- [Changelog](#changelog)
+
+Usage
+-----
+
+### MSBuild properties
 
 - `PkgAbc_Utilities_Sources__Content`
 - `PkgAbc_Utilities_Sources__ContentCSharp`
@@ -9,11 +19,11 @@ Optional properties.
 
 There is also `PkgAbc_Utilities_Sources` if GeneratePathProperty = true.
 
-## Compiler symbols
+### Compiler symbols
 
 - `ABC_UTILITIES_ENABLE_CODE_COVERAGE`
 
-## Selective imports
+### Only import what you really need
 
 ```xml
 <Import Project="$(PkgAbc_Utilities_Sources__Content)NoContent.targets" />
@@ -31,7 +41,7 @@ There is also `PkgAbc_Utilities_Sources` if GeneratePathProperty = true.
 </ItemGroup>
 ```
 
-## Extensibility
+### Extensibility
 
 Instead of static classes, we use abstract partial classes. For instance:
 ```csharp
@@ -67,17 +77,19 @@ namespace MyNamespace
 }
 ```
 
-## Miscs
+### Notes
 
 All classes carry are marked with the attribute `DebuggerNonUserCode`.
+
+#### NRTs
 All files start with `#nullable enable`.
+
+#### Code coverage
 Unless `ABC_UTILITIES_ENABLE_CODE_COVERAGE` is defined, all codes are
 marked with the attribute `ExcludeFromCodeCoverage`.
-
-### NRTs
-
-### Code coverage
-
 Filter out "System" classes: `[Abc.Utilities]System.*`.
 
-### Deterministic build
+#### Deterministic build
+
+Changelog
+---------
