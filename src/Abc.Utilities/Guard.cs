@@ -24,7 +24,8 @@ namespace Abc.Utilities
 #endif
         [Pure]
         [DebuggerStepThrough]
-        public static T NotNull<T>(T? value, string paramName) where T : class
+        public static T NotNull<T>(T? value, string paramName) 
+            where T : class
             => value ?? throw new ArgumentNullException(paramName);
     }
 }
