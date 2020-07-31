@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <IsTestProject Condition=" '$(IsTestProject)' == '' ">false</IsTestProject>
-    
+
     <!--
       CA1034    Nested types should not be visible (Design)
       CA1303    Do not pass literals as localized parameters (Globalization)
@@ -24,10 +24,16 @@
     </None>
 
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
+
+    <!--
+      I prefer coverlet.msbuild over coverlet.collector because the test results
+      have predictable filenames.
+    -->
     <PackageReference Include="coverlet.msbuild" Version="2.9.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.2">
       <PrivateAssets>all</PrivateAssets>
