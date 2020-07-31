@@ -33,9 +33,9 @@ namespace System
 {
     [AttributeUsage(
         AttributeTargets.Class
-        | AttributeTargets.Struct
+        | AttributeTargets.Delegate
         | AttributeTargets.Enum
-        | AttributeTargets.Delegate,
+        | AttributeTargets.Struct,
         Inherited = false)]
     internal sealed class SerializableAttribute : Attribute { }
 }
@@ -50,8 +50,8 @@ namespace System.Diagnostics.CodeAnalysis
         | AttributeTargets.Method
         | AttributeTargets.Property
         | AttributeTargets.Struct,
-        Inherited = false,
-        AllowMultiple = false)]
+        AllowMultiple = false,
+        Inherited = false)]
     internal sealed class ExcludeFromCodeCoverageAttribute : Attribute { }
 }
 
@@ -61,15 +61,15 @@ namespace System.Diagnostics.Contracts
 
     [Conditional("CONTRACTS_FULL")]
     [AttributeUsage(
-        AttributeTargets.Constructor
-        | AttributeTargets.Method
-        | AttributeTargets.Property
-        | AttributeTargets.Event
+        AttributeTargets.Class
+        | AttributeTargets.Constructor
         | AttributeTargets.Delegate
-        | AttributeTargets.Class
-        | AttributeTargets.Parameter,
-        Inherited = true,
-        AllowMultiple = false)]
+        | AttributeTargets.Event
+        | AttributeTargets.Method
+        | AttributeTargets.Parameter
+        | AttributeTargets.Property,
+        AllowMultiple = false,
+        Inherited = true)]
     internal sealed class PureAttribute : Attribute { }
 }
 
