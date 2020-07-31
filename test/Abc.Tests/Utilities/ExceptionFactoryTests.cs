@@ -3,6 +3,8 @@
 
 namespace Abc.Utilities
 {
+    using System;
+
     using Xunit;
 
     using Assert = AssertEx;
@@ -26,16 +28,22 @@ namespace Abc.Utilities
     // Overflow exceptions.
     public partial class ExceptionFactoryTests
     {
-        [Fact] public static void YearOverflow() => Assert.CheckException(EF.YearOverflow);
+        [Fact] public static void YearOverflow() =>
+            Assert.CheckException(typeof(OverflowException), EF.YearOverflow);
 
-        [Fact] public static void YearOverflowOrUnderflow() => Assert.CheckException(EF.YearOverflowOrUnderflow);
+        [Fact] public static void YearOverflowOrUnderflow() =>
+            Assert.CheckException(typeof(OverflowException), EF.YearOverflowOrUnderflow);
 
-        [Fact] public static void YearUnderflow() => Assert.CheckException(EF.YearUnderflow);
+        [Fact] public static void YearUnderflow() =>
+            Assert.CheckException(typeof(OverflowException), EF.YearUnderflow);
 
-        [Fact] public static void DayNumberOverflow() => Assert.CheckException(EF.DayNumberOverflow);
+        [Fact] public static void DayNumberOverflow() =>
+            Assert.CheckException(typeof(OverflowException), EF.DayNumberOverflow);
 
-        [Fact] public static void DayNumberOverflowOrUnderflow() => Assert.CheckException(EF.DayNumberOverflowOrUnderflow);
+        [Fact] public static void DayNumberOverflowOrUnderflow() =>
+            Assert.CheckException(typeof(OverflowException), EF.DayNumberOverflowOrUnderflow);
 
-        [Fact] public static void DayNumberUnderflow() => Assert.CheckException(EF.DayNumberUnderflow);
+        [Fact] public static void DayNumberUnderflow() =>
+            Assert.CheckException(typeof(OverflowException), EF.DayNumberUnderflow);
     }
 }

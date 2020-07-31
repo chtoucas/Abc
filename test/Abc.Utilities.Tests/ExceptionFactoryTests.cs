@@ -3,6 +3,8 @@
 
 namespace Abc.Utilities
 {
+    using System;
+
     using Xunit;
 
     using Assert = AssertEx;
@@ -12,11 +14,14 @@ namespace Abc.Utilities
 
     public partial class ExceptionFactoryTests
     {
-        [Fact] public static void ControlFlow() => Assert.CheckException(EF.ControlFlow);
+        [Fact] public static void ControlFlow() => 
+            Assert.CheckException(typeof(InvalidOperationException), EF.ControlFlow);
 
-        [Fact] public static void EmptySequence() => Assert.CheckException(EF.EmptySequence);
+        [Fact] public static void EmptySequence() => 
+            Assert.CheckException(typeof(InvalidOperationException), EF.EmptySequence);
 
-        [Fact] public static void ReadOnlyCollection() => Assert.CheckException(EF.ReadOnlyCollection);
+        [Fact] public static void ReadOnlyCollection() => 
+            Assert.CheckException(typeof(NotSupportedException), EF.ReadOnlyCollection);
     }
 
     // Argument exceptions.

@@ -33,11 +33,11 @@ namespace Abc
         public static void Failure(string userMessage) => True(false, userMessage);
 
         // TODO: better names. IsType?
-        public static void CheckException<T>(T ex) where T : Exception
+        public static void CheckException(Type expectedExceptionType, Exception ex)
         {
             if (ex is null) { throw new Anexn(nameof(ex)); }
 
-            IsType<T>(ex);
+            IsType(expectedExceptionType, ex);
             NotNull(ex.Message);
         }
 
