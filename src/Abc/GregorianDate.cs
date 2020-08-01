@@ -14,7 +14,7 @@ namespace Abc
     using static Abc.Utilities.MathOperations;
 
     using AoorException = System.ArgumentOutOfRangeException;
-    using EF = Utilities.ExceptionFactory;
+    using EF = Utilities.ExceptionFactoryEx;
 
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public readonly partial struct GregorianDate
