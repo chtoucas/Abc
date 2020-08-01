@@ -6,8 +6,9 @@
     <RootNamespace>Abc.Utilities</RootNamespace>
   </PropertyGroup>
 
+  <Import Project="$(SourceRoot)Abc.Utilities\Shared.targets" />
+
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Abc.Utilities\Abc.Utilities.csproj" />
     <ProjectReference Include="..\Abc.Testing\Abc.Testing.csproj" />
   </ItemGroup>
 

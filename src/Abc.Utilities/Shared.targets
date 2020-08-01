@@ -1,0 +1,20 @@
+<Project>
+
+  <!-- 
+    Kind of like a VS shared project to be used instead of a ProjectReference.
+    Error CS0433: The type 'PureAttribute' exists in both 'Abc.Utilities' and 'mscorlib'.
+  -->
+
+  <ItemGroup>
+    <FilesToExclude Include="$(MSBuildThisFileDirectory)AssemblyInfo.cs" />
+    <FilesToExclude Include="$(MSBuildThisFileDirectory)bin\**\*.*" />
+    <FilesToExclude Include="$(MSBuildThisFileDirectory)obj\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)**\*.cs" Exclude="@(FilesToExclude)">
+      <Visible>false</Visible>
+    </Compile>
+  </ItemGroup>
+
+</Project>

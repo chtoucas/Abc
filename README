@@ -28,9 +28,6 @@ TODO:
   https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository -->
 - Abc.Utilities:
   * README.md.
-  * Abc.Utilities.Tests, error CS0433: The type 'PureAttribute' exists in both
-    'Abc.Utilities' and 'mscorlib'. Only happens because I use the binary form
-    of Abc.Utilities.
   * review Guard and Require. Test DebugEx.
   * some classes could be made public.
   * code coverage for a consumer library of a source only package,
