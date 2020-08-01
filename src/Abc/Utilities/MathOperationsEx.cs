@@ -8,7 +8,9 @@ namespace Abc.Utilities
     using System.Diagnostics.Contracts;
     using System.Runtime.CompilerServices;
 
-    internal partial class MathOperations
+    internal sealed partial class MathOperationsEx : MathOperations { }
+
+    internal partial class MathOperationsEx
     {
         /// <summary>
         /// Calculates the remainder of the division of a 32-bit signed integer
@@ -35,7 +37,7 @@ namespace Abc.Utilities
     }
 
     // Doubles.
-    internal partial class MathOperations
+    internal partial class MathOperationsEx
     {
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -168,7 +170,7 @@ namespace Abc.Utilities
     }
 
     // Decimals.
-    internal partial class MathOperations
+    internal partial class MathOperationsEx
     {
         public const int HalfOneMin = Int32.MinValue / 10;
         public const int HalfOneMax = Int32.MaxValue / 10;
@@ -201,7 +203,7 @@ namespace Abc.Utilities
     }
 
     // Logarithme décimal.
-    internal partial class MathOperations
+    internal partial class MathOperationsEx
     {
         /// <summary>
         /// Calculates the integer log base 10 of a strictly positive 32-bit

@@ -7,18 +7,18 @@ namespace Abc.Utilities
 
     using Xunit;
 
-    public static partial class MathOperationsTests { }
+    public static partial class MathOperationsExTests { }
 
     // Decimals.
-    public partial class MathOperationsTests
+    public partial class MathOperationsExTests
     {
         public static readonly TheoryData<int, decimal> AddHalfOneData =
             new TheoryData<int, decimal>
             {
                 { Int32.MinValue, Int32.MinValue + .5m },
-                { MathOperations.HalfOneMin - 1, (MathOperations.HalfOneMin - 1) + .5m },
-                { MathOperations.HalfOneMin, MathOperations.HalfOneMin + .5m },
-                { MathOperations.HalfOneMin + 1, (MathOperations.HalfOneMin + 1) + .5m },
+                { MathOperationsEx.HalfOneMin - 1, (MathOperationsEx.HalfOneMin - 1) + .5m },
+                { MathOperationsEx.HalfOneMin, MathOperationsEx.HalfOneMin + .5m },
+                { MathOperationsEx.HalfOneMin + 1, (MathOperationsEx.HalfOneMin + 1) + .5m },
                 { -3, -2.5m },
                 { -2, -1.5m },
                 { -1,  -.5m },
@@ -26,9 +26,9 @@ namespace Abc.Utilities
                 {  1,  1.5m },
                 {  2,  2.5m },
                 {  3,  3.5m },
-                { MathOperations.HalfOneMax - 1, (MathOperations.HalfOneMax - 1) + .5m },
-                { MathOperations.HalfOneMax, MathOperations.HalfOneMax + .5m },
-                { MathOperations.HalfOneMax + 1, (MathOperations.HalfOneMax + 1) + .5m },
+                { MathOperationsEx.HalfOneMax - 1, (MathOperationsEx.HalfOneMax - 1) + .5m },
+                { MathOperationsEx.HalfOneMax, MathOperationsEx.HalfOneMax + .5m },
+                { MathOperationsEx.HalfOneMax + 1, (MathOperationsEx.HalfOneMax + 1) + .5m },
                 { Int32.MaxValue, Int32.MaxValue + .5m },
             };
 
@@ -36,9 +36,9 @@ namespace Abc.Utilities
             new TheoryData<int, decimal>
             {
                 { Int32.MinValue, Int32.MinValue - .5m },
-                { MathOperations.HalfOneMin - 1, (MathOperations.HalfOneMin - 1) - .5m },
-                { MathOperations.HalfOneMin, MathOperations.HalfOneMin - .5m },
-                { MathOperations.HalfOneMin + 1, (MathOperations.HalfOneMin + 1) - .5m },
+                { MathOperationsEx.HalfOneMin - 1, (MathOperationsEx.HalfOneMin - 1) - .5m },
+                { MathOperationsEx.HalfOneMin, MathOperationsEx.HalfOneMin - .5m },
+                { MathOperationsEx.HalfOneMin + 1, (MathOperationsEx.HalfOneMin + 1) - .5m },
                 { -3, -3.5m },
                 { -2, -2.5m },
                 { -1, -1.5m },
@@ -46,23 +46,23 @@ namespace Abc.Utilities
                 {  1,   .5m },
                 {  2,  1.5m },
                 {  3,  2.5m },
-                { MathOperations.HalfOneMax - 1, (MathOperations.HalfOneMax - 1) - .5m },
-                { MathOperations.HalfOneMax, MathOperations.HalfOneMax - .5m },
-                { MathOperations.HalfOneMax + 1, (MathOperations.HalfOneMax + 1) - .5m },
+                { MathOperationsEx.HalfOneMax - 1, (MathOperationsEx.HalfOneMax - 1) - .5m },
+                { MathOperationsEx.HalfOneMax, MathOperationsEx.HalfOneMax - .5m },
+                { MathOperationsEx.HalfOneMax + 1, (MathOperationsEx.HalfOneMax + 1) - .5m },
                 { Int32.MaxValue, Int32.MaxValue - .5m },
             };
 
         [Theory, MemberData(nameof(AddHalfOneData))]
         public static void AddHalfOne(int num, decimal exp) =>
-            Assert.Equal(exp, MathOperations.AddHalfOne(num));
+            Assert.Equal(exp, MathOperationsEx.AddHalfOne(num));
 
         [Theory, MemberData(nameof(SubtractHalfOneData))]
         public static void SubtractHalfOne(int num, decimal exp) =>
-            Assert.Equal(exp, MathOperations.SubtractHalfOne(num));
+            Assert.Equal(exp, MathOperationsEx.SubtractHalfOne(num));
     }
 
     // Logarithme décimal.
-    public partial class MathOperationsTests
+    public partial class MathOperationsExTests
     {
         [Theory]
         [InlineData(1, 0)]
@@ -93,7 +93,7 @@ namespace Abc.Utilities
         public static void Log10(int num, int logE)
         {
             // Act
-            int log = MathOperations.Log10(num);
+            int log = MathOperationsEx.Log10(num);
             // Assert
             Assert.Equal(logE, log);
         }
@@ -128,7 +128,7 @@ namespace Abc.Utilities
         public static void AdjustedLog10(int num, int alogE)
         {
             // Act
-            int alog = MathOperations.AdjustedLog10(num);
+            int alog = MathOperationsEx.AdjustedLog10(num);
             // Assert
             Assert.Equal(alogE, alog);
         }
@@ -137,11 +137,11 @@ namespace Abc.Utilities
         public static void AdjustedLog10_Faster()
         {
             // Act
-            int alog1 = MathOperations.AdjustedLog10(10_001, 1, 1);
-            int alog2 = MathOperations.AdjustedLog10(10_001, 10, 2);
-            int alog3 = MathOperations.AdjustedLog10(10_001, 100, 3);
-            int alog4 = MathOperations.AdjustedLog10(10_001, 1000, 4);
-            int alog5 = MathOperations.AdjustedLog10(10_001, 10_000, 5);
+            int alog1 = MathOperationsEx.AdjustedLog10(10_001, 1, 1);
+            int alog2 = MathOperationsEx.AdjustedLog10(10_001, 10, 2);
+            int alog3 = MathOperationsEx.AdjustedLog10(10_001, 100, 3);
+            int alog4 = MathOperationsEx.AdjustedLog10(10_001, 1000, 4);
+            int alog5 = MathOperationsEx.AdjustedLog10(10_001, 10_000, 5);
             // Assert
             Assert.Equal(5, alog1);
             Assert.Equal(5, alog2);
@@ -179,7 +179,7 @@ namespace Abc.Utilities
         public static void AdjustedLog10_Pow(int num, int logE, int powE)
         {
             // Act
-            int log = MathOperations.AdjustedLog10(num, out int pow);
+            int log = MathOperationsEx.AdjustedLog10(num, out int pow);
             // Assert
             Assert.Equal(logE, log);
             Assert.Equal(powE, pow);
@@ -189,11 +189,11 @@ namespace Abc.Utilities
         public static void AdjustedLog10_Pow_Faster()
         {
             // Act
-            int alog1 = MathOperations.AdjustedLog10(10_001, 1, 1, out int pow1);
-            int alog2 = MathOperations.AdjustedLog10(10_001, 10, 2, out int pow2);
-            int alog3 = MathOperations.AdjustedLog10(10_001, 100, 3, out int pow3);
-            int alog4 = MathOperations.AdjustedLog10(10_001, 1000, 4, out int pow4);
-            int alog5 = MathOperations.AdjustedLog10(10_001, 10_000, 5, out int pow5);
+            int alog1 = MathOperationsEx.AdjustedLog10(10_001, 1, 1, out int pow1);
+            int alog2 = MathOperationsEx.AdjustedLog10(10_001, 10, 2, out int pow2);
+            int alog3 = MathOperationsEx.AdjustedLog10(10_001, 100, 3, out int pow3);
+            int alog4 = MathOperationsEx.AdjustedLog10(10_001, 1000, 4, out int pow4);
+            int alog5 = MathOperationsEx.AdjustedLog10(10_001, 10_000, 5, out int pow5);
             // Assert
             Assert.Equal(5, alog1);
             Assert.Equal(5, alog2);
