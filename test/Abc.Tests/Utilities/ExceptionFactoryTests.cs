@@ -19,9 +19,9 @@ namespace Abc.Utilities
         public static void InvalidBinaryInput()
         {
             // Act
-            var ex = EF.InvalidBinaryInput("paramName");
+            var exn = EF.InvalidBinaryInput("paramName");
             // Assert
-            Assert.CheckArgumentException(ex);
+            Assert.CheckArgumentException("paramName", exn);
         }
     }
 

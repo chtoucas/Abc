@@ -30,56 +30,69 @@ namespace Abc
         /// <summary>
         /// Fails with a user message.
         /// </summary>
-        public static void Failure(string userMessage) => True(false, userMessage);
-
-        // TODO: better names. IsType?
-        public static void CheckException(Type expectedExceptionType, Exception ex)
-        {
-            if (ex is null) { throw new Anexn(nameof(ex)); }
-
-            IsType(expectedExceptionType, ex);
-            NotNull(ex.Message);
-        }
-
-        public static void CheckArgumentException(ArgumentException ex)
-        {
-            if (ex is null) { throw new Anexn(nameof(ex)); }
-
-            NotNull(ex.Message);
-            Equal("paramName", ex.ParamName);
-        }
+        public static void Fails(string userMessage) => True(false, userMessage);
     }
 
     public partial class AssertEx
     {
         /// <summary>
-        /// Verifies that the specified delegate throws an exception of type
-        /// <see cref="ArgumentException"/> (and not a derived exception type)
-        /// with a null parameter name.
+        /// Verifies that an exception is exactly the given exception type 
+        /// (and not a derived one), then that its message is not null.
         /// </summary>
-        public static void ThrowsArgexn(Action testCode) =>
-            Throws<ArgumentException>(null, testCode);
+        public static void CheckException(Type expectedExceptionType, Exception exn)
+        {
+            if (exn is null) { throw new Anexn(nameof(exn)); }
+
+            IsType(expectedExceptionType, exn);
+            NotNull(exn.Message);
+        }
 
         /// <summary>
-        /// Verifies that the specified delegate throws an exception of type
-        /// <see cref="ArgumentException"/> (and not a derived exception type)
-        /// with a null parameter name.
+        /// Verifies that an exception message is not null, then that the name
+        /// of the parameter that causes the exception is equal to 
+        /// <paramref name="expectedParamName"/>.
         /// </summary>
-        public static void ThrowsArgexn(Func<object> testCode) =>
-            Throws<ArgumentException>(null, testCode);
+        public static void CheckArgumentException(string expectedParamName, ArgumentException exn)
+        {
+            if (exn is null) { throw new Anexn(nameof(exn)); }
+
+            NotNull(exn.Message);
+            Equal(expectedParamName, exn.ParamName);
+        }
+
+        ///// <summary>
+        ///// Verifies that the specified delegate throws an exception of type
+        ///// <see cref="ArgumentException"/> (and not a derived exception type)
+        ///// with a null parameter name.
+        ///// </summary>
+        //public static void ThrowsArgumentException(Action testCode) =>
+        //    Throws<ArgumentException>(null, testCode);
+
+        ///// <summary>
+        ///// Verifies that the specified delegate throws an exception of type
+        ///// <see cref="ArgumentException"/> (and not a derived exception type)
+        ///// with a null parameter name.
+        ///// </summary>
+        //public static void ThrowsArgumentException(Func<object> testCode) =>
+        //    Throws<ArgumentException>(null, testCode);
+
+        //
+        // Below, use "argName" instead of "paramName" to avoid an error CA1507
+        // in the caller code.
+        //
 
         /// <summary>
         /// Verifies that the specified delegate throws an exception of type
         /// <see cref="ArgumentException"/> (and not a derived exception type).
         /// </summary>
-        public static void ThrowsArgexn(string argName, Action testCode) =>
+        public static void ThrowsArgumentException(string argName, Action testCode) =>
             Throws<ArgumentException>(argName, testCode);
 
         /// <summary>
         /// Verifies that the specified delegate throws an exception of type
         /// <see cref="ArgumentException"/> (and not a derived exception type).
         /// </summary>
-        public static void ThrowsArgexn(string argName, Func<object> testCode) =>
+        public static void ThrowsArgumentException(string argName, Func<object> testCode) =>
             Throws<ArgumentException>(argName, testCode);
 
         /// <summary>

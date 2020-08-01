@@ -31,9 +31,9 @@ namespace Abc.Utilities
         public static void InvalidType()
         {
             // Act
-            var ex = EF.InvalidType("paramName", typeof(string), 1);
+            var exn = EF.InvalidType("paramName", typeof(string), 1);
             // Assert
-            Assert.CheckArgumentException(ex);
+            Assert.CheckArgumentException("paramName", exn);
         }
     }
 }
