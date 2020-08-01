@@ -4,6 +4,8 @@
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net461;net452</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <RootNamespace>Abc.Utilities</RootNamespace>
+
+    <DefineConstants>$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
   </PropertyGroup>
 
   <Import Project="$(SourceRoot)Abc.Utilities\Shared.targets" />
