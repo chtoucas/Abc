@@ -7,24 +7,38 @@ namespace Abc.Utilities
 
     using Xunit;
 
+    using Assert = AssertEx;
+
     public static class GuardTests
     {
         [Fact]
-#pragma warning disable CA1806 // Do not ignore method results
-        public static void DoesNotThrow() => Guard.NotNull("", "paramName");
-#pragma warning restore CA1806
+        public static void NotNull_DoesNotThrow() =>
+            Guard.NotNull(String.Empty, "paramName");
 
         [Fact]
-        public static void Throws()
+        public static void NotNull_Throws()
         {
             // Arrange
             object obj = null!;
             string paramName = "paramName";
-            // Act
-            var ex = Assert.Throws<ArgumentNullException>(() => Guard.NotNull(obj, paramName));
-            // Assert
-            Assert.NotNull(ex);
-            Assert.Equal(paramName, ex.ParamName);
+            // Act & Assert
+            Assert.ThrowsAnexn(paramName, () => Guard.NotNull(obj, paramName));
+        }
+
+        [Fact]
+#pragma warning disable CA1806 // Do not ignore method results
+        public static void NotNullPassThru_DoesNotThrow() => 
+            Guard.NotNullPassThru(String.Empty, "paramName");
+#pragma warning restore CA1806
+
+        [Fact]
+        public static void NotNullPassThru_Throws()
+        {
+            // Arrange
+            object obj = null!;
+            string paramName = "paramName";
+            // Act & Assert
+            Assert.ThrowsAnexn(paramName, () => Guard.NotNullPassThru(obj, paramName));
         }
     }
 }

@@ -10,6 +10,12 @@ namespace Abc.Utilities
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
+    // Will most certainly be obsoleted with C# 9.0.
+    // See https://github.com/dotnet/csharplang/issues/2145
+    // REVIEW: 
+    // - add unconstrained versions.
+    // - now that we have NRTs, the attr ValidatedNotNull seems useless?
+
     [DebuggerNonUserCode]
     internal abstract partial class Guard
     {
@@ -22,10 +28,24 @@ namespace Abc.Utilities
 #if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
         [ExcludeFromCodeCoverage]
 #endif
+        [DebuggerStepThrough]
+        public static void NotNull<T>([ValidatedNotNull] T value, string paramName)
+            where T : class
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(paramName);
+            }
+        }
+
+        // This is one is for use when calling a base constructor.
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+        [ExcludeFromCodeCoverage]
+#endif
         [Pure]
         [DebuggerStepThrough]
-        public static T NotNull<T>(T? value, string paramName) 
-            where T : class
-            => value ?? throw new ArgumentNullException(paramName);
+        public static T NotNullPassThru<T>([ValidatedNotNull] T value, string paramName) 
+            where T : class =>
+            value ?? throw new ArgumentNullException(paramName);
     }
 }

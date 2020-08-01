@@ -9,7 +9,7 @@ namespace Abc.Utilities
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Provides static methods that help debug the code.
+    /// Provides static methods that help debug your code.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
     [DebuggerNonUserCode]
@@ -34,8 +34,8 @@ namespace Abc.Utilities
         // [conflict](https://github.com/dotnet/csharplang/wiki/Nullable-Reference-Types-Preview#microsoftcodeanalysiscompilers-nuget-package-conflict)
         // with the package `Microsoft.CodeAnalysis.Compilers`? Another possibility is
         // that we use the version 2.0 of the .NET Standard. The real odd thing is that
-        // `dotnet` also complains in `RELEASE` builds.If we comment out the debug
-        // assertions, things work as expected (tag `ASSERT_NULL`).
+        // `dotnet` also complains in `RELEASE` builds. If we comment out the debug
+        // assertions, things work as expected.
         //
         // Maybe an [explanation](https://devblogs.microsoft.com/dotnet/announcing-net-core-3-0-release-candidate-1/):
         // > For technical and historical reasons, the .NET toolset (compilers,
