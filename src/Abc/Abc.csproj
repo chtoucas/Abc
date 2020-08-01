@@ -11,11 +11,10 @@
     prop PkgAbc_Utilities_Sources__Content is not empty. Otherwise, the
     Import within Abc.Utilities.targets will fail.
   -->
-  <Import Project="$(MSBuildThisFileDirectory)Abc.Utilities.targets"
-          Condition=" '$(PkgAbc_Utilities_Sources__Content)' != '' " />
+  <Import Project="$(MSBuildThisFileDirectory)Abc.Utilities.targets" Condition=" '$(PkgAbc_Utilities_Sources__Content)' != '' " />
 
   <ItemGroup>
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha17">
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha18">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
