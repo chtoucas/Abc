@@ -15,7 +15,7 @@
           Condition=" '$(PkgAbc_Utilities_Sources__Content)' != '' " />
 
   <ItemGroup>
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha16">
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha17">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

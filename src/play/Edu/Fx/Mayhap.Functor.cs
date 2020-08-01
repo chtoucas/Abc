@@ -182,7 +182,7 @@ namespace Abc.Edu.Fx
 #if STRICT_HASKELL
             return Map(@this, mayhap);
 #else
-            Require.NotNull(@this, nameof(@this));
+            Guard.NotNull(@this, nameof(@this));
 
             return mayhap.Select(@this);
 #endif

@@ -118,7 +118,7 @@ namespace Abc.Edu.Fx
             // (>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c | infixr 1 |
             // f >=> g = \x -> f x >>= g
 
-            Require.NotNull(@this, nameof(@this));
+            Utilities.Guard.NotNull(@this, nameof(@this));
 
             return x => @this(x).Bind(other);
         }
@@ -130,7 +130,7 @@ namespace Abc.Edu.Fx
             // (<=<) :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c | infixr 1 |
             // (<=<) = flip (>=>)
 
-            Require.NotNull(other, nameof(other));
+            Utilities.Guard.NotNull(other, nameof(other));
 
             return x => other(x).Bind(@this);
         }
@@ -160,7 +160,7 @@ namespace Abc.Edu.Fx
             //
             // Direct MonadPlus equivalent of filter (for lists).
 
-            Require.NotNull(predicate, nameof(predicate));
+            Utilities.Guard.NotNull(predicate, nameof(predicate));
 
             // NB: x is never null.
             return @this.Bind(x => predicate(x) ? Mayhap<T>.Some(x) : Mayhap<T>.None);
@@ -227,7 +227,7 @@ namespace Abc.Edu.Fx
             Mayhap<TOther> other,
             Func<TSource, TOther, TResult> zipper)
         {
-            Require.NotNull(zipper, nameof(zipper));
+            Utilities.Guard.NotNull(zipper, nameof(zipper));
 
             return @this.Bind(
                 x => other.Bind(
@@ -247,7 +247,7 @@ namespace Abc.Edu.Fx
         //    Mayhap<T2> m2,
         //    Func<TSource, T1, T2, TResult> zipper)
         //{
-        //    Require.NotNull(zipper, nameof(zipper));
+        //    Guard.NotNull(zipper, nameof(zipper));
 
         //    return @this.Bind(
         //        x => m1.ZipWith(m2, (y, z) => zipper(x, y, z)));
@@ -276,7 +276,7 @@ namespace Abc.Edu.Fx
         //     Mayhap<T3> third,
         //     Func<TSource, T1, T2, T3, TResult> zipper)
         //{
-        //    Require.NotNull(zipper, nameof(zipper));
+        //    Guard.NotNull(zipper, nameof(zipper));
 
         //    return @this.Bind(
         //        x => first.ZipWith(

@@ -36,7 +36,7 @@ namespace Abc.Edu.Linq
 
         public static IEnumerable<T> Generate<T>(T seed, Func<T, T> generator)
         {
-            Require.NotNull(generator, nameof(generator));
+            Guard.NotNull(generator, nameof(generator));
 
             return __iterator();
 
@@ -58,8 +58,8 @@ namespace Abc.Edu.Linq
             Func<T, T> generator,
             Func<T, bool> predicate)
         {
-            Require.NotNull(generator, nameof(generator));
-            Require.NotNull(predicate, nameof(predicate));
+            Guard.NotNull(generator, nameof(generator));
+            Guard.NotNull(predicate, nameof(predicate));
 
             return __iterator();
 
@@ -80,7 +80,7 @@ namespace Abc.Edu.Linq
             TState seed,
             Func<TState, (TState, TResult)> generator)
         {
-            Require.NotNull(generator, nameof(generator));
+            Guard.NotNull(generator, nameof(generator));
 
             return __iterator();
 
@@ -103,8 +103,8 @@ namespace Abc.Edu.Linq
             Func<TState, (TState, TResult)> generator,
             Func<TState, bool> predicate)
         {
-            Require.NotNull(generator, nameof(generator));
-            Require.NotNull(predicate, nameof(predicate));
+            Guard.NotNull(generator, nameof(generator));
+            Guard.NotNull(predicate, nameof(predicate));
 
             return __iterator();
 
@@ -133,8 +133,8 @@ namespace Abc.Edu.Linq
             Func<TState, TState> generator,
             Func<TState, TResult> resultSelector)
         {
-            Require.NotNull(generator, nameof(generator));
-            Require.NotNull(resultSelector, nameof(resultSelector));
+            Guard.NotNull(generator, nameof(generator));
+            Guard.NotNull(resultSelector, nameof(resultSelector));
 
             return __iterator();
 
@@ -163,9 +163,9 @@ namespace Abc.Edu.Linq
             Func<TState, TResult> resultSelector,
             Func<TState, bool> predicate)
         {
-            Require.NotNull(generator, nameof(generator));
-            Require.NotNull(resultSelector, nameof(resultSelector));
-            Require.NotNull(predicate, nameof(predicate));
+            Guard.NotNull(generator, nameof(generator));
+            Guard.NotNull(resultSelector, nameof(resultSelector));
+            Guard.NotNull(predicate, nameof(predicate));
 
             return __iterator();
 

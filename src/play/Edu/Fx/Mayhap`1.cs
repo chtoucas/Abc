@@ -77,7 +77,7 @@ namespace Abc.Edu.Fx
             //
             //   Promote a function to a monad.
 
-            Require.NotNull(selector, nameof(selector));
+            Guard.NotNull(selector, nameof(selector));
 
 #if MONADS_VIA_MAP_MULTIPLY
             return _isSome ? Mayhap<TResult>.η(selector(_value)) : Mayhap<TResult>.None;
@@ -94,7 +94,7 @@ namespace Abc.Edu.Fx
             // Sequentially compose two actions, passing any value produced by
             // the first as an argument to the second.
 
-            Require.NotNull(binder, nameof(binder));
+            Guard.NotNull(binder, nameof(binder));
 
 #if MONADS_VIA_MAP_MULTIPLY
             return Mayhap<TResult>.μ(Select(binder));
@@ -114,7 +114,7 @@ namespace Abc.Edu.Fx
         public async Task<Mayhap<TResult>> SelectAsync<TResult>(
             Func<T, Task<TResult>> selector)
         {
-            Require.NotNull(selector, nameof(selector));
+            Guard.NotNull(selector, nameof(selector));
 
 #if MONADS_VIA_MAP_MULTIPLY
             return _isSome ? Mayhap<TResult>.η(await selector(_value).ConfigureAwait(false))
@@ -130,7 +130,7 @@ namespace Abc.Edu.Fx
         public async Task<Mayhap<TResult>> BindAsync<TResult>(
             Func<T, Task<Mayhap<TResult>>> binder)
         {
-            Require.NotNull(binder, nameof(binder));
+            Guard.NotNull(binder, nameof(binder));
 
 #if MONADS_VIA_MAP_MULTIPLY
             return Mayhap<TResult>.μ(await SelectAsync(binder).ConfigureAwait(false));
@@ -142,7 +142,7 @@ namespace Abc.Edu.Fx
 
         public async Task<Mayhap<T>> OrElseAsync(Task<Mayhap<T>> other)
         {
-            Require.NotNull(other, nameof(other));
+            Guard.NotNull(other, nameof(other));
 
             return _isSome ? this : await other.ConfigureAwait(false);
         }

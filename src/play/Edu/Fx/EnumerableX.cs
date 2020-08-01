@@ -14,7 +14,7 @@ namespace Abc.Edu.Fx
             this IEnumerable<TSource> source,
             TSource element)
         {
-            Require.NotNull(source, nameof(source));
+            Guard.NotNull(source, nameof(source));
 
             return iterator();
 
@@ -33,7 +33,7 @@ namespace Abc.Edu.Fx
             this IEnumerable<TSource> source,
             TSource element)
         {
-            Require.NotNull(source, nameof(source));
+            Guard.NotNull(source, nameof(source));
 
             return iterator();
 

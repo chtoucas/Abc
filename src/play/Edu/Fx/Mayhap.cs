@@ -16,8 +16,8 @@ namespace Abc.Edu.Fx
             Func<T, Mayhap<TMiddle>> selector,
             Func<T, TMiddle, TResult> resultSelector)
         {
-            Require.NotNull(selector, nameof(selector));
-            Require.NotNull(resultSelector, nameof(resultSelector));
+            Utilities.Guard.NotNull(selector, nameof(selector));
+            Utilities.Guard.NotNull(resultSelector, nameof(resultSelector));
 
             return @this.Bind(
                 x => selector(x).Select(
@@ -31,9 +31,9 @@ namespace Abc.Edu.Fx
             Func<TInner, TKey> innerKeySelector,
             Func<T, TInner, TResult> resultSelector)
         {
-            Require.NotNull(outerKeySelector, nameof(outerKeySelector));
-            Require.NotNull(innerKeySelector, nameof(innerKeySelector));
-            Require.NotNull(resultSelector, nameof(resultSelector));
+            Utilities.Guard.NotNull(outerKeySelector, nameof(outerKeySelector));
+            Utilities.Guard.NotNull(innerKeySelector, nameof(innerKeySelector));
+            Utilities.Guard.NotNull(resultSelector, nameof(resultSelector));
 
             var comparer = EqualityComparer<TKey>.Default;
 
@@ -59,9 +59,9 @@ namespace Abc.Edu.Fx
         //    Func<TInner, TKey> innerKeySelector,
         //    Func<T, Mayhap<TInner>, TResult> resultSelector)
         //{
-        //    Require.NotNull(outerKeySelector, nameof(outerKeySelector));
-        //    Require.NotNull(innerKeySelector, nameof(innerKeySelector));
-        //    Require.NotNull(resultSelector, nameof(resultSelector));
+        //    Guard.NotNull(outerKeySelector, nameof(outerKeySelector));
+        //    Guard.NotNull(innerKeySelector, nameof(innerKeySelector));
+        //    Guard.NotNull(resultSelector, nameof(resultSelector));
 
         //    if (_isSome && inner._isSome)
         //    {

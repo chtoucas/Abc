@@ -46,7 +46,7 @@ namespace Abc.Edu.Fx
         public Ident<TResult> Bind<TResult>(Func<T, Ident<TResult>> binder)
             where TResult : notnull
         {
-            Require.NotNull(binder, nameof(binder));
+            Guard.NotNull(binder, nameof(binder));
 
             return binder(_value);
         }
@@ -66,7 +66,7 @@ namespace Abc.Edu.Fx
         public Ident<TResult> Extend<TResult>(Func<Ident<T>, TResult> extender)
             where TResult : notnull
         {
-            Require.NotNull(extender, nameof(extender));
+            Guard.NotNull(extender, nameof(extender));
 
             return new Ident<TResult>(extender(this));
         }

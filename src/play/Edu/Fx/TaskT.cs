@@ -24,7 +24,7 @@ namespace Abc.Edu.Fx
 
         public static Task<T> Flatten<T>(this Task<Task<T>> square)
         {
-            Require.NotNull(square, nameof(square));
+            Guard.NotNull(square, nameof(square));
 
             return square.Result;
         }
@@ -33,8 +33,8 @@ namespace Abc.Edu.Fx
             this Task<TSource> @this,
             Func<TSource, Task<TResult>> binder)
         {
-            Require.NotNull(@this, nameof(@this));
-            Require.NotNull(binder, nameof(binder));
+            Guard.NotNull(@this, nameof(@this));
+            Guard.NotNull(binder, nameof(binder));
 
             return await binder(await @this.ConfigureAwait(false)).ConfigureAwait(false);
         }
@@ -47,14 +47,14 @@ namespace Abc.Edu.Fx
         //    this Task<TSource> @this,
         //    Func<Task<TSource>, TResult> func)
         //{
-        //    Require.NotNull(@this, nameof(@this));
+        //    Guard.NotNull(@this, nameof(@this));
 
         //    return @this.ContinueWith(func);
         //}
 
         public static T Extract<T>(this Task<T> value)
         {
-            Require.NotNull(value, nameof(value));
+            Guard.NotNull(value, nameof(value));
 
             return value.Result;
         }
@@ -70,8 +70,8 @@ namespace Abc.Edu.Fx
         {
             // > return await source.Bind(_ => other);
 
-            Require.NotNull(@this, nameof(@this));
-            Require.NotNull(other, nameof(other));
+            Guard.NotNull(@this, nameof(@this));
+            Guard.NotNull(other, nameof(other));
 
             await @this.ConfigureAwait(false);
             return await other.ConfigureAwait(false);
