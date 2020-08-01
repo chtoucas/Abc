@@ -48,26 +48,18 @@ Instead of static classes, we use abstract partial classes. For instance:
 //
 namespace Abc.Utilities
 {
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+    [ExcludeFromCodeCoverage]
+#endif
     [DebuggerNonUserCode]
     internal abstract partial class MathOperations
     {
-        [ExcludeFromCodeCoverage]
         protected MathOperations() { }
     }
 }
 ```
 
 ```csharp
-// First option.
-namespace Abc.Utilities
-{
-    internal partial class MathOperations
-    {
-        public static MyMethod() { }
-    }
-}
-
-// Second option.
 namespace MyNamespace
 {
     internal sealed class MyMathOperations : MathOperations

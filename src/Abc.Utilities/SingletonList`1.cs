@@ -29,7 +29,7 @@ namespace Abc.Utilities
     /// Enumerable.Repeat() does not seem to produce one.
     /// </remarks>
 #if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
     [DebuggerNonUserCode]
     [DebuggerDisplay("Count = 1")]

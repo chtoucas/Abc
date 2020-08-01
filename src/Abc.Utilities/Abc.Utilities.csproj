@@ -5,12 +5,9 @@
     <RootNamespace>Abc.Utilities</RootNamespace>
     <IsPackable>true</IsPackable>
 
-    <Version>0.1.0-alpha17</Version>
-    
-    <NoWarn>$(NoWarn);CA1812</NoWarn>
+    <Version>0.1.0-alpha18</Version>
 
-    <!-- Build the project as seen by a customer of the package -->
-    <DefineConstants Condition=" '$(Retail)' != 'true' ">$(DefineConstants);ABC_UTILITIES_ENABLE_CODE_COVERAGE</DefineConstants>
+    <NoWarn>$(NoWarn);CA1812</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(FatBuild)' == 'true' ">
@@ -20,7 +17,7 @@
       net461;net452
     </TargetFrameworks>
 
-    <!-- We don't want to use the default lock file and, even if we don't intend to use one, 
+    <!-- We don't want to use the default lock file and, even if we don't intend to use one,
          we must specify it (error NU1505) -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <NuGetLockFilePath>$(MSBuildThisFileDirectory)packages.fat.lock.json</NuGetLockFilePath>

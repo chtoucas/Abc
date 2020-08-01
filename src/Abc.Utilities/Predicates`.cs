@@ -7,19 +7,22 @@ namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
 
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+#endif
     [DebuggerNonUserCode]
     internal abstract partial class Predicates
     {
-        [ExcludeFromCodeCoverage]
         protected Predicates() { }
     }
 
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+#endif
     [DebuggerNonUserCode]
     internal abstract partial class Predicates<TSource>
     {
-        [ExcludeFromCodeCoverage]
         protected Predicates() { }
     }
 

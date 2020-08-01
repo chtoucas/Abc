@@ -6,16 +6,17 @@
 namespace Abc.Utilities
 {
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Provides static methods that help debug your code.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+#endif
     [DebuggerNonUserCode]
     internal abstract partial class DebugEx
     {
-        [ExcludeFromCodeCoverage]
         protected DebugEx() { }
     }
 
@@ -41,9 +42,6 @@ namespace Abc.Utilities
         // > For technical and historical reasons, the .NET toolset (compilers,
         // > NuGet client, MSBuild, …) is duplicated between Visual Studio and
         // > the .NET Core SDK.
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-        [ExcludeFromCodeCoverage]
-#endif
         [Conditional("DEBUG")]
         public static void NotNull<T>(T value) where T : class =>
             Debug.Assert(value != null);

@@ -6,7 +6,6 @@
 namespace Abc.Utilities
 {
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Runtime.CompilerServices;
 
@@ -14,10 +13,12 @@ namespace Abc.Utilities
     /// Provides static methods for common mathematical operations.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
+#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+#endif
     [DebuggerNonUserCode]
     internal abstract partial class MathOperations
     {
-        [ExcludeFromCodeCoverage]
         protected MathOperations() { }
     }
 
@@ -94,9 +95,6 @@ namespace Abc.Utilities
         /// 32-bit unsigned integer.
         /// <para>This method does NOT validate its parameters.</para>
         /// </summary>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-        [ExcludeFromCodeCoverage]
-#endif
         [Pure]
         // Code size = 19 bytes.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -112,9 +110,6 @@ namespace Abc.Utilities
         /// 64-bit unsigned integer.
         /// <para>This method does NOT validate its parameters.</para>
         /// </summary>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-        [ExcludeFromCodeCoverage]
-#endif
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long Divide(long m, long n)
@@ -134,9 +129,6 @@ namespace Abc.Utilities
         /// The remainder <paramref name="r"/> is in the range from 0 to
         /// (<paramref name="n"/> - 1), both included.
         /// </remarks>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-        [ExcludeFromCodeCoverage]
-#endif
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Divide(int m, int n, out int r)
@@ -169,9 +161,6 @@ namespace Abc.Utilities
         /// The remainder <paramref name="r"/> is in the range from 0 to
         /// (<paramref name="n"/> - 1), both included.
         /// </remarks>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-        [ExcludeFromCodeCoverage]
-#endif
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long Divide(long m, long n, out long r)
@@ -199,9 +188,6 @@ namespace Abc.Utilities
         /// The remainder is in the range from 0 to (<paramref name="n"/> - 1),
         /// both included.
         /// </remarks>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-        [ExcludeFromCodeCoverage]
-#endif
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Modulo(int m, int n)
@@ -221,9 +207,6 @@ namespace Abc.Utilities
         /// The remainder is in the range from 0 to (<paramref name="n"/> - 1),
         /// both included.
         /// </remarks>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-        [ExcludeFromCodeCoverage]
-#endif
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long Modulo(long m, long n)
@@ -244,9 +227,6 @@ namespace Abc.Utilities
         /// <paramref name="n"/>, both included.
         /// </remarks>
         // Opération modulo rectifiée ("adjusted").
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-        [ExcludeFromCodeCoverage]
-#endif
         [Pure]
         // Code size = 22 bytes.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -268,9 +248,6 @@ namespace Abc.Utilities
         /// The adjusted remainder is in the range from 1 to
         /// <paramref name="n"/>, both included.
         /// </remarks>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-        [ExcludeFromCodeCoverage]
-#endif
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long AdjustedModulo(long m, long n)
