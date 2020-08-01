@@ -14,13 +14,16 @@ namespace Abc.Utilities
 
     public partial class ExceptionFactoryTests
     {
-        [Fact] public static void ControlFlow() => 
+        [Fact]
+        public static void ControlFlow() =>
             Assert.CheckException(typeof(InvalidOperationException), EF.ControlFlow);
 
-        [Fact] public static void EmptySequence() => 
+        [Fact]
+        public static void EmptySequence() =>
             Assert.CheckException(typeof(InvalidOperationException), EF.EmptySequence);
 
-        [Fact] public static void ReadOnlyCollection() => 
+        [Fact]
+        public static void ReadOnlyCollection() =>
             Assert.CheckException(typeof(NotSupportedException), EF.ReadOnlyCollection);
     }
 

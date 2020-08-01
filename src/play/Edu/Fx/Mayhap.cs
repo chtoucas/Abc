@@ -6,8 +6,6 @@ namespace Abc.Edu.Fx
     using System;
     using System.Collections.Generic;
 
-    using Abc.Utilities;
-
     // Query Expression Pattern.
     public static partial class Mayhap
     {

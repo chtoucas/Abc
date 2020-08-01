@@ -44,7 +44,7 @@ namespace Abc.Utilities
 #endif
         [Pure]
         [DebuggerStepThrough]
-        public static T NotNullPassThru<T>([ValidatedNotNull] T value, string paramName) 
+        public static T NotNullPassThru<T>([ValidatedNotNull] T value, string paramName)
             where T : class =>
             value ?? throw new ArgumentNullException(paramName);
     }

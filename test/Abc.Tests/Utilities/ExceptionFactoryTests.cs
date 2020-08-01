@@ -28,22 +28,28 @@ namespace Abc.Utilities
     // Overflow exceptions.
     public partial class ExceptionFactoryTests
     {
-        [Fact] public static void YearOverflow() =>
+        [Fact]
+        public static void YearOverflow() =>
             Assert.CheckException(typeof(OverflowException), EF.YearOverflow);
 
-        [Fact] public static void YearOverflowOrUnderflow() =>
+        [Fact]
+        public static void YearOverflowOrUnderflow() =>
             Assert.CheckException(typeof(OverflowException), EF.YearOverflowOrUnderflow);
 
-        [Fact] public static void YearUnderflow() =>
+        [Fact]
+        public static void YearUnderflow() =>
             Assert.CheckException(typeof(OverflowException), EF.YearUnderflow);
 
-        [Fact] public static void DayNumberOverflow() =>
+        [Fact]
+        public static void DayNumberOverflow() =>
             Assert.CheckException(typeof(OverflowException), EF.DayNumberOverflow);
 
-        [Fact] public static void DayNumberOverflowOrUnderflow() =>
+        [Fact]
+        public static void DayNumberOverflowOrUnderflow() =>
             Assert.CheckException(typeof(OverflowException), EF.DayNumberOverflowOrUnderflow);
 
-        [Fact] public static void DayNumberUnderflow() =>
+        [Fact]
+        public static void DayNumberUnderflow() =>
             Assert.CheckException(typeof(OverflowException), EF.DayNumberUnderflow);
     }
 }

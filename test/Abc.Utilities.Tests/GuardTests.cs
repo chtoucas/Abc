@@ -27,7 +27,7 @@ namespace Abc.Utilities
 
         [Fact]
 #pragma warning disable CA1806 // Do not ignore method results
-        public static void NotNullPassThru_DoesNotThrow() => 
+        public static void NotNullPassThru_DoesNotThrow() =>
             Guard.NotNullPassThru(String.Empty, "paramName");
 #pragma warning restore CA1806
 
