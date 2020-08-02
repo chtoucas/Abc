@@ -9,10 +9,8 @@ namespace Abc.Utilities
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
 
-    internal sealed partial class ExceptionFactoryEx : ExceptionFactory { }
-
     // Argument exceptions.
-    internal partial class ExceptionFactoryEx
+    internal partial class ExceptionFactory
     {
         [Pure]
         [DebuggerStepThrough]
@@ -23,7 +21,7 @@ namespace Abc.Utilities
     }
 
     // Overflow exceptions.
-    internal partial class ExceptionFactoryEx
+    internal partial class ExceptionFactory
     {
         public static OverflowException YearOverflow =>
             new OverflowException(

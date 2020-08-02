@@ -16,7 +16,6 @@ namespace Abc.Utilities
     // - add unconstrained versions.
     // - now that we have NRTs, the attr ValidatedNotNull seems useless?
 
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class Guard
     {
         [ExcludeFromCodeCoverage]
@@ -25,7 +24,7 @@ namespace Abc.Utilities
 
     internal partial class Guard
     {
-        [DebuggerStepThrough]
+        [DebuggerNonUserCode, DebuggerStepThrough]
         public static void NotNull<T>([ValidatedNotNull] T value, string paramName)
             where T : class
         {
@@ -36,8 +35,7 @@ namespace Abc.Utilities
         }
 
         // This is one is for use when calling a base constructor.
-        [Pure]
-        [DebuggerStepThrough]
+        [Pure, DebuggerNonUserCode, DebuggerStepThrough]
         public static T NotNullPassThru<T>([ValidatedNotNull] T value, string paramName)
             where T : class =>
             value ?? throw new ArgumentNullException(paramName);

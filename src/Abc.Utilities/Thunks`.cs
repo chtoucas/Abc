@@ -9,14 +9,12 @@ namespace Abc.Utilities
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class Thunks
     {
         [ExcludeFromCodeCoverage]
         protected Thunks() { }
     }
 
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class Thunks<T>
     {
         [ExcludeFromCodeCoverage]
@@ -29,7 +27,8 @@ namespace Abc.Utilities
         /// Represents the action that does nothing.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Action Noop = () => { };
+        [DebuggerNonUserCode]
+        public static Action Noop { get; } = () => { };
     }
 
     internal partial class Thunks<T>
@@ -38,12 +37,14 @@ namespace Abc.Utilities
         /// Represents the identity map.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Func<T, T> Ident = x => x;
+        [DebuggerNonUserCode]
+        public static Func<T, T> Ident { get; } = x => x;
 
         /// <summary>
         /// Represents the action that does nothing.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Action<T> Noop = _ => { };
+        [DebuggerNonUserCode]
+        public static Action<T> Noop { get; } = _ => { };
     }
 }

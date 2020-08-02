@@ -8,7 +8,7 @@ namespace Abc.Utilities
     using Xunit;
 
     using Assert = AssertEx;
-    using EF = ExceptionFactoryEx;
+    using EF = ExceptionFactory;
 
     public static partial class ExceptionFactoryTests { }
 

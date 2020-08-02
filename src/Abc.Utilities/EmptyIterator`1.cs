@@ -16,8 +16,7 @@ namespace Abc.Utilities
     /// Represents the empty iterator.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
-    [DebuggerDisplay("Count = 0")]
+    [DebuggerNonUserCode, DebuggerDisplay("Count = 0")]
     internal sealed class EmptyIterator<T> : IEnumerator<T>
     {
         public static readonly IEnumerator<T> Instance = new EmptyIterator<T>();

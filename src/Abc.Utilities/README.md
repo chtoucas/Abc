@@ -41,7 +41,6 @@ Instead of static classes, we use abstract partial classes. For instance:
 //
 namespace Abc.Utilities
 {
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class MathOperations
     {
         protected MathOperations() { }
@@ -50,9 +49,9 @@ namespace Abc.Utilities
 ```
 
 ```csharp
-namespace MyNamespace
+namespace Abc.Utilities
 {
-    internal sealed class MyMathOperations : MathOperations
+    internal partial class MathOperations
     {
         public static MyMethod() { }
     }
@@ -61,15 +60,12 @@ namespace MyNamespace
 
 ### Notes
 
-All classes carry are marked with the attributes `DebuggerNonUserCode`
-and `_ExcludeFromCodeCoverage`.
-
 #### NRTs
 All files start with `#nullable enable`.
 
 #### Code coverage
-Filter out unwanted classes:
-- `/p:ExcludeByAttribute=_ExcludeFromCodeCoverage`
+Filter out unwanted code in code coverage:
+- `/p:ExcludeByAttribute=DebuggerNonUserCode`
 - `/p:[MyAssembly]System.*`.
 
 #### Deterministic build

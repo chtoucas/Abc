@@ -13,7 +13,7 @@ namespace Abc.Utilities
     /// purposes.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
+    [DebuggerNonUserCode]
     [AttributeUsage(
         AttributeTargets.Constructor
         | AttributeTargets.Method

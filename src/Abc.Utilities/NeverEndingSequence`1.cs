@@ -13,8 +13,7 @@ namespace Abc.Utilities
     using System.Diagnostics.Contracts;
 
     // TODO: name.
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
-    [DebuggerDisplay("Count = ∞")]
+    [DebuggerNonUserCode, DebuggerDisplay("Count = ∞")]
     internal sealed class NeverEndingSequence<T> : IEnumerable<T>, IEnumerator<T>
     {
         [NotNull] private readonly T _element;

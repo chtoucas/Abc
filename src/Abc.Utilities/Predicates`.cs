@@ -9,14 +9,12 @@ namespace Abc.Utilities
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class Predicates
     {
         [ExcludeFromCodeCoverage]
         protected Predicates() { }
     }
 
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class Predicates<TSource>
     {
         [ExcludeFromCodeCoverage]
@@ -29,13 +27,15 @@ namespace Abc.Utilities
         /// Represents the function that always returns false.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Func<bool> False = () => false;
+        [DebuggerNonUserCode]
+        public static Func<bool> False { get; } = () => false;
 
         /// <summary>
         /// Represents the function that always returns true.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Func<bool> True = () => true;
+        [DebuggerNonUserCode]
+        public static Func<bool> True { get; } = () => true;
     }
 
     internal partial class Predicates<TSource>
@@ -44,12 +44,14 @@ namespace Abc.Utilities
         /// Represents the predicate that always evaluates to false.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Func<TSource, bool> False = _ => false;
+        [DebuggerNonUserCode]
+        public static Func<TSource, bool> False { get; } = _ => false;
 
         /// <summary>
         /// Represents the predicate that always evaluates to true.
         /// <para>This field is read-only.</para>
         /// </summary>
-        public static readonly Func<TSource, bool> True = _ => true;
+        [DebuggerNonUserCode]
+        public static Func<TSource, bool> True { get; } = _ => true;
     }
 }

@@ -10,8 +10,6 @@
       We cannot include a ProjectReference to Abc.Utilities.csproj:
       Error CS0433: The type 'PureAttribute' exists in both 'Abc.Utilities' and 'mscorlib'.
     -->
-    <FilesToExclude Include="$(SourceRoot)Abc.Utilities\AssemblyInfo.cs" />
-    <FilesToExclude Include="$(SourceRoot)Abc.Utilities\bin\**\*.*" />
     <FilesToExclude Include="$(SourceRoot)Abc.Utilities\obj\**\*.*" />
     <FilesToExclude Include="$(SourceRoot)Abc.Utilities\System\**\*.*" />
 

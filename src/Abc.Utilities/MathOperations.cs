@@ -14,7 +14,6 @@ namespace Abc.Utilities
     /// Provides static methods for common mathematical operations.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class MathOperations
     {
         [ExcludeFromCodeCoverage]
@@ -94,7 +93,7 @@ namespace Abc.Utilities
         /// 32-bit unsigned integer.
         /// <para>This method does NOT validate its parameters.</para>
         /// </summary>
-        [Pure]
+        [Pure, DebuggerNonUserCode]
         // Code size = 19 bytes.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Divide(int m, int n)
@@ -109,7 +108,7 @@ namespace Abc.Utilities
         /// 64-bit unsigned integer.
         /// <para>This method does NOT validate its parameters.</para>
         /// </summary>
-        [Pure]
+        [Pure, DebuggerNonUserCode]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long Divide(long m, long n)
         {
@@ -128,7 +127,7 @@ namespace Abc.Utilities
         /// The remainder <paramref name="r"/> is in the range from 0 to
         /// (<paramref name="n"/> - 1), both included.
         /// </remarks>
-        [Pure]
+        [Pure, DebuggerNonUserCode]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Divide(int m, int n, out int r)
         {
@@ -160,7 +159,7 @@ namespace Abc.Utilities
         /// The remainder <paramref name="r"/> is in the range from 0 to
         /// (<paramref name="n"/> - 1), both included.
         /// </remarks>
-        [Pure]
+        [Pure, DebuggerNonUserCode]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long Divide(long m, long n, out long r)
         {
@@ -187,7 +186,7 @@ namespace Abc.Utilities
         /// The remainder is in the range from 0 to (<paramref name="n"/> - 1),
         /// both included.
         /// </remarks>
-        [Pure]
+        [Pure, DebuggerNonUserCode]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Modulo(int m, int n)
         {
@@ -206,7 +205,7 @@ namespace Abc.Utilities
         /// The remainder is in the range from 0 to (<paramref name="n"/> - 1),
         /// both included.
         /// </remarks>
-        [Pure]
+        [Pure, DebuggerNonUserCode]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long Modulo(long m, long n)
         {
@@ -226,7 +225,7 @@ namespace Abc.Utilities
         /// <paramref name="n"/>, both included.
         /// </remarks>
         // Opération modulo rectifiée ("adjusted").
-        [Pure]
+        [Pure, DebuggerNonUserCode]
         // Code size = 22 bytes.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int AdjustedModulo(int m, int n)
@@ -247,7 +246,7 @@ namespace Abc.Utilities
         /// The adjusted remainder is in the range from 1 to
         /// <paramref name="n"/>, both included.
         /// </remarks>
-        [Pure]
+        [Pure, DebuggerNonUserCode]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long AdjustedModulo(long m, long n)
         {

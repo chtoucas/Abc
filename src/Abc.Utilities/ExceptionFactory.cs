@@ -16,7 +16,6 @@ namespace Abc.Utilities
     /// Provides static methods to create exceptions.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class ExceptionFactory
     {
         [ExcludeFromCodeCoverage]
@@ -25,14 +24,17 @@ namespace Abc.Utilities
 
     internal partial class ExceptionFactory
     {
+        [DebuggerNonUserCode]
         public static InvalidOperationException ControlFlow =>
             new InvalidOperationException(
                 "The flow of execution just reached a section of the code that should have been unreachable."
                 + $"{Environment.NewLine}Most certainly signals a coding error. Please report.");
 
+        [DebuggerNonUserCode]
         public static InvalidOperationException EmptySequence =>
             new InvalidOperationException("The sequence was empty.");
 
+        [DebuggerNonUserCode]
         public static NotSupportedException ReadOnlyCollection =>
             new NotSupportedException("The collection is read-only.");
     }
@@ -40,8 +42,7 @@ namespace Abc.Utilities
     // Argument exceptions.
     internal partial class ExceptionFactory
     {
-        [Pure]
-        [DebuggerStepThrough]
+        [Pure, DebuggerNonUserCode, DebuggerStepThrough]
         public static ArgumentException InvalidType(
             string paramName, Type expected, object obj) =>
             new ArgumentException(
