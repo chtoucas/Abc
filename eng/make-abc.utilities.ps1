@@ -29,7 +29,8 @@ try {
             Invoke-Coverlet `
                 -ProjectName   $PROJECT_NAME `
                 -Configuration $Configuration `
-                -Framework     $Framework
+                -Framework     $Framework `
+                -IsTestProject
         }
         'pack' {
             $project = Join-Path $SRC_DIR $PROJECT_NAME
@@ -58,7 +59,7 @@ try {
                 & dotnet nuget push $package --force-english-output -s myget
                     || die 'Failed to push the package to MyGet.'
             }
-            
+
             # TODO: apikey warning
             # https://github.community/t/github-package-registry-not-compatible-with-dotnet-nuget-client/14392/6
             if ((Read-Host "Publish package to GitHub?", "[y/N]") -eq "y") {
