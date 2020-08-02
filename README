@@ -25,22 +25,12 @@ TODO:
   https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository -->
 - Abc.Utilities:
   * README.md.
-  * add NETCOREAPP1_x?
   * linked directories and add new file to a project.
   * within VS add DefaultTargetFramework?
-  * test DebugEx.
-    https://github.com/dotnet/runtime/issues/12031
-    https://github.com/dotnet/corefx/blob/master/src/System.Diagnostics.Debug/tests/DebugTestsNoListeners.cs
-  * some classes could be made public.
-  * code coverage for a consumer library of a source only package.
-    ExcludeByAttribute? ExcludeByFile? XPlat? runsettings.
+  * some classes could be public.
+  * runsettings.
     https://docs.microsoft.com/en-us/visualstudio/test/customizing-code-coverage-analysis?view=vs-2019
     https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019
-  * use extension .g.cs?
-  * disable warnings?
-    #if ABC_UTILITIES_DISABLE_WARNINGS
-    #pragma warning disable
-    #endif
 - editorconfig
 - set up CI
 - use Nerdbank.GitVersioning?

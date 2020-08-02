@@ -27,7 +27,7 @@
 // SOFTWARE.
 #endregion
 
-#if NETSTANDARD1_x // Missing attributes
+#if NETSTANDARD1_x // SerializableAttribute
 
 namespace System
 {
@@ -39,6 +39,10 @@ namespace System
         Inherited = false)]
     internal sealed class SerializableAttribute : Attribute { }
 }
+
+#endif
+
+#if NETSTANDARD1_x || NETCOREAPP1_x // ExcludeFromCodeCoverageAttribute
 
 namespace System.Diagnostics.CodeAnalysis
 {
@@ -54,6 +58,10 @@ namespace System.Diagnostics.CodeAnalysis
         Inherited = false)]
     internal sealed class ExcludeFromCodeCoverageAttribute : Attribute { }
 }
+
+#endif
+
+#if NETSTANDARD1_x || NETCOREAPP1_x // PureAttribute
 
 namespace System.Diagnostics.Contracts
 {

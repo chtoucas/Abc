@@ -27,7 +27,7 @@
 // SOFTWARE.
 #endregion
 
-#if NETSTANDARD2_0 || NETSTANDARD1_x || NETCOREAPP2_x || NETFRAMEWORK // Nullable attributes
+#if NETSTANDARD2_0 || NETSTANDARD1_x || NETCOREAPP2_x || NETCOREAPP1_x || NETFRAMEWORK // Nullable attributes
 
 namespace System.Diagnostics.CodeAnalysis
 {
