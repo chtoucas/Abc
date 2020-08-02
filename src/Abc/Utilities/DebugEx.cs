@@ -6,6 +6,7 @@
 namespace Abc.Utilities
 {
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Provides static methods that help debug your code.
@@ -17,6 +18,7 @@ namespace Abc.Utilities
     [DebuggerNonUserCode]
     internal abstract partial class DebugEx
     {
+        [ExcludeFromCodeCoverage]
         protected DebugEx() { }
     }
 
