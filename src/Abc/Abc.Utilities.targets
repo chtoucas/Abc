@@ -3,6 +3,9 @@
   <Import Project="$(PkgAbc_Utilities_Sources__Content)NoContent.targets" />
 
   <ItemGroup>
+    <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)_ExcludeFromCodeCoverageAttribute.cs">
+      <Link>Utilities\_ExcludeFromCodeCoverageAttribute.cs</Link>
+    </Compile>
     <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)ExceptionFactory.cs">
       <Link>Utilities\ExceptionFactory.cs</Link>
     </Compile>
