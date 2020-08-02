@@ -16,10 +16,7 @@ namespace Abc.Utilities
     // - add unconstrained versions.
     // - now that we have NRTs, the attr ValidatedNotNull seems useless?
 
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [ExcludeFromCodeCoverage]
-#endif
-    [DebuggerNonUserCode]
+    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class Guard
     {
         [ExcludeFromCodeCoverage]

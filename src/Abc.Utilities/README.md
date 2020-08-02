@@ -14,14 +14,7 @@ Usage
 - `PkgAbc_Utilities_Sources__Content`
 - `PkgAbc_Utilities_Sources__ContentCSharp`
 
-Optional properties.
-- `PkgAbc_Utilities_Sources__EnableCodeCoverage`
-
 There is also `PkgAbc_Utilities_Sources` if GeneratePathProperty = true.
-
-### Compiler symbols
-
-- `ABC_UTILITIES_ENABLE_CODE_COVERAGE`
 
 ### Only import what you really need
 
@@ -48,10 +41,7 @@ Instead of static classes, we use abstract partial classes. For instance:
 //
 namespace Abc.Utilities
 {
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [ExcludeFromCodeCoverage]
-#endif
-    [DebuggerNonUserCode]
+    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class MathOperations
     {
         protected MathOperations() { }
@@ -71,15 +61,16 @@ namespace MyNamespace
 
 ### Notes
 
-All classes carry are marked with the attribute `DebuggerNonUserCode`.
+All classes carry are marked with the attributes `DebuggerNonUserCode`
+and `_ExcludeFromCodeCoverage`.
 
 #### NRTs
 All files start with `#nullable enable`.
 
 #### Code coverage
-Unless `ABC_UTILITIES_ENABLE_CODE_COVERAGE` is defined, all codes are
-marked with the attribute `ExcludeFromCodeCoverage`.
-Filter out "System" classes: `[Abc.Utilities]System.*`.
+Filter out unwanted classes:
+- `/p:ExcludeByAttribute=_ExcludeFromCodeCoverage`
+- `/p:[MyAssembly]System.*`.
 
 #### Deterministic build
 

@@ -16,10 +16,7 @@ namespace Abc.Utilities
     /// Provides static methods to create exceptions.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [ExcludeFromCodeCoverage]
-#endif
-    [DebuggerNonUserCode]
+    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     internal abstract partial class ExceptionFactory
     {
         [ExcludeFromCodeCoverage]

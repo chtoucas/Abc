@@ -16,10 +16,7 @@ namespace Abc.Utilities
     /// <remarks>
     /// Using this attribute suppresses the CA1062 warning.
     /// </remarks>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-#endif
-    [DebuggerNonUserCode]
+    [DebuggerNonUserCode, _ExcludeFromCodeCoverage]
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
     internal sealed class ValidatedNotNullAttribute : Attribute { }
 }
