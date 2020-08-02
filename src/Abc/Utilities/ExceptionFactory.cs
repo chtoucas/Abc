@@ -12,8 +12,7 @@ namespace Abc.Utilities
     // Argument exceptions.
     internal partial class ExceptionFactory
     {
-        [Pure]
-        [DebuggerStepThrough]
+        [Pure, DebuggerStepThrough]
         public static ArgumentException InvalidBinaryInput(string paramName) =>
             new ArgumentException(
                 "The binary data is not well-formed or is invalid.",

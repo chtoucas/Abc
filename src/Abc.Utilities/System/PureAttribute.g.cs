@@ -27,39 +27,7 @@
 // SOFTWARE.
 #endregion
 
-#if NETSTANDARD1_x // SerializableAttribute
-
-namespace System
-{
-    [AttributeUsage(
-        AttributeTargets.Class
-        | AttributeTargets.Delegate
-        | AttributeTargets.Enum
-        | AttributeTargets.Struct,
-        Inherited = false)]
-    internal sealed class SerializableAttribute : Attribute { }
-}
-
-#endif
-
-#if NETSTANDARD1_x || NETCOREAPP1_x // ExcludeFromCodeCoverageAttribute
-
-namespace System.Diagnostics.CodeAnalysis
-{
-    [AttributeUsage(
-        AttributeTargets.Assembly
-        | AttributeTargets.Class
-        | AttributeTargets.Constructor
-        | AttributeTargets.Event
-        | AttributeTargets.Method
-        | AttributeTargets.Property
-        | AttributeTargets.Struct,
-        AllowMultiple = false,
-        Inherited = false)]
-    internal sealed class ExcludeFromCodeCoverageAttribute : Attribute { }
-}
-
-#endif
+#nullable enable
 
 #if NETSTANDARD1_x || NETCOREAPP1_x // PureAttribute
 

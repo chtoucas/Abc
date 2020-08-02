@@ -7,19 +7,10 @@ namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
 
-    internal abstract partial class Thunks
-    {
-        [ExcludeFromCodeCoverage]
-        protected Thunks() { }
-    }
+    internal static partial class Thunks { }
 
-    internal abstract partial class Thunks<T>
-    {
-        [ExcludeFromCodeCoverage]
-        protected Thunks() { }
-    }
+    internal static partial class Thunks<T> { }
 
     internal partial class Thunks
     {

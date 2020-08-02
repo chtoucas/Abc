@@ -3,13 +3,13 @@
   <Import Project="$(PkgAbc_Utilities_Sources__Content)NoContent.targets" />
 
   <ItemGroup>
-    <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)ExceptionFactory.cs">
-      <Link>Utilities\ExceptionFactory.cs</Link>
+    <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)ExceptionFactory.g.cs">
+      <Link>Utilities\ExceptionFactory.g.cs</Link>
     </Compile>
-    <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)MathOperations.cs">
-      <Link>Utilities\MathOperations.cs</Link>
+    <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)MathOperations.g.cs">
+      <Link>Utilities\MathOperations.g.cs</Link>
     </Compile>
-    <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)system\NullableAttributes.cs">
+    <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)system\NullableAttributes.g.cs">
       <Visible>false</Visible>
     </Compile>
   </ItemGroup>

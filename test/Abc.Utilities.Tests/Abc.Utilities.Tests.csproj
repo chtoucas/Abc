@@ -8,7 +8,7 @@
   <ItemGroup>
     <!--
       We cannot include a ProjectReference to Abc.Utilities.csproj:
-      Error CS0433: The type 'PureAttribute' exists in both 'Abc.Utilities' and 'mscorlib'.
+        Error CS0433: The type 'PureAttribute' exists in both 'Abc.Utilities' and 'mscorlib'.
     -->
     <FilesToExclude Include="$(SourceRoot)Abc.Utilities\obj\**\*.*" />
     <FilesToExclude Include="$(SourceRoot)Abc.Utilities\System\**\*.*" />
@@ -16,7 +16,7 @@
     <Compile Include="$(SourceRoot)Abc.Utilities\**\*.cs" Exclude="@(FilesToExclude)">
       <Visible>false</Visible>
     </Compile>
-    <Compile Include="$(SourceRoot)Abc.Utilities\System\NullableAttributes.cs">
+    <Compile Include="$(SourceRoot)Abc.Utilities\System\NullableAttributes.g.cs">
       <Visible>false</Visible>
     </Compile>
   </ItemGroup>

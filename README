@@ -27,7 +27,6 @@ TODO:
   * README.md.
   * linked directories and add new file to a project.
   * within VS add DefaultTargetFramework?
-  * some classes could be public.
   * runsettings.
     https://docs.microsoft.com/en-us/visualstudio/test/customizing-code-coverage-analysis?view=vs-2019
     https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019

@@ -10,9 +10,9 @@
       },
       "Abc.Utilities.Sources": {
         "type": "Direct",
-        "requested": "[0.1.0-alpha20, )",
-        "resolved": "0.1.0-alpha20",
-        "contentHash": "r9AYOoofEZn8pyomnTvHrc24NtW78hn9eh4mNAbdr6NrSCpHUhBfg+3bDFd1QHPQUgn6mm7U0xtm55+kbPYhcQ=="
+        "requested": "[0.1.0-alpha23, )",
+        "resolved": "0.1.0-alpha23",
+        "contentHash": "aZGaGMxEzzESbf5PX5ImF0lROYExEHI7yGhLgKU+c9DTHQ3S707CrjIQL40+M6r9YYFRa6tilImfRmi2uJoVwA=="
       },
       "Microsoft.CodeAnalysis.FxCopAnalyzers": {
         "type": "Direct",

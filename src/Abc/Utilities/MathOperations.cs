@@ -125,6 +125,7 @@ namespace Abc.Utilities
         // Place" (Goldberg).
         // 1. threshold > 0, seuil absolu à ne pas dépasser.
         // 2. ulpThreshold > 0
+        [Pure]
         public static bool AreNearby(
             double x, double y, double threshold, int ulpThreshold)
         {

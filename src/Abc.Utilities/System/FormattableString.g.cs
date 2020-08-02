@@ -27,6 +27,8 @@
 // SOFTWARE.
 #endregion
 
+#nullable enable
+
 #if NETSTANDARD1_2 || NETSTANDARD1_1 || NETSTANDARD1_0 || NET452 || NET451 || NET45 // FormattableString
 
 namespace System

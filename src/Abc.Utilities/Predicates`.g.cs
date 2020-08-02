@@ -7,19 +7,10 @@ namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
 
-    internal abstract partial class Predicates
-    {
-        [ExcludeFromCodeCoverage]
-        protected Predicates() { }
-    }
+    internal static partial class Predicates { }
 
-    internal abstract partial class Predicates<TSource>
-    {
-        [ExcludeFromCodeCoverage]
-        protected Predicates() { }
-    }
+    internal static partial class Predicates<TSource> { }
 
     internal partial class Predicates
     {

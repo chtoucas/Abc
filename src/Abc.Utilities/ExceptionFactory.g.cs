@@ -9,18 +9,13 @@ namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Provides static methods to create exceptions.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    internal abstract partial class ExceptionFactory
-    {
-        [ExcludeFromCodeCoverage]
-        protected ExceptionFactory() { }
-    }
+    internal static partial class ExceptionFactory { }
 
     internal partial class ExceptionFactory
     {

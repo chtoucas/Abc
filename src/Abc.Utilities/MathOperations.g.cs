@@ -6,7 +6,6 @@
 namespace Abc.Utilities
 {
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Runtime.CompilerServices;
 
@@ -14,11 +13,7 @@ namespace Abc.Utilities
     /// Provides static methods for common mathematical operations.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    internal abstract partial class MathOperations
-    {
-        [ExcludeFromCodeCoverage]
-        protected MathOperations() { }
-    }
+    internal static partial class MathOperations { }
 
     // Euclidian division.
     //
