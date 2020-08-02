@@ -6,23 +6,13 @@
 namespace Abc.Utilities
 {
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Provides static methods that help debug your code.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-#if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [ExcludeFromCodeCoverage]
-#endif
     [DebuggerNonUserCode]
-    internal abstract partial class DebugEx
-    {
-        [ExcludeFromCodeCoverage]
-        protected DebugEx() { }
-    }
-
-    internal partial class DebugEx
+    internal static class DebugEx
     {
         /// <summary>
         /// Checks that <paramref name="value"/> is not null.
