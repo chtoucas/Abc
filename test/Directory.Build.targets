@@ -3,6 +3,11 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
 
   <PropertyGroup>
+    <!--
+      This property is defined automatically when we import Microsoft.NET.Test.Sdk
+      (see Microsoft.NET.Test.Sdk.props), but it is not yet the case here since
+      we use it to conditionally load Microsoft.NET.Test.Sdk.
+    -->
     <IsTestProject Condition=" '$(IsTestProject)' == '' ">false</IsTestProject>
 
     <!--
