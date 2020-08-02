@@ -5,11 +5,14 @@ namespace Abc.Utilities
 {
     using System.Diagnostics;
 
+    // TODO: testing.
+    // https://github.com/dotnet/runtime/issues/12031
+    // https://github.com/dotnet/corefx/blob/master/src/System.Diagnostics.Debug/tests/DebugTestsNoListeners.cs
+
     /// <summary>
     /// Provides static methods that help debug your code.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    [DebuggerNonUserCode]
     internal static class DebugEx
     {
         /// <summary>
