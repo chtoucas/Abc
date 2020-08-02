@@ -8,7 +8,7 @@
       (see Microsoft.NET.Test.Sdk.props), but it is not yet the case here since
       we use it to conditionally load Microsoft.NET.Test.Sdk.
     -->
-    <IsTestProject Condition=" '$(IsTestProject)' == '' ">false</IsTestProject>
+    <IsTestProject Condition=" '$(IsTestProject)' == '' ">true</IsTestProject>
 
     <!--
       CA1034    Nested types should not be visible (Design)
