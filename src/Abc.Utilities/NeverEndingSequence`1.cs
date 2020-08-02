@@ -14,7 +14,7 @@ namespace Abc.Utilities
 
     // TODO: name.
 #if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
 #endif
     [DebuggerNonUserCode]
     [DebuggerDisplay("Count = ∞")]

@@ -6,6 +6,7 @@
 namespace Abc.Utilities
 {
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Runtime.CompilerServices;
 
@@ -14,11 +15,12 @@ namespace Abc.Utilities
     /// <para>This class cannot be inherited.</para>
     /// </summary>
 #if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
 #endif
     [DebuggerNonUserCode]
     internal abstract partial class MathOperations
     {
+        [ExcludeFromCodeCoverage]
         protected MathOperations() { }
     }
 

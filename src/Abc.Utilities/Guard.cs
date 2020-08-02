@@ -7,6 +7,7 @@ namespace Abc.Utilities
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     // Will most certainly be obsoleted with C# 9.0.
@@ -16,11 +17,12 @@ namespace Abc.Utilities
     // - now that we have NRTs, the attr ValidatedNotNull seems useless?
 
 #if !ABC_UTILITIES_ENABLE_CODE_COVERAGE
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
 #endif
     [DebuggerNonUserCode]
     internal abstract partial class Guard
     {
+        [ExcludeFromCodeCoverage]
         protected Guard() { }
     }
 
