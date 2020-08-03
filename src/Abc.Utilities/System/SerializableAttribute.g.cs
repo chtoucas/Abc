@@ -27,8 +27,6 @@
 // SOFTWARE.
 #endregion
 
-#nullable enable
-
 #if NETSTANDARD1_x // SerializableAttribute
 
 namespace System

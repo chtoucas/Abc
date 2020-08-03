@@ -27,8 +27,6 @@
 // SOFTWARE.
 #endregion
 
-#nullable enable
-
 #if NETSTANDARD1_x || NETCOREAPP1_x // PureAttribute
 
 namespace System.Diagnostics.Contracts
