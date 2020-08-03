@@ -1,15 +1,15 @@
 <Project>
 
-  <Import Project="$(PkgAbc_Utilities_Sources__Content)NoContent.targets" />
+  <Import Project="$(PkgAbc_Utilities_Sources__ContentFiles)NoContent.targets" />
 
   <ItemGroup>
-    <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)ExceptionFactory.g.cs">
+    <Compile Include="$(PkgAbc_Utilities_Sources__CSharpFiles)ExceptionFactory.g.cs">
       <Link>Utilities\ExceptionFactory.g.cs</Link>
     </Compile>
-    <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)MathOperations.g.cs">
+    <Compile Include="$(PkgAbc_Utilities_Sources__CSharpFiles)MathOperations.g.cs">
       <Link>Utilities\MathOperations.g.cs</Link>
     </Compile>
-    <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)system\NullableAttributes.g.cs">
+    <Compile Include="$(PkgAbc_Utilities_Sources__CSharpFiles)system\NullableAttributes.g.cs">
       <Visible>false</Visible>
     </Compile>
   </ItemGroup>

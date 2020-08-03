@@ -7,14 +7,14 @@
 
   <!--
     Only import Abc.Utilities.targets when Abc.Utilities.Sources.props
-    has been fully loaded, something we can detect by checking that the
-    prop PkgAbc_Utilities_Sources__Content is not empty. Otherwise, the
-    Import within Abc.Utilities.targets will fail.
+    has been fully loaded. Otherwise, the props required by Abc.Utilities.targets
+    will be empty.
   -->
-  <Import Project="$(MSBuildThisFileDirectory)Abc.Utilities.targets" Condition=" '$(PkgAbc_Utilities_Sources__Content)' != '' " />
+  <Import Project="$(MSBuildThisFileDirectory)Abc.Utilities.targets"
+          Condition=" '$(TargetFramework)' != '' " />
 
   <ItemGroup>
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha23">
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha24">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
