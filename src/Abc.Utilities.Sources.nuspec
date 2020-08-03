@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
-  <metadata>
+  <!--
+    props/targets         -> NuGet 2.5+
+    developmentDependency -> NuGet 2.8+
+    contentFiles          -> NuGet 3.3+
+    buildMultiTargeting   -> NuGet 4.0+
+  -->
+  <metadata minClientVersion="4.0">
     <!-- Required elements -->
     <id>Abc.Utilities.Sources</id>
     <version>$version$</version>
@@ -16,22 +22,23 @@ This is a source code only package providing various utilities used internally b
     <developmentDependency>true</developmentDependency>
     <license type="expression">$licenseExpression$</license>
     <projectUrl>$projectUrl$</projectUrl>
-    <releaseNotes>$releaseNotes$</releaseNotes>
+    <releaseNotes></releaseNotes>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <repository type="$repositoryType$" url="$repositoryUrl$" />
     <tags>Helpers Utilities</tags>
     <title>Abc Utilities [sources]</title>
 
+    <!--
     <contentFiles>
-      <files include="cs/any/**/*.cs" buildAction="Compile" />
-      <!--<files include="*.targets" buildAction="None" />-->
+      <files include="cs/netstandard1.1/**/*.cs" buildAction="Compile" />
     </contentFiles>
+    -->
   </metadata>
 
   <files>
-    <file src="README.md" target="" />
+    <file src="readme.txt" target="" />
     <file src="_build\**" target="build\" />
-    <file src="_content\*.targets" target="contentFiles\" />
+    <file src="_contentFiles\**" target="contentFiles\" />
     <file src="System\**\*.cs" target="contentFiles\cs\netstandard1.1\abc.utilities\system\" />
     <file src="**\*.cs" target="contentFiles\cs\netstandard1.1\abc.utilities\" exclude="AssemblyInfo.cs;System\**\*.cs;obj\**" />
   </files>

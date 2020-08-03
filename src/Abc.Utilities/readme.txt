@@ -16,19 +16,23 @@ Usage
 
 There is also `PkgAbc_Utilities_Sources` if GeneratePathProperty = true.
 
+### Compiler symbols
+
+`CONTRACTS_FULL`
+
 ### Only import what you really need
 
 ```xml
 <Import Project="$(PkgAbc_Utilities_Sources__Content)NoContent.targets" />
 
 <ItemGroup>
-  <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)ExceptionFactory.cs">
-    <Link>Utilities\ExceptionFactory.cs</Link>
+  <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)ExceptionFactory.g.cs">
+    <Link>Utilities\ExceptionFactory.g.cs</Link>
   </Compile>
-  <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)MathOperations.cs">
-    <Link>Utilities\MathOperations.cs</Link>
+  <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)MathOperations.g.cs">
+    <Link>Utilities\MathOperations.g.cs</Link>
   </Compile>
-  <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)system\NullableAttributes.cs">
+  <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)system\NullableAttributes.g.cs">
     <Visible>false</Visible>
   </Compile>
 </ItemGroup>
@@ -36,12 +40,12 @@ There is also `PkgAbc_Utilities_Sources` if GeneratePathProperty = true.
 
 ### Extensibility
 
-Instead of static classes, we use abstract partial classes. For instance:
+All static classes are partial. For instance:
 ```csharp
 //
 namespace Abc.Utilities
 {
-    internal abstract partial class MathOperations
+    internal static partial class MathOperations
     {
         protected MathOperations() { }
     }
@@ -61,12 +65,11 @@ namespace Abc.Utilities
 ### Notes
 
 #### NRTs
-All files start with `#nullable enable`.
 
 #### Code coverage
 Filter out unwanted code in code coverage:
 - `/p:ExcludeByAttribute=DebuggerNonUserCode`
-- `/p:[MyAssembly]System.*`.
+- `/p:[Abc.?*]System.*`.
 
 #### Deterministic build
 

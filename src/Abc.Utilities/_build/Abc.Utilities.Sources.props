@@ -1,12 +1,23 @@
 <Project>
 
   <PropertyGroup>
-    <PkgAbc_Utilities_Sources__Content>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\contentFiles\'))</PkgAbc_Utilities_Sources__Content>
-    <PkgAbc_Utilities_Sources__ContentCSharp>$(PkgAbc_Utilities_Sources__Content)cs\netstandard1.1\abc.utilities\</PkgAbc_Utilities_Sources__ContentCSharp>
+    <!-- Not necessary if GeneratePathProperty = true -->
+    <PkgAbc_Utilities_Sources Condition=" '$(PkgAbc_Utilities_Sources)' == '' ">$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\'))</PkgAbc_Utilities_Sources>
+
+    <PkgAbc_Utilities_Sources__ContentFiles>$(PkgAbc_Utilities_Sources)contentFiles\</PkgAbc_Utilities_Sources__ContentFiles>
+    <PkgAbc_Utilities_Sources__CSharpFiles>$(PkgAbc_Utilities_Sources__ContentFiles)cs\netstandard1.1\abc.utilities\</PkgAbc_Utilities_Sources__CSharpFiles>
+
+    <!--<DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>-->
+    <DefineConstants>$(DefineConstants);INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>
+
+    <DefineConstants Condition=" $(TargetFramework.StartsWith('netstandard1.')) ">$(DefineConstants);NETSTANDARD1_x</DefineConstants>
+
+    <DefineConstants Condition=" $(TargetFramework.StartsWith('netcoreapp1.')) ">$(DefineConstants);NETCOREAPP1_x</DefineConstants>
+    <DefineConstants Condition=" $(TargetFramework.StartsWith('netcoreapp2.')) ">$(DefineConstants);NETCOREAPP2_x</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <SourceRoot Include="$(PkgAbc_Utilities_Sources__Content)" />
+    <SourceRoot Include="$(PkgAbc_Utilities_Sources__ContentFiles)" />
   </ItemGroup>
 
 </Project>
