@@ -22,14 +22,8 @@ Usage
 
 ```xml
 <ItemGroup>
-  <Compile Remove="$(PkgAbc_Utilities_Sources__CSharpFiles)**" />
-
-  <Compile Include="$(PkgAbc_Utilities_Sources__CSharpFiles)MathOperations.g.cs">
-    <Link>abc.utilities\MathOperations.g.cs</Link>
-  </Compile>
-  <Compile Include="$(PkgAbc_Utilities_Sources__CSharpFiles)system\NullableAttributes.g.cs">
-    <Visible>false</Visible>
-  </Compile>
+  <PkgAbc_Utilities_Sources__Compile Include="MathOperations.g.cs" />
+  <PkgAbc_Utilities_Sources__Compile Include="system\NullableAttributes.g.cs" />
 </ItemGroup>
 ```
 

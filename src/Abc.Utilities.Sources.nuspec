@@ -27,12 +27,6 @@ This is a source code only package providing various utilities used internally b
     <repository type="$repositoryType$" url="$repositoryUrl$" />
     <tags>Helpers Utilities</tags>
     <title>Abc Utilities [sources]</title>
-
-    <!--
-    <contentFiles>
-      <files include="cs/netstandard1.1/**/*.cs" buildAction="Compile" />
-    </contentFiles>
-    -->
   </metadata>
 
   <files>

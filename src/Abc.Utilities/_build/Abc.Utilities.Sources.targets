@@ -1,0 +1,9 @@
+<Project>
+
+  <ItemGroup Condition=" '@(PkgAbc_Utilities_Sources__Compile)' != '' ">
+    <Compile Remove="$(PkgAbc_Utilities_Sources__CompileRoot)**" />
+
+    <Compile Include="@(PkgAbc_Utilities_Sources__Compile->'$(PkgAbc_Utilities_Sources__CompileRoot)%(Identity)')" />
+  </ItemGroup>
+
+</Project>
