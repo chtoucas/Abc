@@ -1,13 +1,11 @@
 <Project>
 
   <PropertyGroup>
-    <!-- Not necessary if GeneratePathProperty = true -->
+    <!-- Not necessary if the package was imported using GeneratePathProperty = true -->
     <PkgAbc_Utilities_Sources Condition=" '$(PkgAbc_Utilities_Sources)' == '' ">$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\'))</PkgAbc_Utilities_Sources>
 
-    <PkgAbc_Utilities_Sources__ContentFiles>$(PkgAbc_Utilities_Sources)contentFiles\</PkgAbc_Utilities_Sources__ContentFiles>
-    <PkgAbc_Utilities_Sources__CSharpFiles>$(PkgAbc_Utilities_Sources__ContentFiles)cs\netstandard1.1\abc.utilities\</PkgAbc_Utilities_Sources__CSharpFiles>
+    <PkgAbc_Utilities_Sources__CSharpFiles>$(PkgAbc_Utilities_Sources)contentFiles\cs\netstandard1.1\abc.utilities\</PkgAbc_Utilities_Sources__CSharpFiles>
 
-    <!--<DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>-->
     <DefineConstants>$(DefineConstants);INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>
 
     <DefineConstants Condition=" $(TargetFramework.StartsWith('netstandard1.')) ">$(DefineConstants);NETSTANDARD1_x</DefineConstants>
@@ -17,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <SourceRoot Include="$(PkgAbc_Utilities_Sources__ContentFiles)" />
+    <SourceRoot Include="$(PkgAbc_Utilities_Sources)contentFiles\" />
   </ItemGroup>
 
 </Project>

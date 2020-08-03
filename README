@@ -25,7 +25,6 @@ TODO:
   https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository -->
 - Abc.Utilities:
   * README.md.
-  * linked directories and add new file to a project.
   * within VS add DefaultTargetFramework?
   * runsettings.
     https://docs.microsoft.com/en-us/visualstudio/test/customizing-code-coverage-analysis?view=vs-2019

@@ -38,7 +38,6 @@ This is a source code only package providing various utilities used internally b
   <files>
     <file src="readme.txt" target="" />
     <file src="_build\**" target="build\" />
-    <file src="_contentFiles\**" target="contentFiles\" />
     <file src="System\**\*.cs" target="contentFiles\cs\netstandard1.1\abc.utilities\system\" />
     <file src="**\*.cs" target="contentFiles\cs\netstandard1.1\abc.utilities\" exclude="AssemblyInfo.cs;System\**\*.cs;obj\**" />
   </files>

@@ -5,16 +5,22 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
-  <!--
-    Only import Abc.Utilities.targets when Abc.Utilities.Sources.props
-    has been fully loaded. Otherwise, the props required by Abc.Utilities.targets
-    will be empty.
-  -->
-  <Import Project="$(MSBuildThisFileDirectory)Abc.Utilities.targets"
-          Condition=" '$(TargetFramework)' != '' " />
+  <ItemGroup Condition=" '$(PkgAbc_Utilities_Sources__CSharpFiles)' != '' ">
+    <Compile Remove="$(PkgAbc_Utilities_Sources__CSharpFiles)**" />
+
+    <Compile Include="$(PkgAbc_Utilities_Sources__CSharpFiles)ExceptionFactory.g.cs">
+      <Link>Utilities\ExceptionFactory.g.cs</Link>
+    </Compile>
+    <Compile Include="$(PkgAbc_Utilities_Sources__CSharpFiles)MathOperations.g.cs">
+      <Link>Utilities\MathOperations.g.cs</Link>
+    </Compile>
+    <Compile Include="$(PkgAbc_Utilities_Sources__CSharpFiles)system\NullableAttributes.g.cs">
+      <Visible>false</Visible>
+    </Compile>
+  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha24">
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.0-alpha25">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

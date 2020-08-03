@@ -11,10 +11,8 @@ Usage
 
 ### MSBuild properties
 
-- `PkgAbc_Utilities_Sources__Content`
-- `PkgAbc_Utilities_Sources__ContentCSharp`
-
-There is also `PkgAbc_Utilities_Sources` if GeneratePathProperty = true.
+- `PkgAbc_Utilities_Sources` even if GeneratePathProperty != true
+- `PkgAbc_Utilities_Sources__CSharpFiles`
 
 ### Compiler symbols
 
@@ -23,16 +21,13 @@ There is also `PkgAbc_Utilities_Sources` if GeneratePathProperty = true.
 ### Only import what you really need
 
 ```xml
-<Import Project="$(PkgAbc_Utilities_Sources__Content)NoContent.targets" />
-
 <ItemGroup>
-  <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)ExceptionFactory.g.cs">
-    <Link>Utilities\ExceptionFactory.g.cs</Link>
+  <Compile Remove="$(PkgAbc_Utilities_Sources__CSharpFiles)**" />
+
+  <Compile Include="$(PkgAbc_Utilities_Sources__CSharpFiles)MathOperations.g.cs">
+    <Link>abc.utilities\MathOperations.g.cs</Link>
   </Compile>
-  <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)MathOperations.g.cs">
-    <Link>Utilities\MathOperations.g.cs</Link>
-  </Compile>
-  <Compile Include="$(PkgAbc_Utilities_Sources__ContentCSharp)system\NullableAttributes.g.cs">
+  <Compile Include="$(PkgAbc_Utilities_Sources__CSharpFiles)system\NullableAttributes.g.cs">
     <Visible>false</Visible>
   </Compile>
 </ItemGroup>
