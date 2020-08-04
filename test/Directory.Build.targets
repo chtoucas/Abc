@@ -3,12 +3,12 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
 
   <PropertyGroup>
-    <!--
+    <!-- (no longer used)
       This property is defined automatically when we import Microsoft.NET.Test.Sdk
       (see Microsoft.NET.Test.Sdk.props), but it is not yet the case here since
       we use it to conditionally load Microsoft.NET.Test.Sdk.
     -->
-    <IsTestProject Condition=" '$(IsTestProject)' == '' ">true</IsTestProject>
+    <!--<IsTestProject Condition=" '$(IsTestProject)' == '' ">true</IsTestProject>-->
 
     <!--
       CA1034    Nested types should not be visible (Design)
@@ -22,12 +22,14 @@
     <!--<RunSettingsFilePath>$(MSBuildThisFileDirectory)test-$(Configuration).runsettings</RunSettingsFilePath>-->
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
+  <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)xunit.runner.json">
       <Visible>false</Visible>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
 
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
 
     <PackageReference Include="coverlet.msbuild" Version="2.9.0">
