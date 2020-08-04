@@ -85,6 +85,11 @@
   <!-- Fully deterministic/reproducible/repeatable builds -->
   <PropertyGroup>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <!-- Error NU1403, not just for CI builds... It seems that dotnet tweaks the
+         packages before putting them in the fallback folder. -->
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+    <!-- Continuous integration -->
+    <RestoreLockedMode Condition=" '$(ContinuousIntegrationBuild)' == 'true' ">true</RestoreLockedMode>
   </PropertyGroup>
   <ItemGroup>
     <!--
@@ -95,11 +100,5 @@
     -->
     <SourceRoot Include="$(RepositoryRoot)" />
   </ItemGroup>
-
-  <!-- Continuous integration -->
-  <PropertyGroup Condition=" '$(ContinuousIntegrationBuild)' == 'true' ">
-    <RestoreLockedMode>true</RestoreLockedMode>
-    <!--<DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>-->
-  </PropertyGroup>
 
 </Project>
