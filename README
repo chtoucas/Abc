@@ -32,7 +32,6 @@ TODO:
   https://docs.microsoft.com/en-us/visualstudio/test/customizing-code-coverage-analysis?view=vs-2019
   https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019
 - editorconfig
-- set up CI
 - use Nerdbank.GitVersioning?
 - Do not commit the lock file for Abc.Testing? see the comments in.
   https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository
