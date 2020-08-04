@@ -75,17 +75,17 @@ namespace Abc.Utilities
 
         #region IEnumerable<T>
 
-        [Pure] public IEnumerator<T> GetEnumerator() => new Iterator_(_element);
-        [Pure] IEnumerator IEnumerable.GetEnumerator() => new Iterator_(_element);
+        [Pure] public IEnumerator<T> GetEnumerator() => new Iterator(_element);
+        [Pure] IEnumerator IEnumerable.GetEnumerator() => new Iterator(_element);
 
         #endregion
 
-        private sealed class Iterator_ : IEnumerator<T>
+        public sealed class Iterator : IEnumerator<T>
         {
             [NotNull] private readonly T _element;
             private bool _done = false;
 
-            public Iterator_([DisallowNull] T element)
+            public Iterator([DisallowNull] T element)
             {
                 _element = element;
             }
