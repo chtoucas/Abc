@@ -632,6 +632,7 @@
       "abc.testing": {
         "type": "Project",
         "dependencies": {
+          "NETStandard.Library": "1.6.1",
           "xunit.assert": "2.4.1",
           "xunit.extensibility.core": "2.4.1"
         }
@@ -1759,6 +1760,7 @@
       "abc.testing": {
         "type": "Project",
         "dependencies": {
+          "NETStandard.Library": "1.6.1",
           "xunit.assert": "2.4.1",
           "xunit.extensibility.core": "2.4.1"
         }

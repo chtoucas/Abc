@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netstandard2.0;net461;net452</TargetFrameworks>
-    
+    <TargetFrameworks>netstandard1.1;net452</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+
+    <Version>0.1.0</Version>
+
     <!--
       CA1034    Nested types should not be visible (Design)
       CA1303    Do not pass literals as localized parameters (Globalization)

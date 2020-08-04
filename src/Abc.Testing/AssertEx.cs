@@ -15,9 +15,9 @@ namespace Abc
     /// Contains various static methods that are used to verify that conditions
     /// are met during the process of running tests.
     /// </summary>
-    public sealed partial class AssertEx : Assert
+    public abstract partial class AssertEx : Assert
     {
-        private AssertEx() { }
+        protected AssertEx() { }
 
         /// <summary>
         /// Async test helpers.
@@ -36,7 +36,7 @@ namespace Abc
     public partial class AssertEx
     {
         /// <summary>
-        /// Verifies that an exception is exactly the given exception type 
+        /// Verifies that an exception is exactly the given exception type
         /// (and not a derived one), then that its message is not null.
         /// </summary>
         public static void CheckException(Type expectedExceptionType, Exception exn)
@@ -49,7 +49,7 @@ namespace Abc
 
         /// <summary>
         /// Verifies that an exception message is not null, then that the name
-        /// of the parameter that causes the exception is equal to 
+        /// of the parameter that causes the exception is equal to
         /// <paramref name="expectedParamName"/>.
         /// </summary>
         public static void CheckArgumentException(string expectedParamName, ArgumentException exn)
