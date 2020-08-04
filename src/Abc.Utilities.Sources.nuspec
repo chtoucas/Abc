@@ -12,7 +12,7 @@
     <version>$version$</version>
     <description>
       <![CDATA[
-This is a source code only package providing various utilities used internally by the other Abc packages.
+This is a source code only package providing internal utilities shared among the Abc packages.
     ]]>
     </description>
     <authors>$authors$</authors>
@@ -33,6 +33,6 @@ This is a source code only package providing various utilities used internally b
     <file src="readme.txt" target="" />
     <file src="_build\**" target="build\" />
     <file src="System\**\*.cs" target="contentFiles\cs\netstandard1.1\abc.utilities\system\" />
-    <file src="**\*.cs" target="contentFiles\cs\netstandard1.1\abc.utilities\" exclude="AssemblyInfo.cs;System\**\*.cs;obj\**" />
+    <file src="**\*.cs" target="contentFiles\cs\netstandard1.1\abc.utilities\" exclude="AssemblyInfo.cs;System\**;obj\**" />
   </files>
 </package>
