@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Abc.Testing\Abc.Testing.csproj" />
     <ProjectReference Include="..\..\src\Abc\Abc.csproj" />
-    <ProjectReference Include="..\Abc.Testing\Abc.Testing.csproj" />
   </ItemGroup>
 
 </Project>
