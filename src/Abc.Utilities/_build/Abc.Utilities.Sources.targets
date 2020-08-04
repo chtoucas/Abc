@@ -1,5 +1,12 @@
 <Project>
 
+  <PropertyGroup>
+    <PkgAbc_Utilities_Sources_ImportTfr Condition=" '$(PkgAbc_Utilities_Sources_ImportTfr)' == '' ">true</PkgAbc_Utilities_Sources_ImportTfr>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)Tfr.targets"
+          Condition=" '$(PkgAbc_Utilities_Sources_ImportTfr)' == 'true' " />
+
   <ItemGroup Condition=" '@(PkgAbc_Utilities_Sources__Compile)' != '' ">
     <Compile Remove="$(PkgAbc_Utilities_Sources__CompileRoot)**" />
 

@@ -1,0 +1,21 @@
+<Project>
+
+  <!--
+    Prerequesite: $(TargetFramework) has been set.
+
+    TargetFramework                 netstandard1.1
+    TargetFrameworkMoniker (TFM)    netstandard1.1
+    TargetFrameworkIdentifier (TFI) .NETStandard
+    TargetFrameworkVersion (TFV)    v1.1
+
+    Compiler symbol: NETSTANDARD1_x
+
+    TODO: .NET 5?
+  -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' != '.NETFramework' ">
+    <_TfvMajor>$([System.Version]::Parse($(TargetFrameworkVersion.Substring(1))).Major)</_TfvMajor>
+
+    <DefineConstants>$(DefineConstants);$(TargetFrameworkIdentifier.Substring(1).ToUpper())$(_TfvMajor)_x</DefineConstants>
+  </PropertyGroup>
+
+</Project>

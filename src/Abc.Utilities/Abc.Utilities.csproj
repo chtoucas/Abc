@@ -1,11 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1;net461</TargetFrameworks>
     <RootNamespace>Abc.Utilities</RootNamespace>
     <IsPackable>true</IsPackable>
 
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
 
     <NoWarn>$(NoWarn);CA1812</NoWarn>
   </PropertyGroup>
@@ -45,5 +47,14 @@
       version=$(Version)
     </NuspecProperties>
   </PropertyGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <!--
+    After D.B.targets.
+  -->
+
+  <Import Project="$(MSBuildThisFileDirectory)_build\Tfr.targets"
+          Condition=" '$(TargetFramework)' != '' " />
 
 </Project>

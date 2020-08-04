@@ -1,8 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net461;net452</TargetFrameworks>
     <RootNamespace>Abc.Utilities</RootNamespace>
+
+    <_AbcUtilitiesPath>$(SourceRoot)Abc.Utilities\</_AbcUtilitiesPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,13 +14,13 @@
       We cannot include a ProjectReference to Abc.Utilities.csproj:
         Error CS0433: The type 'PureAttribute' exists in both 'Abc.Utilities' and 'mscorlib'.
     -->
-    <FilesToExclude Include="$(SourceRoot)Abc.Utilities\obj\**\*.*" />
-    <FilesToExclude Include="$(SourceRoot)Abc.Utilities\System\**\*.*" />
+    <FilesToExclude Include="$(_AbcUtilitiesPath)obj\**\*.*" />
+    <FilesToExclude Include="$(_AbcUtilitiesPath)System\**\*.*" />
 
-    <Compile Include="$(SourceRoot)Abc.Utilities\**\*.cs" Exclude="@(FilesToExclude)">
+    <Compile Include="$(_AbcUtilitiesPath)**\*.cs" Exclude="@(FilesToExclude)">
       <Visible>false</Visible>
     </Compile>
-    <Compile Include="$(SourceRoot)Abc.Utilities\System\NullableAttributes.g.cs">
+    <Compile Include="$(_AbcUtilitiesPath)System\NullableAttributes.g.cs">
       <Visible>false</Visible>
     </Compile>
   </ItemGroup>
@@ -24,5 +28,14 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Abc.Testing\Abc.Testing.csproj" />
   </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <!--
+    After D.B.targets.
+  -->
+
+  <Import Project="$(_AbcUtilitiesPath)_build\Tfr.targets"
+          Condition=" '$(TargetFramework)' != '' " />
 
 </Project>
