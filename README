@@ -25,7 +25,7 @@ TODO:
   * readme.txt.
   * SourceRoot -> use github for Abc.Utilities.Sources.
 - within VS add DefaultTargetFramework?
-- TargetFrameworkMoniker? TFV, TFI
+- Use TFM, TFV, TFI instead of TargetFramework?
   https://github.com/dotnet/project-system/blob/master/docs/repo/coding-conventions.md#data
   https://github.com/NuGet/Home/issues/5154
 - test runsettings.
