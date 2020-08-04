@@ -16,11 +16,13 @@
 
   <!-- Local settings -->
   <PropertyGroup>
+    <!-- Meta-option: CI / Release -->
     <Retail Condition=" '$(Retail)' == '' ">false</Retail>
     <!-- Keep "DefaultTargetFramework" in sync with "global.json" -->
     <DefaultTargetFramework>netcoreapp3.1</DefaultTargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Retail)' == 'true' ">
+    <Configuration>Release</Configuration>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
@@ -85,7 +87,7 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <ItemGroup>
-    <!-- 
+    <!--
       Only necessary when ContinuousIntegrationBuild = true
       and when Source Link is not enabled (test projects for instance):
         "SourceRoot items must include at least one top-level (not nested) item

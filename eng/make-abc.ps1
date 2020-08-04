@@ -8,6 +8,7 @@ param(
     [ValidateSet('test', 'pack')]
                  [string] $Task = 'test',
 
+    # Ignored when $Task = 'pack'.
     [Parameter(Mandatory = $false)]
     [ValidateSet('Debug', 'Release')]
     [Alias('c')] [string] $Configuration = 'Debug',
@@ -32,10 +33,13 @@ try {
                 -Framework     $Framework
         }
         'pack' {
+            # We don't actually intend to publish a package.
+            # Only used to verify deterministism when referencing
+            # Abc.Utilities.Sources.
             $project = Join-Path $SRC_DIR $PROJECT_NAME
 
             Write-Host "Packing ""$PROJECT_NAME""..." -ForegroundColor Yellow
-            & dotnet pack $project -c $Configuration /p:Retail=true
+            & dotnet pack $project /p:Retail=true
                 || die 'Failed to pack the project.'
         }
     }

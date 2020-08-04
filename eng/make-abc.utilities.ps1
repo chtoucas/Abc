@@ -8,6 +8,7 @@ param(
     [ValidateSet('test', 'pack', 'push')]
                  [string] $Task = 'test',
 
+    # Ignored when $Task = 'pack'.
     [Parameter(Mandatory = $false)]
     [ValidateSet('Debug', 'Release')]
     [Alias('c')] [string] $Configuration = 'Debug',
@@ -36,11 +37,11 @@ try {
             $project = Join-Path $SRC_DIR $PROJECT_NAME
 
             Write-Host "Building ""$PROJECT_NAME""..." -ForegroundColor Yellow
-            & dotnet build $project -c $Configuration /p:FatBuild=true /p:Retail=true
+            & dotnet build $project /p:FatBuild=true /p:Retail=true
                 || die 'Failed to build the project.'
 
             Write-Host "`nPacking ""$PROJECT_NAME""..." -ForegroundColor Yellow
-            & dotnet pack $project -c $Configuration --no-build
+            & dotnet pack $project --no-build
                 || die 'Failed to pack the project.'
         }
         'push' {
