@@ -9,25 +9,26 @@ Abc.Utilities
 Usage
 -----
 
-### MSBuild properties
+MSBuild properties:
+- `PkgAbc_Utilities_Sources` (even if GeneratePathProperty != true)
+- `PkgAbc_Utilities_Sources__CompileRoot`
+- `PkgAbc_Utilities_Sources__Compile`
 
-- `PkgAbc_Utilities_Sources` even if GeneratePathProperty != true
-- `PkgAbc_Utilities_Sources__CSharpFiles`
+Compiler symbols:
+- `NETSTANDARD1_x`
+- `NETCOREAPP1_x`
+- `NETCOREAPP2_x`
 
-### Compiler symbols
+Optionally
+- `CONTRACTS_FULL`
 
-`CONTRACTS_FULL`
-
-### Only import what you really need
-
+Only import what you really need
 ```xml
 <ItemGroup>
   <PkgAbc_Utilities_Sources__Compile Include="MathOperations.g.cs" />
   <PkgAbc_Utilities_Sources__Compile Include="system\NullableAttributes.g.cs" />
 </ItemGroup>
 ```
-
-### Extensibility
 
 All static classes are partial. For instance:
 ```csharp
@@ -51,16 +52,14 @@ namespace Abc.Utilities
 }
 ```
 
-### Notes
+NRTs
 
-#### NRTs
-
-#### Code coverage
+Code coverage
 Filter out unwanted code in code coverage:
 - `/p:ExcludeByAttribute=DebuggerNonUserCode`
 - `/p:[Abc.?*]System.*`.
 
-#### Deterministic build
+Deterministic build
 
 Changelog
 ---------

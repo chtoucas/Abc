@@ -4,7 +4,7 @@
     <!-- Not necessary if the package was imported using GeneratePathProperty = true -->
     <PkgAbc_Utilities_Sources Condition=" '$(PkgAbc_Utilities_Sources)' == '' ">$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\'))</PkgAbc_Utilities_Sources>
 
-    <!-- Can we get the TxM dynamically? -->
+    <!-- REVIEW: can we get the TxM dynamically? -->
     <PkgAbc_Utilities_Sources__CompileRoot>$(PkgAbc_Utilities_Sources)contentFiles\cs\netstandard1.1\abc.utilities\</PkgAbc_Utilities_Sources__CompileRoot>
 
     <DefineConstants>$(DefineConstants);INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>
