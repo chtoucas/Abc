@@ -63,7 +63,7 @@
 
   <!-- Release vs Debug -->
   <Choose>
-    <When Condition=" $(Configuration) == 'Release' ">
+    <When Condition=" '$(Configuration)' == 'Release' ">
       <PropertyGroup>
         <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
 
