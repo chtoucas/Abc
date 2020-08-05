@@ -7,7 +7,7 @@
     <RootNamespace>Abc.Utilities</RootNamespace>
     <IsPackable>true</IsPackable>
 
-    <Version>0.1.2</Version>
+    <Version>0.2.0</Version>
 
     <NoWarn>$(NoWarn);CA1812</NoWarn>
   </PropertyGroup>
@@ -19,8 +19,9 @@
       net461;net452
     </TargetFrameworks>
 
-    <!-- We don't want to use the default lock file and, even if we don't intend
-         to use one, we must specify it (error NU1505) -->
+    <!-- We don't want to use the default lock file, nevertheless
+         we must specify it (error NU1505) even if we don't intend
+         to use one. -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <NuGetLockFilePath>$(MSBuildThisFileDirectory)packages.fat.lock.json</NuGetLockFilePath>
   </PropertyGroup>
@@ -54,7 +55,6 @@
     After D.B.targets.
   -->
 
-  <Import Project="$(MSBuildThisFileDirectory)_build\Tfr.targets"
-          Condition=" '$(TargetFramework)' != '' " />
+  <Import Project="$(MSBuildThisFileDirectory)_build\TargetFrameworkRange.targets" />
 
 </Project>

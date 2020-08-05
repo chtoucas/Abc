@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <!--
-      We cannot include a ProjectReference to Abc.Utilities.csproj:
+      Do not include a ProjectReference for Abc.Utilities.csproj:
         Error CS0433: The type 'PureAttribute' exists in both 'Abc.Utilities' and 'mscorlib'.
     -->
     <FilesToExclude Include="$(_AbcUtilitiesPath)obj\**\*.*" />
@@ -35,7 +35,6 @@
     After D.B.targets.
   -->
 
-  <Import Project="$(_AbcUtilitiesPath)_build\Tfr.targets"
-          Condition=" '$(TargetFramework)' != '' " />
+  <Import Project="$(_AbcUtilitiesPath)_build\TargetFrameworkRange.targets" />
 
 </Project>

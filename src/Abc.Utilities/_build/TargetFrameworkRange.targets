@@ -1,0 +1,43 @@
+<Project>
+
+  <!--
+    Define compiler symbols for framework ranges:
+      NETSTANDARD1_x
+      NETSTANDARD2_x
+      NETCOREAPP1_x
+      NETCOREAPP2_x
+      NETCOREAPP3_x
+      NETCOREAPP5_x
+      
+    We only care about .NETStandard and .NETCoreApp:
+      TargetFrameworkIdentifier = .NETStandard | .NETCoreApp 
+      TargetFrameworkVersion    = vX.X
+    
+    Examples:
+      TargetFramework (TF)              netstandard1.1 
+      TargetFrameworkMoniker (TFM)      .NETStandard,Version=v1.1 
+      TargetFrameworkIdentifier (TFI)   .NETStandard 
+      TargetFrameworkVersion (TFV)      v1.1
+      
+      Private props defined in https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.TargetFrameworkInference.targets
+      _ShortFrameworkIdentifier         netstandard   
+      _ShortFrameworkVersion            1.1           
+      
+      Compiler symbol                   NETSTANDARD1_1
+                                        NETSTANDARD1_x
+    
+    REVIEW: should work when .NET 5.0 is out as it seems that we'll get
+      TF  = net5.0
+      TFI = .NETCoreApp
+      TFV = v5.0
+    Will TargetFrameworkVersion still be prefixed with "v"?
+    See https://github.com/dotnet/designs/blob/master/accepted/2020/net5/net5.md
+  -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETStandard' or '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
+    <_TfrIdent>$(TargetFrameworkIdentifier.Substring(1).ToUpperInvariant())</_TfrIdent>
+    <_TfrMajor>$([System.Version]::Parse($(TargetFrameworkVersion.Substring(1))).Major)</_TfrMajor>
+
+    <DefineConstants>$(DefineConstants);$(_TfrIdent)$(_TfrMajor)_x</DefineConstants>
+  </PropertyGroup>
+
+</Project>

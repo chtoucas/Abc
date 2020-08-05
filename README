@@ -25,9 +25,6 @@ TODO:
   * readme.txt.
   * SourceRoot -> use github for Abc.Utilities.Sources.
 - within VS add DefaultTargetFramework?
-- Use TFM, TFV, TFI instead of TargetFramework?
-  https://github.com/dotnet/project-system/blob/master/docs/repo/coding-conventions.md#data
-  https://github.com/NuGet/Home/issues/5154
 - test runsettings.
   https://docs.microsoft.com/en-us/visualstudio/test/customizing-code-coverage-analysis?view=vs-2019
   https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019
