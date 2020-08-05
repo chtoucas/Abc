@@ -24,14 +24,12 @@ Packages:
 - https://www.myget.org/feed/narvalo-edge/package/nuget/Abc.Utilities.Sources
 
 TODO:
-- publish to github packages.
-- Abc.Utilities: SourceRoot -> use github for Abc.Utilities.Sources.
+- Abc.Utilities: SourceRoot -> use github uri's for Abc.Utilities.Sources.
 - within VS add DefaultTargetFramework?
 - test runsettings.
   https://docs.microsoft.com/en-us/visualstudio/test/customizing-code-coverage-analysis?view=vs-2019
   https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019
 - editorconfig
-- use Nerdbank.GitVersioning?
 - Do not commit the lock file for Abc.Testing? see the comments in.
   https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository
 References:

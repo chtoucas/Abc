@@ -37,7 +37,7 @@ try {
             $project = Join-Path $SRC_DIR $PROJECT_NAME
 
             Write-Host "Building ""$PROJECT_NAME""..." -ForegroundColor Yellow
-            & dotnet build $project /p:FatBuild=true /p:Retail=true
+            & dotnet build $project /p:MyFatBuild=true /p:MyRetail=true
                 || die 'Failed to build the project.'
 
             Write-Host "`nPacking ""$PROJECT_NAME""..." -ForegroundColor Yellow
@@ -63,11 +63,19 @@ try {
 
             # TODO: apikey warning
             # https://github.community/t/github-package-registry-not-compatible-with-dotnet-nuget-client/14392/6
-            if ((Read-Host "Publish package to GitHub?", "[y/N]") -eq "y") {
-                Write-Host "Pushing package to GitHub..." -ForegroundColor Yellow
-                & dotnet nuget push $package --force-english-output `
-                    -s https://nuget.pkg.github.com/chtoucas/index.json
-                    || die 'Failed to push the package to GitHub.'
+            # We use nuget.exe instead of dotnet since the latter does not have
+            # an option to specify a custom config.
+            $nuget = Join-Path $PSScriptRoot 'nuget.exe'
+            if (Test-Path $nuget) {
+                if ((Read-Host "Publish package to GitHub?", "[y/N]") -eq "y") {
+                    $configFile = Join-Path $env:AppData '\NuGet\NuGet.Config' -Resolve
+
+                    Write-Host "Pushing package to GitHub..." -ForegroundColor Yellow
+                    & $nuget push $package -ForceEnglishOutput `
+                        -Source github `
+                        -ConfigFile $configFile
+                        || die 'Failed to push the package to GitHub.'
+                }
             }
         }
     }
