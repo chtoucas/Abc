@@ -3,13 +3,6 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
 
   <PropertyGroup>
-    <!-- (no longer used)
-      This property is defined automatically when we import Microsoft.NET.Test.Sdk
-      (see Microsoft.NET.Test.Sdk.props), but it is not yet the case here since
-      we use it to conditionally load Microsoft.NET.Test.Sdk.
-    -->
-    <!--<IsTestProject Condition=" '$(IsTestProject)' == '' ">true</IsTestProject>-->
-
     <!--
       CA1034    Nested types should not be visible (Design)
       CA1303    Do not pass literals as localized parameters (Globalization)

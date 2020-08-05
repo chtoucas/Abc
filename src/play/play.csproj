@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(MyDefaultTargetFramework)</TargetFramework>
+    <RootNamespace>Abc</RootNamespace>
     <OutputType>Exe</OutputType>
 
     <!--

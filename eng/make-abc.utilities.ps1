@@ -49,33 +49,30 @@ try {
                 | sort LastWriteTime | select -Last 1
 
             if ($package -eq $null) {
-                Write-Host "There is nothing to be published." -ForegroundColor Yellow
+                Write-Host 'There is nothing to be published.' -ForegroundColor Yellow
                 exit 0
             }
 
             Write-Host "Found package ""$package""."
 
-            if ((Read-Host "Publish package to MyGet?", "[y/N]") -eq "y") {
-                Write-Host "Pushing package to MyGet..." -ForegroundColor Yellow
+            if ((Read-Host 'Publish package to MyGet?', '[y/N]') -eq 'y') {
+                Write-Host 'Pushing package to MyGet...' -ForegroundColor Yellow
                 & dotnet nuget push $package --force-english-output -s myget
                     || die 'Failed to push the package to MyGet.'
             }
 
             # TODO: apikey warning
             # https://github.community/t/github-package-registry-not-compatible-with-dotnet-nuget-client/14392/6
-            # We use nuget.exe instead of dotnet since the latter does not have
-            # an option to specify a custom config.
-            $nuget = Join-Path $PSScriptRoot 'nuget.exe'
-            if (Test-Path $nuget) {
-                if ((Read-Host "Publish package to GitHub?", "[y/N]") -eq "y") {
-                    $configFile = Join-Path $env:AppData '\NuGet\NuGet.Config' -Resolve
+            if ((Read-Host 'Publish package to GitHub?', '[y/N]') -eq 'y') {
+                # We use nuget.exe instead of dotnet since the latter does not have
+                # an option to specify a custom config.
+                $nuget = Join-Path $PSScriptRoot 'nuget.exe' -Resolve
+                $configFile = Join-Path $env:AppData '\NuGet\NuGet.Config' -Resolve
 
-                    Write-Host "Pushing package to GitHub..." -ForegroundColor Yellow
-                    & $nuget push $package -ForceEnglishOutput `
-                        -Source github `
-                        -ConfigFile $configFile
-                        || die 'Failed to push the package to GitHub.'
-                }
+                Write-Host 'Pushing package to GitHub...' -ForegroundColor Yellow
+                & $nuget push $package -ForceEnglishOutput -Source github `
+                    -ConfigFile $configFile
+                    || die 'Failed to push the package to GitHub.'
             }
         }
     }

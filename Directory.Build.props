@@ -7,19 +7,18 @@
     <ContinuousIntegrationBuild Condition=" '$(TF_BUILD)' == 'true' ">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <!-- Repository layout -->
+  <!-- Local settings -->
   <PropertyGroup>
+    <!-- Repository layout -->
     <MyRepositoryRoot>$(MSBuildThisFileDirectory)</MyRepositoryRoot>
     <MySourceRoot>$(MyRepositoryRoot)src\</MySourceRoot>
     <MyArtifactsRoot>$(MyRepositoryRoot)__\</MyArtifactsRoot>
-  </PropertyGroup>
 
-  <!-- Local settings -->
-  <PropertyGroup>
-    <!-- Meta-option: CI / Release -->
-    <MyRetail Condition=" '$(MyRetail)' == '' ">false</MyRetail>
     <!-- Keep "MyDefaultTargetFramework" in sync with "global.json" -->
     <MyDefaultTargetFramework>netcoreapp3.1</MyDefaultTargetFramework>
+
+    <!-- Meta-option for retail builds -->
+    <MyRetail Condition=" '$(MyRetail)' == '' ">false</MyRetail>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(MyRetail)' == 'true' ">
     <Configuration>Release</Configuration>
@@ -28,8 +27,6 @@
 
   <!-- Common settings -->
   <PropertyGroup>
-    <RootNamespace>Abc</RootNamespace>
-
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
 
@@ -85,11 +82,10 @@
   <!-- Fully deterministic/reproducible/repeatable builds -->
   <PropertyGroup>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <!-- Error NU1403, not just for CI builds... It seems that dotnet tweaks the
-         packages before putting them in the fallback folder. -->
-    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-    <!-- Continuous integration -->
     <RestoreLockedMode Condition=" '$(ContinuousIntegrationBuild)' == 'true' ">true</RestoreLockedMode>
+    <!-- Fix error NU1403, and not just for CI builds... It seems that dotnet
+         tweaks the packages before putting them in the fallback folder. -->
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
   </PropertyGroup>
   <ItemGroup>
     <!--
@@ -98,7 +94,7 @@
         "SourceRoot items must include at least one top-level (not nested) item
          when DeterministicSourcePaths is true"
     -->
-    <SourceRoot Include="$(MyRepositoryRoot)" />
+    <SourceRoot Include="$(MySourceRoot)" />
   </ItemGroup>
 
 </Project>
