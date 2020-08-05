@@ -6,7 +6,7 @@
     <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;net461;net452</TargetFrameworks>
     <RootNamespace>Abc.Utilities</RootNamespace>
 
-    <_AbcUtilitiesPath>$(SourceRoot)Abc.Utilities\</_AbcUtilitiesPath>
+    <MyAbcUtilitiesDir>$(MySourceRoot)Abc.Utilities\</MyAbcUtilitiesDir>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,13 +14,13 @@
       Do not include a ProjectReference for Abc.Utilities.csproj:
         Error CS0433: The type 'PureAttribute' exists in both 'Abc.Utilities' and 'mscorlib'.
     -->
-    <FilesToExclude Include="$(_AbcUtilitiesPath)obj\**\*.*" />
-    <FilesToExclude Include="$(_AbcUtilitiesPath)System\**\*.*" />
+    <FilesToExclude Include="$(MyAbcUtilitiesDir)obj\**\*.*" />
+    <FilesToExclude Include="$(MyAbcUtilitiesDir)System\**\*.*" />
 
-    <Compile Include="$(_AbcUtilitiesPath)**\*.cs" Exclude="@(FilesToExclude)">
+    <Compile Include="$(MyAbcUtilitiesDir)**\*.cs" Exclude="@(FilesToExclude)">
       <Visible>false</Visible>
     </Compile>
-    <Compile Include="$(_AbcUtilitiesPath)System\NullableAttributes.g.cs">
+    <Compile Include="$(MyAbcUtilitiesDir)System\NullableAttributes.g.cs">
       <Visible>false</Visible>
     </Compile>
   </ItemGroup>
@@ -35,6 +35,6 @@
     After D.B.targets.
   -->
 
-  <Import Project="$(_AbcUtilitiesPath)_build\TargetFrameworkRange.targets" />
+  <Import Project="$(MyAbcUtilitiesDir)_build\TargetFrameworkRange.targets" />
 
 </Project>

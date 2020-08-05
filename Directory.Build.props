@@ -9,19 +9,19 @@
 
   <!-- Repository layout -->
   <PropertyGroup>
-    <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
-    <SourceRoot>$(RepositoryRoot)src\</SourceRoot>
-    <ArtifactsRoot>$(RepositoryRoot)__\</ArtifactsRoot>
+    <MyRepositoryRoot>$(MSBuildThisFileDirectory)</MyRepositoryRoot>
+    <MySourceRoot>$(MyRepositoryRoot)src\</MySourceRoot>
+    <MyArtifactsRoot>$(MyRepositoryRoot)__\</MyArtifactsRoot>
   </PropertyGroup>
 
   <!-- Local settings -->
   <PropertyGroup>
     <!-- Meta-option: CI / Release -->
-    <Retail Condition=" '$(Retail)' == '' ">false</Retail>
-    <!-- Keep "DefaultTargetFramework" in sync with "global.json" -->
-    <DefaultTargetFramework>netcoreapp3.1</DefaultTargetFramework>
+    <MyRetail Condition=" '$(MyRetail)' == '' ">false</MyRetail>
+    <!-- Keep "MyDefaultTargetFramework" in sync with "global.json" -->
+    <MyDefaultTargetFramework>netcoreapp3.1</MyDefaultTargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Retail)' == 'true' ">
+  <PropertyGroup Condition=" '$(MyRetail)' == 'true' ">
     <Configuration>Release</Configuration>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
@@ -55,7 +55,7 @@
     <RepositoryUrl>https://github.com/chtoucas/Abc/</RepositoryUrl>
 
     <IsPackable>false</IsPackable>
-    <PackageOutputPath>$(ArtifactsRoot)packages\</PackageOutputPath>
+    <PackageOutputPath>$(MyArtifactsRoot)packages\</PackageOutputPath>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <PackageReleaseNotes></PackageReleaseNotes>
@@ -98,7 +98,7 @@
         "SourceRoot items must include at least one top-level (not nested) item
          when DeterministicSourcePaths is true"
     -->
-    <SourceRoot Include="$(RepositoryRoot)" />
+    <SourceRoot Include="$(MyRepositoryRoot)" />
   </ItemGroup>
 
 </Project>

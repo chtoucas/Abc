@@ -39,7 +39,7 @@ try {
             $project = Join-Path $SRC_DIR $PROJECT_NAME
 
             Write-Host "Packing ""$PROJECT_NAME""..." -ForegroundColor Yellow
-            & dotnet pack $project /p:Retail=true
+            & dotnet pack $project /p:MyRetail=true
                 || die 'Failed to pack the project.'
         }
     }

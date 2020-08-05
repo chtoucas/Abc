@@ -12,16 +12,15 @@
     <NoWarn>$(NoWarn);CA1812</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(FatBuild)' == 'true' ">
+  <PropertyGroup Condition=" '$(MyFatBuild)' == 'true' ">
     <TargetFrameworks>
       netstandard2.1;netstandard2.0;netstandard1.1;
       netcoreapp3.1;netcoreapp2.1;netcoreapp1.1;
       net461;net452
     </TargetFrameworks>
 
-    <!-- We don't want to use the default lock file, nevertheless
-         we must specify it (error NU1505) even if we don't intend
-         to use one. -->
+    <!-- We don't want to use the default lock file, nevertheless we must specify
+         a lock file (error NU1505) even if we don't intend to use one. -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <NuGetLockFilePath>$(MSBuildThisFileDirectory)packages.fat.lock.json</NuGetLockFilePath>
   </PropertyGroup>
@@ -36,7 +35,7 @@
   <PropertyGroup>
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
-    <NuspecFile>$(SourceRoot)Abc.Utilities.Sources.nuspec</NuspecFile>
+    <NuspecFile>$(MySourceRoot)Abc.Utilities.Sources.nuspec</NuspecFile>
     <NuspecBasePath>$(MSBuildThisFileDirectory)</NuspecBasePath>
     <NuspecProperties>
       authors=$(Authors);

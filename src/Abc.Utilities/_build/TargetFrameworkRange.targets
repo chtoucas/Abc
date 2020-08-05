@@ -8,24 +8,26 @@
       NETCOREAPP2_x
       NETCOREAPP3_x
       NETCOREAPP5_x
-      
+
     We only care about .NETStandard and .NETCoreApp:
-      TargetFrameworkIdentifier = .NETStandard | .NETCoreApp 
+      TargetFrameworkIdentifier = .NETStandard | .NETCoreApp
       TargetFrameworkVersion    = vX.X
-    
-    Examples:
-      TargetFramework (TF)              netstandard1.1 
-      TargetFrameworkMoniker (TFM)      .NETStandard,Version=v1.1 
-      TargetFrameworkIdentifier (TFI)   .NETStandard 
+
+    Example:
+      TargetFramework (TF)              netstandard1.1
+      TargetFrameworkMoniker (TFM)      .NETStandard,Version=v1.1
+      TargetFrameworkIdentifier (TFI)   .NETStandard
       TargetFrameworkVersion (TFV)      v1.1
-      
-      Private props defined in https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.TargetFrameworkInference.targets
-      _ShortFrameworkIdentifier         netstandard   
-      _ShortFrameworkVersion            1.1           
-      
       Compiler symbol                   NETSTANDARD1_1
-                                        NETSTANDARD1_x
-    
+
+      Private props defined in https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.TargetFrameworkInference.targets
+      _ShortFrameworkIdentifier         netstandard
+      _ShortFrameworkVersion            1.1
+
+      _TfrIdent                         NETSTANDARD
+      _TfrMajor                         1
+      Compiler symbol                   NETSTANDARD1_x
+
     REVIEW: should work when .NET 5.0 is out as it seems that we'll get
       TF  = net5.0
       TFI = .NETCoreApp
