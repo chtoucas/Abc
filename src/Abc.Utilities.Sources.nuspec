@@ -30,7 +30,7 @@ This is a source code only package providing internal utilities shared among the
   </metadata>
 
   <files>
-    <file src="README.md" target="" />
+    <file src="readme.txt" target="" />
     <file src="_build\**" target="build\" />
     <file src="System\**\*.cs" target="contentFiles\cs\netstandard1.1\abc.utilities\system\" />
     <file src="**\*.cs" target="contentFiles\cs\netstandard1.1\abc.utilities\" exclude="AssemblyInfo.cs;System\**;obj\**" />
