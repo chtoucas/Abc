@@ -6,19 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PkgAbc_Utilities_Sources__Compile Include="ExceptionFactory.g.cs">
+    <PkgAbc_Utilities_Sources__CompileItem Include="ExceptionFactory.g.cs">
       <Link>Utilities\%(Identity)</Link>
-    </PkgAbc_Utilities_Sources__Compile>
-    <PkgAbc_Utilities_Sources__Compile Include="MathOperations.g.cs">
+    </PkgAbc_Utilities_Sources__CompileItem>
+    <PkgAbc_Utilities_Sources__CompileItem Include="MathOperations.g.cs">
       <Link>Utilities\%(Identity)</Link>
-    </PkgAbc_Utilities_Sources__Compile>
-    <PkgAbc_Utilities_Sources__Compile Include="system\NullableAttributes.g.cs">
+    </PkgAbc_Utilities_Sources__CompileItem>
+    <PkgAbc_Utilities_Sources__CompileItem Include="system\NullableAttributes.g.cs">
       <Visible>false</Visible>
-    </PkgAbc_Utilities_Sources__Compile>
+    </PkgAbc_Utilities_Sources__CompileItem>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abc.Utilities.Sources" Version="0.1.2">
+    <PackageReference Include="Abc.Utilities.Sources" Version="0.2.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
