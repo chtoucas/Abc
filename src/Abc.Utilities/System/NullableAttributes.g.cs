@@ -29,6 +29,8 @@
 
 #if NETSTANDARD2_0 || NETSTANDARD1_x || NETCOREAPP2_x || NETCOREAPP1_x || NETFRAMEWORK // Nullable attributes
 
+#define INTERNAL_NULLABLE_ATTRIBUTES
+
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>Specifies that null is allowed as an input even if the corresponding type disallows it.</summary>

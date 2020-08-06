@@ -30,13 +30,10 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
 
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)Abc.snk</AssemblyOriginatorKeyFile>
 
     <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
-    <DefineConstants>$(DefineConstants);INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>
     <DefineConstants Condition=" '$(SignAssembly)' == 'true' ">$(DefineConstants);SIGNED_ASSEMBLY</DefineConstants>
 
     <Authors>chtoucas</Authors>
@@ -55,7 +52,6 @@
     <PackageOutputPath>$(MyArtifactsRoot)packages\</PackageOutputPath>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
-    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Release vs Debug -->

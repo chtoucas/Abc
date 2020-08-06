@@ -7,7 +7,7 @@
     <!-- REVIEW: can we get the TxM dynamically? TxM = Target x Moniker -->
     <PkgAbc_Utilities_Sources__CompileRoot>$(PkgAbc_Utilities_Sources)contentFiles\cs\netstandard1.1\abc.utilities\</PkgAbc_Utilities_Sources__CompileRoot>
 
-    <DefineConstants>$(DefineConstants);INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>
+    <!--<DefineConstants>$(DefineConstants);INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>-->
   </PropertyGroup>
 
   <ItemGroup>
