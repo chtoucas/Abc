@@ -3,6 +3,7 @@
   <!--
   https://github.com/Microsoft/vstest-docs/blob/master/docs/configure.md
   https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019
+  https://docs.microsoft.com/en-us/visualstudio/test/customizing-code-coverage-analysis?view=vs-2019
   -->
 
   <RunConfiguration>
