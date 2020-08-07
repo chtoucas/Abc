@@ -10,13 +10,13 @@ namespace Abc.Utilities
 
     using Assert = AssertEx;
 
-    public static class NeverEndingSequenceTests
+    public static class YieldForeverTests
     {
         [Fact(DisplayName = "GetEnumerator() always returns the same iterator.")]
         public static void GetEnumerator()
         {
             // Arrange
-            using var seq = new NeverEndingSequence<AnyT>(new AnyT());
+            using var seq = new YieldForever<AnyT>(new AnyT());
             // Act
             IEnumerator<AnyT> it = seq.GetEnumerator();
             // Assert
@@ -27,7 +27,7 @@ namespace Abc.Utilities
         public static void GetEnumerator_Untyped()
         {
             // Arrange
-            using var seq = new NeverEndingSequence<AnyT>(new AnyT());
+            using var seq = new YieldForever<AnyT>(new AnyT());
             // Act
             IEnumerable enumerable = seq;
             IEnumerator it = enumerable.GetEnumerator();
@@ -40,7 +40,7 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            using var seq = new NeverEndingSequence<AnyT>(value);
+            using var seq = new YieldForever<AnyT>(value);
 
             // Act
             IEnumerator<AnyT> it = seq.GetEnumerator();
@@ -61,7 +61,7 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            using var seq = new NeverEndingSequence<AnyT>(value);
+            using var seq = new YieldForever<AnyT>(value);
 
             // Act
             IEnumerator it = seq.GetEnumerator();
@@ -81,7 +81,7 @@ namespace Abc.Utilities
         public static void MoveNext()
         {
             // Arrange
-            using var seq = new NeverEndingSequence<AnyT>(new AnyT());
+            using var seq = new YieldForever<AnyT>(new AnyT());
             // Act
             IEnumerator it = seq.GetEnumerator();
             // Assert
@@ -93,7 +93,7 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            using var seq = new NeverEndingSequence<AnyT>(value);
+            using var seq = new YieldForever<AnyT>(value);
 
             // Act
             IEnumerator it = seq.GetEnumerator();
@@ -120,7 +120,7 @@ namespace Abc.Utilities
         {
             // Arrange
             var value = new AnyT();
-            using var seq = new NeverEndingSequence<AnyT>(value);
+            using var seq = new YieldForever<AnyT>(value);
 
             // Act
             IEnumerator<AnyT> it = seq.GetEnumerator();

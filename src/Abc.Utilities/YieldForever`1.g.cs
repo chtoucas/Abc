@@ -10,13 +10,12 @@ namespace Abc.Utilities
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
-    // TODO: name.
     [DebuggerNonUserCode, DebuggerDisplay("Count = ∞")]
-    internal sealed class NeverEndingSequence<T> : IEnumerable<T>, IEnumerator<T>
+    internal sealed class YieldForever<T> : IEnumerable<T>, IEnumerator<T>
     {
         [NotNull] private readonly T _element;
 
-        public NeverEndingSequence([DisallowNull] T element)
+        public YieldForever([DisallowNull] T element)
         {
             _element = element;
         }
