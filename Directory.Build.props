@@ -82,4 +82,9 @@
     </Otherwise>
   </Choose>
 
+  <!-- Workaround for dotnet < 3.1.400 -->
+  <ItemGroup>
+    <SourceRoot Include="$(MySourceRoot)" />
+  </ItemGroup>
+
 </Project>
