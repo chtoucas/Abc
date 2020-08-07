@@ -7,15 +7,6 @@ branche majeure, p.ex. netcoreapp2.x où x >= 1) et .NET Framework 4.5.2+ ---
 il est fort probable que tout marche correctement avec netstandard1.0+,
 netcoreapp1.0+ et .NET 4.5+, mais je ne l'ai pas vérifié explicitement.
 
-Propriétés MSBuild disponibles au niveau du fichier projet :
-`PkgAbc_Utilities_Sources` :
-  Chemin absolu vers le contenu du paquet Abc.Utilities.Sources.
-  On définit toujours cette propriété alors que normalement ce n'est le cas que
-  lorsqu'on importe le paquet avec l'option `GeneratePathProperty` égale à `true`.
-`PkgAbc_Utilities_Sources__CompileRoot` :
-  Chemin absolu vers les sources C# du paquet Abc.Utilities.Sources.
-  Notons que ce chemin est le même quelque soit le "framework" cible.
-
 Propriétés MSBuild optionnelles :
 `PkgAbc_Utilities_Sources__CompileItem` :
   Par défaut, tous les codes sources sont inclus dans le projet mais il est
@@ -40,8 +31,8 @@ Propriétés MSBuild optionnelles :
 
 `PkgAbc_Utilities_Sources__ImportTfr` :
   Il s'agit d'une propriété booléenne dont la valeur par défaut est `true`.
-  Symboles de compilation automatiquement définis à moins que cette propriété
-  ne soit égale à `false` :
+  À moins que cette propriété ne soit égale à `false`, on définit les
+  symboles de compilation suivants :
   - `NETSTANDARD1_x` quand le "framework" cible est netstandard1.x ;
   - `NETSTANDARD2_x` quand le "framework" cible est netstandard2.x ;
   - `NETCOREAPP1_x` quand le "framework" cible est netcoreapp1.x ;

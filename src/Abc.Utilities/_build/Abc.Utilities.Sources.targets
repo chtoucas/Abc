@@ -1,10 +1,10 @@
 <Project>
 
   <PropertyGroup>
+    <!-- Définir des symboles de compilation complémentaires ? (défaut: oui) -->
     <PkgAbc_Utilities_Sources__ImportTfr Condition=" '$(PkgAbc_Utilities_Sources__ImportTfr)' == '' ">true</PkgAbc_Utilities_Sources__ImportTfr>
   </PropertyGroup>
 
-  <!-- Define the additional compiler symbols? (default: yes) -->
   <Import Project="$(MSBuildThisFileDirectory)TargetFrameworkRange.targets"
           Condition=" '$(PkgAbc_Utilities_Sources__ImportTfr)' == 'true' " />
 

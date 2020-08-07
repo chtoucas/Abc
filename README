@@ -27,7 +27,6 @@ TODO:
 - when github actions supports 3.1.400, update global.json and remove the
   workaround in D.B.props.
 - RestorePackagesWithLockFile only when RetailBuild = true?
-- SourceRoot in src\Abc.Utilities\_build\D.B.props, use NuGetPackageFolders instead?
 - within VS add target MyDefaultTargetFramework?
 - test runsettings
 - editorconfig
