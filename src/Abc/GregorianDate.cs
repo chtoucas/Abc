@@ -16,6 +16,8 @@ namespace Abc
     using AoorException = System.ArgumentOutOfRangeException;
     using EF = Utilities.ExceptionFactory;
 
+    // TODO: CC exclusion.
+    [ExcludeFromCodeCoverage]
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public readonly partial struct GregorianDate
         : IEquatable<GregorianDate>, IComparable<GregorianDate>, IComparable
