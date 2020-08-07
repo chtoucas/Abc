@@ -3,6 +3,7 @@
   <PropertyGroup>
     <!-- Not necessary if the package was imported using GeneratePathProperty = true -->
     <PkgAbc_Utilities_Sources Condition=" '$(PkgAbc_Utilities_Sources)' == '' ">$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\'))</PkgAbc_Utilities_Sources>
+    <PkgAbc_Utilities_Sources>$([MSBuild]::EnsureTrailingSlash($(PkgAbc_Utilities_Sources)))</PkgAbc_Utilities_Sources>
 
     <!-- REVIEW: can we get the TxM dynamically? TxM = Target x Moniker -->
     <PkgAbc_Utilities_Sources__CompileRoot>$(PkgAbc_Utilities_Sources)contentFiles\cs\netstandard1.1\abc.utilities\</PkgAbc_Utilities_Sources__CompileRoot>
@@ -13,7 +14,7 @@
       Only necessary when ContinuousIntegrationBuild = true and Source Link is not enabled:
         "SourceRoot items must include at least one top-level (not nested) item
          when DeterministicSourcePaths is true"
-      Unnecessary with dotnet 3.1.400 as it adds NuGetPackageFolders to SourceRoot.
+      Unnecessary with dotnet 3.1.400 as NuGet always adds NuGetPackageFolders to SourceRoot.
         <SourceRoot Include="$([MSBuild]::EnsureTrailingSlash($(NuGetPackageFolders)))" />
     -->
     <SourceRoot Include="$(PkgAbc_Utilities_Sources)contentFiles\cs\" />

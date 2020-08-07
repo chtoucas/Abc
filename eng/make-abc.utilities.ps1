@@ -31,13 +31,13 @@ try {
                 -ProjectName   $PROJECT_NAME `
                 -Configuration $Configuration `
                 -Framework     $Framework `
-                -IsTestProject
+                -IsTestAssembly
         }
         'pack' {
             $project = Join-Path $SRC_DIR $PROJECT_NAME
 
             Write-Host "Building ""$PROJECT_NAME""..." -ForegroundColor Yellow
-            & dotnet build $project /p:MyFatBuild=true /p:MyRetail=true
+            & dotnet build $project /p:RetailBuild=true /p:FatBuild=true
                 || die 'Failed to build the project.'
 
             Write-Host "`nPacking ""$PROJECT_NAME""..." -ForegroundColor Yellow

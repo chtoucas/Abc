@@ -9,9 +9,6 @@
 
   <!-- Local settings -->
   <PropertyGroup>
-    <!-- Meta-option for retail builds -->
-    <MyRetail Condition=" '$(MyRetail)' == '' ">false</MyRetail>
-
     <!-- Repository layout -->
     <MyRepositoryRoot>$(MSBuildThisFileDirectory)</MyRepositoryRoot>
     <MySourceRoot>$(MyRepositoryRoot)src\</MySourceRoot>
@@ -20,7 +17,12 @@
     <!-- Keep "MyDefaultTargetFramework" in sync with "global.json" -->
     <MyDefaultTargetFramework>netcoreapp3.1</MyDefaultTargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(MyRetail)' == 'true' ">
+
+  <!-- Retail build? (default: no) -->
+  <PropertyGroup>
+    <RetailBuild Condition=" '$(RetailBuild)' == '' ">false</RetailBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RetailBuild)' == 'true' ">
     <Configuration>Release</Configuration>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
@@ -81,10 +83,5 @@
       </PropertyGroup>
     </Otherwise>
   </Choose>
-
-  <!-- Workaround for dotnet < 3.1.400 -->
-  <ItemGroup>
-    <SourceRoot Include="$(MySourceRoot)" />
-  </ItemGroup>
 
 </Project>
