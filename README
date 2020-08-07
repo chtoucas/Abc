@@ -24,7 +24,8 @@ Packages:
 - https://www.myget.org/feed/narvalo-edge/package/nuget/Abc.Utilities.Sources
 
 TODO:
-- Abc.Utilities: SourceRoot -> use github uri's for Abc.Utilities.Sources.
+- RestorePackagesWithLockFile only when MyRetail = true?
+- SourceRoot in src\Abc.Utilities\_build\D.B.props
 - within VS add DefaultTargetFramework?
 - test runsettings
 - editorconfig

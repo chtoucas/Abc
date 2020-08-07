@@ -5,6 +5,7 @@
   <PropertyGroup>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GenerateDocumentationFile Condition=" $(Configuration) == 'Release' ">true</GenerateDocumentationFile>
+
     <WarningsNotAsErrors>$(WarningsNotAsErrors);CS1591</WarningsNotAsErrors>
 
     <!-- Source Link -->

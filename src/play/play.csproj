@@ -7,8 +7,8 @@
 
     <!--
       dotnet.exe ignores RunAnalyzers/RunAnalyzersDuringBuild/RunAnalyzersDuringLiveAnalysis,
-      this is a VS issue. Fixed in VS 16.7? see https://github.com/dotnet/roslyn/issues/40926
-      When done, clean up NoWarn.
+      this is a VS issue. Fixed in VS 16.7? Hummm, no. When OK, remove NoWarn.
+      See https://github.com/dotnet/roslyn/issues/40926
     -->
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <NoWarn>$(NoWarn);CA1000;CA1034;CA1303;CA1716;CA1812</NoWarn>
