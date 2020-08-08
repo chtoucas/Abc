@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <!-- Workaround for dotnet < 3.1.400 -->
-  <ItemGroup>
+  <ItemGroup Condition=" '$(DeterministicSourcePaths)' == 'true' ">
     <SourceRoot Include="$(MyRepositoryRoot)" />
   </ItemGroup>
 
