@@ -5,7 +5,7 @@ Les codes C# contenus dans le paquet Abc.Utilities.Sources sont compatibles
 avec netstandard1.1+, netcoreapp (versions LTS et postérieures dans chaque
 branche majeure, p.ex. netcoreapp2.x où x >= 1) et .NET Framework 4.5.2+ ---
 il est fort probable que tout marche correctement avec netstandard1.0+,
-netcoreapp1.0+ et .NET 4.5+, mais je ne l'ai pas vérifié explicitement.
+netcoreapp1.0+ et .NET 4.5+, mais cela n'a pas été vérifié explicitement.
 
 Propriétés MSBuild optionnelles :
 `PkgAbc_Utilities_Sources__CompileItem` :
@@ -67,11 +67,11 @@ Remarques :
 - compatible avec les NRTs ;
 - compatible avec la compilation déterministe ;
 - pour exclure le code provenant de ce paquet lorsqu'on mesure la couverture
-  de code, on peut p.ex. utiliser avec coverlet.msbuild,
+  de code, avec coverlet.msbuild on peut p.ex. utiliser
   ```
   /p:Exclude=[MyAssembly]System.*
   /p:ExcludeByAttribute=DebuggerNonUserCode
   ```
 - les méthodes retournant quelque chose ont l'attribut `Pure`. Pour en bénéficier
-  il est nécessaire de définir le symbole de compilation `CONTRACTS_FULL`, ce que
-  l'on ne fait pas automatiquement.
+  il est nécessaire de définir le symbole de compilation `CONTRACTS_FULL`, chose
+  que l'on ne fait pas automatiquement lors de l'installation du paquet.

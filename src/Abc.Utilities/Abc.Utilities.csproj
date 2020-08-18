@@ -23,7 +23,7 @@
     </TargetFrameworks>
 
     <!-- We don't want to use the default lock file, nevertheless we must specify
-         a lock file (error NU1505) even if we don't intend to use one. -->
+         one (error NU1505) even if we don't intend to use it. -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <NuGetLockFilePath>$(MSBuildThisFileDirectory)packages.fat.lock.json</NuGetLockFilePath>
   </PropertyGroup>
