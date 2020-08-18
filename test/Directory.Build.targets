@@ -15,10 +15,10 @@
     <!--<RunSettingsFilePath>$(MSBuildThisFileDirectory)test-$(Configuration).runsettings</RunSettingsFilePath>-->
   </PropertyGroup>
 
-  <!-- Workaround for dotnet < 3.1.400 -->
+  <!-- Workaround for dotnet < 3.1.400
   <ItemGroup Condition=" '$(DeterministicSourcePaths)' == 'true' ">
     <SourceRoot Include="$(MyRepositoryRoot)" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)xunit.runner.json">
