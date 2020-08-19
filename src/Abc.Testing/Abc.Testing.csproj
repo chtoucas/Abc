@@ -4,6 +4,7 @@
     <TargetFrameworks>netstandard1.1;net452</TargetFrameworks>
     <RootNamespace>Abc</RootNamespace>
     <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile Condition=" $(Configuration) == 'Release' ">true</GenerateDocumentationFile>
 
     <Version>0.1.0</Version>
 

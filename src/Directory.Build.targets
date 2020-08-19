@@ -3,8 +3,7 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
 
   <PropertyGroup>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <GenerateDocumentationFile Condition=" $(Configuration) == 'Release' ">true</GenerateDocumentationFile>
+    <GenerateDocumentationFile Condition=" $(GenerateDocumentationFile) == '' ">false</GenerateDocumentationFile>
 
     <WarningsNotAsErrors>$(WarningsNotAsErrors);CS1591</WarningsNotAsErrors>
 

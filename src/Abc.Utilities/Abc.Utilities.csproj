@@ -5,6 +5,8 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1;net461</TargetFrameworks>
     <IsPackable>true</IsPackable>
+    <!-- Since all classes are internal, we won't get a warning for any missing XML comment -->
+    <GenerateDocumentationFile Condition=" $(Configuration) == 'Release' ">true</GenerateDocumentationFile>
 
     <Version>1.0.0</Version>
 

@@ -26,11 +26,11 @@ Packages:
 TODO:
 - when github actions supports 3.1.400, update global.json and remove the
   workaround in D.B.props.
-- RestorePackagesWithLockFile only when RetailBuild = true?
 - within VS add target MyDefaultTargetFramework?
 - test runsettings
 - editorconfig
-- Do not commit the lock file for Abc.Testing? see the comments in.
+- RestorePackagesWithLockFile only when RetailBuild = true?
+  Do not commit the lock file for Abc.Testing? see the comments in
   https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository
 References:
 - https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec

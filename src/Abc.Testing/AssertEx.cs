@@ -17,12 +17,21 @@ namespace Abc
     /// </summary>
     public abstract partial class AssertEx : Assert
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssertEx"/> class.
+        /// </summary>
         protected AssertEx() { }
 
         /// <summary>
-        /// Async test helpers.
+        /// Provides async test helpers.
         /// </summary>
-        public static partial class Async { }
+        public abstract partial class Async
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Async"/> class.
+            /// </summary>
+            protected Async() { }
+        }
     }
 
     public partial class AssertEx
@@ -39,6 +48,7 @@ namespace Abc
         /// Verifies that an exception is exactly the given exception type
         /// (and not a derived one), then that its message is not null.
         /// </summary>
+        /// <exception cref="Anexn"><paramref name="exn"/> is null.</exception>
         public static void CheckException(Type expectedExceptionType, Exception exn)
         {
             if (exn is null) { throw new Anexn(nameof(exn)); }
@@ -52,6 +62,7 @@ namespace Abc
         /// of the parameter that causes the exception is equal to
         /// <paramref name="expectedParamName"/>.
         /// </summary>
+        /// <exception cref="Anexn"><paramref name="exn"/> is null.</exception>
         public static void CheckArgumentException(string expectedParamName, ArgumentException exn)
         {
             if (exn is null) { throw new Anexn(nameof(exn)); }
@@ -59,22 +70,6 @@ namespace Abc
             NotNull(exn.Message);
             Equal(expectedParamName, exn.ParamName);
         }
-
-        ///// <summary>
-        ///// Verifies that the specified delegate throws an exception of type
-        ///// <see cref="ArgumentException"/> (and not a derived exception type)
-        ///// with a null parameter name.
-        ///// </summary>
-        //public static void ThrowsArgumentException(Action testCode) =>
-        //    Throws<ArgumentException>(null, testCode);
-
-        ///// <summary>
-        ///// Verifies that the specified delegate throws an exception of type
-        ///// <see cref="ArgumentException"/> (and not a derived exception type)
-        ///// with a null parameter name.
-        ///// </summary>
-        //public static void ThrowsArgumentException(Func<object> testCode) =>
-        //    Throws<ArgumentException>(null, testCode);
 
         //
         // Below, use "argName" instead of "paramName" to avoid an error CA1507
@@ -135,6 +130,7 @@ namespace Abc
             /// <para>Fails if the delegate uses eager (synchronous) validation.
             /// </para>
             /// </summary>
+            /// <exception cref="Anexn"><paramref name="testCode"/> is null.</exception>
             public static async Task ThrowsAnexn(string argName, Func<Task> testCode)
             {
                 if (testCode is null) { throw new Anexn(nameof(testCode)); }

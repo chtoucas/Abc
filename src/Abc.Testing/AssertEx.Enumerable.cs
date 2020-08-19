@@ -10,6 +10,11 @@ namespace Abc
 
     public partial class AssertEx
     {
+        /// <summary>
+        /// Verifies that a call to <c>MoveNext</c> throws an
+        /// <see cref="InvalidOperationException"/>.
+        /// </summary>
+        /// <exception cref="Anexn"><paramref name="seq"/> is null.</exception>
         public static void ThrowsOnNext<T>(IEnumerable<T> seq)
         {
             if (seq is null) { throw new Anexn(nameof(seq)); }
@@ -18,6 +23,12 @@ namespace Abc
             Throws<InvalidOperationException>(() => iter.MoveNext());
         }
 
+        /// <summary>
+        /// Verifies that a call to <c>MoveNext</c> throws an
+        /// <see cref="InvalidOperationException"/> after exactly
+        /// <paramref name="count"/> iterations.
+        /// </summary>
+        /// <exception cref="Anexn"><paramref name="seq"/> is null.</exception>
         public static void ThrowsAfter<T>(IEnumerable<T> seq, int count)
         {
             if (seq is null) { throw new Anexn(nameof(seq)); }
@@ -28,23 +39,39 @@ namespace Abc
             Throws<InvalidOperationException>(() => iter.MoveNext());
         }
 
+        /// <summary>
+        /// Verifies that a call to <c>MoveNext</c> sets <paramref name="called"/>
+        /// to <see langword="true"/>.
+        /// </summary>
+        /// <exception cref="Anexn"><paramref name="seq"/> is null.</exception>
         public static void CalledOnNext<T>(IEnumerable<T> seq, ref bool called)
         {
             if (seq is null) { throw new Anexn(nameof(seq)); }
 
             using var iter = seq.GetEnumerator();
-            iter.MoveNext();
+            True(iter.MoveNext());
             True(called);
         }
 
+        /// <summary>
+        /// Verifies that a call to <c>MoveNext</c> only sets <paramref name="called"/>
+        /// to <see langword="true"/> after exactly <paramref name="count"/>
+        /// iterations.
+        /// </summary>
+        /// <exception cref="Anexn"><paramref name="seq"/> is null.</exception>
         public static void CalledAfter<T>(IEnumerable<T> seq, int count, ref bool called)
         {
             if (seq is null) { throw new Anexn(nameof(seq)); }
 
             int i = 0;
             using var iter = seq.GetEnumerator();
-            while (i < count) { True(iter.MoveNext()); i++; }
-            iter.MoveNext();
+            while (i < count)
+            {
+                True(iter.MoveNext());
+                False(called);
+                i++;
+            }
+            True(iter.MoveNext());
             True(called);
         }
     }

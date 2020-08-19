@@ -75,6 +75,8 @@ function Invoke-Coverlet {
     # To use Coverlet with .NET Framework Full:
     # - Force the portable pdb format.
     # - Do not sign the assembly: System.IO.FileLoadException.
+    #   Another solution: disable AppDomain (-- RunConfiguration.DisableAppDomain=true)
+    #   https://github.com/coverlet-coverage/coverlet/blob/master/Documentation/KnownIssues.md#5-tests-fail-if-assembly-is-strong-named
     & dotnet build $project $args `
         /p:DebugType=portable `
         /p:SignAssembly=false

@@ -13,6 +13,7 @@ namespace Abc
     /// </summary>
     public sealed class ThrowingCollection<T> : IEnumerable<T>
     {
+        /// <inheritdoc />
         public IEnumerator<T> GetEnumerator() => throw new InvalidOperationException();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
