@@ -45,7 +45,7 @@ namespace Abc.Edu.Fx
     public partial struct Mayhap<T>
     {
         /// <summary>Nothing / mzero</summary>
-        public static Mayhap<T> None { get; } = default;
+        public static Mayhap<T> None { get; }
 
         /// <summary>Just</summary>
         public static Mayhap<T> Some(T value)
