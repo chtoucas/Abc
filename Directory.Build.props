@@ -35,9 +35,6 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)Abc.snk</AssemblyOriginatorKeyFile>
 
-    <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
-    <DefineConstants Condition=" '$(SignAssembly)' == 'true' ">$(DefineConstants);SIGNED_ASSEMBLY</DefineConstants>
-
     <Authors>chtoucas</Authors>
     <Company>Narvalo.Org</Company>
     <Product>Abécédaire Library</Product>
@@ -83,5 +80,13 @@
       </PropertyGroup>
     </Otherwise>
   </Choose>
+
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(DefineConstants)' == '' ">CONTRACTS_FULL</DefineConstants>
+    <DefineConstants Condition=" '$(DefineConstants)' != '' ">$(DefineConstants);CONTRACTS_FULL</DefineConstants>
+
+    <DefineConstants Condition=" '$(SignAssembly)' == 'true' ">$(DefineConstants);SIGNED_ASSEMBLY</DefineConstants>
+    <DefineConstants Condition=" '$(CheckForOverflowUnderflow)' != 'true' ">$(DefineConstants);UNCHECKED</DefineConstants>
+  </PropertyGroup>
 
 </Project>
