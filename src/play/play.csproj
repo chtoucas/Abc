@@ -6,8 +6,8 @@
     <OutputType>Exe</OutputType>
 
     <!--
-      dotnet.exe ignores RunAnalyzers/RunAnalyzersDuringBuild/RunAnalyzersDuringLiveAnalysis,
-      this is a VS issue. Fixed in VS 16.7? Hummm, no. When OK, remove NoWarn.
+      RunAnalyzers/RunAnalyzersDuringBuild/RunAnalyzersDuringLiveAnalysis
+      OK with MSBuild but ignored by dotnet.exe. When OK, remove NoWarn.
       See https://github.com/dotnet/roslyn/issues/40926
     -->
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abc.Maybe" Version="1.0.2" />
+    <PackageReference Include="Abc.Maybe" Version="1.0.3" />
     <PackageReference Include="Abc.Utilities.Sources" Version="1.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

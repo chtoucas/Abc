@@ -4,9 +4,9 @@
     ".NETCoreApp,Version=v3.1": {
       "Abc.Maybe": {
         "type": "Direct",
-        "requested": "[1.0.2, )",
-        "resolved": "1.0.2",
-        "contentHash": "DIGRz+hETiukR398rzSGT7Jh8L755b2GKvTlxqKuGQckx83RKVl3LyQ7w0y/0hw4Ml90Hr77WvqadSxSRNYMQg=="
+        "requested": "[1.0.3, )",
+        "resolved": "1.0.3",
+        "contentHash": "d95T+xPhq1eilpstMqbGTr3aCt5v/A7Z7BMukzyxLlAWf1CeURyS0KK8zDJa/5KS/J7raGQrdjkHZsAfhPKhSw=="
       },
       "Abc.Utilities.Sources": {
         "type": "Direct",
