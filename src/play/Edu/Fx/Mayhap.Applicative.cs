@@ -5,6 +5,8 @@ namespace Abc.Edu.Fx
 {
     using System;
 
+    using Abc.Utilities;
+
     // Applicative Functor
     // ===================
     //
@@ -72,7 +74,7 @@ namespace Abc.Edu.Fx
             // liftA2, it would likely be better to define (*>) using liftA2.
 
 #if STRICT_HASKELL
-            return Lift(Stubs<TSource, TResult>.Const2).Invoke(@this, other);
+            return Lift(Thunks<TSource, TResult>.Const2).Invoke(@this, other);
 #else
             return other;
 #endif
@@ -91,7 +93,7 @@ namespace Abc.Edu.Fx
             // (<*) = liftA2 const
 
 #if STRICT_HASKELL
-            return Lift(Stubs<TSource, TOther>.Const1).Invoke(@this, other);
+            return Lift(Thunks<TSource, TOther>.Const1).Invoke(@this, other);
 #else
             return @this;
 #endif
@@ -284,7 +286,7 @@ namespace Abc.Edu.Fx
             // pure id <*> v = v
             public static bool IdentityRule<T>(Mayhap<T> mayhap)
             {
-                return Pure(Stubs<T>.Ident).Invoke(mayhap)
+                return Pure(Thunks<T>.Ident).Invoke(mayhap)
                     == mayhap;
             }
 

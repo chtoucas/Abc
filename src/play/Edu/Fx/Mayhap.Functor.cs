@@ -5,6 +5,8 @@ namespace Abc.Edu.Fx
 {
     using System;
 
+    using Abc.Utilities;
+
     // Functor
     // =======
     //
@@ -103,7 +105,7 @@ namespace Abc.Edu.Fx
             return Map(__const, mayhap);
 
             // NB: this is just (_ => value).
-            TResult __const(TSource x) => Stubs<TResult, TSource>.Const1(value, x);
+            TResult __const(TSource x) => Thunks<TResult, TSource>.Const1(value, x);
 #else
             return mayhap.Select(_ => value);
 #endif
@@ -199,11 +201,11 @@ namespace Abc.Edu.Fx
             public static bool IdentityRule<T>(Mayhap<T> mayhap)
             {
 #if STRICT_HASKELL
-                return Map(Stubs<T>.Ident, mayhap)
-                    == Stubs<Mayhap<T>>.Ident(mayhap);
+                return Map(Thunks<T>.Ident, mayhap)
+                    == Thunks<Mayhap<T>>.Ident(mayhap);
 #else
-                return mayhap.Select(Stubs<T>.Ident)
-                    == Stubs<Mayhap<T>>.Ident(mayhap);
+                return mayhap.Select(Thunks<T>.Ident)
+                    == Thunks<Mayhap<T>>.Ident(mayhap);
 #endif
             }
 
