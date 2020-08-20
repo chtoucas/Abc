@@ -1,4 +1,22 @@
 
+Packages:
+- https://www.myget.org/feed/narvalo-edge/package/nuget/Abc.Utilities.Sources
+
+TODO:
+- when github actions supports 3.1.400, update global.json and remove the
+  workaround in D.B.props.
+- within VS add target MyDefaultTargetFramework?
+- test runsettings
+- editorconfig
+- RestorePackagesWithLockFile only when RetailBuild = true?
+  Do not commit the lock file for Abc.Testing? see the comments in
+  https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository
+References:
+- https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec
+- https://docs.microsoft.com/en-us/nuget/create-packages/creating-a-package-msbuild
+- https://docs.microsoft.com/en-us/nuget/create-packages/creating-a-package#include-msbuild-props-and-targets-in-a-package
+- https://medium.com/@attilah/source-code-only-nuget-packages-8f34a8fb4738
+
 Narvalo.NET (https://github.com/chtoucas/Narvalo.NET)
 - a fast Gregorian date type
 - country codes
@@ -19,21 +37,3 @@ Numerics:
   https://en.wikipedia.org/wiki/Signed_number_representations
 - Binary-coded decimal
   https://en.wikipedia.org/wiki/Binary-coded_decimal
-
-Packages:
-- https://www.myget.org/feed/narvalo-edge/package/nuget/Abc.Utilities.Sources
-
-TODO:
-- when github actions supports 3.1.400, update global.json and remove the
-  workaround in D.B.props.
-- within VS add target MyDefaultTargetFramework?
-- test runsettings
-- editorconfig
-- RestorePackagesWithLockFile only when RetailBuild = true?
-  Do not commit the lock file for Abc.Testing? see the comments in
-  https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#make-lock-file-part-of-your-source-repository
-References:
-- https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec
-- https://docs.microsoft.com/en-us/nuget/create-packages/creating-a-package-msbuild
-- https://docs.microsoft.com/en-us/nuget/create-packages/creating-a-package#include-msbuild-props-and-targets-in-a-package
-- https://medium.com/@attilah/source-code-only-nuget-packages-8f34a8fb4738
