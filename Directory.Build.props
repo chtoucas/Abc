@@ -14,8 +14,8 @@
     <MySourceRoot>$(MyRepositoryRoot)src\</MySourceRoot>
     <MyArtifactsRoot>$(MyRepositoryRoot)__\</MyArtifactsRoot>
 
-    <!-- Keep "MyDefaultTargetFramework" in sync with "global.json" -->
-    <MyDefaultTargetFramework>netcoreapp3.1</MyDefaultTargetFramework>
+    <!-- Keep "MyDefaultFramework" in sync with "global.json" -->
+    <MyDefaultFramework>netcoreapp3.1</MyDefaultFramework>
   </PropertyGroup>
 
   <!-- Retail build? (default: no) -->
@@ -81,6 +81,7 @@
     </Otherwise>
   </Choose>
 
+  <!-- Compiler symbols -->
   <PropertyGroup>
     <DefineConstants Condition=" '$(DefineConstants)' == '' ">CONTRACTS_FULL</DefineConstants>
     <DefineConstants Condition=" '$(DefineConstants)' != '' ">$(DefineConstants);CONTRACTS_FULL</DefineConstants>

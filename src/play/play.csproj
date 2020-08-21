@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>$(MyDefaultTargetFramework)</TargetFramework>
+    <TargetFramework>$(MyDefaultFramework)</TargetFramework>
     <RootNamespace>Abc</RootNamespace>
     <OutputType>Exe</OutputType>
 
