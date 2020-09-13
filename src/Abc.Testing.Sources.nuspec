@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata minClientVersion="4.0">
+    <!-- Required elements -->
+    <id>Abc.Testing.Sources</id>
+    <version>$version$</version>
+    <description>
+      <![CDATA[
+Ce paquet n'est pas destiné à un usage en dehors des projets de Narvalo.Org.
+    ]]>
+    </description>
+    <authors>$authors$</authors>
+
+    <!-- Optional elements -->
+    <copyright>$copyright$</copyright>
+    <developmentDependency>true</developmentDependency>
+    <license type="expression">$licenseExpression$</license>
+    <projectUrl>$projectUrl$</projectUrl>
+    <releaseNotes></releaseNotes>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <repository type="$repositoryType$" url="$repositoryUrl$" />
+    <tags>Xunit</tags>
+    <title>Abc Testing [sources]</title>
+
+    <!-- Dépendances -->
+    <dependencies>
+      <group>
+        <dependency id="xunit.assert" version="2.4.1" />
+        <dependency id="xunit.extensibility.core" version="2.4.1" />
+      </group>
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="**\*.cs" target="contentFiles\cs\net452\abc.testing\" exclude="obj\**" />
+    <file src="**\*.cs" target="contentFiles\cs\netstandard1.1\abc.testing\" exclude="obj\**" />
+  </files>
+</package>

@@ -27,8 +27,9 @@
       net461;net452
     </TargetFrameworks>
 
-    <!-- We don't want to use the default lock file, nevertheless we must specify
-         one (error NU1505) even if we don't intend to use it. -->
+    <!-- We don't want to use the default lock file (the one created when
+         FatBuild = false), nevertheless we must specify one (error NU1505) even
+         if we don't intend to use it. -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <NuGetLockFilePath>$(MSBuildThisFileDirectory)packages.fat.lock.json</NuGetLockFilePath>
   </PropertyGroup>

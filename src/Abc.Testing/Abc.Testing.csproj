@@ -16,6 +16,29 @@
     <NoWarn>$(NoWarn);CA1034;CA1303;CA2007</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(NoBuild)' == 'true' ">
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+  <!-- Source code only package -->
+  <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+
+    <NuspecFile>$(MySourceRoot)Abc.Testing.Sources.nuspec</NuspecFile>
+    <NuspecBasePath>$(MSBuildThisFileDirectory)</NuspecBasePath>
+    <NuspecProperties>
+      authors=$(Authors);
+      copyright=$(Copyright);
+      licenseExpression=$(PackageLicenseExpression);
+      projectUrl=$(PackageProjectUrl);
+      repositoryType=$(RepositoryType);
+      repositoryUrl=$(RepositoryUrl);
+      version=$(Version)
+    </NuspecProperties>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="xunit.assert" Version="2.4.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
