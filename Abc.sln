@@ -41,6 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{179F2796-B5A
 		eng\asm.ps1 = eng\asm.ps1
 		eng\common.ps1 = eng\common.ps1
 		eng\make-abc.ps1 = eng\make-abc.ps1
+		eng\make-abc.testing.ps1 = eng\make-abc.testing.ps1
 		eng\make-abc.utilities.ps1 = eng\make-abc.utilities.ps1
 		eng\reset.ps1 = eng\reset.ps1
 	EndProjectSection

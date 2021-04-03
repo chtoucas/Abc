@@ -3,8 +3,6 @@ Packages:
 - https://www.myget.org/feed/narvalo-edge/package/nuget/Abc.Utilities.Sources
 
 TODO:
-- when github actions supports 3.1.400, update global.json and remove the
-  workaround in D.B.props.
 - within VS add target MyDefaultFramework?
 - test runsettings
 - editorconfig
