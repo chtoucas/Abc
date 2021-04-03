@@ -17,7 +17,7 @@ namespace Abc.Utilities
     public partial class SingletonListTests
     {
         public static readonly TheoryData<int> NotSupportedIndexes =
-            new TheoryData<int>
+            new()
             {
                 // -1 is always invalid for a list.
                 -1,

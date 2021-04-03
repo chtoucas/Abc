@@ -19,17 +19,17 @@ namespace Abc.Utilities
     {
         [DebuggerNonUserCode]
         public static InvalidOperationException ControlFlow =>
-            new InvalidOperationException(
+            new(
                 "The flow of execution just reached a section of the code that should have been unreachable."
                 + $"{Environment.NewLine}Most certainly signals a coding error. Please report.");
 
         [DebuggerNonUserCode]
         public static InvalidOperationException EmptySequence =>
-            new InvalidOperationException("The sequence was empty.");
+            new("The sequence was empty.");
 
         [DebuggerNonUserCode]
         public static NotSupportedException ReadOnlyCollection =>
-            new NotSupportedException("The collection is read-only.");
+            new("The collection is read-only.");
     }
 
     // Argument exceptions.
@@ -38,7 +38,7 @@ namespace Abc.Utilities
         [Pure, DebuggerNonUserCode, DebuggerStepThrough]
         public static ArgumentException InvalidType(
             string paramName, Type expected, object obj) =>
-            new ArgumentException(
+            new(
                 $"The object should be of type {expected} but it is of type {obj.GetType()}.",
                 paramName);
     }

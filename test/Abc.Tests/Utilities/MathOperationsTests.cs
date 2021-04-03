@@ -13,7 +13,7 @@ namespace Abc.Utilities
     public partial class MathOperationsTests
     {
         public static readonly TheoryData<int, decimal> AddHalfOneData =
-            new TheoryData<int, decimal>
+            new()
             {
                 { Int32.MinValue, Int32.MinValue + .5m },
                 { MathOperations.HalfOneMin - 1, (MathOperations.HalfOneMin - 1) + .5m },
@@ -33,7 +33,7 @@ namespace Abc.Utilities
             };
 
         public static readonly TheoryData<int, decimal> SubtractHalfOneData =
-            new TheoryData<int, decimal>
+            new()
             {
                 { Int32.MinValue, Int32.MinValue - .5m },
                 { MathOperations.HalfOneMin - 1, (MathOperations.HalfOneMin - 1) - .5m },
