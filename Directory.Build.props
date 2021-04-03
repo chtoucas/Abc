@@ -15,7 +15,7 @@
     <MyArtifactsRoot>$(MyRepositoryRoot)__\</MyArtifactsRoot>
 
     <!-- Keep "MyDefaultFramework" in sync with "global.json" -->
-    <MyDefaultFramework>netcoreapp3.1</MyDefaultFramework>
+    <MyDefaultFramework>net5.0</MyDefaultFramework>
   </PropertyGroup>
 
   <!-- Retail build? (default: no) -->
