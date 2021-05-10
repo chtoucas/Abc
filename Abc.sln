@@ -31,6 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abc.Tests", "test\Abc.Tests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E1D42DE7-B953-46DC-9B21-637E018042E2}"
 	ProjectSection(SolutionItems) = preProject
+		src\Abc.Testing.Sources.nuspec = src\Abc.Testing.Sources.nuspec
 		src\Abc.Utilities.Sources.nuspec = src\Abc.Utilities.Sources.nuspec
 		src\AssemblyInfo.Common.cs = src\AssemblyInfo.Common.cs
 		src\Directory.Build.targets = src\Directory.Build.targets
