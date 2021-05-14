@@ -62,6 +62,7 @@ try {
             }
 
             # TODO: apikey warning
+            # Please use the --api-key option when publishing to GitHub Packages
             # https://github.community/t/github-package-registry-not-compatible-with-dotnet-nuget-client/14392/6
             if ((Read-Host 'Publish package to GitHub?', '[y/N]') -eq 'y') {
                 # We use nuget.exe instead of dotnet since the latter does not have
