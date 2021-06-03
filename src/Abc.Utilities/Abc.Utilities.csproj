@@ -8,7 +8,7 @@
     <!-- Since all classes are internal, we won't get any warning in case of missing XML comments -->
     <GenerateDocumentationFile Condition=" $(Configuration) == 'Release' ">true</GenerateDocumentationFile>
 
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
 
     <!--
       CA1812  Avoid uninstantiated internal classes (Performance)

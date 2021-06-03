@@ -13,7 +13,13 @@ namespace Abc.Utilities
     /// Provides static methods to create exceptions.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    internal static partial class ExceptionFactory { }
+    internal abstract partial class ExceptionFactory
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExceptionFactory"/> class.
+        /// </summary>
+        protected ExceptionFactory() { }
+    }
 
     internal partial class ExceptionFactory
     {

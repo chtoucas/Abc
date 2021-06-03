@@ -11,7 +11,13 @@ namespace Abc.Utilities
     /// Provides static methods for common mathematical operations.
     /// <para>This class cannot be inherited.</para>
     /// </summary>
-    internal static partial class MathOperations { }
+    internal abstract partial class MathOperations
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MathOperations"/> class.
+        /// </summary>
+        protected MathOperations() { }
+    }
 
     // Euclidian division.
     //

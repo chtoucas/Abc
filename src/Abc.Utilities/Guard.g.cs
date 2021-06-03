@@ -13,7 +13,13 @@ namespace Abc.Utilities
     // - add unconstrained versions.
     // - now that we have NRTs, the attr ValidatedNotNull seems useless?
 
-    internal static partial class Guard { }
+    internal abstract partial class Guard
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Guard"/> class.
+        /// </summary>
+        protected Guard() { }
+    }
 
     internal partial class Guard
     {

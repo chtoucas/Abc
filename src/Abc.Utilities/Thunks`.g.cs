@@ -6,9 +6,21 @@ namespace Abc.Utilities
     using System;
     using System.Diagnostics;
 
-    internal static partial class Thunks { }
+    internal abstract partial class Thunks
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Thunks"/> class.
+        /// </summary>
+        protected Thunks() { }
+    }
 
-    internal static partial class Thunks<T> { }
+    internal abstract partial class Thunks<T>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Thunks{T}"/> class.
+        /// </summary>
+        protected Thunks() { }
+    }
 
     internal partial class Thunks
     {

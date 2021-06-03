@@ -6,9 +6,21 @@ namespace Abc.Utilities
     using System;
     using System.Diagnostics;
 
-    internal static partial class Predicates { }
+    internal abstract partial class Predicates
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Predicates"/> class.
+        /// </summary>
+        protected Predicates() { }
+    }
 
-    internal static partial class Predicates<TSource> { }
+    internal abstract partial class Predicates<TSource>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Predicate{T}"/> class.
+        /// </summary>
+        protected Predicates() { }
+    }
 
     internal partial class Predicates
     {
