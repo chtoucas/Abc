@@ -11,6 +11,7 @@ namespace Abc.Utilities
         /// <summary>
         /// Initializes a new instance of the <see cref="Predicates"/> class.
         /// </summary>
+        [DebuggerNonUserCode]
         protected Predicates() { }
     }
 
@@ -19,6 +20,7 @@ namespace Abc.Utilities
         /// <summary>
         /// Initializes a new instance of the <see cref="Predicate{T}"/> class.
         /// </summary>
+        [DebuggerNonUserCode]
         protected Predicates() { }
     }
 

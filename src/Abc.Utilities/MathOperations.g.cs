@@ -16,6 +16,7 @@ namespace Abc.Utilities
         /// <summary>
         /// Initializes a new instance of the <see cref="MathOperations"/> class.
         /// </summary>
+        [DebuggerNonUserCode]
         protected MathOperations() { }
     }
 

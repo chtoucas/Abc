@@ -18,6 +18,7 @@ namespace Abc.Utilities
         /// <summary>
         /// Initializes a new instance of the <see cref="ExceptionFactory"/> class.
         /// </summary>
+        [DebuggerNonUserCode]
         protected ExceptionFactory() { }
     }
 

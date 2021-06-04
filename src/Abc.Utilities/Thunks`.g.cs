@@ -11,6 +11,7 @@ namespace Abc.Utilities
         /// <summary>
         /// Initializes a new instance of the <see cref="Thunks"/> class.
         /// </summary>
+        [DebuggerNonUserCode]
         protected Thunks() { }
     }
 
@@ -19,6 +20,7 @@ namespace Abc.Utilities
         /// <summary>
         /// Initializes a new instance of the <see cref="Thunks{T}"/> class.
         /// </summary>
+        [DebuggerNonUserCode]
         protected Thunks() { }
     }
 
