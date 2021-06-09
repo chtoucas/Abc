@@ -83,8 +83,8 @@
 
   <!-- Compiler symbols -->
   <PropertyGroup>
-    <DefineConstants Condition=" '$(DefineConstants)' == '' ">CONTRACTS_FULL</DefineConstants>
     <DefineConstants Condition=" '$(DefineConstants)' != '' ">$(DefineConstants);CONTRACTS_FULL</DefineConstants>
+    <DefineConstants Condition=" '$(DefineConstants)' == '' ">CONTRACTS_FULL</DefineConstants>
 
     <DefineConstants Condition=" '$(SignAssembly)' == 'true' ">$(DefineConstants);SIGNED_ASSEMBLY</DefineConstants>
     <DefineConstants Condition=" '$(CheckForOverflowUnderflow)' != 'true' ">$(DefineConstants);UNCHECKED</DefineConstants>

@@ -25,7 +25,7 @@ try {
                 || die 'Failed to build the project.'
 
             Write-Host "`nPacking ""$PROJECT_NAME""..." -ForegroundColor Yellow
-            & dotnet pack $project --no-build
+            & dotnet pack $project /p:RetailBuild=true --no-build
                 || die 'Failed to pack the project.'
         }
         'push' {
